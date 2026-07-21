@@ -988,6 +988,15 @@ def classify_route_sets(route_lines, segment_records, fid_to_segment_id, segment
         stable_runs = build_runs(stable_route_sets)
         stable_change_count += max(0, len(stable_runs) - 1)
         classified_lines.append({"line": route_line, "segment_lengths": segment_lengths, "route_sets": stable_route_sets, "runs": stable_runs})
+
+        debug(
+            "Route-set / Rute-sæt:",
+            route_line["route_no"],
+            "segments", len(stable_route_sets),
+            "stable_route_sets", stable_route_sets,
+            "runs", [list(run) for run in stable_runs]
+        )
+
         if line_counter % 10 == 0:
             debug(line_counter, "/", len(route_lines))
     debug("")
@@ -1071,6 +1080,45 @@ def materialize_corridors(classified_lines):
     debug("Skipped non-owner runs / Ikke-owner runs sprunget over:", skipped_non_owner)
     debug("Skipped short corridors / Korte korridorer sprunget over:", skipped_short)
 
+    for corridor_id, corridor in enumerate(corridors):
+        first_point = None
+        last_point = None
+
+        if corridor["geometry"].isMultipart():
+            parts = corridor["geometry"].asMultiPolyline()
+            if parts and parts[0]:
+                first_point = QgsPointXY(parts[0][0])
+                last_point = QgsPointXY(parts[0][-1])
+        else:
+            points = corridor["geometry"].asPolyline()
+            if points:
+                first_point = QgsPointXY(points[0])
+                last_point = QgsPointXY(points[-1])
+
+        closed_geom = (
+            first_point is not None
+            and last_point is not None
+            and point_distance(first_point, last_point) < 0.001
+        )
+
+        debug(
+            "CORRIDOR",
+            corridor_id,
+            "source_route",
+            corridor["source_route"],
+            "routes",
+            sorted(corridor["routes"]),
+            "route_count",
+            corridor["route_count"],
+            "length_m",
+            round(corridor["geometry"].length(), 2),
+            "closed_geom",
+            closed_geom,
+            "start_seg",
+            corridor["start_seg"],
+            "end_seg",
+            corridor["end_seg"]
+        )
 
 
     return corridors
@@ -1411,18 +1459,26 @@ def resolve_corridor_equivalence(merged_corridors):
             if corridor1["routes"] != corridor2["routes"]:
                 continue
 
-            if (
-                corridor1["geometry"].distance(
-                    corridor2["geometry"]
-                )
-                > CORRIDOR_EQUIVALENCE_DISTANCE
-            ):
-                continue
+            distance = corridor1["geometry"].distance(
+                corridor2["geometry"]
+            )
 
             coverage = corridor_overlap_coverage(
                 corridor1["geometry"],
                 corridor2["geometry"]
             )
+
+            debug(
+                "Corridor overlap / Korridor overlap:",
+                index1,
+                index2,
+                "routes", corridor1["routes"],
+                "distance", round(distance, 3),
+                "coverage", round(coverage, 3)
+            )
+
+            if distance > CORRIDOR_EQUIVALENCE_DISTANCE:
+                continue
 
             if (
                 coverage
@@ -2128,7 +2184,9 @@ def materialize_manual_routes(project_crs, routes, route_lines, lane_features, l
         [
             QgsField("ref_id", QVariant.Int),
             QgsField("route_no", QVariant.Int),
-            QgsField("corridor_id", QVariant.Int)
+            QgsField("corridor_id", QVariant.Int),
+            QgsField("canonical_corridor_id", QVariant.Int),
+            QgsField("physical_lane_id", QVariant.Int),
         ]
     )
 
@@ -2137,6 +2195,8 @@ def materialize_manual_routes(project_crs, routes, route_lines, lane_features, l
     lane_reference_records = {}
     lane_reference_features = []
     next_reference_id = 0
+    physical_lane_identity = {}
+    next_physical_lane_id = 0
 
     skipped_equivalent_lane_references = 0
 
@@ -2158,6 +2218,23 @@ def materialize_manual_routes(project_crs, routes, route_lines, lane_features, l
 
         route_no = int(lane_feature["route_no"])
         lane_index = float(lane_feature["lane_index"])
+        canonical_corridor_id = int(
+            lane_feature["corridor_id"]
+        )
+        physical_lane_key = (
+            canonical_corridor_id,
+            route_no,
+            lane_index
+        )
+        physical_lane_id = physical_lane_identity.get(
+            physical_lane_key
+        )
+        if physical_lane_id is None:
+            physical_lane_id = next_physical_lane_id
+            physical_lane_identity[
+                physical_lane_key
+            ] = physical_lane_id
+            next_physical_lane_id += 1
 
         physical_offset = (
             lane_index
@@ -2204,6 +2281,8 @@ def materialize_manual_routes(project_crs, routes, route_lines, lane_features, l
             reference_feature["corridor_id"] = int(
                 lane_feature["corridor_id"]
             )
+            reference_feature["canonical_corridor_id"] = canonical_corridor_id
+            reference_feature["physical_lane_id"] = physical_lane_id
             reference_feature.setGeometry(geometry)
 
             lane_reference_features.append(
@@ -2214,7 +2293,9 @@ def materialize_manual_routes(project_crs, routes, route_lines, lane_features, l
                 "route_no": route_no,
                 "geometry": geometry,
                 "corridor_id": int(lane_feature["corridor_id"]),
-                "lane_index": lane_index
+                "canonical_corridor_id": canonical_corridor_id,
+                "lane_index": lane_index,
+                "physical_lane_id": physical_lane_id
             }
 
             next_reference_id += 1
@@ -2255,12 +2336,33 @@ def materialize_manual_routes(project_crs, routes, route_lines, lane_features, l
             if reference["corridor_id"] == corridor_id
         }
 
+    for corridor_id, routes in corridor_routes_by_id.items():
+        debug(
+            "Corridor membership / Korridor medlemskab:",
+            corridor_id,
+            "routes",
+            sorted(routes),
+            "lane_indexes",
+            {
+                route_no: corridor_lane_by_route[corridor_id].get(route_no)
+                for route_no in sorted(routes)
+            }
+        )
+
     route_transition_history_by_route = {}
     route_closed_by_route = {}
 
     debug(
         "Physical lane references / Fysiske lane-referencer:",
         len(lane_reference_records)
+    )
+
+    debug(
+        "Unique physical lanes / Unikke fysiske lanes:",
+        len({
+            reference["physical_lane_id"]
+            for reference in lane_reference_records.values()
+        })
     )
 
     debug(
@@ -2324,16 +2426,25 @@ def materialize_manual_routes(project_crs, routes, route_lines, lane_features, l
 
         route_no = route_line["route_no"]
         original_points = route_line["points"]
+        route_closed_threshold = max(
+            1.0,
+            SAMPLE_DISTANCE * 0.25
+        )
         route_closed = (
             len(original_points) >= 2
             and point_distance(
                 original_points[0],
                 original_points[-1]
             )
-            < 1.0
+            < route_closed_threshold
         )
 
         route_closed_by_route[route_no] = route_closed
+        debug(
+            "Route closure / Rute lukket:",
+            route_no,
+            "closed" if route_closed else "open"
+        )
         route_transition_history = []
 
         mapped_points = []
@@ -2543,6 +2654,10 @@ def materialize_manual_routes(project_crs, routes, route_lines, lane_features, l
                                 "curr_lane": best_reference["lane_index"],
                                 "prev_route_lane": prev_lane_by_route.get(route_no),
                                 "curr_route_lane": curr_lane_by_route.get(route_no),
+                                "prev_physical_lane": previous_reference["physical_lane_id"],
+                                "curr_physical_lane": best_reference["physical_lane_id"],
+                                "prev_canonical_corridor": previous_reference["canonical_corridor_id"],
+                                "curr_canonical_corridor": best_reference["canonical_corridor_id"],
                             }
                             route_transition_history.append(
                                 transition
@@ -2555,8 +2670,14 @@ def materialize_manual_routes(project_crs, routes, route_lines, lane_features, l
                                 route_no,
                                 ":",
                                 prev_corridor,
+                                "(canonical",
+                                transition["prev_canonical_corridor"],
+                                ")",
                                 "->",
-                                curr_corridor
+                                curr_corridor,
+                                "(canonical",
+                                transition["curr_canonical_corridor"],
+                                ")"
                             )
                             debug(
                                 "Prev routes:",
@@ -2567,10 +2688,16 @@ def materialize_manual_routes(project_crs, routes, route_lines, lane_features, l
                                 ",".join(str(r) for r in curr_routes)
                             )
                             debug(
-                                "Lane",
+                                "Lane index",
                                 previous_reference["lane_index"],
+                                "(physical",
+                                previous_reference["physical_lane_id"],
+                                ")",
                                 "->",
-                                best_reference["lane_index"]
+                                best_reference["lane_index"],
+                                "(physical",
+                                best_reference["physical_lane_id"],
+                                ")"
                             )
 
                 previous_reference_id = best_reference_id
@@ -2872,7 +2999,12 @@ def materialize_manual_routes(project_crs, routes, route_lines, lane_features, l
                             "Lane mapping:",
                             transition["prev_route_lane"],
                             "->",
-                            transition["curr_route_lane"]
+                            transition["curr_route_lane"],
+                            "(physical",
+                            transition["prev_physical_lane"],
+                            "->",
+                            transition["curr_physical_lane"],
+                            ")"
                         )
                     assert False, (
                     "Closed route {} materialization broke closure".format(

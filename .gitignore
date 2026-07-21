@@ -1,1 +1,10 @@
+# macOS
+.DS_Store
 
+# Python
+__pycache__/
+*.py[cod]
+
+# QGIS temporary files
+*.qgz~
+*.qgs~
