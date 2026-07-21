@@ -11,7 +11,6 @@ from qgis.core import (
     QgsLineSymbol,
     QgsCategorizedSymbolRenderer,
     QgsRendererCategory,
-    QgsGeometryGeneratorSymbolLayer,
     Qgis,
     QgsProcessing,
     QgsProcessingAlgorithm,
@@ -98,9 +97,6 @@ class InputOutputParameters:
 
 @dataclass(frozen=True)
 class CartographyParameters:
-    # Diagnostisk spacing i projektets map units (meter i meterbaseret CRS).
-    diagnostic_lane_spacing_map_units: float = 8.0
-
     # Fysisk lane-afstand på færdigt print.
     output_lane_spacing_mm: float = 1.00
 
@@ -220,7 +216,6 @@ class EngineParameters:
         errors = []
 
         positive_values = (
-            ("diagnostic_lane_spacing_map_units", self.cartography.diagnostic_lane_spacing_map_units),
             ("output_lane_spacing_mm", self.cartography.output_lane_spacing_mm),
             ("lane_width_mm", self.cartography.lane_width_mm),
             ("manual_target_scale", self.cartography.manual_target_scale),
@@ -300,7 +295,7 @@ def _bind_engine_parameters(parameters):
     parameters = parameters.validate()
 
     global GROUP_NAME, CORRIDOR_RESULT_NAME, RESULT_NAME, MANUAL_RESULT_NAME
-    global DIAGNOSTIC_LANE_SPACING_MAP_UNITS, OUTPUT_LANE_SPACING_MM
+    global OUTPUT_LANE_SPACING_MM
     global LANE_WIDTH_MM, MANUAL_TARGET_SCALE, OFFSET_SEGMENTS, OFFSET_MITER_LIMIT
     global MANUAL_LANE_SEARCH_DISTANCE, MANUAL_CONTINUITY_WEIGHT
     global MANUAL_LANE_INERTIA_WEIGHT, MANUAL_TERMINAL_TRANSITION_DISTANCE
@@ -317,7 +312,6 @@ def _bind_engine_parameters(parameters):
     RESULT_NAME = parameters.io.result_name
     MANUAL_RESULT_NAME = parameters.io.manual_result_name
 
-    DIAGNOSTIC_LANE_SPACING_MAP_UNITS = parameters.cartography.diagnostic_lane_spacing_map_units
     OUTPUT_LANE_SPACING_MM = parameters.cartography.output_lane_spacing_mm
     LANE_WIDTH_MM = parameters.cartography.lane_width_mm
     MANUAL_TARGET_SCALE = parameters.cartography.manual_target_scale
@@ -2147,7 +2141,7 @@ def resolve_preferred_order(merged_corridors):
 
 
 
-    return preferred_order_edges, preferred_order_reversed_count
+    return preferred_order_edges, preferred_order_reversed_count, corridor_reversed
 
 
 def create_output_layers(project, project_crs):
@@ -2226,6 +2220,15 @@ def create_output_layers(project, project_crs):
 def write_corridors_and_lanes(merged_corridors, corridor_result, corridor_provider, result, provider):
     # ==================================================
     # SKRIV CORRIDORS + LANES
+    #
+    # Hver lane får sin egen forudberegnede offset-geometri (samme
+    # offsetCurve-teknik som manual-lagets fysiske lane-referencer),
+    # fremfor at dele corridorens centerline og lade QGIS' renderer
+    # beregne en uafhængig offset_curve() pr. corridor ved hvert tegn.
+    # Uafhængigt beregnede offsets fra nabo-corridorer rammer generelt
+    # ikke samme koordinat i en junction, hvilket giver synlige knæk/
+    # krydsninger. snap_lane_junctions() retter det op bagefter ved at
+    # sømme delte ruters lane-endepunkter sammen på tværs af corridorer.
     # ==================================================
 
     debug("")
@@ -2285,8 +2288,36 @@ def write_corridors_and_lanes(merged_corridors, corridor_result, corridor_provid
                 lane_position - lane_center
             )
 
-            offset_m = (
-                lane_index * DIAGNOSTIC_LANE_SPACING_MAP_UNITS
+            physical_offset = (
+                lane_index
+                * MANUAL_TARGET_SCALE
+                * OUTPUT_LANE_SPACING_MM
+                / 1000.0
+            )
+
+            if abs(physical_offset) < 0.000001:
+                lane_geometry = geometry
+            else:
+                lane_geometry = geometry.offsetCurve(
+                    physical_offset,
+                    OFFSET_SEGMENTS,
+                    Qgis.JoinStyle.Round,
+                    OFFSET_MITER_LIMIT
+                )
+
+            if lane_geometry.isNull() or lane_geometry.isEmpty():
+                continue
+
+            lane_parts = extract_lines(lane_geometry)
+
+            if not lane_parts:
+                continue
+
+            # A self-intersecting offset (sharp bend) can split into
+            # several parts - keep the longest as the lane's geometry.
+            lane_points = max(
+                lane_parts,
+                key=lambda part: QgsGeometry.fromPolylineXY(part).length()
             )
 
             lane_feature = QgsFeature(
@@ -2300,15 +2331,15 @@ def write_corridors_and_lanes(merged_corridors, corridor_result, corridor_provid
             )
             lane_feature["route_no"] = route_no
             lane_feature["lane_index"] = lane_index
-            lane_feature["offset_m"] = offset_m
+            lane_feature["offset_m"] = physical_offset
             lane_feature["source_route"] = (
                 corridor["source_route"]
             )
             lane_feature["length_m"] = length_m
 
-            # VIGTIGT:
-            # Alle lanes i korridoren får samme centerline.
-            lane_feature.setGeometry(geometry)
+            lane_feature.setGeometry(
+                QgsGeometry.fromPolylineXY(lane_points)
+            )
 
             lane_features.append(
                 lane_feature
@@ -2325,15 +2356,134 @@ def write_corridors_and_lanes(merged_corridors, corridor_result, corridor_provid
 
     corridor_result.updateExtents()
 
-    provider.addFeatures(
-        lane_features
-    )
-
-    result.updateExtents()
-
 
 
     return lane_features, lane_feature_corridor_indices
+
+
+def snap_lane_junctions(
+    lane_features,
+    lane_feature_corridor_indices,
+    preferred_order_edges,
+    corridor_reversed
+):
+    # ==================================================
+    # SØM LANE-JUNCTIONS / SNAP LANE JUNCTIONS
+    #
+    # Hver lane har nu sin egen uafhængigt beregnede offsetCurve.
+    # Ved en preferred-order junction deler to corridorer en eller flere
+    # ruter; disse ruters lane-endepunkter rammer generelt ikke præcis
+    # samme koordinat, selvom corridorernes centerlines mødes. Her sømmes
+    # de fælles ruters endepunkter sammen til ét fælles punkt pr. junction,
+    # samme teknik som loop-sømme i merge_corridors.
+    # ==================================================
+
+    debug("")
+    debug("SNAPPING LANE JUNCTIONS / SØMMER LANE-JUNCTIONS")
+    debug("----------------------------------------")
+
+    lane_feature_by_corridor_route = {}
+
+    for lane_feature, corridor_index in zip(
+        lane_features,
+        lane_feature_corridor_indices
+    ):
+        key = (corridor_index, int(lane_feature["route_no"]))
+        lane_feature_by_corridor_route[key] = lane_feature
+
+
+    def lane_points(lane_feature):
+        parts = extract_lines(lane_feature.geometry())
+
+        if not parts:
+            return None
+
+        return [QgsPointXY(point) for point in parts[0]]
+
+
+    def current_endpoint(endpoint_original, reversed_flag):
+        return (
+            1 - endpoint_original
+            if reversed_flag
+            else endpoint_original
+        )
+
+
+    def midpoint(point1, point2):
+        return QgsPointXY(
+            (point1.x() + point2.x()) / 2.0,
+            (point1.y() + point2.y()) / 2.0
+        )
+
+
+    snapped_count = 0
+
+    for edge in preferred_order_edges:
+
+        corridor_a = edge["a"]
+        corridor_b = edge["b"]
+
+        endpoint_a = current_endpoint(
+            edge["endpoint_a"],
+            corridor_reversed[corridor_a]
+        )
+        endpoint_b = current_endpoint(
+            edge["endpoint_b"],
+            corridor_reversed[corridor_b]
+        )
+
+        for route_no in edge["shared_routes"]:
+
+            feature_a = lane_feature_by_corridor_route.get(
+                (corridor_a, route_no)
+            )
+            feature_b = lane_feature_by_corridor_route.get(
+                (corridor_b, route_no)
+            )
+
+            if feature_a is None or feature_b is None:
+                continue
+
+            points_a = lane_points(feature_a)
+            points_b = lane_points(feature_b)
+
+            if (
+                points_a is None or len(points_a) < 2
+                or points_b is None or len(points_b) < 2
+            ):
+                continue
+
+            index_a = -1 if endpoint_a == 1 else 0
+            index_b = -1 if endpoint_b == 1 else 0
+
+            snapped_point = midpoint(
+                points_a[index_a],
+                points_b[index_b]
+            )
+
+            points_a[index_a] = snapped_point
+            points_b[index_b] = snapped_point
+
+            feature_a.setGeometry(
+                QgsGeometry.fromPolylineXY(points_a)
+            )
+            feature_b.setGeometry(
+                QgsGeometry.fromPolylineXY(points_b)
+            )
+
+            snapped_count += 1
+
+    debug("Lane junctions snapped / Lane-junctions sømmet:", snapped_count)
+
+
+
+    return lane_features
+
+
+def commit_lane_features(provider, result, lane_features):
+
+    provider.addFeatures(lane_features)
+    result.updateExtents()
 
 
 def materialize_manual_routes(project_crs, routes, route_lines, lane_features, lane_feature_corridor_indices, canonical_corridor_by_index):
@@ -2455,26 +2605,12 @@ def materialize_manual_routes(project_crs, routes, route_lines, lane_features, l
             ] = physical_lane_id
             next_physical_lane_id += 1
 
-        physical_offset = (
-            lane_index
-            * MANUAL_TARGET_SCALE
-            * OUTPUT_LANE_SPACING_MM
-            / 1000.0
-        )
-
-        source_geometry = QgsGeometry(
+        # lane_feature's geometry is already the precomputed, junction-
+        # snapped physical offset curve built in write_corridors_and_lanes
+        # / snap_lane_junctions - no need to offset it again here.
+        lane_geometry = QgsGeometry(
             lane_feature.geometry()
         )
-
-        if abs(physical_offset) < 0.000001:
-            lane_geometry = source_geometry
-        else:
-            lane_geometry = source_geometry.offsetCurve(
-                physical_offset,
-                OFFSET_SEGMENTS,
-                Qgis.JoinStyle.Round,
-                OFFSET_MITER_LIMIT
-            )
 
         if (
             lane_geometry.isNull()
@@ -3302,83 +3438,22 @@ def materialize_manual_routes(project_crs, routes, route_lines, lane_features, l
 def apply_renderers(lane_features, manual_features, manual_result, result):
     # ==================================================
     # KARTOGRAFISK RENDERER
+    #
+    # lane_features har allerede deres endelige, sømmede offset-geometri
+    # (se write_corridors_and_lanes / snap_lane_junctions), så begge lag
+    # tegnes som en almindelig per-rute farvet linjesymbol - ingen
+    # geometry-generator/offset_curve() ved render-tid.
     # ==================================================
 
-    lane_expression = """offset_curve(
-        $geometry,
-        "lane_index" * @map_scale * {spacing}
-    )""".format(spacing=OUTPUT_LANE_SPACING_MM / 1000.0)
 
-
-    def build_geometry_generator_renderer(expression):
-
-        categories = []
-
-        route_numbers_in_result = sorted(
-            {
-                feature["route_no"]
-                for feature in lane_features
-            }
-        )
-
-        for route_no in route_numbers_in_result:
-
-            color = ROUTE_COLORS[
-                (route_no - 1) % len(ROUTE_COLORS)
-            ]
-
-            line_symbol = QgsLineSymbol.createSimple({})
-
-            geometry_generator = (
-                QgsGeometryGeneratorSymbolLayer.create(
-                    {
-                        "geometryModifier": expression,
-                        "SymbolType": "Line"
-                    }
-                )
-            )
-
-            sub_symbol = QgsLineSymbol.createSimple(
-                {
-                    "color": color,
-                    "width": str(LANE_WIDTH_MM),
-                    "width_unit": "MM",
-                    "capstyle": "round",
-                    "joinstyle": "round"
-                }
-            )
-
-            geometry_generator.setSubSymbol(
-                sub_symbol
-            )
-
-            line_symbol.deleteSymbolLayer(0)
-            line_symbol.appendSymbolLayer(
-                geometry_generator
-            )
-
-            categories.append(
-                QgsRendererCategory(
-                    route_no,
-                    line_symbol,
-                    "Rute {}".format(route_no)
-                )
-            )
-
-        return QgsCategorizedSymbolRenderer(
-            "route_no",
-            categories
-        )
-
-
-    def build_manual_renderer():
+    def build_route_colored_renderer(features):
 
         categories = []
 
         route_numbers_in_result = sorted(
             {
                 int(feature["route_no"])
-                for feature in manual_features
+                for feature in features
             }
         )
 
@@ -3413,13 +3488,11 @@ def apply_renderers(lane_features, manual_features, manual_result, result):
 
 
     result.setRenderer(
-        build_geometry_generator_renderer(
-            lane_expression
-        )
+        build_route_colored_renderer(lane_features)
     )
 
     manual_result.setRenderer(
-        build_manual_renderer()
+        build_route_colored_renderer(manual_features)
     )
 
 
@@ -3599,7 +3672,7 @@ def run_engine(parameters=None, route_layers=None, feedback=None):
         corridors = materialize_corridors(classified_lines)
         merged_corridors, joined_count = merge_corridors(corridors)
         canonical_corridor_by_index = resolve_corridor_equivalence(merged_corridors)
-        preferred_order_edges, preferred_order_reversed_count = resolve_preferred_order(
+        preferred_order_edges, preferred_order_reversed_count, corridor_reversed = resolve_preferred_order(
             merged_corridors
         )
         corridor_result, corridor_provider, result, provider = create_output_layers(
@@ -3612,6 +3685,13 @@ def run_engine(parameters=None, route_layers=None, feedback=None):
             result,
             provider,
         )
+        lane_features = snap_lane_junctions(
+            lane_features,
+            lane_feature_corridor_indices,
+            preferred_order_edges,
+            corridor_reversed,
+        )
+        commit_lane_features(provider, result, lane_features)
         manual_result, manual_features, effective_search_distance = materialize_manual_routes(
             project_crs,
             routes,
@@ -3891,9 +3971,6 @@ class CartographicRouteLayoutAlgorithm(QgsProcessingAlgorithm):
                 manual_result_name=defaults.io.manual_result_name,
             ),
             cartography=CartographyParameters(
-                diagnostic_lane_spacing_map_units=(
-                    defaults.cartography.diagnostic_lane_spacing_map_units
-                ),
                 output_lane_spacing_mm=get_double(
                     self.LANE_SPACING_MM,
                     defaults.cartography.output_lane_spacing_mm,
