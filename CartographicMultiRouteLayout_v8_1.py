@@ -11,7 +11,6 @@ from qgis.core import (
     QgsLineSymbol,
     QgsCategorizedSymbolRenderer,
     QgsRendererCategory,
-    Qgis,
     QgsProcessing,
     QgsProcessingAlgorithm,
     QgsProcessingException,
@@ -105,10 +104,6 @@ class CartographyParameters:
 
     # Produktionsskala for materialiseret manual-lag.
     manual_target_scale: float = 20000.0
-
-    # GEOS offsetCurve-parametre.
-    offset_segments: int = 8
-    offset_miter_limit: float = 2.0
 
 
 @dataclass(frozen=True)
@@ -225,12 +220,6 @@ class EngineParameters:
             if value <= 0:
                 errors.append("{} skal være > 0".format(name))
 
-        if self.cartography.offset_segments < 1:
-            errors.append("offset_segments skal være >= 1")
-
-        if self.cartography.offset_miter_limit <= 0:
-            errors.append("offset_miter_limit skal være > 0")
-
         if self.mapping.manual_continuity_weight < 0:
             errors.append("manual_continuity_weight skal være >= 0")
 
@@ -286,7 +275,7 @@ def _bind_engine_parameters(parameters):
 
     global GROUP_NAME, CORRIDOR_RESULT_NAME, RESULT_NAME, MANUAL_RESULT_NAME
     global OUTPUT_LANE_SPACING_MM
-    global LANE_WIDTH_MM, MANUAL_TARGET_SCALE, OFFSET_SEGMENTS, OFFSET_MITER_LIMIT
+    global LANE_WIDTH_MM, MANUAL_TARGET_SCALE
     global MANUAL_LANE_SEARCH_DISTANCE, MANUAL_CONTINUITY_WEIGHT
     global MANUAL_LANE_INERTIA_WEIGHT, MANUAL_TERMINAL_TRANSITION_DISTANCE
     global PREFERRED_ORDER_JUNCTION_DISTANCE, PREFERRED_ORDER_MIN_SHARED_ROUTES
@@ -305,8 +294,6 @@ def _bind_engine_parameters(parameters):
     OUTPUT_LANE_SPACING_MM = parameters.cartography.output_lane_spacing_mm
     LANE_WIDTH_MM = parameters.cartography.lane_width_mm
     MANUAL_TARGET_SCALE = parameters.cartography.manual_target_scale
-    OFFSET_SEGMENTS = parameters.cartography.offset_segments
-    OFFSET_MITER_LIMIT = parameters.cartography.offset_miter_limit
 
     MANUAL_LANE_SEARCH_DISTANCE = parameters.mapping.manual_lane_search_distance
     MANUAL_CONTINUITY_WEIGHT = parameters.mapping.manual_continuity_weight
@@ -706,6 +693,78 @@ def corridor_geometry(
         return QgsGeometry()
 
     return QgsGeometry.fromPolylineXY(points)
+
+
+def offset_polyline_points(points, offset_distance):
+    # ==================================================
+    # PER-VERTEX PERPENDICULAR OFFSET / PUNKTVIS VINKELRET OFFSET
+    #
+    # GEOS' offsetCurve() runs a full buffer operation and can fold into a
+    # self-intersecting loop wherever the offset distance exceeds the
+    # local turning radius - worst on the outer lanes with the largest
+    # offset, at exactly the sharp bends a route network naturally has.
+    # Lane position here is already fully determined by topology (which
+    # corridor, which lane_index) before this is ever called; the offset
+    # itself only needs to place each point sideways by a known distance,
+    # not resolve arbitrary self-intersections. A direct, predictable
+    # per-vertex offset - using the averaged normal of the two adjoining
+    # segments at each interior vertex, the single segment's normal at
+    # each end - can't produce that kind of loop. A genuinely sharp bend
+    # can still pinch the offset line close to itself, but that's a mild,
+    # local degradation instead of a spike.
+    # ==================================================
+
+    if abs(offset_distance) < 0.000001:
+        return list(points)
+
+    point_count = len(points)
+
+    if point_count < 2:
+        return list(points)
+
+    segment_normals = []
+
+    for index in range(point_count - 1):
+
+        dx = points[index + 1].x() - points[index].x()
+        dy = points[index + 1].y() - points[index].y()
+        length = math.hypot(dx, dy)
+
+        if length < 0.000001:
+            segment_normals.append((0.0, 0.0))
+        else:
+            segment_normals.append((-dy / length, dx / length))
+
+    offset_points = []
+
+    for index in range(point_count):
+
+        if index == 0:
+            nx, ny = segment_normals[0]
+        elif index == point_count - 1:
+            nx, ny = segment_normals[-1]
+        else:
+            n1x, n1y = segment_normals[index - 1]
+            n2x, n2y = segment_normals[index]
+            sx, sy = n1x + n2x, n1y + n2y
+            norm = math.hypot(sx, sy)
+
+            if norm < 0.000001:
+                # Near-180-degree reversal: an averaged miter normal would
+                # blow up. Fall back to the outgoing segment's own normal
+                # rather than extending a spike toward infinity.
+                nx, ny = n2x, n2y
+            else:
+                nx, ny = sx / norm, sy / norm
+
+        offset_points.append(
+            QgsPointXY(
+                points[index].x() + nx * offset_distance,
+                points[index].y() + ny * offset_distance
+            )
+        )
+
+    return offset_points
 
 
 
@@ -1998,14 +2057,18 @@ def write_corridors_and_lanes(merged_corridors, corridor_result, corridor_provid
     # ==================================================
     # SKRIV CORRIDORS + LANES
     #
-    # Hver lane får sin egen forudberegnede offset-geometri (samme
-    # offsetCurve-teknik som manual-lagets fysiske lane-referencer),
-    # fremfor at dele corridorens centerline og lade QGIS' renderer
-    # beregne en uafhængig offset_curve() pr. corridor ved hvert tegn.
-    # Uafhængigt beregnede offsets fra nabo-corridorer rammer generelt
-    # ikke samme koordinat i en junction, hvilket giver synlige knæk/
-    # krydsninger. snap_lane_junctions() retter det op bagefter ved at
-    # sømme delte ruters lane-endepunkter sammen på tværs af corridorer.
+    # Hver lane får sin egen forudberegnede offset-geometri via
+    # offset_polyline_points() - en simpel punktvis offset, ikke GEOS'
+    # buffer-baserede offsetCurve(), som kan folde ind i en selvskærende
+    # løkke ved et skarpt knæk. Fordi lane-positionen (hvilken corridor,
+    # hvilket lane_index) allerede er fastlagt af topologien før dette
+    # kaldes, skal offsettet kun placere hvert punkt sidelæns med en kendt
+    # afstand - ikke løse vilkårlige selvskæringer.
+    #
+    # Uafhængigt beregnede offsets fra nabo-corridorer rammer stadig
+    # generelt ikke samme koordinat i en junction. snap_lane_junctions()
+    # retter det op bagefter ved at sømme delte ruters lane-endepunkter
+    # sammen på tværs af corridorer.
     # ==================================================
 
     debug("")
@@ -2033,6 +2096,11 @@ def write_corridors_and_lanes(merged_corridors, corridor_result, corridor_provid
 
         geometry = corridor["geometry"]
         length_m = geometry.length()
+
+        centerline_parts = extract_lines(geometry)
+        centerline_points = (
+            centerline_parts[0] if centerline_parts else []
+        )
 
         corridor_feature = QgsFeature(
             corridor_result.fields()
@@ -2072,30 +2140,16 @@ def write_corridors_and_lanes(merged_corridors, corridor_result, corridor_provid
                 / 1000.0
             )
 
-            if abs(physical_offset) < 0.000001:
-                lane_geometry = geometry
-            else:
-                lane_geometry = geometry.offsetCurve(
-                    physical_offset,
-                    OFFSET_SEGMENTS,
-                    Qgis.JoinStyle.Round,
-                    OFFSET_MITER_LIMIT
-                )
-
-            if lane_geometry.isNull() or lane_geometry.isEmpty():
+            if len(centerline_points) < 2:
                 continue
 
-            lane_parts = extract_lines(lane_geometry)
-
-            if not lane_parts:
-                continue
-
-            # A self-intersecting offset (sharp bend) can split into
-            # several parts - keep the longest as the lane's geometry.
-            lane_points = max(
-                lane_parts,
-                key=lambda part: QgsGeometry.fromPolylineXY(part).length()
+            lane_points = offset_polyline_points(
+                centerline_points,
+                physical_offset
             )
+
+            if len(lane_points) < 2:
+                continue
 
             lane_feature = QgsFeature(
                 result.fields()
@@ -3945,8 +3999,6 @@ class CartographicRouteLayoutAlgorithm(QgsProcessingAlgorithm):
                     self.TARGET_SCALE,
                     defaults.cartography.manual_target_scale,
                 ),
-                offset_segments=defaults.cartography.offset_segments,
-                offset_miter_limit=defaults.cartography.offset_miter_limit,
             ),
             mapping=MappingParameters(
                 manual_lane_search_distance=get_double(
