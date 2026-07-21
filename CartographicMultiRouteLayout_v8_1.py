@@ -759,17 +759,6 @@ def setup_project(context=None):
     return project, root, group, project_crs
 
 
-    debug("")
-    debug("========================================")
-    debug("Cartographic Multi-Route Layout v8.2")
-    debug("VERSION", VERSION)
-    debug("========================================")
-
-
-
-    return project, root, group, project_crs
-
-
 def discover_routes(layers):
     # ==================================================
     # FIND RUTER
@@ -810,6 +799,33 @@ def discover_routes(layers):
 
     if not routes:
         raise Exception("No routes found / Ingen ruter fundet")
+
+    # route_no is used as the join key for corridors, lanes, and manual
+    # materialization throughout the engine. Two layers resolving to the
+    # same number would silently merge into one route downstream instead
+    # of raising an error, so duplicates must be rejected here.
+    numbers_seen = {}
+    duplicate_messages = []
+
+    for route in routes:
+        existing_layer_name = numbers_seen.get(route["number"])
+
+        if existing_layer_name is not None:
+            duplicate_messages.append(
+                "{} ({} / {})".format(
+                    route["number"],
+                    existing_layer_name,
+                    route["layer"].name()
+                )
+            )
+        else:
+            numbers_seen[route["number"]] = route["layer"].name()
+
+    if duplicate_messages:
+        raise Exception(
+            "Duplicate route numbers / Dobbelte rutenumre: "
+            + ", ".join(duplicate_messages)
+        )
 
 
     debug("")
@@ -2329,23 +2345,23 @@ def materialize_manual_routes(project_crs, routes, route_lines, lane_features, l
             reference["route_no"]
         )
 
-    for corridor_id, routes in corridor_routes_by_id.items():
+    for corridor_id, corridor_routes in corridor_routes_by_id.items():
         corridor_lane_by_route[corridor_id] = {
             reference["route_no"]: reference["lane_index"]
             for reference in lane_reference_records.values()
             if reference["corridor_id"] == corridor_id
         }
 
-    for corridor_id, routes in corridor_routes_by_id.items():
+    for corridor_id, corridor_routes in corridor_routes_by_id.items():
         debug(
             "Corridor membership / Korridor medlemskab:",
             corridor_id,
             "routes",
-            sorted(routes),
+            sorted(corridor_routes),
             "lane_indexes",
             {
                 route_no: corridor_lane_by_route[corridor_id].get(route_no)
-                for route_no in sorted(routes)
+                for route_no in sorted(corridor_routes)
             }
         )
 
@@ -2953,18 +2969,17 @@ def materialize_manual_routes(project_crs, routes, route_lines, lane_features, l
                     ) > 1.0
                 ):
                     debug(
-                        "Closed route assertion failed for route",
+                        "Closed route repair failed for route",
                         route_no,
                         "distance:",
                         point_distance(
                             first_point,
                             last_point
-                        )
+                        ),
+                        "- emitting route with the residual gap instead of "
+                        "aborting the whole run."
                     )
-                    for transition in route_transition_history_by_route.get(
-                        route_no,
-                        []
-                    ):
+                    for transition in route_transition_history:
                         debug(
                             "--- corridor transition ---"
                         )
@@ -3006,11 +3021,10 @@ def materialize_manual_routes(project_crs, routes, route_lines, lane_features, l
                             transition["curr_physical_lane"],
                             ")"
                         )
-                    assert False, (
-                    "Closed route {} materialization broke closure".format(
-                        route_no
-                    )
-                )
+                    # Non-fatal: one route with a stubborn gap must not discard
+                    # the manual layer for every other route in the run. / En
+                    # enkelt rute med et vedvarende gap må ikke kassere
+                    # manual-laget for alle andre ruter i kørslen.
 
         route_transition_history_by_route[route_no] = route_transition_history
 
@@ -3453,84 +3467,6 @@ def run_engine(parameters=None, route_layers=None, feedback=None):
         )
     finally:
         ENGINE_FEEDBACK = previous_feedback
-
-    engine_context.project_crs = project_crs
-    engine_context.group = group
-
-    routes = discover_routes(route_layers or [])
-    route_lines = load_routes(routes, project_crs, project)
-    segment_records, fid_to_segment_id, segment_spatial_index = build_segment_index(
-        route_lines, project_crs
-    )
-    classified_lines, raw_change_count, stable_change_count, stability_repair_count = classify_route_sets(
-        route_lines,
-        segment_records,
-        fid_to_segment_id,
-        segment_spatial_index,
-    )
-    corridors = materialize_corridors(classified_lines)
-    merged_corridors, joined_count = merge_corridors(corridors)
-    canonical_corridor_by_index = resolve_corridor_equivalence(merged_corridors)
-    preferred_order_edges, preferred_order_reversed_count = resolve_preferred_order(
-        merged_corridors
-    )
-    corridor_result, corridor_provider, result, provider = create_output_layers(
-        project, project_crs
-    )
-    lane_features, lane_feature_corridor_indices = write_corridors_and_lanes(
-        merged_corridors,
-        corridor_result,
-        corridor_provider,
-        result,
-        provider,
-    )
-    manual_result, manual_features, effective_search_distance = materialize_manual_routes(
-        project_crs,
-        routes,
-        route_lines,
-        lane_features,
-        lane_feature_corridor_indices,
-        canonical_corridor_by_index,
-    )
-    apply_renderers(lane_features, manual_features, manual_result, result)
-    add_layers_to_project(
-        project,
-        root,
-        group,
-        corridor_result,
-        result,
-        manual_result,
-    )
-    report_results(
-        effective_search_distance,
-        corridor_result,
-        corridors,
-        joined_count,
-        manual_result,
-        preferred_order_edges,
-        preferred_order_reversed_count,
-        raw_change_count,
-        result,
-        route_lines,
-        stability_repair_count,
-        stable_change_count,
-    )
-
-    return EngineRunResult(
-        parameters=parameters,
-        corridor_layer=corridor_result,
-        automatic_lane_layer=result,
-        manual_lane_layer=manual_result,
-        route_count=len(route_lines),
-        raw_route_set_changes=raw_change_count,
-        stable_route_set_changes=stable_change_count,
-        stability_repairs=stability_repair_count,
-        raw_corridor_count=len(corridors),
-        joined_corridor_count=joined_count,
-        preferred_order_junction_count=len(preferred_order_edges),
-        preferred_order_reversed_corridor_count=preferred_order_reversed_count,
-        effective_manual_lane_search_distance=effective_search_distance,
-    )
 
 
 def main():
