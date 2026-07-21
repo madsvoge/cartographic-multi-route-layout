@@ -1089,11 +1089,9 @@ def build_segment_index(route_lines, project_crs):
     segment_index_layer.updateFields()
     segment_records = {}
     segment_features = []
-    route_segment_ids = {}
     next_segment_id = 0
     for route_line in route_lines:
         points = route_line["points"]
-        route_segment_ids[route_line["route_no"]] = []
         for segment_index in range(len(points) - 1):
             point1 = points[segment_index]
             point2 = points[segment_index + 1]
@@ -1103,7 +1101,6 @@ def build_segment_index(route_lines, project_crs):
                 "geometry": geometry,
                 "angle": segment_angle(point1, point2),
             }
-            route_segment_ids[route_line["route_no"]].append(next_segment_id)
             feature = QgsFeature(segment_index_layer.fields())
             feature["segment_id"] = next_segment_id
             feature.setGeometry(geometry)
@@ -1115,136 +1112,97 @@ def build_segment_index(route_lines, project_crs):
     debug("Index segments / Indekssegmenter:", len(segment_records))
 
 
-    return segment_records, fid_to_segment_id, segment_spatial_index, route_segment_ids
+    return segment_records, fid_to_segment_id, segment_spatial_index
 
 
-def cluster_segments_by_proximity(segment_records, fid_to_segment_id, segment_spatial_index):
+def classify_route_sets(route_lines, segment_records, fid_to_segment_id, segment_spatial_index):
     # ==================================================
-    # SYMMETRISK SEGMENT-KLYNGE / SYMMETRIC SEGMENT CLUSTERING
+    # KLASSIFICER ROUTE-SET - GROV KANDIDAT-OPDAGELSE
     #
-    # Two routes travelling the same physical stretch can never be
-    # allowed to disagree about it - but letting each route's own local
-    # search independently decide "which other routes do I see near my
-    # segment" is exactly what allows that: different sampling
-    # boundaries and independent per-route stabilization mean route A
-    # can detect route B as a neighbour while route B's own scan of the
-    # same physical spot fails to detect A back. That asymmetry used to
-    # be silently absorbed by the old per-point nearest-lane search this
-    # rewrite retired - which is exactly the noisy, patch-like behaviour
-    # this rewrite was meant to remove, not reintroduce.
-    #
-    # Clustering directly on segments removes the asymmetry by
-    # construction: any two segments found within tolerance are unioned
-    # into the same cluster, and every route's route-set at that
-    # location is read back from the cluster it belongs to - not
-    # decided independently per route. Two routes in the same cluster
-    # get the identical route-set; there is no per-route decision left
-    # to disagree.
-    # ==================================================
-
-    parent = list(range(len(segment_records)))
-
-    def find(index):
-        while parent[index] != index:
-            parent[index] = parent[parent[index]]
-            index = parent[index]
-        return index
-
-    def union(index1, index2):
-        root1 = find(index1)
-        root2 = find(index2)
-        if root1 == root2:
-            return
-        if root1 < root2:
-            parent[root2] = root1
-        else:
-            parent[root1] = root2
-
-    for segment_id, segment in segment_records.items():
-
-        search_rectangle = segment["geometry"].boundingBox()
-        search_rectangle.grow(INDEX_SEARCH_MARGIN)
-        candidate_fids = segment_spatial_index.intersects(search_rectangle)
-
-        for candidate_fid in candidate_fids:
-
-            candidate_segment_id = fid_to_segment_id.get(candidate_fid)
-
-            # Each pair only needs handling once - and skips comparing a
-            # segment against itself.
-            if (
-                candidate_segment_id is None
-                or candidate_segment_id <= segment_id
-            ):
-                continue
-
-            candidate = segment_records[candidate_segment_id]
-
-            if candidate["route_no"] == segment["route_no"]:
-                continue
-
-            distance = segment["geometry"].distance(candidate["geometry"])
-
-            if distance > MATCH_DISTANCE:
-                continue
-
-            difference = angle_difference(segment["angle"], candidate["angle"])
-
-            if difference > ANGLE_TOLERANCE:
-                continue
-
-            union(segment_id, candidate_segment_id)
-
-    cluster_routes = {}
-
-    for segment_id, segment in segment_records.items():
-        cluster_routes.setdefault(find(segment_id), set()).add(segment["route_no"])
-
-    segment_route_set = {
-        segment_id: route_set_key(cluster_routes[find(segment_id)])
-        for segment_id in segment_records
-    }
-
-    return segment_route_set
-
-
-def classify_route_sets(route_lines, segment_records, fid_to_segment_id, segment_spatial_index, route_segment_ids):
-    # ==================================================
-    # KLASSIFICER ROUTE-SET - SYMMETRISK SEGMENT-KLYNGE
+    # This only has to find WHERE a route is plausibly travelling
+    # alongside others, not get the exact membership right - two routes
+    # sharing a real stretch can each independently detect a different
+    # (possibly incomplete) subset of who else is there, and that is no
+    # longer a correctness problem. materialize_corridors() below still
+    # only builds one corridor candidate per detected run, from whichever
+    # route happens to be its lowest-numbered member; when the same
+    # physical stretch produces more than one such candidate (because two
+    # routes disagreed about who else was on it), resolve_corridor_
+    # equivalence() is what reconciles that - by geometry, at the
+    # corridor level, taking the union of every equivalent candidate's
+    # routes as the single corrected source of truth. That is a much
+    # safer place to reconcile than here: a corridor is already a long,
+    # continuous, stable run, so merging by whole-corridor coverage can't
+    # bridge two routes that only ever pass near a shared third route at
+    # different, unrelated physical locations - which per-segment
+    # reconciliation (tried and reverted) could and did.
     # ==================================================
     debug("")
     debug("CLASSIFYING CORRIDORS / KLASSIFICERER KORRIDORER")
     debug("----------------------------------------")
 
-    segment_route_set = cluster_segments_by_proximity(
-        segment_records,
-        fid_to_segment_id,
-        segment_spatial_index
-    )
-
     classified_lines = []
     raw_change_count = 0
     stable_change_count = 0
     stability_repair_count = 0
+
     for line_counter, route_line in enumerate(route_lines, start=1):
+
         points = route_line["points"]
-        segment_ids = route_segment_ids[route_line["route_no"]]
         segment_lengths = []
         raw_route_sets = []
+
         for segment_index in range(len(points) - 1):
+
             point1 = points[segment_index]
             point2 = points[segment_index + 1]
-            segment_length = point_distance(point1, point2)
-            segment_lengths.append(segment_length)
-            segment_id = segment_ids[segment_index]
-            raw_route_sets.append(segment_route_set[segment_id])
+            segment_lengths.append(point_distance(point1, point2))
+
+            segment_geometry = QgsGeometry.fromPolylineXY([point1, point2])
+            angle = segment_angle(point1, point2)
+            search_rectangle = segment_geometry.boundingBox()
+            search_rectangle.grow(INDEX_SEARCH_MARGIN)
+            candidate_fids = segment_spatial_index.intersects(search_rectangle)
+
+            matched_routes = {route_line["route_no"]}
+
+            for candidate_fid in candidate_fids:
+
+                candidate_segment_id = fid_to_segment_id.get(candidate_fid)
+
+                if candidate_segment_id is None:
+                    continue
+
+                candidate = segment_records.get(candidate_segment_id)
+
+                if candidate is None or candidate["route_no"] == route_line["route_no"]:
+                    continue
+
+                if segment_geometry.distance(candidate["geometry"]) > MATCH_DISTANCE:
+                    continue
+
+                if angle_difference(angle, candidate["angle"]) > ANGLE_TOLERANCE:
+                    continue
+
+                matched_routes.add(candidate["route_no"])
+
+            raw_route_sets.append(route_set_key(matched_routes))
+
         raw_runs = build_runs(raw_route_sets)
         raw_change_count += max(0, len(raw_runs) - 1)
+
         stable_route_sets, repairs = stabilize_route_sets(raw_route_sets, segment_lengths)
         stability_repair_count += repairs
+
         stable_runs = build_runs(stable_route_sets)
         stable_change_count += max(0, len(stable_runs) - 1)
-        classified_lines.append({"line": route_line, "segment_lengths": segment_lengths, "route_sets": stable_route_sets, "runs": stable_runs})
+
+        classified_lines.append({
+            "line": route_line,
+            "segment_lengths": segment_lengths,
+            "route_sets": stable_route_sets,
+            "runs": stable_runs
+        })
 
         debug(
             "Route-set / Rute-sæt:",
@@ -1601,14 +1559,38 @@ def merge_corridors(corridors):
 
 def resolve_corridor_equivalence(merged_corridors):
     # ==================================================
-    # V7.4.1 KORRIDOR-EQUIVALENS
+    # KORRIDOR-EQUIVALENS - TOPOLOGY FIRST
     #
-    # Samme route-set er ikke i sig selv nok: det samme sæt ruter
-    # kan mødes flere steder på kortet. Derfor kræves også høj lokal
-    # geometrisk overlap-coverage.
+    # This is the single source of truth for "which routes actually
+    # share this physical stretch" - not classify_route_sets(). Two
+    # routes' own independent proximity search can each detect a
+    # different (possibly incomplete) subset of who else is on a shared
+    # stretch, since each is only guessing from noisy GPS traces; that
+    # disagreement showed up as materialize_corridors() emitting more
+    # than one corridor candidate for what is really the same physical
+    # road, one per route whose own detection made it the run's owner.
     #
-    # Resultatet bruges KUN ved fysisk lane-reference/materialisering.
-    # De diagnostiske corridor- og lane-lag bevarer alle korridorer.
+    # Equivalence is judged on geometry alone here - NOT on whether the
+    # two candidates' route-sets already agree, which would beg the
+    # question. Two whole corridor candidates are the same physical
+    # stretch if they run close together for (almost) their entire
+    # length; when they are, the union of every equivalent candidate's
+    # routes becomes the corrected, single route-set for that stretch -
+    # every route that actually travels it, regardless of which of them
+    # individually detected which others.
+    #
+    # Judging equivalence on whole, already-continuous corridor
+    # candidates (not on individual raw segments) is what keeps this
+    # safe from over-merging: a candidate only merges with another if it
+    # tracks it closely along (nearly) its whole length, so a route that
+    # only brushes past a shared corridor briefly near a junction, then
+    # diverges, cannot drag unrelated routes on the other side of that
+    # junction into the same group the way segment-level reconciliation
+    # (tried and reverted) could.
+    #
+    # The result is used ONLY for physical lane reference/materialization.
+    # The diagnostic corridor/lane layers keep every raw candidate as
+    # detected, unmodified.
     # ==================================================
 
     debug("")
@@ -1713,12 +1695,15 @@ def resolve_corridor_equivalence(merged_corridors):
 
             corridor2 = merged_corridors[index2]
 
-            if corridor1["routes"] != corridor2["routes"]:
-                continue
-
             distance = corridor1["geometry"].distance(
                 corridor2["geometry"]
             )
+
+            # Cheap rejection first, before the more expensive coverage
+            # sampling - and before logging, so the debug log only shows
+            # pairs that were genuine candidates.
+            if distance > CORRIDOR_EQUIVALENCE_DISTANCE:
+                continue
 
             coverage = corridor_overlap_coverage(
                 corridor1["geometry"],
@@ -1729,13 +1714,11 @@ def resolve_corridor_equivalence(merged_corridors):
                 "Corridor overlap / Korridor overlap:",
                 index1,
                 index2,
-                "routes", corridor1["routes"],
+                "routes1", corridor1["routes"],
+                "routes2", corridor2["routes"],
                 "distance", round(distance, 3),
                 "coverage", round(coverage, 3)
             )
-
-            if distance > CORRIDOR_EQUIVALENCE_DISTANCE:
-                continue
 
             if (
                 coverage
@@ -1770,6 +1753,7 @@ def resolve_corridor_equivalence(merged_corridors):
 
 
     canonical_corridor_by_index = {}
+    corridor_routes_by_canonical_index = {}
 
     for group_indices in equivalence_groups.values():
 
@@ -1788,6 +1772,23 @@ def resolve_corridor_equivalence(merged_corridors):
             canonical_corridor_by_index[
                 corridor_index
             ] = canonical_index
+
+        # The corrected route-set for this physical stretch: every route
+        # that any equivalent candidate detected, not just whichever
+        # candidate happened to become canonical - this is what actually
+        # fixes routes disagreeing about who else shares a stretch,
+        # rather than just picking one route's (possibly incomplete)
+        # side of the disagreement.
+        unioned_routes = set()
+
+        for corridor_index in group_indices:
+            unioned_routes.update(
+                merged_corridors[corridor_index]["routes"]
+            )
+
+        corridor_routes_by_canonical_index[canonical_index] = route_set_key(
+            unioned_routes
+        )
 
 
     equivalent_groups = [
@@ -1815,12 +1816,12 @@ def resolve_corridor_equivalence(merged_corridors):
         )
 
         debug(
-            "routes",
+            "corrected routes",
             ",".join(
                 str(route_no)
-                for route_no in merged_corridors[
+                for route_no in corridor_routes_by_canonical_index[
                     canonical_index
-                ]["routes"]
+                ]
             ),
             "→ corridors",
             ",".join(
@@ -1833,7 +1834,7 @@ def resolve_corridor_equivalence(merged_corridors):
 
 
 
-    return canonical_corridor_by_index
+    return canonical_corridor_by_index, corridor_routes_by_canonical_index
 
 
 def smooth_corridor_centerlines(merged_corridors):
@@ -1955,22 +1956,25 @@ def extract_polyline_subrange(points, distances, position_a, position_b):
     return deduplicated
 
 
-def build_corridor_route_index(merged_corridors, canonical_corridor_by_index):
+def build_corridor_route_index(merged_corridors, canonical_corridor_by_index, corridor_routes_by_canonical_index):
     # ==================================================
     # CORRIDOR-OPSLAG / CORRIDOR LOOKUP
     #
     # Precomputes, once, what match_run_to_corridor() needs to look
-    # candidates up cheaply per route run: corridors grouped by their
-    # exact route-set (a run can only match a corridor with the identical
-    # set of routes), and each corridor's own points/arc-length distances
-    # computed once rather than on every query. Only canonical corridors
-    # (per resolve_corridor_equivalence) are indexed, so every route
-    # sharing a corridor is matched to the same single geometry even if
-    # that physical stretch was independently detected more than once.
+    # candidates up cheaply per route: which canonical corridors this
+    # specific route is a member of, per the CORRECTED route-set from
+    # resolve_corridor_equivalence() - not the possibly-incomplete set
+    # this route's own classify_route_sets() run happened to detect - and
+    # each corridor's own points/arc-length distances computed once
+    # rather than on every query. Only canonical corridors are indexed,
+    # so every route sharing a corridor is matched to the same single
+    # geometry even if that physical stretch was independently detected
+    # more than once.
     # ==================================================
 
-    corridors_by_routes = {}
+    corridors_by_route_no = {}
     corridor_cache = {}
+    corridor_routes = {}
 
     for corridor_index, corridor in enumerate(merged_corridors):
 
@@ -1995,34 +1999,42 @@ def build_corridor_route_index(merged_corridors, canonical_corridor_by_index):
             "distances": distances,
         }
 
-        corridors_by_routes.setdefault(
-            corridor["routes"],
-            []
-        ).append(corridor_index)
+        routes = corridor_routes_by_canonical_index.get(
+            canonical_index,
+            corridor["routes"]
+        )
+
+        corridor_routes[corridor_index] = routes
+
+        for route_no in routes:
+            corridors_by_route_no.setdefault(route_no, []).append(corridor_index)
 
     return {
-        "merged_corridors": merged_corridors,
-        "corridors_by_routes": corridors_by_routes,
+        "corridors_by_route_no": corridors_by_route_no,
         "corridor_cache": corridor_cache,
+        "corridor_routes": corridor_routes,
     }
 
 
-def match_run_to_corridor(corridor_index_data, routes_key, run_start, run_end):
+def match_run_to_corridor(corridor_index_data, route_no, run_start, run_end):
     # ==================================================
     # MATCH RUTE-RUN TIL CORRIDOR / MATCH ROUTE RUN TO CORRIDOR
     #
-    # Given a route's own run (its start/end points, and the route-set it
-    # was classified as belonging to), finds the single canonical
-    # corridor representing that route-set at this physical location -
-    # disambiguating between multiple corridors that happen to share the
-    # exact same route-set elsewhere in the network by picking whichever
-    # is spatially closest to this run - and returns just the sub-range
-    # of that corridor's geometry this run actually covers, oriented to
-    # match this run's own travel direction.
+    # Given a route's own run (its start/end points) and the route's own
+    # number, finds the single canonical corridor this route belongs to
+    # at this physical location - per the corrected topology, not this
+    # route's own local guess about who else is on it. Candidates are
+    # every canonical corridor this route is a member of anywhere in the
+    # network; disambiguating between more than one (the same route can
+    # of course share different corridors at different points along its
+    # length) is by picking whichever is spatially closest to this run -
+    # and the result is just the sub-range of that corridor's geometry
+    # this run actually covers, oriented to match this run's own travel
+    # direction.
     # ==================================================
 
-    candidates = corridor_index_data["corridors_by_routes"].get(
-        routes_key,
+    candidates = corridor_index_data["corridors_by_route_no"].get(
+        route_no,
         []
     )
 
@@ -2061,13 +2073,13 @@ def match_run_to_corridor(corridor_index_data, routes_key, run_start, run_end):
         if start_position is None or end_position is None:
             continue
 
-        # A route-set with no genuinely corresponding corridor nearby
-        # (e.g. one filtered out earlier for being too short) must not
-        # get matched to whatever same-route-set corridor happens to be
-        # nearest, however far away - that would silently offset this
-        # run from an unrelated physical location. MATCH_DISTANCE is
-        # already the established "is this really the same feature"
-        # bound used for cross-route matching in classify_route_sets.
+        # A corridor this route is nowhere near must not get matched
+        # just because the route is nominally listed as one of its
+        # members somewhere else in the network - that would silently
+        # offset this run from an unrelated physical location. MATCH_
+        # DISTANCE is already the established "is this really the same
+        # feature" bound used for cross-route matching in classify_
+        # route_sets.
         if start_distance > MATCH_DISTANCE or end_distance > MATCH_DISTANCE:
             continue
 
@@ -2095,7 +2107,7 @@ def match_run_to_corridor(corridor_index_data, routes_key, run_start, run_end):
         return None
 
     route_numbers = sorted(
-        corridor_index_data["merged_corridors"][best_corridor_index]["routes"]
+        corridor_index_data["corridor_routes"][best_corridor_index]
     )
 
     return {
@@ -2110,16 +2122,22 @@ def assemble_route_path(classified_line, corridor_index_data):
     # SAMMENSÆT RUTE-STRÆKNING FRA TOPOLOGI / ASSEMBLE ROUTE PATH FROM TOPOLOGY
     #
     # classify_route_sets() already walks this route's own points in
-    # travel order and splits them into stable runs, each with a known
-    # route-set - exactly the "which part of the topology is this route
-    # present on" mapping. This walks that same run sequence once, in
-    # order, and for each run either takes the route's own points
-    # (unshared stretches - lane_index 0, nothing to offset from) or the
-    # matching corridor's own (smoothed, canonical) sub-range plus this
-    # route's lane_index within it (shared stretches). The result is one
-    # continuous point sequence with a parallel per-point target offset
-    # distance - built once, directly from the topology, never searched
-    # for point-by-point afterwards.
+    # travel order and splits them into stable runs, each with a
+    # locally-guessed route-set - only used here as a coarse "is this
+    # stretch plausibly shared with anyone" gate (len(routes_key) >= 2),
+    # not trusted for who exactly. match_run_to_corridor() below looks
+    # the corridor up by this route's own number against the corrected
+    # topology from resolve_corridor_equivalence() instead, so the
+    # correct, complete set of routes at each corridor is used - not
+    # whatever this route's own noisy local detection happened to see.
+    # For each run, this either takes the route's own points (unshared
+    # stretches, or a shared guess with no real corridor match -
+    # lane_index 0, nothing to offset from) or the matching corridor's
+    # own (smoothed, canonical) sub-range plus this route's lane_index
+    # within it (shared stretches). The result is one continuous point
+    # sequence with a parallel per-point target offset distance - built
+    # once, directly from the topology, never searched for point-by-
+    # point afterwards.
     #
     # lane_index is used as-is regardless of whether this run travels the
     # same or the opposite direction along a shared corridor as another
@@ -2159,7 +2177,7 @@ def assemble_route_path(classified_line, corridor_index_data):
 
             match = match_run_to_corridor(
                 corridor_index_data,
-                routes_key,
+                route_no,
                 run_points[0],
                 run_points[-1]
             )
@@ -2242,7 +2260,9 @@ def create_output_layers(project, project_crs):
             QgsField("routes", QVariant.String),
             QgsField("route_count", QVariant.Int),
             QgsField("source_route", QVariant.Int),
-            QgsField("length_m", QVariant.Double)
+            QgsField("length_m", QVariant.Double),
+            QgsField("corrected_routes", QVariant.String),
+            QgsField("canonical_id", QVariant.Int),
         ]
     )
 
@@ -2294,7 +2314,13 @@ def create_output_layers(project, project_crs):
     )
 
 
-def write_corridor_diagnostics(merged_corridors, corridor_result, corridor_provider):
+def write_corridor_diagnostics(
+    merged_corridors,
+    corridor_result,
+    corridor_provider,
+    canonical_corridor_by_index,
+    corridor_routes_by_canonical_index
+):
     # ==================================================
     # SKRIV CORRIDOR-DIAGNOSTIK / WRITE CORRIDOR DIAGNOSTICS
     #
@@ -2302,6 +2328,15 @@ def write_corridor_diagnostics(merged_corridors, corridor_result, corridor_provi
     # itself (smoothed centerlines, route membership) - no lane offsets
     # are computed here, since lanes are now built once per route
     # directly from this same topology (materialize_route_layers()).
+    #
+    # "routes" is this specific candidate's own, possibly-incomplete raw
+    # detection (unchanged, so the raw signal stays inspectable);
+    # "corrected_routes" is what actually gets used for matching and lane
+    # fan-out - the union from resolve_corridor_equivalence() across
+    # every candidate judged to be the same physical stretch. The two
+    # can legitimately differ; that gap is exactly the bug this rewrite
+    # fixed, so surfacing it directly here avoids re-deriving it by hand
+    # from the debug log next time.
     # ==================================================
 
     debug("")
@@ -2317,6 +2352,15 @@ def write_corridor_diagnostics(merged_corridors, corridor_result, corridor_provi
         routes_text = ",".join(str(route_no) for route_no in route_numbers)
         geometry = corridor["geometry"]
 
+        canonical_index = canonical_corridor_by_index.get(corridor_index, corridor_index)
+        corrected_route_numbers = corridor_routes_by_canonical_index.get(
+            canonical_index,
+            corridor["routes"]
+        )
+        corrected_routes_text = ",".join(
+            str(route_no) for route_no in sorted(corrected_route_numbers)
+        )
+
         corridor_feature = QgsFeature(corridor_result.fields())
 
         corridor_feature["corridor_id"] = corridor_id
@@ -2324,6 +2368,8 @@ def write_corridor_diagnostics(merged_corridors, corridor_result, corridor_provi
         corridor_feature["route_count"] = len(route_numbers)
         corridor_feature["source_route"] = corridor["source_route"]
         corridor_feature["length_m"] = geometry.length()
+        corridor_feature["corrected_routes"] = corrected_routes_text
+        corridor_feature["canonical_id"] = canonical_index + 1
         corridor_feature.setGeometry(geometry)
 
         corridor_features.append(corridor_feature)
@@ -2717,7 +2763,7 @@ def run_engine(parameters=None, route_layers=None, feedback=None):
 
         routes = discover_routes(route_layers or [])
         route_lines = load_routes(routes, project_crs, project)
-        segment_records, fid_to_segment_id, segment_spatial_index, route_segment_ids = build_segment_index(
+        segment_records, fid_to_segment_id, segment_spatial_index = build_segment_index(
             route_lines, project_crs
         )
         classified_lines, raw_change_count, stable_change_count, stability_repair_count = classify_route_sets(
@@ -2725,16 +2771,18 @@ def run_engine(parameters=None, route_layers=None, feedback=None):
             segment_records,
             fid_to_segment_id,
             segment_spatial_index,
-            route_segment_ids,
         )
         corridors = materialize_corridors(classified_lines)
         merged_corridors, joined_count = merge_corridors(corridors)
-        canonical_corridor_by_index = resolve_corridor_equivalence(merged_corridors)
+        canonical_corridor_by_index, corridor_routes_by_canonical_index = resolve_corridor_equivalence(
+            merged_corridors
+        )
         smooth_corridor_centerlines(merged_corridors)
 
         corridor_index_data = build_corridor_route_index(
             merged_corridors,
-            canonical_corridor_by_index
+            canonical_corridor_by_index,
+            corridor_routes_by_canonical_index
         )
 
         corridor_result, corridor_provider, result, provider, manual_result, manual_provider = create_output_layers(
@@ -2744,6 +2792,8 @@ def run_engine(parameters=None, route_layers=None, feedback=None):
             merged_corridors,
             corridor_result,
             corridor_provider,
+            canonical_corridor_by_index,
+            corridor_routes_by_canonical_index,
         )
         lane_features, manual_features = materialize_route_layers(
             classified_lines,
