@@ -6,7 +6,6 @@ from qgis.core import (
     QgsGeometry,
     QgsCoordinateTransform,
     QgsPointXY,
-    QgsLayerTreeLayer,
     QgsSpatialIndex,
     QgsRectangle,
     QgsLineSymbol,
@@ -161,6 +160,28 @@ class CorridorParameters:
     # Mindste outputcorridor.
     min_corridor_length: float = 10.0
 
+    # Maksimal reel afstand mellem en rutes optagne start- og slutpunkt,
+    # der stadig behandles som én sammenhængende lukning. Bruges både til
+    # at samle en løkkes corridor-buer på tværs af start/slut-sømmen og
+    # til at afgøre om ruten selv skal lukkes i manual-materialiseringen.
+    # Samme tolerance begge steder undgår at de to trin er uenige om
+    # hvorvidt en rute er lukket. / Maximum real-world gap between a
+    # route's recorded start and end point that is still treated as one
+    # continuous closure. Used both to merge a loop's corridor arcs across
+    # its start/end seam and to decide whether the route itself should be
+    # closed during manual materialization, so the two steps can't disagree
+    # about whether a route is closed.
+    loop_closure_tolerance: float = 5.0
+
+    # Minimum sammenhængende længde et match mellem to af rutens egne
+    # segmenter skal opretholdes over, før det behandles som en reel
+    # selv-overlap/retur-arm frem for en almindelig kurve eller en kort
+    # tilfældig krydsning. / Minimum sustained length a match between two
+    # of a route's own segments must hold up over before it is treated as
+    # a genuine self-overlap (out-and-back retrace) rather than an
+    # ordinary bend or a brief incidental crossing.
+    self_overlap_min_separation: float = 150.0
+
     @property
     def angle_tolerance_radians(self):
         return math.radians(self.angle_tolerance_degrees)
@@ -211,6 +232,8 @@ class EngineParameters:
             ("match_distance", self.corridor.match_distance),
             ("min_stable_length", self.corridor.min_stable_length),
             ("min_corridor_length", self.corridor.min_corridor_length),
+            ("loop_closure_tolerance", self.corridor.loop_closure_tolerance),
+            ("self_overlap_min_separation", self.corridor.self_overlap_min_separation),
         )
 
         for name, value in positive_values:
@@ -255,23 +278,6 @@ class EngineParameters:
         return self
 
 
-@dataclass
-class EngineContext:
-    parameters: EngineParameters
-    project: QgsProject = None
-    project_crs: object = None
-    root: object = None
-    group: object = None
-
-    @property
-    def index_search_margin(self):
-        return self.parameters.corridor.index_search_margin
-
-    @property
-    def angle_tolerance(self):
-        return self.parameters.corridor.angle_tolerance_radians
-
-
 # ==================================================
 # STANDARDPARAMETRE
 # ==================================================
@@ -304,6 +310,7 @@ def _bind_engine_parameters(parameters):
     global SAMPLE_DISTANCE, MATCH_DISTANCE, ANGLE_TOLERANCE
     global MIN_STABLE_LENGTH, STABILITY_PASSES, MIN_CORRIDOR_LENGTH
     global INDEX_SEARCH_MARGIN
+    global LOOP_CLOSURE_TOLERANCE, SELF_OVERLAP_MIN_SEPARATION
 
     GROUP_NAME = parameters.io.output_group_name
     CORRIDOR_RESULT_NAME = parameters.io.corridor_result_name
@@ -338,8 +345,10 @@ def _bind_engine_parameters(parameters):
     STABILITY_PASSES = parameters.corridor.stability_passes
     MIN_CORRIDOR_LENGTH = parameters.corridor.min_corridor_length
     INDEX_SEARCH_MARGIN = parameters.corridor.index_search_margin
+    LOOP_CLOSURE_TOLERANCE = parameters.corridor.loop_closure_tolerance
+    SELF_OVERLAP_MIN_SEPARATION = parameters.corridor.self_overlap_min_separation
 
-    return EngineContext(parameters=parameters)
+    return parameters
 
 
 _bind_engine_parameters(DEFAULT_PARAMETERS)
@@ -718,18 +727,13 @@ def corridor_geometry(
 
 
 
-def setup_project(context=None):
+def setup_project():
     # ==================================================
     # PROJEKT
     # ==================================================
-    # Transformering læser den aktive QGIS-kontekst fra argumenterne.
 
     project = QgsProject.instance()
     root = project.layerTreeRoot()
-
-    if context is not None:
-        context.project = project
-        context.root = root
 
     group = (
         root.findGroup(GROUP_NAME)
@@ -745,10 +749,6 @@ def setup_project(context=None):
         raise Exception(
             "Project CRS must be meter-based / Projektets CRS skal være meterbaseret"
         )
-
-    if context is not None:
-        context.project_crs = project_crs
-        context.group = group
 
     debug("")
     debug("========================================")
@@ -853,7 +853,6 @@ def load_routes(routes, project_crs, project):
     debug("----------------------------------------")
 
     route_lines = []
-    next_line_id = 0
 
     for route in routes:
 
@@ -881,21 +880,13 @@ def load_routes(routes, project_crs, project):
                 if len(sampled) < 2:
                     continue
 
-                geometry = QgsGeometry.fromPolylineXY(
-                    sampled
-                )
-
                 route_lines.append(
                     {
-                        "line_id": next_line_id,
                         "route_no": route["number"],
                         "route_name": route["name"],
                         "points": sampled,
-                        "geometry": geometry
                     }
                 )
-
-                next_line_id += 1
 
         debug(
             "Route", route["number"], "loaded / Rute", route["number"], "indlæst"
@@ -903,6 +894,218 @@ def load_routes(routes, project_crs, project):
 
     debug("")
     debug("Route lines / Rutelinjer:", len(route_lines))
+
+
+
+    return route_lines
+
+
+def detect_self_overlaps(route_lines, project_crs):
+    # ==================================================
+    # SELF-OVERLAP SNAPPING / SELV-OVERLAP SNAPPING
+    #
+    # A route that retraces its own path (an out-and-back spur, or a loop
+    # that returns along the same road) is never matched against itself in
+    # classify_route_sets - only different route numbers are compared there.
+    # Left alone, the outbound and return arms are two independently
+    # recorded/sampled polylines that are only approximately coincident
+    # (GPS noise, and resampling continues by arc-length through the
+    # turnaround rather than restarting per arm), so they end up as two
+    # close but visibly distinct lines instead of one.
+    #
+    # This pass finds, for each route, stretches where it runs back over
+    # itself using the same distance/angle matching as cross-route
+    # classification, then snaps the later (return) stretch onto the
+    # earlier (outbound) stretch's own points, so both are materialized
+    # from the same geometry and render as a single overlapping line.
+    #
+    # The tricky part is telling a genuine retrace apart from an ordinary
+    # bend or a straight stretch: on a straight (or gently curved) line,
+    # nearby segments are always "parallel and close" to each other by
+    # construction, which would make cross-route-style distance/angle
+    # matching alone fire on nearly every segment. What actually
+    # distinguishes a real retrace is that travelling along the route from
+    # the earlier segment to the later one requires a substantial detour
+    # (out to a turnaround and back) compared to the direct distance
+    # between them - for an ordinary continuing stretch, walking along the
+    # route *is* essentially the direct path. SELF_OVERLAP_MIN_SEPARATION
+    # is the minimum size of that detour.
+    # ==================================================
+
+    debug("")
+    debug("DETECTING SELF-OVERLAPS / DETEKTERER SELV-OVERLAP")
+    debug("----------------------------------------")
+
+    snapped_point_count = 0
+    affected_route_count = 0
+
+    for route_line in route_lines:
+        points = route_line["points"]
+        segment_count = len(points) - 1
+
+        if segment_count < 2:
+            continue
+
+        along_route = cumulative_distances(points)
+
+        local_layer = QgsVectorLayer(
+            "LineString?crs=" + project_crs.authid(),
+            "_temporary_self_overlap_index",
+            "memory"
+        )
+        local_provider = local_layer.dataProvider()
+        local_provider.addAttributes([QgsField("segment_index", QVariant.Int)])
+        local_layer.updateFields()
+
+        local_features = []
+        local_angles = []
+
+        for segment_index in range(segment_count):
+            point1 = points[segment_index]
+            point2 = points[segment_index + 1]
+            local_angles.append(segment_angle(point1, point2))
+            feature = QgsFeature(local_layer.fields())
+            feature["segment_index"] = segment_index
+            feature.setGeometry(QgsGeometry.fromPolylineXY([point1, point2]))
+            local_features.append(feature)
+
+        local_provider.addFeatures(local_features)
+        fid_to_index = {
+            feature.id(): int(feature["segment_index"])
+            for feature in local_layer.getFeatures()
+        }
+        local_index = QgsSpatialIndex(local_layer.getFeatures())
+
+        # For every segment, find the best-matching EARLIER segment of the
+        # same route, using the same distance/angle rules as cross-route
+        # matching. Only later->earlier links are kept, so the first
+        # occurrence of a retraced stretch stays the untouched anchor and
+        # only the repeat gets pulled onto it.
+        match_target = [None] * segment_count
+
+        for segment_index in range(segment_count):
+            point1 = points[segment_index]
+            point2 = points[segment_index + 1]
+            segment_geometry = QgsGeometry.fromPolylineXY([point1, point2])
+            angle = local_angles[segment_index]
+
+            search_rectangle = segment_geometry.boundingBox()
+            search_rectangle.grow(MATCH_DISTANCE)
+
+            best_index = None
+            best_distance = None
+
+            for candidate_fid in local_index.intersects(search_rectangle):
+                candidate_index = fid_to_index.get(candidate_fid)
+
+                if candidate_index is None or candidate_index >= segment_index:
+                    continue
+
+                # Require a genuine detour: travelling along the route from
+                # the candidate segment to this one must be substantially
+                # longer than the direct distance between them, otherwise
+                # this is just the next bit of the same continuing stretch.
+                along_route_gap = (
+                    along_route[segment_index] - along_route[candidate_index]
+                )
+                straight_gap = point_distance(
+                    points[candidate_index],
+                    points[segment_index]
+                )
+
+                if (
+                    along_route_gap - straight_gap
+                    < SELF_OVERLAP_MIN_SEPARATION
+                ):
+                    continue
+
+                candidate_point1 = points[candidate_index]
+                candidate_point2 = points[candidate_index + 1]
+                candidate_geometry = QgsGeometry.fromPolylineXY(
+                    [candidate_point1, candidate_point2]
+                )
+
+                distance = segment_geometry.distance(candidate_geometry)
+
+                if distance > MATCH_DISTANCE:
+                    continue
+
+                difference = angle_difference(angle, local_angles[candidate_index])
+
+                if difference > ANGLE_TOLERANCE:
+                    continue
+
+                if best_distance is None or distance < best_distance:
+                    best_distance = distance
+                    best_index = candidate_index
+
+            match_target[segment_index] = best_index
+
+        has_match = [target is not None for target in match_target]
+        runs = build_runs(has_match)
+        segment_lengths = [
+            point_distance(points[index], points[index + 1])
+            for index in range(segment_count)
+        ]
+
+        route_snapped = False
+
+        for run in runs:
+
+            if not run["value"]:
+                continue
+
+            # The detour check above already does the real "is this a
+            # genuine retrace" test; this is just a noise floor against a
+            # single isolated segment matching by fluke.
+            if run_length(run, segment_lengths) < MIN_CORRIDOR_LENGTH:
+                continue
+
+            targets_in_run = [
+                match_target[index]
+                for index in range(run["start"], run["end"] + 1)
+                if match_target[index] is not None
+            ]
+
+            if not targets_in_run:
+                continue
+
+            anchor_start = min(targets_in_run)
+            anchor_end = max(targets_in_run) + 1
+
+            anchor_geometry = QgsGeometry.fromPolylineXY(
+                points[anchor_start:anchor_end + 1]
+            )
+
+            for point_index in range(run["start"], run["end"] + 2):
+                point_geometry = QgsGeometry.fromPointXY(points[point_index])
+                nearest = anchor_geometry.nearestPoint(point_geometry)
+
+                if nearest.isNull() or nearest.isEmpty():
+                    continue
+
+                points[point_index] = QgsPointXY(nearest.asPoint())
+                snapped_point_count += 1
+                route_snapped = True
+
+        if route_snapped:
+            affected_route_count += 1
+
+        debug(
+            "Self-overlap / Selv-overlap:",
+            route_line["route_no"],
+            "snapped" if route_snapped else "none"
+        )
+
+    debug("")
+    debug(
+        "Self-overlap snapped points / Selv-overlap snappede punkter:",
+        snapped_point_count
+    )
+    debug(
+        "Routes with self-overlap / Ruter med selv-overlap:",
+        affected_route_count
+    )
 
 
 
@@ -930,9 +1133,9 @@ def build_segment_index(route_lines, project_crs):
             point2 = points[segment_index + 1]
             geometry = QgsGeometry.fromPolylineXY([point1, point2])
             segment_records[next_segment_id] = {
-                "segment_id": next_segment_id, "line_id": route_line["line_id"],
-                "route_no": route_line["route_no"], "segment_index": segment_index,
-                "geometry": geometry, "angle": segment_angle(point1, point2)
+                "route_no": route_line["route_no"],
+                "geometry": geometry,
+                "angle": segment_angle(point1, point2),
             }
             feature = QgsFeature(segment_index_layer.fields())
             feature["segment_id"] = next_segment_id
@@ -1145,9 +1348,14 @@ def merge_corridors(corridors):
     # SAMMENKÆD DIREKTE NABO-RUNS
     #
     # Kun inden for samme source route og samme route-set.
-    # Ingen afstandssøgning. Ingen nabo-gæt.
-    # De skal dele præcis endepunkt i den oprindelige
-    # samplede routesekvens.
+    # Kandidatsøgningen er stadig begrænset til den gruppe -
+    # aldrig et generelt nærmeste-nabo-gæt på tværs af corridors.
+    # Men to runs af samme route+route-set må gerne have et reelt,
+    # begrænset endepunktsgab mellem sig (typisk GPS-/digitaliserings-
+    # støj ved en løkkes start/slut-søm), ikke kun floating point-støj.
+    # LOOP_CLOSURE_TOLERANCE styrer hvor stort det gab må være, og er
+    # den samme tolerance som afgør om en rute regnes som lukket i
+    # materialize_manual_routes, så de to trin ikke er uenige.
     # ==================================================
 
     debug("")
@@ -1166,18 +1374,6 @@ def merge_corridors(corridors):
             item["geometry"].boundingBox().yMinimum()
         )
     )
-
-    # Geometrisk endpoint-baseret lookup. Tolerancen er kun
-    # til floating point-identitet, ikke topologisk snapping.
-    ENDPOINT_EPSILON = 0.001
-
-
-    def endpoint_key(point):
-
-        return (
-            int(round(point.x() / ENDPOINT_EPSILON)),
-            int(round(point.y() / ENDPOINT_EPSILON))
-        )
 
 
     def geometry_points(geometry):
@@ -1203,39 +1399,71 @@ def merge_corridors(corridors):
 
     unused = set(range(len(corridors_sorted)))
 
-    endpoint_lookup = {}
+    # Kandidater grupperes kun efter (source_route, routes_key). Selve
+    # matchet afgøres af en reel afstandssammenligning inden for gruppen,
+    # ikke af et hash-baseret koordinatgitter.
+    corridor_points = {}
+    candidates_by_group = {}
 
-    for corridor_id, corridor in enumerate(
-        corridors_sorted
-    ):
+    for corridor_id, corridor in enumerate(corridors_sorted):
 
-        points = geometry_points(
-            corridor["geometry"]
-        )
+        points = geometry_points(corridor["geometry"])
+        corridor_points[corridor_id] = points
 
         if len(points) < 2:
             continue
 
-        for endpoint_index, point in (
-            (0, points[0]),
-            (1, points[-1])
-        ):
+        group_key = (corridor["source_route"], corridor["routes"])
+        candidates_by_group.setdefault(group_key, []).append(corridor_id)
 
-            key = (
-                corridor["source_route"],
-                corridor["routes"],
-                endpoint_key(point)
-            )
 
-            endpoint_lookup.setdefault(
-                key,
-                []
-            ).append(
-                (
-                    corridor_id,
-                    endpoint_index
-                )
-            )
+    def find_join_candidate(group_key, point):
+
+        best_id = None
+        best_endpoint_index = None
+        best_distance = None
+
+        for candidate_id in candidates_by_group.get(group_key, []):
+
+            if candidate_id not in unused:
+                continue
+
+            candidate_points = corridor_points[candidate_id]
+
+            if len(candidate_points) < 2:
+                continue
+
+            for endpoint_index, candidate_point in (
+                (0, candidate_points[0]),
+                (1, candidate_points[-1])
+            ):
+
+                distance = point_distance(point, candidate_point)
+
+                if distance > LOOP_CLOSURE_TOLERANCE:
+                    continue
+
+                if (
+                    best_distance is None
+                    or distance < best_distance
+                    or (
+                        distance == best_distance
+                        and candidate_id < best_id
+                    )
+                ):
+                    best_distance = distance
+                    best_id = candidate_id
+                    best_endpoint_index = endpoint_index
+
+        return best_id, best_endpoint_index
+
+
+    def midpoint(point1, point2):
+
+        return QgsPointXY(
+            (point1.x() + point2.x()) / 2.0,
+            (point1.y() + point2.y()) / 2.0
+        )
 
 
     while unused:
@@ -1245,12 +1473,11 @@ def merge_corridors(corridors):
 
         current = corridors_sorted[current_id]
 
-        chain_points = geometry_points(
-            current["geometry"]
-        )
+        chain_points = list(corridor_points[current_id])
 
         source_route = current["source_route"]
         routes_key = current["routes"]
+        group_key = (source_route, routes_key)
 
         extended = True
 
@@ -1259,72 +1486,49 @@ def merge_corridors(corridors):
             extended = False
 
             # Forsøg først ved slutningen.
-            end_key = (
-                source_route,
-                routes_key,
-                endpoint_key(chain_points[-1])
+            candidate_id, endpoint_index = find_join_candidate(
+                group_key,
+                chain_points[-1]
             )
 
-            for candidate_id, endpoint_index in (
-                endpoint_lookup.get(end_key, [])
-            ):
+            if candidate_id is not None:
 
-                if candidate_id not in unused:
-                    continue
-
-                candidate = corridors_sorted[
-                    candidate_id
-                ]
-
-                candidate_points = geometry_points(
-                    candidate["geometry"]
-                )
-
-                if len(candidate_points) < 2:
-                    continue
+                candidate_points = list(corridor_points[candidate_id])
 
                 if endpoint_index == 1:
                     candidate_points.reverse()
 
-                chain_points.extend(
-                    candidate_points[1:]
+                # Luk et eventuelt reelt gab i sømmen med ét fælles punkt
+                # i stedet for at lade et lille knæk stå.
+                chain_points[-1] = midpoint(
+                    chain_points[-1],
+                    candidate_points[0]
                 )
+
+                chain_points.extend(candidate_points[1:])
 
                 unused.remove(candidate_id)
                 joined_count += 1
                 extended = True
-                break
-
-            if extended:
                 continue
 
             # Forsøg derefter ved starten.
-            start_key = (
-                source_route,
-                routes_key,
-                endpoint_key(chain_points[0])
+            candidate_id, endpoint_index = find_join_candidate(
+                group_key,
+                chain_points[0]
             )
 
-            for candidate_id, endpoint_index in (
-                endpoint_lookup.get(start_key, [])
-            ):
+            if candidate_id is not None:
 
-                if candidate_id not in unused:
-                    continue
-
-                candidate = corridors_sorted[
-                    candidate_id
-                ]
-
-                candidate_points = geometry_points(
-                    candidate["geometry"]
-                )
-
-                if len(candidate_points) < 2:
-                    continue
+                candidate_points = list(corridor_points[candidate_id])
 
                 if endpoint_index == 0:
                     candidate_points.reverse()
+
+                chain_points[0] = midpoint(
+                    candidate_points[-1],
+                    chain_points[0]
+                )
 
                 chain_points = (
                     candidate_points[:-1]
@@ -1334,7 +1538,6 @@ def merge_corridors(corridors):
                 unused.remove(candidate_id)
                 joined_count += 1
                 extended = True
-                break
 
         merged_geometry = QgsGeometry.fromPolylineXY(
             chain_points
@@ -2442,17 +2645,13 @@ def materialize_manual_routes(project_crs, routes, route_lines, lane_features, l
 
         route_no = route_line["route_no"]
         original_points = route_line["points"]
-        route_closed_threshold = max(
-            1.0,
-            SAMPLE_DISTANCE * 0.25
-        )
         route_closed = (
             len(original_points) >= 2
             and point_distance(
                 original_points[0],
                 original_points[-1]
             )
-            < route_closed_threshold
+            < LOOP_CLOSURE_TOLERANCE
         )
 
         route_closed_by_route[route_no] = route_closed
@@ -3379,20 +3578,15 @@ def run_engine(parameters=None, route_layers=None, feedback=None):
     previous_feedback = ENGINE_FEEDBACK
     ENGINE_FEEDBACK = feedback
     try:
-        engine_context = _bind_engine_parameters(
+        parameters = _bind_engine_parameters(
             DEFAULT_PARAMETERS if parameters is None else parameters
         )
-        parameters = engine_context.parameters
 
-        # QGIS-kontekst publiceres kun som intern kompatibilitet for den nuværende
-        # geometrikerne. Kaldere skal ikke sætte disse kontekstvariabler.
-        project, root, group, project_crs = setup_project(engine_context)
-
-        engine_context.project_crs = project_crs
-        engine_context.group = group
+        project, root, group, project_crs = setup_project()
 
         routes = discover_routes(route_layers or [])
         route_lines = load_routes(routes, project_crs, project)
+        route_lines = detect_self_overlaps(route_lines, project_crs)
         segment_records, fid_to_segment_id, segment_spatial_index = build_segment_index(
             route_lines, project_crs
         )
