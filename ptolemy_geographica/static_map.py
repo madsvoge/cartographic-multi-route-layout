@@ -51,6 +51,7 @@ def _in_bbox(lon: float, lat: float, bbox: tuple[float, float, float, float]) ->
 def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False) -> int:
     import geopandas
     import matplotlib.pyplot as plt
+    from matplotlib.patches import Circle
 
     lon_min, lat_min, lon_max, lat_max = bbox
     in_view = [r for r in refs if r.is_plausible() and _in_bbox(r.lon_modern, r.lat_modern, bbox)]
@@ -100,7 +101,9 @@ def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False)
 
     island_lines = get_island_lines(refs)
     island_lines_drawn = 0
+    island_line_ref_ids: set[str] = set()
     for line in island_lines:
+        island_line_ref_ids.update(r.ref_id for r in line)
         line_in_view = [r for r in line if _in_bbox(r.lon_modern, r.lat_modern, bbox)]
         if len(line_in_view) < 2:
             continue
@@ -108,6 +111,26 @@ def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False)
         xs, ys = zip(*coords)
         ax.plot(xs, ys, color=CATEGORIES["island"]["color"], linewidth=1.8, alpha=0.9, zorder=4)
         island_lines_drawn += 1
+
+    # No known coastal walk for these - a single citation, or one entry in
+    # a list of several different islands (see _ISLAND_LINE_GROUPS). A real
+    # cartographer working from just one reported position wouldn't have
+    # left a bare point either - they'd still sketch a small schematic
+    # island there. This circle is exactly that: a stylistic placeholder,
+    # not a real coastline (its size carries no geographic meaning).
+    for r in in_view:
+        if r.category == "island" and r.ref_id not in island_line_ref_ids:
+            ax.add_patch(
+                Circle(
+                    (r.lon_modern, r.lat_modern),
+                    radius=0.09,
+                    facecolor=CATEGORIES["island"]["color"],
+                    edgecolor=CATEGORIES["island"]["color"],
+                    alpha=0.3,
+                    linewidth=1.0,
+                    zorder=4,
+                )
+            )
 
     present_categories = [cat for cat in CATEGORIES if any(r.category == cat for r in in_view)]
     for cat in present_categories:

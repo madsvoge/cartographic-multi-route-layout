@@ -289,6 +289,16 @@ a section is actually one island's own coastal walk, tell me its
 `(book.map, section)` and which island, and I'll add it to
 `_ISLAND_LINE_GROUPS`.
 
+Those remaining unconnected `island` points still get a small pink
+schematic circle drawn around them (`folium.Circle` in `ptolemy_map.py`,
+a `matplotlib.patches.Circle` in `static_map.py`), rather than sitting as
+a bare dot - the way a cartographer working from just one reported
+position for an island would still have sketched a small round island
+there, not left it off the map. The circle's size carries no geographic
+meaning (all of them are drawn the same size) - it's a stylistic
+placeholder for "this is an island we don't have a shape for," not a
+claim about the island's real extent.
+
 ## Compiling the catalogue to data: `annotate_dataset.py`
 
 Everything described above - classification, graph reconstruction, distance

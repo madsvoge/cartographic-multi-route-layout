@@ -1383,6 +1383,23 @@ def build_map(
                     )
                 ),
             ).add_to(clusters[ref.category])
+        if ref.category == "island" and ref.ref_id not in island_position:
+            # No known coastal walk for this island - a single citation, or
+            # one entry in a list of several different islands (see
+            # _ISLAND_LINE_GROUPS). A real cartographer working from just
+            # one reported position wouldn't have left a bare point either -
+            # they'd still sketch a small schematic island there. This
+            # circle is exactly that: a stylistic placeholder, not a real
+            # coastline (its size carries no geographic meaning).
+            folium.Circle(
+                location=[ref.lat_modern, ref.lon_modern],
+                radius=7000,
+                color=CATEGORIES["island"]["color"],
+                weight=1.5,
+                fill=True,
+                fill_color=CATEGORIES["island"]["color"],
+                fill_opacity=0.25,
+            ).add_to(clusters[ref.category])
 
     _add_legend(fmap, plausible)
     folium.LayerControl(collapsed=False).add_to(fmap)
