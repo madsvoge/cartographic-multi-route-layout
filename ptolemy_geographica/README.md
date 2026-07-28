@@ -12,9 +12,12 @@ python3 ptolemy_map.py --open
 ```
 
 This reads the full catalogue and writes `ptolemy_map.html`, an interactive
-Leaflet/OpenStreetMap page with a marker (and popup: name, modern
-identification, book/tabula, ancient and modernized coordinates) for each of
-the ~6,400 plottable references — clustered so the browser stays responsive.
+Leaflet/OpenStreetMap page with a marker for each of the ~6,400 plottable
+references, clustered so the browser stays responsive. Coastal points are
+drawn larger than other categories; click one for its name, category, map
+ID, its position within its reconstructed coastline (segment #, position
+#), and both its ancient and modernized coordinates - useful for auditing
+why two particular points ended up connected.
 
 ## Point classification & coastlines
 
@@ -29,9 +32,9 @@ this structure well enough to classify every plotted point into one of:
 |---|---|---|
 | Coastal point | blue | the point's catalogue section is headed by a sea/ocean/gulf name, or its own name matches a cape/river-mouth/harbor/estuary pattern |
 | City / inland settlement | orange | default, for points not in a coastal section and not matching another pattern |
-| River source / confluence | teal | name matches "Quelle" (source), "Einmündung" (confluence), etc. |
+| River source / confluence | teal | name matches "Quelle" (source), "Einmündung" (confluence), "Zusammenfluss" (two rivers joining), etc. - checked *before* the coastal mouth pattern, since "Einmündung" contains the substring "mündung" and would otherwise be misread as a coastal river mouth |
 | Mountain | amber | name matches "Gebirge" (mountain range) |
-| Island | pink | name matches "Insel" (island) |
+| Island | pink | name matches "Insel" (island), or the name ends in "(N)" - e.g. "Kassiteriden (10)" - the catalogue's convention for a scattered island group given as one count-labelled entry |
 | Lake / inland water | green | name matches "See" (lake) or "Palus" (marsh/lake) |
 
 Harbors ("Hafen"/"Portus") and estuaries ("Ästuar") are always coastal

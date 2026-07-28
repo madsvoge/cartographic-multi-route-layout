@@ -110,27 +110,39 @@ _COASTAL_HDR_RE = re.compile(r"ozean|meer(?!wärts)|golf|meerbusen|kanal|bucht",
 # of what their catalogue section happens to be headed by (sections are
 # often headed by the local tribe's name even for points right on the
 # shore).
+# Note: matched *before* _MOUTH_RE below - "Einmündung" (a tributary joining
+# another river inland) contains the substring "mündung" and would
+# otherwise be caught by the coastal mouth pattern first.
+_RIVERFEAT_RE = re.compile(r"quelle|einmündung|ursprung|zusammenfluss", re.IGNORECASE)
 _MOUTH_RE = re.compile(r"mündung", re.IGNORECASE)
 _CAPE_RE = re.compile(r"^kap\b|spitze|vorgebirge|promont", re.IGNORECASE)
 _HARBOR_RE = re.compile(r"\bhafen\b|portus", re.IGNORECASE)
 _ESTUARY_RE = re.compile(r"ästuar", re.IGNORECASE)
 _MOUNTAIN_RE = re.compile(r"gebirge|-berg\b|^berg\b", re.IGNORECASE)
 _ISLAND_RE = re.compile(r"\binsel\b|inseln", re.IGNORECASE)
+# A name ending in "(N)" - "Kassiteriden (10)", "Pityussae (2)" - denotes an
+# island group given as a single count-labelled entry, a standard
+# cataloguing convention for scattered islands sharing one name. These
+# often sit in a section headed by a sea name (so section_is_coastal would
+# otherwise call them "coast"), but they're not steps along a coastal
+# walk - two island groups in the same sea can be catalogued back to back
+# while sitting on opposite sides of it, and connecting them as if adjacent
+# drew a line straight across open water between unrelated islands.
+_ISLAND_GROUP_RE = re.compile(r"\(\d+\)\s*$")
 _LAKE_RE = re.compile(r"\bsee\b|\bpalus\b", re.IGNORECASE)
-_RIVERFEAT_RE = re.compile(r"quelle|einmündung|ursprung|zusammenfluss", re.IGNORECASE)
 
 
 def _classify_locality(name: str, section_is_coastal: bool) -> str:
+    if _RIVERFEAT_RE.search(name):
+        return "river"
     if _MOUTH_RE.search(name) or _CAPE_RE.search(name) or _HARBOR_RE.search(name) or _ESTUARY_RE.search(name):
         return "coast"
     if _MOUNTAIN_RE.search(name):
         return "mountain"
-    if _ISLAND_RE.search(name):
+    if _ISLAND_RE.search(name) or _ISLAND_GROUP_RE.search(name):
         return "island"
     if _LAKE_RE.search(name):
         return "lake"
-    if _RIVERFEAT_RE.search(name):
-        return "river"
     if section_is_coastal:
         return "coast"
     return "city"
@@ -314,7 +326,11 @@ def _dist(a: tuple[float, float], b: tuple[float, float]) -> float:
     return ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2) ** 0.5
 
 
-def _stitch_trails(trails: list[list[tuple[float, float]]]) -> list[list[tuple[float, float]]]:
+def _ref_dist(a: "Reference", b: "Reference") -> float:
+    return _dist((a.lat_modern, a.lon_modern), (b.lat_modern, b.lon_modern))
+
+
+def _stitch_trails(trails: list[list["Reference"]]) -> list[list["Reference"]]:
     """Greedily join trails whose nearest endpoints are within range."""
     trails = [list(t) for t in trails]
     merged = True
@@ -330,7 +346,7 @@ def _stitch_trails(trails: list[list[tuple[float, float]]]) -> list[list[tuple[f
                     "start-start": (a[0], b[0]),
                     "start-end": (a[0], b[-1]),
                 }.items():
-                    d = _dist(pa, pb)
+                    d = _ref_dist(pa, pb)
                     if d <= _STITCH_MAX_GAP_DEG and (best is None or d < best[0]):
                         best = (d, i, j, orientation)
         if best is not None:
@@ -351,8 +367,13 @@ def _stitch_trails(trails: list[list[tuple[float, float]]]) -> list[list[tuple[f
     return trails
 
 
-def build_coastlines(refs: list[Reference]) -> list[list[tuple[float, float]]]:
+def build_coastlines(refs: list[Reference]) -> list[list[Reference]]:
     """Reconstruct coastlines from category="coast" points.
+
+    Returns a list of trails, each an ordered list of the Reference points
+    along it (so callers can label points with their name/category/tabula
+    and their sequence position within the trail, not just bare
+    coordinates).
 
     Ptolemy lists coastal points as a running sequence along the shore, so
     consecutive "coast"-classified points *in catalogue order* are real
@@ -397,7 +418,7 @@ def build_coastlines(refs: list[Reference]) -> list[list[tuple[float, float]]]:
             continue
         groups.setdefault((ref.source, book_map(ref)), []).append(ref)
 
-    polylines: list[list[tuple[float, float]]] = []
+    polylines: list[list[Reference]] = []
     for items in groups.values():
         items.sort(key=sort_key)
 
@@ -410,30 +431,29 @@ def build_coastlines(refs: list[Reference]) -> list[list[tuple[float, float]]]:
         # entry does, and requiring strict adjacency dropped those capes
         # entirely. The distance cap below is what still guards against
         # bridging two genuinely unrelated stretches.
-        edges: list[tuple[tuple[float, float], tuple[float, float]]] = []
-        prev: tuple[float, float] | None = None
+        edges: list[tuple[Reference, Reference]] = []
+        prev: Reference | None = None
         for ref in items:
-            point = (ref.lat_modern, ref.lon_modern)
             if ref.category != "coast":
                 continue
-            if prev is not None and _dist(prev, point) <= _MAX_COASTAL_GAP_DEG:
-                edges.append((prev, point))
-            prev = point
+            if prev is not None and _dist((prev.lat_modern, prev.lon_modern), (ref.lat_modern, ref.lon_modern)) <= _MAX_COASTAL_GAP_DEG:
+                edges.append((prev, ref))
+            prev = ref
 
         if not edges:
             continue
 
         # Collapse near-identical points (shared corners) into one node,
         # keyed by rounded coordinates.
-        def node_key(p: tuple[float, float]) -> tuple[float, float]:
-            return (round(p[0] / _SAME_POINT_TOL_DEG), round(p[1] / _SAME_POINT_TOL_DEG))
+        def node_key(ref: Reference) -> tuple[float, float]:
+            return (round(ref.lat_modern / _SAME_POINT_TOL_DEG), round(ref.lon_modern / _SAME_POINT_TOL_DEG))
 
-        node_coords: dict[tuple[float, float], tuple[float, float]] = {}
+        node_ref: dict[tuple[float, float], Reference] = {}
         adjacency: dict[tuple[float, float], list[tuple[float, float]]] = {}
         for a, b in edges:
             ka, kb = node_key(a), node_key(b)
-            node_coords.setdefault(ka, a)
-            node_coords.setdefault(kb, b)
+            node_ref.setdefault(ka, a)
+            node_ref.setdefault(kb, b)
             if ka == kb:
                 continue
             adjacency.setdefault(ka, []).append(kb)
@@ -456,7 +476,7 @@ def build_coastlines(refs: list[Reference]) -> list[list[tuple[float, float]]]:
             remaining[u].remove(v)
             remaining[v].remove(u)
 
-        trails: list[list[tuple[float, float]]] = []
+        trails: list[list[Reference]] = []
         while any(remaining.values()):
             # Prefer starting a trail at an odd-degree node (a natural
             # trail endpoint); otherwise any node with unused edges works
@@ -473,18 +493,23 @@ def build_coastlines(refs: list[Reference]) -> list[list[tuple[float, float]]]:
                 path.append(nxt)
                 current = nxt
 
-            points = [node_coords[n] for n in path]
-            if len(points) >= 2:
-                trails.append(points)
+            trail_refs = [node_ref[n] for n in path]
+            if len(trail_refs) >= 2:
+                trails.append(trail_refs)
 
         # Trails broken apart by an interrupting non-coastal point (rather
         # than a genuine gap in the graph) are rejoined if their loose ends
         # land close together, then closed into a loop if the final trail
         # returns near its own start.
-        for points in _stitch_trails(trails):
-            if len(points) >= 4 and points[0] != points[-1] and _dist(points[0], points[-1]) <= _CLOSE_LOOP_MAX_GAP_DEG:
-                points = points + [points[0]]
-            polylines.append(points)
+        for trail_refs in _stitch_trails(trails):
+            first, last = trail_refs[0], trail_refs[-1]
+            if (
+                len(trail_refs) >= 4
+                and first is not last
+                and _dist((first.lat_modern, first.lon_modern), (last.lat_modern, last.lon_modern)) <= _CLOSE_LOOP_MAX_GAP_DEG
+            ):
+                trail_refs = trail_refs + [first]
+            polylines.append(trail_refs)
 
     return polylines
 
@@ -590,10 +615,19 @@ def build_map(
     fmap = folium.Map(location=[center_lat, center_lon], zoom_start=zoom_start, tiles="OpenStreetMap")
 
     coastlines = build_coastlines(plausible)
+    # Position of each coastal point within its trail, so it can be labelled
+    # "#N in coastline segment #M" - both in the map (see below) and for
+    # anyone re-deriving the trails to audit a specific segment.
+    trail_position: dict[str, tuple[int, int]] = {}
+    for trail_idx, trail in enumerate(coastlines):
+        for i, ref in enumerate(trail):
+            trail_position.setdefault(ref.ref_id, (trail_idx, i))
+
     if coastlines:
         coast_layer = folium.FeatureGroup(name=f"Coastlines ({len(coastlines)} segments)").add_to(fmap)
         for line in coastlines:
-            folium.PolyLine(line, color=CATEGORIES["coast"]["color"], weight=2, opacity=0.75).add_to(coast_layer)
+            coords = [(r.lat_modern, r.lon_modern) for r in line]
+            folium.PolyLine(coords, color=CATEGORIES["coast"]["color"], weight=2, opacity=0.75).add_to(coast_layer)
 
     clusters = {
         cat: MarkerCluster(name=f"{info['label']} ({sum(1 for r in plausible if r.category == cat)})").add_to(fmap)
@@ -605,27 +639,48 @@ def build_map(
         modern_line = f"Identified with: {html.escape(ref.modern_location)}<br>" if ref.modern_location else ""
         recension_line = f" ({html.escape(ref.recension)} recension)" if ref.recension else ""
         category_line = f"Category: {html.escape(CATEGORIES[ref.category]['label'])}<br>" if ref.category else ""
+        seq_line = ""
+        seq_label = ""
+        if ref.ref_id in trail_position:
+            trail_idx, pos = trail_position[ref.ref_id]
+            seq_line = f"Coastline segment #{trail_idx}, position #{pos}<br>"
+            seq_label = str(pos)
         popup_html = (
             f"<b>{html.escape(ref.name)}</b><br>"
             f"{modern_line}"
             f"{category_line}"
-            f"Book {html.escape(ref.book) or '?'} "
-            f"&mdash; {html.escape(ref.tabula) or 'unlabelled table'}<br>"
+            f"{seq_line}"
+            f"Map ID: {html.escape(ref.ref_id) or '?'} "
+            f"&mdash; Book {html.escape(ref.book) or '?'}, {html.escape(ref.tabula) or 'unlabelled table'}<br>"
             f"Ptolemy coords: {ref.lon_ptolemy:.2f}° (Ferro), {ref.lat_ptolemy:.2f}°{recension_line}<br>"
             f"Modern approx.: {ref.lat_modern:.3f}, {ref.lon_modern:.3f}<br>"
             f"<i>source: {html.escape(ref.source)}</i>"
         )
         color = CATEGORIES[ref.category]["color"]
-        folium.CircleMarker(
+        is_coast = ref.category == "coast"
+        marker = folium.CircleMarker(
             location=[ref.lat_modern, ref.lon_modern],
-            radius=4 if ref.category == "coast" else 5,
+            radius=8 if is_coast else 5,
             color=color,
+            weight=2,
             fill=True,
             fill_color=color,
             fill_opacity=0.85,
-            popup=folium.Popup(popup_html, max_width=300),
-            tooltip=ref.name,
-        ).add_to(clusters[ref.category])
+            popup=folium.Popup(popup_html, max_width=320),
+            tooltip=f"#{seq_label} {ref.name} ({ref.ref_id})" if is_coast else f"{ref.name} ({ref.ref_id})",
+        )
+        marker.add_to(clusters[ref.category])
+        if is_coast and seq_label:
+            folium.Marker(
+                location=[ref.lat_modern, ref.lon_modern],
+                icon=folium.DivIcon(
+                    html=(
+                        f'<div style="font-size:10px;font-weight:bold;color:#0b0b0b;'
+                        f'text-shadow:0 0 2px #fff,0 0 2px #fff,0 0 2px #fff,0 0 2px #fff;'
+                        f'transform:translate(8px,-8px);white-space:nowrap;">{seq_label}</div>'
+                    )
+                ),
+            ).add_to(clusters["coast"])
 
     _add_legend(fmap, plausible)
     folium.LayerControl(collapsed=False).add_to(fmap)

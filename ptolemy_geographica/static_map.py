@@ -48,7 +48,7 @@ def _in_bbox(lon: float, lat: float, bbox: tuple[float, float, float, float]) ->
     return lon_min <= lon <= lon_max and lat_min <= lat <= lat_max
 
 
-def render(refs, bbox, output: Path, title: str) -> int:
+def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False) -> int:
     import geopandas
     import matplotlib.pyplot as plt
 
@@ -67,13 +67,25 @@ def render(refs, bbox, output: Path, title: str) -> int:
 
     coastlines = build_coastlines(refs)
     coastline_segments_drawn = 0
-    for line in coastlines:
-        line_in_view = [(lon, lat) for lat, lon in line if _in_bbox(lon, lat, bbox)]
+    for trail_idx, trail in enumerate(coastlines):
+        line_in_view = [(r.lon_modern, r.lat_modern, i, r) for i, r in enumerate(trail) if _in_bbox(r.lon_modern, r.lat_modern, bbox)]
         if len(line_in_view) < 2:
             continue
-        xs, ys = zip(*line_in_view)
+        coords = [(r.lon_modern, r.lat_modern) for r in trail]
+        xs, ys = zip(*coords)
         ax.plot(xs, ys, color=CATEGORIES["coast"]["color"], linewidth=1.1, alpha=0.8, zorder=4)
         coastline_segments_drawn += 1
+        if label_coastlines:
+            for lon, lat, i, r in line_in_view:
+                ax.annotate(
+                    f"{trail_idx}.{i} {r.name} [{r.ref_id}]",
+                    (lon, lat),
+                    fontsize=6.5,
+                    color="#0b0b0b",
+                    xytext=(4, 4),
+                    textcoords="offset points",
+                    zorder=6,
+                )
 
     present_categories = [cat for cat in CATEGORIES if any(r.category == cat for r in in_view)]
     for cat in present_categories:
@@ -82,10 +94,10 @@ def render(refs, bbox, output: Path, title: str) -> int:
         ax.scatter(
             xs,
             ys,
-            s=10 if cat == "coast" else 16,
+            s=42 if cat == "coast" else 16,
             color=CATEGORIES[cat]["color"],
-            alpha=0.75,
-            linewidths=0.3,
+            alpha=0.85 if cat == "coast" else 0.75,
+            linewidths=0.6 if cat == "coast" else 0.3,
             edgecolors="white",
             zorder=5,
             label=f"{CATEGORIES[cat]['label']} ({len(pts)})",
@@ -147,6 +159,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument("--output", type=Path, default=SCRIPT_DIR / "ptolemy_map_static.png")
     parser.add_argument("--title", default=None, help="Custom map title")
+    parser.add_argument(
+        "--label-coastlines",
+        action="store_true",
+        help="Annotate each coastal point with 'trail.position name [ref_id]' - "
+        "for auditing a specific --bbox, not for wide views (gets unreadable fast)",
+    )
     return parser.parse_args(argv)
 
 
@@ -160,7 +178,7 @@ def main(argv: list[str] | None = None) -> int:
     bbox = tuple(args.bbox) if args.bbox else REGIONS[args.region]
     region_label = "custom region" if args.bbox else args.region.title()
     title = args.title or f"Ptolemy's Geographica - geographical references ({region_label})"
-    render(refs, bbox, args.output, title)
+    render(refs, bbox, args.output, title, label_coastlines=args.label_coastlines)
     return 0
 
 
