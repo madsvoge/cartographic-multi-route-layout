@@ -30,11 +30,11 @@ this structure well enough to classify every plotted point into one of:
 
 | Category | Color | How it's detected |
 |---|---|---|
-| Coastal point | blue | the point's catalogue section is headed by a sea/ocean/gulf name, or its own name matches a cape/estuary pattern |
-| Harbor town | purple | name matches "Hafen"/"Portus" - a distinct color from "Coastal point" so a harbor's own commercial/settlement role stands out, but otherwise treated identically: still sized like a coastal point and still a full participant in coastline reconstruction (see below) |
-| River mouth | light blue | name matches "Mündung" - a distinct shade from "Coastal point" for visual identification, but otherwise treated identically: still sized like a coastal point and still a full participant in coastline reconstruction (see below) |
+| Coastal point | dark blue | the point's catalogue section is headed by a sea/ocean/gulf name, or its own name matches a cape/estuary pattern |
+| Harbor town | light blue | name matches "Hafen"/"Portus" - a distinct color from "Coastal point" so a harbor's own commercial/settlement role stands out, but otherwise treated identically: still sized like a coastal point and still a full participant in coastline reconstruction (see below) |
+| River mouth | green | name matches "Mündung" - a distinct color from "Coastal point" for visual identification, but otherwise treated identically: still sized like a coastal point and still a full participant in coastline reconstruction (see below) |
 | City / inland settlement | orange | default, for points not in a coastal section and not matching another pattern |
-| River source / confluence / bend | teal | name matches "Quelle" (source), "Einmündung" (confluence), "Zusammenfluss" (two rivers joining), "(Mitte)"/"Biegung" (a river's midpoint/bend), "Abzweigung"/"Aufteilung" (a delta fork) - checked *before* the coastal mouth pattern, since e.g. "Einmündung" contains the substring "mündung" and would otherwise be misread as a coastal river mouth |
+| River source / confluence / bend | green | name matches "Quelle" (source), "Einmündung" (confluence), "Zusammenfluss" (two rivers joining), "(Mitte)"/"Biegung" (a river's midpoint/bend), "Abzweigung"/"Aufteilung" (a delta fork) - checked *before* the coastal mouth pattern, since e.g. "Einmündung" contains the substring "mündung" and would otherwise be misread as a coastal river mouth |
 | Mountain | amber | name matches "Gebirge" (mountain range) |
 | Island | pink | name matches "Insel" (island), or the name ends in "(N)" - e.g. "Kassiteriden (10)" - the catalogue's convention for a scattered island group given as one count-labelled entry |
 | Lake / inland water | green | name matches "See" (lake) or "Palus" (marsh/lake) |

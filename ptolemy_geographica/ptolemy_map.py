@@ -93,11 +93,11 @@ _CONTINENT_NAMES = {"EU": "Europe", "AS": "Asia", "AF": "Africa"}
 # Point categories the xlsx loader classifies each coordinate into, and the
 # color each gets on the map (dataviz reference palette, fixed hue order).
 CATEGORIES = {
-    "coast": {"label": "Coastal point / coastline", "color": "#2a78d6"},
-    "harbor": {"label": "Harbor town", "color": "#8a63d2"},
-    "river_mouth": {"label": "River mouth", "color": "#86b6ef"},
+    "coast": {"label": "Coastal point / coastline", "color": "#123f7a"},
+    "harbor": {"label": "Harbor town", "color": "#86b6ef"},
+    "river_mouth": {"label": "River mouth", "color": "#98df8a"},
     "city": {"label": "City / inland settlement", "color": "#eb6834"},
-    "river": {"label": "River source / confluence / bend", "color": "#1baf7a"},
+    "river": {"label": "River source / confluence / bend", "color": "#2ca02c"},
     "mountain": {"label": "Mountain", "color": "#eda100"},
     "island": {"label": "Island", "color": "#e87ba4"},
     "lake": {"label": "Lake / inland water", "color": "#008300"},
@@ -1057,7 +1057,7 @@ def build_map(
         coast_layer = folium.FeatureGroup(name=f"Coastlines ({len(coastlines)} segments)").add_to(fmap)
         for line in coastlines:
             coords = [(r.lat_modern, r.lon_modern) for r in line]
-            folium.PolyLine(coords, color=CATEGORIES["coast"]["color"], weight=2, opacity=0.75).add_to(coast_layer)
+            folium.PolyLine(coords, color=CATEGORIES["coast"]["color"], weight=4, opacity=0.85).add_to(coast_layer)
 
     river_lines = get_river_lines(plausible)
     river_position: dict[str, tuple[int, int]] = {}

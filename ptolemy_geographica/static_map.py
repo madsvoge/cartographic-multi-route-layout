@@ -73,7 +73,7 @@ def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False)
             continue
         coords = [(r.lon_modern, r.lat_modern) for r in trail]
         xs, ys = zip(*coords)
-        ax.plot(xs, ys, color=CATEGORIES["coast"]["color"], linewidth=1.1, alpha=0.8, zorder=4)
+        ax.plot(xs, ys, color=CATEGORIES["coast"]["color"], linewidth=2.2, alpha=0.9, zorder=4)
         coastline_segments_drawn += 1
         if label_coastlines:
             for lon, lat, i, r in line_in_view:
