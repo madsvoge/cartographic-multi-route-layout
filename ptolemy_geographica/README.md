@@ -157,9 +157,68 @@ Roman-Britain towns, not capes or mouths - which had spliced a detour up
 to York into the middle of the England coastline between East Anglia and
 Kent.
 
+## Compiling the catalogue to data: `annotate_dataset.py`
+
+Everything described above - classification, graph reconstruction, distance
+thresholds, the two exception lists - is *reasoning* the xlsx loader has to
+redo every time it runs, because nobody had gone through and settled those
+questions once and written the answers down. `annotate_dataset.py` does
+exactly that: it runs the classifier and the coastline graph algorithm once
+over the whole catalogue and writes the result as data, in
+`data/ptolemy_catalogue_annotated.csv`:
+
+- `category` - unchanged from the xlsx loader's output.
+- `naming_observation` - *why* that category was picked: which keyword
+  matched, or which manually-verified exception applied, e.g. `starts with
+  'Kap' (cape) - coastal regardless of any mountain-range aside` or
+  `manually verified island-appendix section
+  (_ISLAND_APPENDIX_SECTIONS)`. This is an audit trail, not a new
+  classification - if a point's category looks wrong, its
+  `naming_observation` says which rule to fix (or, for the two exception
+  lists, which `(book.map, section)` entry to add or remove) rather than
+  requiring a re-read of the classifier's source.
+- `feature_id` / `sequence_in_feature` / `feature_closes_loop` - which
+  drawn coastline (if any) a point belongs to, its position within it, and
+  whether that line closes into a loop. These are the graph algorithm's
+  output, materialized: no more edges, junctions, or stitching-distance
+  thresholds at draw time, just "group by `feature_id`, sort by
+  `sequence_in_feature`, connect the dots, close the loop if
+  `feature_closes_loop`" (`build_coastlines_from_features` in
+  `ptolemy_map.py`). That's the same two-step process - set the points,
+  connect the dots - a cartographer working from the Geographica's text
+  would have followed by hand.
+
+`data/ptolemy_catalogue_annotated.csv` is the new default input
+(`DEFAULT_INPUT` in `ptolemy_map.py`), for both `ptolemy_map.py` and
+`static_map.py`. `get_coastlines()` picks `build_coastlines_from_features`
+whenever the loaded data already carries a `feature_id` (i.e. whenever
+you're reading the annotated CSV); it falls back to the from-scratch graph
+algorithm (`build_coastlines`, the one described above) for the raw xlsx or
+any plain CSV that hasn't been through the compiler - so pointing `--input`
+at another source, or at a custom text file, still works exactly as before.
+
+If you change a classification rule or the coastline algorithm itself,
+regenerate the annotated CSV from the raw catalogue:
+
+```bash
+python3 annotate_dataset.py
+# or, to point at a different source/output:
+python3 annotate_dataset.py --input data/ptolemy_catalogue_stueckelberger.xlsx --output data/ptolemy_catalogue_annotated.csv
+```
+
 ## Data
 
-- `data/ptolemy_catalogue_stueckelberger.xlsx` (default, full catalogue) —
+- `data/ptolemy_catalogue_annotated.csv` (default) — the compiled dataset
+  described above: every plottable reference from the full catalogue
+  (6,372 rows), already classified and, where applicable, already assigned
+  to a coastline feature and draw position. Columns:
+  `ref_id, name, category, book, tabula, modern_location, recension,
+  lon_ptolemy, lat_ptolemy, naming_observation, feature_id,
+  sequence_in_feature, feature_closes_loop`. Regenerate it with
+  `annotate_dataset.py` (above) after any change to the classifier or
+  coastline algorithm - don't hand-edit it except to correct a specific
+  row's `category`/`naming_observation`/`feature_*` fields.
+- `data/ptolemy_catalogue_stueckelberger.xlsx` (compile source) —
   10,049 rows covering all 27 regional maps of the Geographica (10 Europe, 12
   Asia, 4 Africa + Ireland), columns:
   `ID, ID_map, Locality, Modern_location, Longitude_Omega, Latitude_Omega, Longitude_Xi, Latitude_Xi`.

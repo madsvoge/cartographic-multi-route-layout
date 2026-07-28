@@ -23,7 +23,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from ptolemy_map import CATEGORIES, DEFAULT_INPUT, build_coastlines, load_inputs
+from ptolemy_map import CATEGORIES, DEFAULT_INPUT, get_coastlines, load_inputs
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 
@@ -65,7 +65,7 @@ def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False)
 
     world.plot(ax=ax, color=LAND, edgecolor=BORDER, linewidth=0.6)
 
-    coastlines = build_coastlines(refs)
+    coastlines = get_coastlines(refs)
     coastline_segments_drawn = 0
     for trail_idx, trail in enumerate(coastlines):
         line_in_view = [(r.lon_modern, r.lat_modern, i, r) for i, r in enumerate(trail) if _in_bbox(r.lon_modern, r.lat_modern, bbox)]

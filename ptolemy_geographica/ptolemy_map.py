@@ -82,7 +82,7 @@ from pathlib import Path
 FERRO_OFFSET_DEG = 17.6667
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-DEFAULT_INPUT = SCRIPT_DIR / "data" / "ptolemy_catalogue_stueckelberger.xlsx"
+DEFAULT_INPUT = SCRIPT_DIR / "data" / "ptolemy_catalogue_annotated.csv"
 DEFAULT_OUTPUT = SCRIPT_DIR / "ptolemy_map.html"
 
 # Continent prefixes used by the ID_map column of the Stueckelberger/Grasshoff
@@ -200,7 +200,10 @@ _KAP_PREFIX_RE = re.compile(r"^kap\b", re.IGNORECASE)
 
 def _classify_locality(
     name: str, section_is_coastal: bool, force_island: bool = False, force_noncoastal: bool = False
-) -> str:
+) -> tuple[str, str]:
+    """Return (category, naming_observation) - the observation is the audit
+    trail for *why* this category was picked, for the "naming_observation"
+    column of the annotated dataset (see annotate_dataset.py)."""
     if _KAP_PREFIX_RE.search(name):
         # A name that leads with "Kap" is unambiguously a cape - even when
         # it also carries a mountain-range aside, e.g. "Kap Oiarso,
@@ -209,28 +212,36 @@ def _classify_locality(
         # it "mountain" dropped it from the coastline entirely, leaving a
         # gap between Spain's Biscay coast and France's Atlantic coast that
         # this cape would otherwise have bridged.
-        return "coast"
+        return "coast", "starts with 'Kap' (cape) - coastal regardless of any mountain-range aside"
     if _MOUNTAIN_RE.search(name):
-        return "mountain"
+        return "mountain", "matches mountain-range pattern (Gebirge/-berg/Alpes/Alpen)"
     if force_island:
-        return "island"
+        return "island", "manually verified island-appendix section (_ISLAND_APPENDIX_SECTIONS)"
     if force_noncoastal:
         section_is_coastal = False
     if _RIVERFEAT_RE.search(name):
-        return "river"
+        return "river", "matches river-feature pattern (Quelle/Einmündung/Ursprung/Zusammenfluss)"
     if _RIVER_COURSE_RE.search(name) and not _GULF_RE.search(name):
-        return "river"
+        return "river", "matches river-course pattern (Mitte/Biegung/Abzweigung/Aufteilung), not a gulf bend"
     if _MOUTH_RE.search(name):
-        return "river_mouth"
-    if _CAPE_RE.search(name) or _HARBOR_RE.search(name) or _ESTUARY_RE.search(name):
-        return "coast"
-    if _ISLAND_RE.search(name) or _ISLAND_GROUP_RE.search(name):
-        return "island"
+        return "river_mouth", "matches 'Mündung' (river mouth) - coastal, colored separately"
+    if _CAPE_RE.search(name):
+        return "coast", "matches cape pattern (Spitze/Vorgebirge/Promont)"
+    if _HARBOR_RE.search(name):
+        return "coast", "matches harbor pattern (Hafen/Portus)"
+    if _ESTUARY_RE.search(name):
+        return "coast", "matches estuary pattern (Ästuar)"
+    if _ISLAND_RE.search(name):
+        return "island", "matches 'Insel'/'Inseln' (island)"
+    if _ISLAND_GROUP_RE.search(name):
+        return "island", "name ends in '(N)' - a count-labelled island group"
     if _LAKE_RE.search(name):
-        return "lake"
+        return "lake", "matches 'See'/'Palus' (lake/marsh)"
+    if force_noncoastal:
+        return "city", "manually verified non-coastal exception despite sea-headed section (_NONCOASTAL_EXCEPTION_SECTIONS)"
     if section_is_coastal:
-        return "coast"
-    return "city"
+        return "coast", "no specific keyword match; section header names a sea/ocean/gulf"
+    return "city", "no specific keyword match; section not sea-headed (default)"
 
 
 @dataclass
@@ -247,6 +258,10 @@ class Reference:
     recension: str = ""
     category: str = ""  # "coast" | "city" | "river" | "mountain" | "island" | "" (unclassified)
     ref_id: str = ""  # catalogue ID (book.map.section.item), used to reconstruct coastlines
+    naming_observation: str = ""  # why _classify_locality picked this category (audit trail)
+    feature_id: str = ""  # which drawn line this point belongs to, once resolved (see annotate_dataset.py)
+    sequence_in_feature: int = -1  # draw order within feature_id, once resolved
+    feature_closes_loop: bool = False  # if true, after the last point re-connect to the first (an island etc.)
 
     @property
     def lon_modern(self) -> float:
@@ -297,6 +312,81 @@ def load_csv(path: Path) -> list[Reference]:
                     lon_ptolemy=lon,
                     lat_ptolemy=lat,
                     source=path.name,
+                )
+            )
+    return refs
+
+
+_ANNOTATED_CSV_FIELDS = [
+    "ref_id",
+    "name",
+    "category",
+    "book",
+    "tabula",
+    "modern_location",
+    "recension",
+    "lon_ptolemy",
+    "lat_ptolemy",
+    "naming_observation",
+    "feature_id",
+    "sequence_in_feature",
+    "feature_closes_loop",
+]
+
+
+def write_annotated_csv(refs: list[Reference], path: Path) -> None:
+    """Write the fully-resolved dataset: every point's category plus (for
+    coastline points) its feature_id/sequence_in_feature/feature_closes_loop
+    - drawing the map from this file needs no algorithm beyond "group by
+    feature_id, sort by sequence_in_feature, connect the dots"."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="", encoding="utf-8") as fh:
+        writer = csv.DictWriter(fh, fieldnames=_ANNOTATED_CSV_FIELDS)
+        writer.writeheader()
+        for ref in refs:
+            writer.writerow(
+                {
+                    "ref_id": ref.ref_id,
+                    "name": ref.name,
+                    "category": ref.category,
+                    "book": ref.book,
+                    "tabula": ref.tabula,
+                    "modern_location": ref.modern_location,
+                    "recension": ref.recension,
+                    "lon_ptolemy": ref.lon_ptolemy,
+                    "lat_ptolemy": ref.lat_ptolemy,
+                    "naming_observation": ref.naming_observation,
+                    "feature_id": ref.feature_id,
+                    "sequence_in_feature": ref.sequence_in_feature if ref.feature_id else "",
+                    "feature_closes_loop": "1" if ref.feature_closes_loop else "",
+                }
+            )
+
+
+def load_annotated_csv(path: Path) -> list[Reference]:
+    """Load a dataset already annotated by annotate_dataset.py - category
+    and (for coastline points) feature_id/sequence_in_feature are read
+    directly, not re-derived."""
+    refs: list[Reference] = []
+    with path.open(newline="", encoding="utf-8") as fh:
+        reader = csv.DictReader(fh)
+        for row in reader:
+            refs.append(
+                Reference(
+                    name=row["name"],
+                    book=row["book"],
+                    tabula=row["tabula"],
+                    lon_ptolemy=float(row["lon_ptolemy"]),
+                    lat_ptolemy=float(row["lat_ptolemy"]),
+                    source=path.name,
+                    modern_location=row.get("modern_location", ""),
+                    recension=row.get("recension", ""),
+                    category=row.get("category", ""),
+                    ref_id=row.get("ref_id", ""),
+                    naming_observation=row.get("naming_observation", ""),
+                    feature_id=row.get("feature_id", ""),
+                    sequence_in_feature=int(row["sequence_in_feature"]) if row.get("sequence_in_feature") else -1,
+                    feature_closes_loop=row.get("feature_closes_loop") == "1",
                 )
             )
     return refs
@@ -369,6 +459,9 @@ def load_xlsx(path: Path) -> list[Reference]:
             name = str(locality).strip()
             id_map = (id_map or "").strip()
             continent = _CONTINENT_NAMES.get(id_map[:2], id_map[:2])
+            category, observation = _classify_locality(
+                name, section_is_coastal, force_island=force_island, force_noncoastal=force_noncoastal
+            )
             refs.append(
                 Reference(
                     name=name,
@@ -379,9 +472,8 @@ def load_xlsx(path: Path) -> list[Reference]:
                     source=path.name,
                     modern_location=str(modern_location).strip() if modern_location else "",
                     recension=recension,
-                    category=_classify_locality(
-                        name, section_is_coastal, force_island=force_island, force_noncoastal=force_noncoastal
-                    ),
+                    category=category,
+                    naming_observation=observation,
                     ref_id=str(_id),
                 )
             )
@@ -638,6 +730,82 @@ def build_coastlines(refs: list[Reference]) -> list[list[Reference]]:
     return final
 
 
+def assign_coastline_features(refs: list[Reference]) -> None:
+    """Resolve every ambiguity build_coastlines has to reason about at
+    runtime (which points connect, in what order, where a trail closes)
+    into two plain data columns: `feature_id` and `sequence_in_feature`.
+
+    Mutates the Reference objects in place. Once assigned and saved (see
+    annotate_dataset.py), drawing a coastline is just "group by feature_id,
+    sort by sequence_in_feature, connect the dots" - no graph, no distance
+    thresholds, no stitching. The graph reconstruction in build_coastlines()
+    still does the actual reasoning; this just records its answer as data
+    instead of re-deriving it on every run.
+    """
+    trails = build_coastlines(refs)
+    for trail_idx, trail in enumerate(trails):
+        # A closed-loop trail repeats its first Reference as its last
+        # (same object, so it can't hold two different sequence numbers).
+        # Record the loop-closure as its own flag instead and number only
+        # the trail's distinct points.
+        closes_loop = len(trail) > 1 and trail[0] is trail[-1]
+        points = trail[:-1] if closes_loop else trail
+        feature_id = f"coastline_{trail_idx:03d}_{points[0].tabula}"
+        for position, ref in enumerate(points):
+            ref.feature_id = feature_id
+            ref.sequence_in_feature = position
+            ref.feature_closes_loop = closes_loop
+
+
+def build_coastlines_from_features(refs: list[Reference]) -> list[list[Reference]]:
+    """The trivial counterpart to build_coastlines(): once every point
+    carries a resolved `feature_id`/`sequence_in_feature` (see
+    assign_coastline_features and annotate_dataset.py), drawing coastlines
+    needs no graph, no distance thresholds, and no stitching - just group
+    by feature_id, sort by sequence_in_feature, and connect the dots in
+    order. This is what map-drawing "should" be, per the catalogue's own
+    category+sequence structure - all the ambiguity-resolution now lives in
+    the annotated dataset as data, not in this function.
+    """
+    groups: dict[str, list[Reference]] = {}
+    for ref in refs:
+        if not ref.feature_id:
+            continue
+        groups.setdefault(ref.feature_id, []).append(ref)
+
+    trails: list[list[Reference]] = []
+    for points in groups.values():
+        points.sort(key=lambda r: r.sequence_in_feature)
+        if points[0].feature_closes_loop and len(points) >= 2:
+            points = points + [points[0]]
+        trails.append(points)
+    return trails
+
+
+def get_coastlines(refs: list[Reference]) -> list[list[Reference]]:
+    """Trivial reconstruction (build_coastlines_from_features) if the
+    dataset already carries resolved feature_id/sequence_in_feature - e.g.
+    loaded from annotate_dataset.py's output - falling back to the
+    from-scratch graph reconstruction (build_coastlines) for datasets that
+    don't (the raw xlsx, or a plain CSV)."""
+    if any(r.feature_id for r in refs):
+        return build_coastlines_from_features(refs)
+    return build_coastlines(refs)
+
+
+def _is_annotated_csv(path: Path) -> bool:
+    """Distinguish an annotate_dataset.py output from a plain
+    Ptolemy-Geography-schema CSV by its header - the former carries
+    "feature_id", the latter never does."""
+    with path.open(newline="", encoding="utf-8") as fh:
+        header = fh.readline()
+    return "feature_id" in header
+
+
+def _load_csv_auto(path: Path) -> list[Reference]:
+    return load_annotated_csv(path) if _is_annotated_csv(path) else load_csv(path)
+
+
 def load_inputs(paths: list[Path]) -> list[Reference]:
     refs: list[Reference] = []
     for p in paths:
@@ -646,11 +814,11 @@ def load_inputs(paths: list[Path]) -> list[Reference]:
             if not data_files:
                 print(f"warning: no *.csv/*.xlsx files found in directory {p}", file=sys.stderr)
             for data_file in data_files:
-                refs.extend(load_xlsx(data_file) if data_file.suffix == ".xlsx" else load_csv(data_file))
+                refs.extend(load_xlsx(data_file) if data_file.suffix == ".xlsx" else _load_csv_auto(data_file))
         elif p.suffix == ".xlsx":
             refs.extend(load_xlsx(p))
         else:
-            refs.extend(load_csv(p))
+            refs.extend(_load_csv_auto(p))
     return refs
 
 
@@ -738,7 +906,7 @@ def build_map(
 
     fmap = folium.Map(location=[center_lat, center_lon], zoom_start=zoom_start, tiles="OpenStreetMap")
 
-    coastlines = build_coastlines(plausible)
+    coastlines = get_coastlines(plausible)
     # Position of each coastal point within its trail, so it can be labelled
     # "#N in coastline segment #M" - both in the map (see below) and for
     # anyone re-deriving the trails to audit a specific segment.
