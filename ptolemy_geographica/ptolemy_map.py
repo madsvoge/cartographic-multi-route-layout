@@ -608,6 +608,24 @@ _COASTLINE_SKIP_REF_IDS = {
     "3.14.01.04",  # Acheloos-Mündung - introductory boundary citation, duplicated (correctly) at 3.14.06.07
 }
 
+# The final global stitching pass below (see _SAME_POINT_TOL_DEG * 2)
+# reconnects two book.map trails only when their endpoints land within a
+# tight tolerance - deliberately tight, so it only catches a genuine shared
+# citation and doesn't reopen the cross-region guessing that grouping by
+# book.map exists to prevent. That tolerance is occasionally *just* too
+# tight for a real one: Epirus/Akarnania's coast (book.map "3.14") ends at
+# the Acheloos' mouth, and Aetolia's (book.map "3.15") starts at "Kap einer
+# Halbinsel" barely 0.12 degrees away - the same stretch of coast, split
+# only because Ptolemy describes it under two different regional headings,
+# but just outside the 0.1-degree window that would auto-stitch it. Rather
+# than loosening that tolerance everywhere (and risking a false stitch
+# elsewhere), specific endpoint pairs manually verified to be the same
+# real-world hand-off are force-stitched regardless of the exact distance.
+# Keyed by the two ref_ids, order doesn't matter.
+_BOUNDARY_STITCH_REF_ID_PAIRS = {
+    ("3.14.06.07", "3.15.02.05"),  # Acheloos-Mündung (end of Epirus/Akarnania) -> Kap einer Halbinsel (start of Aetolia)
+}
+
 # Two catalogue points are treated as "the same physical spot" (a shared
 # corner where two separate coastal walks both start/end) if within this
 # many degrees of each other.
@@ -663,9 +681,17 @@ def _ref_dist(a: "Reference", b: "Reference") -> float:
     return _dist((a.lat_modern, a.lon_modern), (b.lat_modern, b.lon_modern))
 
 
-def _stitch_trails(trails: list[list["Reference"]], max_gap_deg: float = _STITCH_MAX_GAP_DEG) -> list[list["Reference"]]:
-    """Greedily join trails whose nearest endpoints are within range."""
+def _stitch_trails(
+    trails: list[list["Reference"]],
+    max_gap_deg: float = _STITCH_MAX_GAP_DEG,
+    force_pairs: set[tuple[str, str]] | None = None,
+) -> list[list["Reference"]]:
+    """Greedily join trails whose nearest endpoints are within range - or,
+    for an endpoint ref_id pair manually verified to be the same real-world
+    hand-off (see _BOUNDARY_STITCH_REF_ID_PAIRS), regardless of the actual
+    distance between them."""
     trails = [list(t) for t in trails]
+    force_pairs = force_pairs or set()
     merged = True
     while merged and len(trails) > 1:
         merged = False
@@ -679,8 +705,9 @@ def _stitch_trails(trails: list[list["Reference"]], max_gap_deg: float = _STITCH
                     "start-start": (a[0], b[0]),
                     "start-end": (a[0], b[-1]),
                 }.items():
-                    d = _ref_dist(pa, pb)
-                    if d <= max_gap_deg and (best is None or d < best[0]):
+                    forced = (pa.ref_id, pb.ref_id) in force_pairs or (pb.ref_id, pa.ref_id) in force_pairs
+                    d = 0.0 if forced else _ref_dist(pa, pb)
+                    if (forced or d <= max_gap_deg) and (best is None or d < best[0]):
                         best = (d, i, j, orientation)
         if best is not None:
             _, i, j, orientation = best
@@ -846,8 +873,10 @@ def build_coastlines(refs: list[Reference]) -> list[list[Reference]]:
     # stitched against itself. A final global pass reconnects trails whose
     # endpoints are essentially the same point (not just nearby) - tight
     # enough to only catch real shared citations, not reintroduce
-    # cross-region guessing.
-    polylines = _stitch_trails(polylines, max_gap_deg=_SAME_POINT_TOL_DEG * 2)
+    # cross-region guessing - plus any pair manually verified to be a real
+    # hand-off despite falling just outside that tolerance (see
+    # _BOUNDARY_STITCH_REF_ID_PAIRS).
+    polylines = _stitch_trails(polylines, max_gap_deg=_SAME_POINT_TOL_DEG * 2, force_pairs=_BOUNDARY_STITCH_REF_ID_PAIRS)
 
     final: list[list[Reference]] = []
     for trail_refs in polylines:

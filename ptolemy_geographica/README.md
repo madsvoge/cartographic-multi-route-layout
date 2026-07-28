@@ -208,11 +208,28 @@ or are genuine cases the graph reconstruction already handles correctly
 coast walks; the Oxos' mouth, genuinely re-cited to close a small real
 loop in Central Asia) - only the Acheloos case produced this failure mode.
 
+A fifth handles the opposite failure: two trails that *should* connect but
+don't. The final global stitching pass (`_SAME_POINT_TOL_DEG * 2` =
+0.1 degrees) reconnects book.map trails whose endpoints are essentially
+the same point - deliberately tight, so it only catches a genuine shared
+citation and doesn't reopen the cross-region guessing that grouping by
+book.map exists to prevent. That tightness occasionally excludes a real
+one: Epirus/Akarnania's coast (book.map "3.14") ends at the Acheloos'
+mouth, and Aetolia's (book.map "3.15") starts at "Kap einer Halbinsel"
+0.12 degrees away - the same stretch of coast, split only because Ptolemy
+describes it under two regional headings, but just outside the
+auto-stitch window. Rather than loosen that window everywhere (and risk a
+false stitch elsewhere), `_BOUNDARY_STITCH_REF_ID_PAIRS` force-joins
+specific endpoint `ref_id` pairs manually verified to be the same
+hand-off, regardless of the exact distance between them.
+
 If a coastline still visibly closes into a loop across open water or
-straight across a mainland, or jumps in a way that looks like this
-introductory-citation pattern, tell me the two endpoint `ref_id`s (hover
-the line's ends in the interactive map, or read them off
-`--label-coastlines` in the static one) and I'll add it here.
+straight across a mainland, jumps in a way that looks like the
+introductory-citation pattern, or looks like it should continue into a
+neighbouring book.map's trail but doesn't, tell me the relevant `ref_id`s
+(hover the line's ends in the interactive map, or read them off
+`--label-coastlines` in the static one) and I'll add it to the
+appropriate list.
 
 ## River lines
 
