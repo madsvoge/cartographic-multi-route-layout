@@ -98,6 +98,7 @@ CATEGORIES = {
     "river": {"label": "River source / confluence", "color": "#1baf7a"},
     "mountain": {"label": "Mountain", "color": "#eda100"},
     "island": {"label": "Island", "color": "#e87ba4"},
+    "lake": {"label": "Lake / inland water", "color": "#008300"},
     "": {"label": "Unclassified", "color": "#898781"},
 }
 
@@ -105,20 +106,29 @@ CATEGORIES = {
 # mark a catalogue section as a run of coastal points.
 _COASTAL_HDR_RE = re.compile(r"ozean|meer(?!wärts)|golf|meerbusen|kanal|bucht", re.IGNORECASE)
 # Per-point name keywords used to refine/override the section-level guess.
+# Mouths, capes, harbors and estuaries are coastal by definition regardless
+# of what their catalogue section happens to be headed by (sections are
+# often headed by the local tribe's name even for points right on the
+# shore).
 _MOUTH_RE = re.compile(r"mündung", re.IGNORECASE)
 _CAPE_RE = re.compile(r"^kap\b|spitze|vorgebirge|promont", re.IGNORECASE)
+_HARBOR_RE = re.compile(r"\bhafen\b|portus", re.IGNORECASE)
+_ESTUARY_RE = re.compile(r"ästuar", re.IGNORECASE)
 _MOUNTAIN_RE = re.compile(r"gebirge|-berg\b|^berg\b", re.IGNORECASE)
 _ISLAND_RE = re.compile(r"\binsel\b|inseln", re.IGNORECASE)
+_LAKE_RE = re.compile(r"\bsee\b|\bpalus\b", re.IGNORECASE)
 _RIVERFEAT_RE = re.compile(r"quelle|einmündung|ursprung|zusammenfluss", re.IGNORECASE)
 
 
 def _classify_locality(name: str, section_is_coastal: bool) -> str:
-    if _MOUTH_RE.search(name) or _CAPE_RE.search(name):
+    if _MOUTH_RE.search(name) or _CAPE_RE.search(name) or _HARBOR_RE.search(name) or _ESTUARY_RE.search(name):
         return "coast"
     if _MOUNTAIN_RE.search(name):
         return "mountain"
     if _ISLAND_RE.search(name):
         return "island"
+    if _LAKE_RE.search(name):
+        return "lake"
     if _RIVERFEAT_RE.search(name):
         return "river"
     if section_is_coastal:
@@ -281,73 +291,52 @@ def load_xlsx(path: Path) -> list[Reference]:
 # the catalogue's row order.
 _MAX_COASTAL_GAP_DEG = 15.0
 
-# After building runs, dangling segment *endpoints* within the same
-# book.map region are stitched together if they're closer than this - much
-# tighter than the gap valve above, and restricted to endpoints (not every
-# point pair) so it only bridges runs that catalogue order itself split
-# (e.g. a city/mountain point interrupting an otherwise continuous coast),
-# rather than free-form nearest-neighbour routing across the whole point
-# cloud, which tends to cut straight across bays and peninsulas.
-_STITCH_MAX_GAP_DEG = 2.5
+# Two catalogue points are treated as "the same physical spot" (a shared
+# corner where two separate coastal walks both start/end) if within this
+# many degrees of each other.
+_SAME_POINT_TOL_DEG = 0.05
+
+# A traced coastline whose two loose ends land within this distance is
+# assumed to be a real closed loop (an island, or a peninsula walk that
+# just didn't re-state its own starting point) and gets closed.
+_CLOSE_LOOP_MAX_GAP_DEG = 6.0
 
 
-def _stitch_segments(segments: list[list[tuple[float, float]]]) -> list[list[tuple[float, float]]]:
-    """Greedily join segments whose nearest endpoints are within range."""
-
-    def dist(a: tuple[float, float], b: tuple[float, float]) -> float:
-        return ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2) ** 0.5
-
-    segments = [list(s) for s in segments]
-    merged = True
-    while merged and len(segments) > 1:
-        merged = False
-        best = None  # (distance, i, j, orientation)
-        for i in range(len(segments)):
-            for j in range(i + 1, len(segments)):
-                a, b = segments[i], segments[j]
-                for orientation, (pa, pb) in {
-                    "end-start": (a[-1], b[0]),
-                    "end-end": (a[-1], b[-1]),
-                    "start-start": (a[0], b[0]),
-                    "start-end": (a[0], b[-1]),
-                }.items():
-                    d = dist(pa, pb)
-                    if d <= _STITCH_MAX_GAP_DEG and (best is None or d < best[0]):
-                        best = (d, i, j, orientation)
-        if best is not None:
-            _, i, j, orientation = best
-            a, b = segments[i], segments[j]
-            if orientation == "end-start":
-                joined = a + b
-            elif orientation == "end-end":
-                joined = a + list(reversed(b))
-            elif orientation == "start-start":
-                joined = list(reversed(a)) + b
-            else:  # start-end
-                joined = b + a
-            for idx in sorted((i, j), reverse=True):
-                del segments[idx]
-            segments.append(joined)
-            merged = True
-    return segments
+def _dist(a: tuple[float, float], b: tuple[float, float]) -> float:
+    return ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2) ** 0.5
 
 
 def build_coastlines(refs: list[Reference]) -> list[list[tuple[float, float]]]:
     """Reconstruct coastlines from category="coast" points.
 
     Ptolemy lists coastal points as a running sequence along the shore, so
-    connecting consecutive "coast"-classified points *in catalogue order*
-    retraces the coastline he described. Runs are grouped by the
-    catalogue's own "book.map" prefix (e.g. "2.02"), not by the printed
-    tabula (e.g. "EU01") - a single tabula routinely bundles several
-    distinct book.map sub-regions (EU01 = Ireland "2.02" *and* Britain
-    "2.03" on one sheet), and grouping by tabula alone drew a spurious
-    line straight across the sea between two unrelated landmasses. A run
-    also breaks whenever a differently-classified point interrupts the
-    sequence, or the gap between two points is implausibly large - such
-    breaks are then re-stitched (see _stitch_segments) if the two loose
-    ends land close together, since that's usually catalogue order being
-    interrupted by an inland aside rather than a real coastline gap.
+    consecutive "coast"-classified points *in catalogue order* are real
+    geographic neighbours. But a region isn't always described as one
+    single unbroken lap: Ptolemy often walks a coast out from a corner
+    point and back to a *different* stretch starting at that same corner
+    again (e.g. Ireland's north coast and west coast both start at
+    "Nordspitze"). Naively concatenating catalogue order end-to-end draws
+    a spurious straight line from the end of one walk back across to the
+    start of the next.
+
+    Instead, catalogue-order neighbours become edges in an undirected
+    graph, with points that (nearly) coincide - like "Nordspitze" showing
+    up twice - collapsed into one shared node. Tracing each connected
+    component as a path (or a cycle, if it closes on itself) reconstructs
+    the coastline without that spurious jump: shared corners naturally
+    become junctions rather than the two arms getting stitched together
+    end-to-end. A path whose two remaining loose ends land close together
+    is closed into a loop (see _CLOSE_LOOP_MAX_GAP_DEG) - this is what
+    closes an island's coastline back to its own starting point.
+
+    Runs (and hence edges) are grouped by the catalogue's own "book.map"
+    prefix (e.g. "2.02"), not by the printed tabula (e.g. "EU01") - a
+    single tabula routinely bundles several distinct book.map sub-regions
+    onto one sheet (EU01 = Ireland "2.02" *and* Britain "2.03"), and
+    grouping by tabula alone drew a line straight across the sea between
+    two unrelated landmasses. A run also breaks whenever a
+    differently-classified point interrupts the sequence, or the gap
+    between two points is implausibly large.
     """
 
     def sort_key(ref: Reference) -> tuple:
@@ -366,22 +355,77 @@ def build_coastlines(refs: list[Reference]) -> list[list[tuple[float, float]]]:
     polylines: list[list[tuple[float, float]]] = []
     for items in groups.values():
         items.sort(key=sort_key)
-        segments: list[list[tuple[float, float]]] = []
-        current: list[tuple[float, float]] = []
+
+        # Build the raw catalogue-order edge list, breaking at non-coastal
+        # points or implausibly large jumps.
+        edges: list[tuple[tuple[float, float], tuple[float, float]]] = []
+        prev: tuple[float, float] | None = None
         for ref in items:
             point = (ref.lat_modern, ref.lon_modern)
             if ref.category != "coast":
-                if current:
-                    segments.append(current)
-                current = []
+                prev = None
                 continue
-            if current and (abs(point[0] - current[-1][0]) > _MAX_COASTAL_GAP_DEG or abs(point[1] - current[-1][1]) > _MAX_COASTAL_GAP_DEG):
-                segments.append(current)
-                current = []
-            current.append(point)
-        if current:
-            segments.append(current)
-        polylines.extend(s for s in _stitch_segments(segments) if len(s) >= 2)
+            if prev is not None and _dist(prev, point) <= _MAX_COASTAL_GAP_DEG:
+                edges.append((prev, point))
+            prev = point
+
+        if not edges:
+            continue
+
+        # Collapse near-identical points (shared corners) into one node,
+        # keyed by rounded coordinates.
+        def node_key(p: tuple[float, float]) -> tuple[float, float]:
+            return (round(p[0] / _SAME_POINT_TOL_DEG), round(p[1] / _SAME_POINT_TOL_DEG))
+
+        node_coords: dict[tuple[float, float], tuple[float, float]] = {}
+        adjacency: dict[tuple[float, float], list[tuple[float, float]]] = {}
+        for a, b in edges:
+            ka, kb = node_key(a), node_key(b)
+            node_coords.setdefault(ka, a)
+            node_coords.setdefault(kb, b)
+            if ka == kb:
+                continue
+            adjacency.setdefault(ka, []).append(kb)
+            adjacency.setdefault(kb, []).append(ka)
+
+        # Trace each connected component: walk from a degree-1 node if one
+        # exists (an open path), otherwise start anywhere (a closed cycle).
+        visited_nodes: set[tuple[float, float]] = set()
+        for start in adjacency:
+            if start in visited_nodes:
+                continue
+            component_nodes = {start}
+            frontier = [start]
+            while frontier:
+                n = frontier.pop()
+                for nb in adjacency[n]:
+                    if nb not in component_nodes:
+                        component_nodes.add(nb)
+                        frontier.append(nb)
+
+            start_node = next((n for n in component_nodes if len(adjacency[n]) == 1), next(iter(component_nodes)))
+
+            path = [start_node]
+            used_edges: set[tuple[tuple[float, float], tuple[float, float]]] = set()
+            current = start_node
+            while True:
+                nxt = next(
+                    (nb for nb in adjacency[current] if (current, nb) not in used_edges and (nb, current) not in used_edges),
+                    None,
+                )
+                if nxt is None:
+                    break
+                used_edges.add((current, nxt))
+                path.append(nxt)
+                current = nxt
+
+            visited_nodes.update(path)
+            points = [node_coords[n] for n in path]
+            if len(points) >= 4 and points[0] != points[-1] and _dist(points[0], points[-1]) <= _CLOSE_LOOP_MAX_GAP_DEG:
+                points.append(points[0])
+            if len(points) >= 2:
+                polylines.append(points)
+
     return polylines
 
 

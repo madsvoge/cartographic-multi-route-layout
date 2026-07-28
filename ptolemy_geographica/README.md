@@ -27,33 +27,48 @@ this structure well enough to classify every plotted point into one of:
 
 | Category | Color | How it's detected |
 |---|---|---|
-| Coastal point | blue | the point's catalogue section is headed by a sea/ocean/gulf name, or its own name matches a cape/river-mouth pattern |
+| Coastal point | blue | the point's catalogue section is headed by a sea/ocean/gulf name, or its own name matches a cape/river-mouth/harbor/estuary pattern |
 | City / inland settlement | orange | default, for points not in a coastal section and not matching another pattern |
 | River source / confluence | teal | name matches "Quelle" (source), "Einmündung" (confluence), etc. |
 | Mountain | amber | name matches "Gebirge" (mountain range) |
 | Island | pink | name matches "Insel" (island) |
+| Lake / inland water | green | name matches "See" (lake) or "Palus" (marsh/lake) |
 
-**Coastlines** are then reconstructed by connecting consecutive
-coastal-category points *in the catalogue's own listing order*, grouped by
-the catalogue's "book.map" prefix (e.g. "2.02") rather than by the printed
-tabula (e.g. "EU01") - a tabula routinely bundles several distinct
-book.map sub-regions onto one sheet (EU01 = Ireland "2.02" *and* Britain
-"2.03"), and grouping by tabula alone drew a spurious line straight across
-the sea between the two. A run breaks at a non-coastal point or an
-implausibly large jump; broken-off segments are then re-stitched
-(`_stitch_segments`) if their loose ends land within ~2.5° of each other,
-since that's usually catalogue order being interrupted by an inland aside
-rather than a genuine gap in the coast.
+Harbors ("Hafen"/"Portus") and estuaries ("Ästuar") are always coastal
+regardless of their section, the same as capes and river mouths - they used
+to only get classified as coastal when their section happened to be headed
+by a sea name, which missed a real chunk of them (most catalogue sections
+are headed by the local tribe's name even for points sitting right on the
+shore).
 
-This is a heuristic (regex over the German `Locality` text plus section
-structure), not a verified ground truth - expect the occasional
-misclassified point, or a coastline that runs oddly straight in a region
-where Ptolemy's own coordinates were badly distorted (Sarmatia/Scythia are
-the worst-known cases - compared against a 15th-century Nicolaus Germanus
-redrawing of the same catalogue, the straight-line distortion there turned
-out to already be present in Ptolemy's original data, not a bug in this
-reconstruction). Use `--dry-run` to inspect the `category` assigned to any
-point.
+**Coastlines** are reconstructed from catalogue-order neighbours, but not
+by naive end-to-end concatenation. Ptolemy regularly walks a coastline out
+from a corner point and back to a *different* stretch starting at that
+same corner again (Ireland's north coast and west coast both start at
+"Nordspitze") - concatenating catalogue order literally would draw a
+spurious straight line from the end of one walk back across to the start
+of the next (this is what caused Britain's stray diagonal line, and why
+Ireland's line never closed back to its own start). Instead, each
+catalogue-order neighbour pair becomes an edge in an undirected graph,
+points that (nearly) coincide are collapsed into one shared node, and each
+connected component is traced as a path - or as a closed loop, if its two
+ends land within ~6° of each other (this is what closes an island's
+coastline). Runs are grouped by the catalogue's "book.map" prefix (e.g.
+"2.02"), not the printed tabula (e.g. "EU01") - a tabula routinely bundles
+several distinct book.map sub-regions onto one sheet (EU01 = Ireland
+"2.02" *and* Britain "2.03"), which used to draw a line straight across
+the sea between the two. A run also breaks at a non-coastal point or an
+implausibly large jump.
+
+This is all heuristic (regex over the German `Locality` text plus section
+structure and graph reconstruction), not a verified ground truth - expect
+the occasional misclassified point, or a coastline that runs oddly
+straight in a region where Ptolemy's own coordinates were badly distorted
+(Sarmatia/Scythia are the worst-known cases - compared against a
+15th-century Nicolaus Germanus redrawing of the same catalogue, the
+straight-line distortion there turned out to already be present in
+Ptolemy's original data, not a bug in this reconstruction). Use `--dry-run`
+to inspect the `category` assigned to any point.
 
 ## Data
 
