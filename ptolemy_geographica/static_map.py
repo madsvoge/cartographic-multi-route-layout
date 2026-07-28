@@ -91,12 +91,13 @@ def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False)
     for cat in present_categories:
         pts = [(r.lon_modern, r.lat_modern) for r in in_view if r.category == cat]
         xs, ys = zip(*pts)
+        is_coast_family = cat in ("coast", "river_mouth")
         ax.scatter(
             xs,
             ys,
-            s=42 if cat == "coast" else 16,
+            s=42 if is_coast_family else 16,
             color=CATEGORIES[cat]["color"],
-            alpha=0.85 if cat == "coast" else 0.75,
+            alpha=0.85 if is_coast_family else 0.75,
             linewidths=0.6 if cat == "coast" else 0.3,
             edgecolors="white",
             zorder=5,

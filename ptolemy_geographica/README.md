@@ -30,9 +30,10 @@ this structure well enough to classify every plotted point into one of:
 
 | Category | Color | How it's detected |
 |---|---|---|
-| Coastal point | blue | the point's catalogue section is headed by a sea/ocean/gulf name, or its own name matches a cape/river-mouth/harbor/estuary pattern |
+| Coastal point | blue | the point's catalogue section is headed by a sea/ocean/gulf name, or its own name matches a cape/harbor/estuary pattern |
+| River mouth | light blue | name matches "Mündung" - a distinct shade from "Coastal point" for visual identification, but otherwise treated identically: still sized like a coastal point and still a full participant in coastline reconstruction (see below) |
 | City / inland settlement | orange | default, for points not in a coastal section and not matching another pattern |
-| River source / confluence | teal | name matches "Quelle" (source), "Einmündung" (confluence), "Zusammenfluss" (two rivers joining), etc. - checked *before* the coastal mouth pattern, since "Einmündung" contains the substring "mündung" and would otherwise be misread as a coastal river mouth |
+| River source / confluence / bend | teal | name matches "Quelle" (source), "Einmündung" (confluence), "Zusammenfluss" (two rivers joining), "(Mitte)"/"Biegung" (a river's midpoint/bend), "Abzweigung"/"Aufteilung" (a delta fork) - checked *before* the coastal mouth pattern, since e.g. "Einmündung" contains the substring "mündung" and would otherwise be misread as a coastal river mouth |
 | Mountain | amber | name matches "Gebirge" (mountain range) |
 | Island | pink | name matches "Insel" (island), or the name ends in "(N)" - e.g. "Kassiteriden (10)" - the catalogue's convention for a scattered island group given as one count-labelled entry |
 | Lake / inland water | green | name matches "See" (lake) or "Palus" (marsh/lake) |

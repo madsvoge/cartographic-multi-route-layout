@@ -94,13 +94,20 @@ _CONTINENT_NAMES = {"EU": "Europe", "AS": "Asia", "AF": "Africa"}
 # color each gets on the map (dataviz reference palette, fixed hue order).
 CATEGORIES = {
     "coast": {"label": "Coastal point / coastline", "color": "#2a78d6"},
+    "river_mouth": {"label": "River mouth", "color": "#86b6ef"},
     "city": {"label": "City / inland settlement", "color": "#eb6834"},
-    "river": {"label": "River source / confluence", "color": "#1baf7a"},
+    "river": {"label": "River source / confluence / bend", "color": "#1baf7a"},
     "mountain": {"label": "Mountain", "color": "#eda100"},
     "island": {"label": "Island", "color": "#e87ba4"},
     "lake": {"label": "Lake / inland water", "color": "#008300"},
     "": {"label": "Unclassified", "color": "#898781"},
 }
+
+# Categories that participate in coastline reconstruction (build_coastlines)
+# as if they were "coast" - river mouths are a distinct color for display,
+# but they're still real points on the shore and stay part of the traced
+# coastline, same as a cape or harbor.
+_COASTLINE_CATEGORIES = ("coast", "river_mouth")
 
 # Section-header keywords (German, this catalogue's Locality language) that
 # mark a catalogue section as a run of coastal points.
@@ -177,7 +184,9 @@ def _classify_locality(name: str, section_is_coastal: bool, force_island: bool =
         return "river"
     if _RIVER_COURSE_RE.search(name) and not _GULF_RE.search(name):
         return "river"
-    if _MOUTH_RE.search(name) or _CAPE_RE.search(name) or _HARBOR_RE.search(name) or _ESTUARY_RE.search(name):
+    if _MOUTH_RE.search(name):
+        return "river_mouth"
+    if _CAPE_RE.search(name) or _HARBOR_RE.search(name) or _ESTUARY_RE.search(name):
         return "coast"
     if _ISLAND_RE.search(name) or _ISLAND_GROUP_RE.search(name):
         return "island"
@@ -495,7 +504,7 @@ def build_coastlines(refs: list[Reference]) -> list[list[Reference]]:
         edges: list[tuple[Reference, Reference]] = []
         prev: Reference | None = None
         for ref in items:
-            if ref.category != "coast":
+            if ref.category not in _COASTLINE_CATEGORIES:
                 continue
             if prev is not None and _dist((prev.lat_modern, prev.lon_modern), (ref.lat_modern, ref.lon_modern)) <= _MAX_COASTAL_GAP_DEG:
                 edges.append((prev, ref))
@@ -717,20 +726,20 @@ def build_map(
             f"<i>source: {html.escape(ref.source)}</i>"
         )
         color = CATEGORIES[ref.category]["color"]
-        is_coast = ref.category == "coast"
+        is_coast_family = ref.category in _COASTLINE_CATEGORIES
         marker = folium.CircleMarker(
             location=[ref.lat_modern, ref.lon_modern],
-            radius=8 if is_coast else 5,
+            radius=8 if is_coast_family else 5,
             color=color,
             weight=2,
             fill=True,
             fill_color=color,
             fill_opacity=0.85,
             popup=folium.Popup(popup_html, max_width=320),
-            tooltip=f"#{seq_label} {ref.name} ({ref.ref_id})" if is_coast else f"{ref.name} ({ref.ref_id})",
+            tooltip=f"#{seq_label} {ref.name} ({ref.ref_id})" if is_coast_family else f"{ref.name} ({ref.ref_id})",
         )
         marker.add_to(clusters[ref.category])
-        if is_coast and seq_label:
+        if is_coast_family and seq_label:
             folium.Marker(
                 location=[ref.lat_modern, ref.lon_modern],
                 icon=folium.DivIcon(
@@ -740,7 +749,7 @@ def build_map(
                         f'transform:translate(8px,-8px);white-space:nowrap;">{seq_label}</div>'
                     )
                 ),
-            ).add_to(clusters["coast"])
+            ).add_to(clusters[ref.category])
 
     _add_legend(fmap, plausible)
     folium.LayerControl(collapsed=False).add_to(fmap)
