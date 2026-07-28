@@ -301,9 +301,54 @@ _SAME_POINT_TOL_DEG = 0.05
 # just didn't re-state its own starting point) and gets closed.
 _CLOSE_LOOP_MAX_GAP_DEG = 6.0
 
+# Separate trails within the same book.map region are stitched together if
+# their nearest endpoints are closer than this - a run breaks whenever a
+# non-coastal point interrupts an otherwise-continuous coast (a city point
+# wedged between two capes, say), and this reconnects those pieces. Tighter
+# than the loop-closing gap above since this bridges two *different* trails
+# rather than confirming one trail return to its own start.
+_STITCH_MAX_GAP_DEG = 2.5
+
 
 def _dist(a: tuple[float, float], b: tuple[float, float]) -> float:
     return ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2) ** 0.5
+
+
+def _stitch_trails(trails: list[list[tuple[float, float]]]) -> list[list[tuple[float, float]]]:
+    """Greedily join trails whose nearest endpoints are within range."""
+    trails = [list(t) for t in trails]
+    merged = True
+    while merged and len(trails) > 1:
+        merged = False
+        best = None  # (distance, i, j, orientation)
+        for i in range(len(trails)):
+            for j in range(i + 1, len(trails)):
+                a, b = trails[i], trails[j]
+                for orientation, (pa, pb) in {
+                    "end-start": (a[-1], b[0]),
+                    "end-end": (a[-1], b[-1]),
+                    "start-start": (a[0], b[0]),
+                    "start-end": (a[0], b[-1]),
+                }.items():
+                    d = _dist(pa, pb)
+                    if d <= _STITCH_MAX_GAP_DEG and (best is None or d < best[0]):
+                        best = (d, i, j, orientation)
+        if best is not None:
+            _, i, j, orientation = best
+            a, b = trails[i], trails[j]
+            if orientation == "end-start":
+                joined = a + b
+            elif orientation == "end-end":
+                joined = a + list(reversed(b))
+            elif orientation == "start-start":
+                joined = list(reversed(a)) + b
+            else:  # start-end
+                joined = b + a
+            for idx in sorted((i, j), reverse=True):
+                del trails[idx]
+            trails.append(joined)
+            merged = True
+    return trails
 
 
 def build_coastlines(refs: list[Reference]) -> list[list[tuple[float, float]]]:
@@ -358,12 +403,18 @@ def build_coastlines(refs: list[Reference]) -> list[list[tuple[float, float]]]:
 
         # Build the raw catalogue-order edge list, breaking at non-coastal
         # points or implausibly large jumps.
+        # Non-coastal rows (a city, a river feature) are skipped over rather
+        # than treated as a hard break: some books (e.g. Africa) interleave
+        # a tribal/descriptive aside between *every* coastal point instead
+        # of grouping them into one contiguous run the way e.g. Ireland's
+        # entry does, and requiring strict adjacency dropped those capes
+        # entirely. The distance cap below is what still guards against
+        # bridging two genuinely unrelated stretches.
         edges: list[tuple[tuple[float, float], tuple[float, float]]] = []
         prev: tuple[float, float] | None = None
         for ref in items:
             point = (ref.lat_modern, ref.lon_modern)
             if ref.category != "coast":
-                prev = None
                 continue
             if prev is not None and _dist(prev, point) <= _MAX_COASTAL_GAP_DEG:
                 edges.append((prev, point))
@@ -388,43 +439,52 @@ def build_coastlines(refs: list[Reference]) -> list[list[tuple[float, float]]]:
             adjacency.setdefault(ka, []).append(kb)
             adjacency.setdefault(kb, []).append(ka)
 
-        # Trace each connected component: walk from a degree-1 node if one
-        # exists (an open path), otherwise start anywhere (a closed cycle).
-        visited_nodes: set[tuple[float, float]] = set()
-        for start in adjacency:
-            if start in visited_nodes:
-                continue
-            component_nodes = {start}
-            frontier = [start]
-            while frontier:
-                n = frontier.pop()
-                for nb in adjacency[n]:
-                    if nb not in component_nodes:
-                        component_nodes.add(nb)
-                        frontier.append(nb)
+        # Decompose the graph into trails that together cover every edge -
+        # not just one path per connected component. A node with 3+ edges
+        # (three or more coastal walks sharing one corner) can't be
+        # captured by a single walk: greedily walking from one endpoint
+        # until "stuck" leaves the other branches at that junction
+        # untouched, and since nothing revisits an already-walked node,
+        # those branches would otherwise be silently dropped instead of
+        # rendered as their own line. Repeatedly tracing a trail from
+        # whatever unused edges remain - allowing a junction node to be
+        # revisited by a later trail - guarantees every edge ends up in
+        # some polyline.
+        remaining: dict[tuple[float, float], list[tuple[float, float]]] = {n: list(nbs) for n, nbs in adjacency.items()}
 
-            start_node = next((n for n in component_nodes if len(adjacency[n]) == 1), next(iter(component_nodes)))
+        def remove_edge(u: tuple[float, float], v: tuple[float, float]) -> None:
+            remaining[u].remove(v)
+            remaining[v].remove(u)
 
+        trails: list[list[tuple[float, float]]] = []
+        while any(remaining.values()):
+            # Prefer starting a trail at an odd-degree node (a natural
+            # trail endpoint); otherwise any node with unused edges works
+            # (it's part of a not-yet-fully-consumed cycle or junction).
+            start_node = next(
+                (n for n, nbs in remaining.items() if nbs and len(nbs) % 2 == 1),
+                next(n for n, nbs in remaining.items() if nbs),
+            )
             path = [start_node]
-            used_edges: set[tuple[tuple[float, float], tuple[float, float]]] = set()
             current = start_node
-            while True:
-                nxt = next(
-                    (nb for nb in adjacency[current] if (current, nb) not in used_edges and (nb, current) not in used_edges),
-                    None,
-                )
-                if nxt is None:
-                    break
-                used_edges.add((current, nxt))
+            while remaining[current]:
+                nxt = remaining[current][0]
+                remove_edge(current, nxt)
                 path.append(nxt)
                 current = nxt
 
-            visited_nodes.update(path)
             points = [node_coords[n] for n in path]
-            if len(points) >= 4 and points[0] != points[-1] and _dist(points[0], points[-1]) <= _CLOSE_LOOP_MAX_GAP_DEG:
-                points.append(points[0])
             if len(points) >= 2:
-                polylines.append(points)
+                trails.append(points)
+
+        # Trails broken apart by an interrupting non-coastal point (rather
+        # than a genuine gap in the graph) are rejoined if their loose ends
+        # land close together, then closed into a loop if the final trail
+        # returns near its own start.
+        for points in _stitch_trails(trails):
+            if len(points) >= 4 and points[0] != points[-1] and _dist(points[0], points[-1]) <= _CLOSE_LOOP_MAX_GAP_DEG:
+                points = points + [points[0]]
+            polylines.append(points)
 
     return polylines
 

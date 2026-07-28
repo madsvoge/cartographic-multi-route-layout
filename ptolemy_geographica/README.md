@@ -50,15 +50,27 @@ spurious straight line from the end of one walk back across to the start
 of the next (this is what caused Britain's stray diagonal line, and why
 Ireland's line never closed back to its own start). Instead, each
 catalogue-order neighbour pair becomes an edge in an undirected graph,
-points that (nearly) coincide are collapsed into one shared node, and each
-connected component is traced as a path - or as a closed loop, if its two
-ends land within ~6° of each other (this is what closes an island's
-coastline). Runs are grouped by the catalogue's "book.map" prefix (e.g.
-"2.02"), not the printed tabula (e.g. "EU01") - a tabula routinely bundles
-several distinct book.map sub-regions onto one sheet (EU01 = Ireland
-"2.02" *and* Britain "2.03"), which used to draw a line straight across
-the sea between the two. A run also breaks at a non-coastal point or an
-implausibly large jump.
+points that (nearly) coincide are collapsed into one shared node, and the
+graph is decomposed into trails that together cover every edge - a naive
+single walk per connected component silently drops whichever branches it
+doesn't happen to walk down at a junction (3+ coastal stretches sharing
+one corner), so trails are re-started from any still-unused edge until
+none remain. Non-coastal rows (a city, a river feature) are skipped over
+rather than breaking the run outright - some books (Africa, for one)
+interleave a tribal aside between *every* coastal point instead of
+grouping them the way Ireland's entry does, and hard-breaking on each one
+dropped those points entirely. Trails still separated afterwards (a
+genuine gap, or a non-coastal detour too long to bridge) are stitched back
+together if their loose ends land within ~2.5° of each other, and a
+trail whose two remaining ends land within ~6° is closed into a loop -
+this is what closes an island's coastline back to its own start. Runs are
+grouped by the catalogue's "book.map" prefix (e.g. "2.02"), not the
+printed tabula (e.g. "EU01") - a tabula routinely bundles several distinct
+book.map sub-regions onto one sheet (EU01 = Ireland "2.02" *and* Britain
+"2.03"), which used to draw a line straight across the sea between the
+two. A run also breaks at an implausibly large jump between points
+(15°), which is also the outer bound the stitching and loop-closing above
+stay well under.
 
 This is all heuristic (regex over the German `Locality` text plus section
 structure and graph reconstruction), not a verified ground truth - expect
