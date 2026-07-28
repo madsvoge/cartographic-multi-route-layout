@@ -34,16 +34,26 @@ this structure well enough to classify every plotted point into one of:
 | Island | pink | name matches "Insel" (island) |
 
 **Coastlines** are then reconstructed by connecting consecutive
-coastal-category points *in the catalogue's own listing order* per map -
-since Ptolemy described the coast as a running sequence, walking that
-sequence retraces it. A run breaks at a non-coastal point, an implausibly
-large jump between consecutive points, or a map boundary.
+coastal-category points *in the catalogue's own listing order*, grouped by
+the catalogue's "book.map" prefix (e.g. "2.02") rather than by the printed
+tabula (e.g. "EU01") - a tabula routinely bundles several distinct
+book.map sub-regions onto one sheet (EU01 = Ireland "2.02" *and* Britain
+"2.03"), and grouping by tabula alone drew a spurious line straight across
+the sea between the two. A run breaks at a non-coastal point or an
+implausibly large jump; broken-off segments are then re-stitched
+(`_stitch_segments`) if their loose ends land within ~2.5° of each other,
+since that's usually catalogue order being interrupted by an inland aside
+rather than a genuine gap in the coast.
 
 This is a heuristic (regex over the German `Locality` text plus section
-structure), not a verified ground truth - expect occasional misclassified
-points or a coastline segment that cuts across land, especially in regions
-where Ptolemy's own coordinates were badly distorted (e.g. Sarmatia/Scythia).
-Use `--dry-run` to inspect the `category` assigned to any point.
+structure), not a verified ground truth - expect the occasional
+misclassified point, or a coastline that runs oddly straight in a region
+where Ptolemy's own coordinates were badly distorted (Sarmatia/Scythia are
+the worst-known cases - compared against a 15th-century Nicolaus Germanus
+redrawing of the same catalogue, the straight-line distortion there turned
+out to already be present in Ptolemy's original data, not a bug in this
+reconstruction). Use `--dry-run` to inspect the `category` assigned to any
+point.
 
 ## Data
 

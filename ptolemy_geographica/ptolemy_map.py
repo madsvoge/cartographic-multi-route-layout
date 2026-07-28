@@ -275,10 +275,61 @@ def load_xlsx(path: Path) -> list[Reference]:
     return refs
 
 
-# Coastal runs are broken if consecutive points are further apart than this
-# (degrees, roughly - a safety valve against wrongly bridging two disjoint
-# landmasses that happen to sit adjacent in the catalogue's row order).
+# Coastal runs are broken if consecutive points (in catalogue order) are
+# further apart than this (degrees, roughly) - a safety valve against
+# wrongly bridging two disjoint landmasses that happen to sit adjacent in
+# the catalogue's row order.
 _MAX_COASTAL_GAP_DEG = 15.0
+
+# After building runs, dangling segment *endpoints* within the same
+# book.map region are stitched together if they're closer than this - much
+# tighter than the gap valve above, and restricted to endpoints (not every
+# point pair) so it only bridges runs that catalogue order itself split
+# (e.g. a city/mountain point interrupting an otherwise continuous coast),
+# rather than free-form nearest-neighbour routing across the whole point
+# cloud, which tends to cut straight across bays and peninsulas.
+_STITCH_MAX_GAP_DEG = 2.5
+
+
+def _stitch_segments(segments: list[list[tuple[float, float]]]) -> list[list[tuple[float, float]]]:
+    """Greedily join segments whose nearest endpoints are within range."""
+
+    def dist(a: tuple[float, float], b: tuple[float, float]) -> float:
+        return ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2) ** 0.5
+
+    segments = [list(s) for s in segments]
+    merged = True
+    while merged and len(segments) > 1:
+        merged = False
+        best = None  # (distance, i, j, orientation)
+        for i in range(len(segments)):
+            for j in range(i + 1, len(segments)):
+                a, b = segments[i], segments[j]
+                for orientation, (pa, pb) in {
+                    "end-start": (a[-1], b[0]),
+                    "end-end": (a[-1], b[-1]),
+                    "start-start": (a[0], b[0]),
+                    "start-end": (a[0], b[-1]),
+                }.items():
+                    d = dist(pa, pb)
+                    if d <= _STITCH_MAX_GAP_DEG and (best is None or d < best[0]):
+                        best = (d, i, j, orientation)
+        if best is not None:
+            _, i, j, orientation = best
+            a, b = segments[i], segments[j]
+            if orientation == "end-start":
+                joined = a + b
+            elif orientation == "end-end":
+                joined = a + list(reversed(b))
+            elif orientation == "start-start":
+                joined = list(reversed(a)) + b
+            else:  # start-end
+                joined = b + a
+            for idx in sorted((i, j), reverse=True):
+                del segments[idx]
+            segments.append(joined)
+            merged = True
+    return segments
 
 
 def build_coastlines(refs: list[Reference]) -> list[list[tuple[float, float]]]:
@@ -286,39 +337,51 @@ def build_coastlines(refs: list[Reference]) -> list[list[tuple[float, float]]]:
 
     Ptolemy lists coastal points as a running sequence along the shore, so
     connecting consecutive "coast"-classified points *in catalogue order*
-    (per map) retraces the coastline he described. The run breaks whenever
-    a differently-classified point (city/river/mountain/island) interrupts
-    the sequence, whenever the gap between two points is implausibly large,
-    or at a map boundary.
+    retraces the coastline he described. Runs are grouped by the
+    catalogue's own "book.map" prefix (e.g. "2.02"), not by the printed
+    tabula (e.g. "EU01") - a single tabula routinely bundles several
+    distinct book.map sub-regions (EU01 = Ireland "2.02" *and* Britain
+    "2.03" on one sheet), and grouping by tabula alone drew a spurious
+    line straight across the sea between two unrelated landmasses. A run
+    also breaks whenever a differently-classified point interrupts the
+    sequence, or the gap between two points is implausibly large - such
+    breaks are then re-stitched (see _stitch_segments) if the two loose
+    ends land close together, since that's usually catalogue order being
+    interrupted by an inland aside rather than a real coastline gap.
     """
 
     def sort_key(ref: Reference) -> tuple:
         return tuple(int(p) if p.isdigit() else p for p in ref.ref_id.split("."))
 
+    def book_map(ref: Reference) -> str:
+        parts = ref.ref_id.split(".")
+        return ".".join(parts[:2]) if len(parts) >= 2 else ref.ref_id
+
     groups: dict[tuple[str, str], list[Reference]] = {}
     for ref in refs:
         if not ref.ref_id or not ref.is_plausible():
             continue
-        groups.setdefault((ref.source, ref.tabula), []).append(ref)
+        groups.setdefault((ref.source, book_map(ref)), []).append(ref)
 
     polylines: list[list[tuple[float, float]]] = []
     for items in groups.values():
         items.sort(key=sort_key)
+        segments: list[list[tuple[float, float]]] = []
         current: list[tuple[float, float]] = []
         for ref in items:
             point = (ref.lat_modern, ref.lon_modern)
             if ref.category != "coast":
-                if len(current) >= 2:
-                    polylines.append(current)
+                if current:
+                    segments.append(current)
                 current = []
                 continue
             if current and (abs(point[0] - current[-1][0]) > _MAX_COASTAL_GAP_DEG or abs(point[1] - current[-1][1]) > _MAX_COASTAL_GAP_DEG):
-                if len(current) >= 2:
-                    polylines.append(current)
+                segments.append(current)
                 current = []
             current.append(point)
-        if len(current) >= 2:
-            polylines.append(current)
+        if current:
+            segments.append(current)
+        polylines.extend(s for s in _stitch_segments(segments) if len(s) >= 2)
     return polylines
 
 
