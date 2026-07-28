@@ -23,7 +23,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from ptolemy_map import DEFAULT_INPUT, load_inputs
+from ptolemy_map import CATEGORIES, DEFAULT_INPUT, build_coastlines, load_inputs
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 
@@ -36,7 +36,6 @@ REGIONS = {
     "africa": (-20, -35, 55, 38),
 }
 
-SERIES_BLUE = "#2a78d6"
 LAND = "#eceae4"
 OCEAN = "#dbe6ee"
 BORDER = "#c3c2b7"
@@ -44,16 +43,17 @@ TEXT_PRIMARY = "#0b0b0b"
 TEXT_SECONDARY = "#52514e"
 
 
+def _in_bbox(lon: float, lat: float, bbox: tuple[float, float, float, float]) -> bool:
+    lon_min, lat_min, lon_max, lat_max = bbox
+    return lon_min <= lon <= lon_max and lat_min <= lat <= lat_max
+
+
 def render(refs, bbox, output: Path, title: str) -> int:
     import geopandas
     import matplotlib.pyplot as plt
 
     lon_min, lat_min, lon_max, lat_max = bbox
-    points = [
-        (r.lon_modern, r.lat_modern)
-        for r in refs
-        if r.is_plausible() and lon_min <= r.lon_modern <= lon_max and lat_min <= r.lat_modern <= lat_max
-    ]
+    in_view = [r for r in refs if r.is_plausible() and _in_bbox(r.lon_modern, r.lat_modern, bbox)]
 
     world = geopandas.read_file(geopandas.datasets.get_path("naturalearth_lowres"))
     pad = max((lon_max - lon_min), (lat_max - lat_min)) * 0.1
@@ -65,9 +65,36 @@ def render(refs, bbox, output: Path, title: str) -> int:
 
     world.plot(ax=ax, color=LAND, edgecolor=BORDER, linewidth=0.6)
 
-    if points:
-        xs, ys = zip(*points)
-        ax.scatter(xs, ys, s=14, color=SERIES_BLUE, alpha=0.65, linewidths=0.4, edgecolors="white", zorder=5)
+    coastlines = build_coastlines(refs)
+    coastline_segments_drawn = 0
+    for line in coastlines:
+        line_in_view = [(lon, lat) for lat, lon in line if _in_bbox(lon, lat, bbox)]
+        if len(line_in_view) < 2:
+            continue
+        xs, ys = zip(*line_in_view)
+        ax.plot(xs, ys, color=CATEGORIES["coast"]["color"], linewidth=1.1, alpha=0.8, zorder=4)
+        coastline_segments_drawn += 1
+
+    present_categories = [cat for cat in CATEGORIES if any(r.category == cat for r in in_view)]
+    for cat in present_categories:
+        pts = [(r.lon_modern, r.lat_modern) for r in in_view if r.category == cat]
+        xs, ys = zip(*pts)
+        ax.scatter(
+            xs,
+            ys,
+            s=10 if cat == "coast" else 16,
+            color=CATEGORIES[cat]["color"],
+            alpha=0.75,
+            linewidths=0.3,
+            edgecolors="white",
+            zorder=5,
+            label=f"{CATEGORIES[cat]['label']} ({len(pts)})",
+        )
+
+    if present_categories:
+        legend = ax.legend(loc="lower right", fontsize=8.5, framealpha=0.9, facecolor="#fcfcfb", edgecolor=BORDER)
+        for text in legend.get_texts():
+            text.set_color(TEXT_PRIMARY)
 
     ax.set_xlim(lon_min, lon_max)
     ax.set_ylim(lat_min, lat_max)
@@ -84,7 +111,8 @@ def render(refs, bbox, output: Path, title: str) -> int:
     fig.text(
         0.06,
         0.925,
-        f"{len(points)} of {len(refs)} catalogue references shown at modernized (Ferro-offset) coordinates",
+        f"{len(in_view)} of {len(refs)} catalogue references shown ({coastline_segments_drawn} coastline segments) "
+        "at modernized (Ferro-offset) coordinates",
         fontsize=11.5,
         color=TEXT_SECONDARY,
         ha="left",
@@ -101,8 +129,8 @@ def render(refs, bbox, output: Path, title: str) -> int:
 
     output.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output, facecolor=fig.get_facecolor())
-    print(f"plotted {len(points)} reference(s) -> {output}")
-    return len(points)
+    print(f"plotted {len(in_view)} reference(s), {coastline_segments_drawn} coastline segments -> {output}")
+    return len(in_view)
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:

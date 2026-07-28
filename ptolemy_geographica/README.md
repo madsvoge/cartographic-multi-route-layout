@@ -16,6 +16,35 @@ Leaflet/OpenStreetMap page with a marker (and popup: name, modern
 identification, book/tabula, ancient and modernized coordinates) for each of
 the ~6,400 plottable references — clustered so the browser stays responsive.
 
+## Point classification & coastlines
+
+Ptolemy didn't just list coordinates - within each region his catalogue is
+organized into rubricated sections: a running sequence of coastal points
+(capes, river mouths, bays - going around the shore in order), the peoples
+inhabiting the area (named but given no coordinates of their own), and the
+inland cities. The xlsx loader (`load_xlsx` in `ptolemy_map.py`) recovers
+this structure well enough to classify every plotted point into one of:
+
+| Category | Color | How it's detected |
+|---|---|---|
+| Coastal point | blue | the point's catalogue section is headed by a sea/ocean/gulf name, or its own name matches a cape/river-mouth pattern |
+| City / inland settlement | orange | default, for points not in a coastal section and not matching another pattern |
+| River source / confluence | teal | name matches "Quelle" (source), "Einmündung" (confluence), etc. |
+| Mountain | amber | name matches "Gebirge" (mountain range) |
+| Island | pink | name matches "Insel" (island) |
+
+**Coastlines** are then reconstructed by connecting consecutive
+coastal-category points *in the catalogue's own listing order* per map -
+since Ptolemy described the coast as a running sequence, walking that
+sequence retraces it. A run breaks at a non-coastal point, an implausibly
+large jump between consecutive points, or a map boundary.
+
+This is a heuristic (regex over the German `Locality` text plus section
+structure), not a verified ground truth - expect occasional misclassified
+points or a coastline segment that cuts across land, especially in regions
+where Ptolemy's own coordinates were badly distorted (e.g. Sarmatia/Scythia).
+Use `--dry-run` to inspect the `category` assigned to any point.
+
 ## Data
 
 - `data/ptolemy_catalogue_stueckelberger.xlsx` (default, full catalogue) —
