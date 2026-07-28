@@ -10,23 +10,36 @@ plots them as an interactive map on OpenStreetMap tiles.
 Ptolemy's Geographica lists ~8,000 place names as pairs of coordinates
 (longitude, latitude in degrees/minutes) measured from a prime meridian at
 the "Fortunate Isles" (roughly the Canary Islands / El Hierro / "Ferro"),
-not from Greenwich. Two input modes are supported:
+not from Greenwich. Three input modes are supported:
 
-1. CSV mode (default, recommended): reads structured digitizations of the
-   Geographica's tables ("tabulae"), using the open-data schema published by
-   the Ptolemy-Geography project (github.com/Lorp/Ptolemy-Geography):
+1. XLSX mode (default, full catalogue): reads
+   `data/ptolemy_catalogue_stueckelberger.xlsx`, a 10,049-row digitization of
+   the complete Geographica catalogue covering all 27 regional maps (10
+   Europe, 12 Asia, 4 Africa + Ireland), with columns:
+
+       ID, ID_map, Locality, Modern_location,
+       Longitude_Omega, Latitude_Omega, Longitude_Xi, Latitude_Xi
+
+   Omega and Xi are the two main manuscript recensions of the Geographica;
+   this loader plots the Omega coordinates where available, falling back to
+   Xi. ~6,400 of the 10,049 rows carry coordinates - the rest are
+   region/people/river names in the catalogue that Ptolemy didn't assign
+   their own coordinate pair to.
+
+2. CSV mode: reads structured digitizations of the Geographica's tables
+   ("tabulae") using the open-data schema published by the Ptolemy-Geography
+   project (github.com/Lorp/Ptolemy-Geography):
 
        book,map,subheading,placename,longitude,longitude-min,latitude,latitude-min
 
    A small bundled sample (`data/petri-munster-1540-hibernia.csv`, the
-   "Hiberniae Insulae" table from the 1540 Petri/Munster edition) is used by
-   default. Point --input at a directory or additional CSV files (in the
-   same schema) to plot more of the Geographica as more tables get
-   digitized upstream.
+   "Hiberniae Insulae" table from the 1540 Petri/Munster edition) is
+   included for reference. Point --input at a directory or specific CSV
+   files (in the same schema) to include more.
 
-2. Text mode (--text): a best-effort regex extractor for freeform/plain-text
+3. Text mode (--text): a best-effort regex extractor for freeform/plain-text
    editions of the Geographica, for place-name + degree/minute coordinate
-   pairs that don't already exist as structured CSV. Always review
+   pairs that don't already exist as structured data. Always review
    extracted points with --dry-run before trusting them; OCR'd or loosely
    formatted source text will produce false positives/negatives.
 
@@ -45,8 +58,8 @@ worse the further from the Mediterranean. Treat plotted positions as
 Usage
 -----
     pip install -r requirements.txt
-    python3 ptolemy_map.py                        # bundled sample -> ptolemy_map.html
-    python3 ptolemy_map.py --input data/           # every *.csv in a directory
+    python3 ptolemy_map.py                        # full catalogue -> ptolemy_map.html
+    python3 ptolemy_map.py --input data/           # every *.csv/*.xlsx in a directory
     python3 ptolemy_map.py --text geographica.txt --dry-run
     python3 ptolemy_map.py --output out.html --open
 """
@@ -68,8 +81,12 @@ from pathlib import Path
 FERRO_OFFSET_DEG = 17.6667
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-DEFAULT_INPUT = SCRIPT_DIR / "data" / "petri-munster-1540-hibernia.csv"
+DEFAULT_INPUT = SCRIPT_DIR / "data" / "ptolemy_catalogue_stueckelberger.xlsx"
 DEFAULT_OUTPUT = SCRIPT_DIR / "ptolemy_map.html"
+
+# Continent prefixes used by the ID_map column of the Stueckelberger/Grasshoff
+# catalogue (EU/AS/AF + the map's 2-digit index within that continent).
+_CONTINENT_NAMES = {"EU": "Europe", "AS": "Asia", "AF": "Africa"}
 
 
 @dataclass
@@ -82,6 +99,8 @@ class Reference:
     lon_ptolemy: float  # decimal degrees, Ferro-relative
     lat_ptolemy: float  # decimal degrees, from equator
     source: str
+    modern_location: str = ""
+    recension: str = ""
 
     @property
     def lon_modern(self) -> float:
@@ -137,15 +156,70 @@ def load_csv(path: Path) -> list[Reference]:
     return refs
 
 
-def load_csv_inputs(paths: list[Path]) -> list[Reference]:
+def load_xlsx(path: Path) -> list[Reference]:
+    """Load the Stueckelberger/Grasshoff-schema catalogue workbook.
+
+    Columns: ID, ID_map, Locality, Modern_location,
+             Longitude_Omega, Latitude_Omega, Longitude_Xi, Latitude_Xi
+    Uses the Omega recension's coordinates where present, falling back to
+    Xi; rows with neither (region/people/river names without their own
+    coordinate pair) are skipped.
+    """
+    try:
+        import openpyxl
+    except ImportError as exc:  # pragma: no cover
+        raise SystemExit(
+            "openpyxl is required to read .xlsx catalogues. Install it with:\n"
+            "    pip install -r requirements.txt"
+        ) from exc
+
+    wb = openpyxl.load_workbook(str(path), read_only=True, data_only=True)
+    ws = wb[wb.sheetnames[0]]
+    rows = ws.iter_rows(min_row=2, max_col=8, values_only=True)
+
+    refs: list[Reference] = []
+    for row in rows:
+        row = tuple(row) + (None,) * (8 - len(row))
+        _id, id_map, locality, modern_location, lon_o, lat_o, lon_x, lat_x = row
+        if not locality:
+            continue
+
+        if isinstance(lon_o, (int, float)) and isinstance(lat_o, (int, float)):
+            lon, lat, recension = float(lon_o), float(lat_o), "Omega"
+        elif isinstance(lon_x, (int, float)) and isinstance(lat_x, (int, float)):
+            lon, lat, recension = float(lon_x), float(lat_x), "Xi"
+        else:
+            continue  # no coordinate pair recorded for this catalogue entry
+
+        id_map = (id_map or "").strip()
+        continent = _CONTINENT_NAMES.get(id_map[:2], id_map[:2])
+        refs.append(
+            Reference(
+                name=str(locality).strip(),
+                book=continent,
+                tabula=id_map or "?",
+                lon_ptolemy=lon,
+                lat_ptolemy=lat,
+                source=path.name,
+                modern_location=str(modern_location).strip() if modern_location else "",
+                recension=recension,
+            )
+        )
+    wb.close()
+    return refs
+
+
+def load_inputs(paths: list[Path]) -> list[Reference]:
     refs: list[Reference] = []
     for p in paths:
         if p.is_dir():
-            csv_files = sorted(p.glob("*.csv"))
-            if not csv_files:
-                print(f"warning: no *.csv files found in directory {p}", file=sys.stderr)
-            for csv_file in csv_files:
-                refs.extend(load_csv(csv_file))
+            data_files = sorted(p.glob("*.csv")) + sorted(p.glob("*.xlsx"))
+            if not data_files:
+                print(f"warning: no *.csv/*.xlsx files found in directory {p}", file=sys.stderr)
+            for data_file in data_files:
+                refs.extend(load_xlsx(data_file) if data_file.suffix == ".xlsx" else load_csv(data_file))
+        elif p.suffix == ".xlsx":
+            refs.extend(load_xlsx(p))
         else:
             refs.extend(load_csv(p))
     return refs
@@ -229,11 +303,14 @@ def build_map(refs: list[Reference], output: Path) -> None:
     cluster = MarkerCluster(name="Ptolemy Geographica references").add_to(fmap)
 
     for ref in plausible:
+        modern_line = f"Identified with: {html.escape(ref.modern_location)}<br>" if ref.modern_location else ""
+        recension_line = f" ({html.escape(ref.recension)} recension)" if ref.recension else ""
         popup_html = (
             f"<b>{html.escape(ref.name)}</b><br>"
+            f"{modern_line}"
             f"Book {html.escape(ref.book) or '?'} "
             f"&mdash; {html.escape(ref.tabula) or 'unlabelled table'}<br>"
-            f"Ptolemy coords: {ref.lon_ptolemy:.2f}° (Ferro), {ref.lat_ptolemy:.2f}°<br>"
+            f"Ptolemy coords: {ref.lon_ptolemy:.2f}° (Ferro), {ref.lat_ptolemy:.2f}°{recension_line}<br>"
             f"Modern approx.: {ref.lat_modern:.3f}, {ref.lon_modern:.3f}<br>"
             f"<i>source: {html.escape(ref.source)}</i>"
         )
@@ -261,8 +338,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         nargs="*",
         type=Path,
         default=[DEFAULT_INPUT],
-        help="CSV file(s) and/or directories of CSV files in the Ptolemy-Geography schema "
-        "(default: bundled sample data/petri-munster-1540-hibernia.csv)",
+        help="CSV/XLSX file(s) and/or directories of them "
+        "(default: full catalogue data/ptolemy_catalogue_stueckelberger.xlsx)",
     )
     parser.add_argument(
         "--text",
@@ -294,7 +371,7 @@ def main(argv: list[str] | None = None) -> int:
     FERRO_OFFSET_DEG = args.ferro_offset
 
     refs: list[Reference] = []
-    refs.extend(load_csv_inputs(args.input))
+    refs.extend(load_inputs(args.input))
     for text_path in args.text:
         refs.extend(extract_from_text(text_path))
 

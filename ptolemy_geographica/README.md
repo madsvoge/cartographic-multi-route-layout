@@ -11,20 +11,28 @@ pip install -r requirements.txt
 python3 ptolemy_map.py --open
 ```
 
-This reads the bundled sample data and writes `ptolemy_map.html`, an
-interactive Leaflet/OpenStreetMap page with a marker (and popup: name,
-book/tabula, ancient and modernized coordinates) for every reference found.
+This reads the full catalogue and writes `ptolemy_map.html`, an interactive
+Leaflet/OpenStreetMap page with a marker (and popup: name, modern
+identification, book/tabula, ancient and modernized coordinates) for each of
+the ~6,400 plottable references — clustered so the browser stays responsive.
 
 ## Data
 
-- `data/petri-munster-1540-hibernia.csv` — a small bundled sample (the
+- `data/ptolemy_catalogue_stueckelberger.xlsx` (default, full catalogue) —
+  10,049 rows covering all 27 regional maps of the Geographica (10 Europe, 12
+  Asia, 4 Africa + Ireland), columns:
+  `ID, ID_map, Locality, Modern_location, Longitude_Omega, Latitude_Omega, Longitude_Xi, Latitude_Xi`.
+  Omega and Xi are the Geographica's two main manuscript recensions; the
+  loader plots Omega where available, Xi otherwise. ~6,400 rows carry a
+  coordinate pair — the remaining rows are region/people/river names in the
+  catalogue that Ptolemy didn't assign coordinates of their own.
+- `data/petri-munster-1540-hibernia.csv` — a small CSV-schema sample (the
   "Hiberniae Insulae" table of the 1540 Petri/Münster edition), in the
   open-data schema published by the
   [Ptolemy-Geography project](https://github.com/Lorp/Ptolemy-Geography):
   `book,map,subheading,placename,longitude,longitude-min,latitude,latitude-min`.
-- Point `--input` at a directory (or additional CSV files in the same
-  schema) to plot more of the Geographica as more of its ~8,000 entries get
-  digitized upstream, e.g.:
+- Point `--input` at a directory (or specific CSV/XLSX files) to combine
+  multiple sources, e.g.:
 
   ```bash
   python3 ptolemy_map.py --input data/ more_tables/ --output map.html
