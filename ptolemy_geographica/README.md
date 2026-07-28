@@ -122,19 +122,31 @@ the other half of that same Spain/France gap.
 
 A second, harder-to-generalize problem: some sea-headed sections aren't a
 coastal walk at all but a list of scattered islands (Elba/Capraia/Pianosa;
-the Balearics; the Sporades; Red Sea and Persian Gulf islands...), and nothing
-in the text reliably tells them apart from a real coastal-city section
-headed the same way (Ptolemy's Gulf-of-Taranto cities - Croto, Thurii,
-Tarentum - are headed by "Golf von Tarent" exactly like the island lists
-are headed by "Tyrrhenisches Meer"). A blanket rule would misclassify one
-or the other, so `_ISLAND_APPENDIX_SECTIONS` is a small, manually verified
-exception list (checked against the `Modern_location` column and known
-ancient geography) of the specific `(book.map, section)` pairs confirmed to
-be island enumerations - not a general heuristic. If you spot another
-sea-crossing line, check the two points' `Modern_location` in the
-spreadsheet (or click them in the interactive map) - if they're islands,
-tell me their section (`book.section` prefix of the `ref_id`, e.g. "6.08")
-and I can add it.
+the Balearics; the Sporades; Red Sea and Persian Gulf islands; Corfu;
+Euboea; the Cyclades...), and nothing in the text reliably tells them apart
+from a real coastal-city section headed the same way (Ptolemy's
+Gulf-of-Taranto cities - Croto, Thurii, Tarentum - are headed by "Golf von
+Tarent" exactly like the island lists are headed by "Tyrrhenisches Meer").
+Worse, a name like "Kap Leukimma" (a real cape, on Corfu) or "Kap Sunion"
+(the real Attica cape - cited *again*, in the middle of the Cyclades list,
+apparently as a reference point rather than the same physical cape) reads
+as an unambiguous mainland coastal point from the name alone, with nothing
+to say it isn't. A blanket rule would misclassify some section or other, so
+`_ISLAND_APPENDIX_SECTIONS` is a small, manually verified exception list
+(checked against the `Modern_location` column and known ancient geography)
+of the specific `(book.map, section)` pairs confirmed to be island
+enumerations - not a general heuristic - and it wins over even an
+unambiguous "Kap"-prefixed name. A companion list,
+`_ISLAND_POINT_OVERRIDES`, handles the same problem at single-point
+granularity for the rare case where only *one* entry in an otherwise
+all-mainland section is actually on an island - book.map "3.14" section
+"06" is Akarnania's mainland coast except for "Kap Leukas" (Cape Doukato,
+on the island of Lefkada), where force-islanding the whole section would
+have wrongly reclassified the real mainland points sitting right next to
+it. If you spot another sea-crossing line, check the two points'
+`Modern_location` in the spreadsheet (or click them in the interactive
+map) - if they're islands, tell me their section (`book.section` prefix of
+the `ref_id`, e.g. "6.08") or the individual `ref_id` and I can add it.
 
 This is all heuristic (regex over the German `Locality` text plus section
 structure and graph reconstruction), not a verified ground truth - expect
@@ -147,18 +159,19 @@ already be present in Ptolemy's original data, not a bug in this
 reconstruction). Use `--dry-run` to inspect the `category` assigned to any
 point.
 
-Two exception lists handle cases neither the header nor the point-name
-regexes can resolve on their own, both keyed by `(book.map, section)` and
-manually verified against `Modern_location` plus known ancient geography:
-`_ISLAND_APPENDIX_SECTIONS` for sea-headed sections that are actually a
-scattered island list (see above), and `_NONCOASTAL_EXCEPTION_SECTIONS`
-for the mirror-image problem - a coastal-*sounding* header whose points
-are really inland. E.g. book.map "2.03" section "17" is headed
-"Hafenreicher Golf" ("harbor-rich gulf") but its points are Eboracum
-(York), Camulodunum (Colchester), and Petuaria (Brough-on-Humber) - inland
-Roman-Britain towns, not capes or mouths - which had spliced a detour up
-to York into the middle of the England coastline between East Anglia and
-Kent.
+Several exception lists handle cases neither the header nor the point-name
+regexes can resolve on their own, all manually verified against
+`Modern_location` plus known ancient geography: `_ISLAND_APPENDIX_SECTIONS`
+(keyed by `(book.map, section)`) for sea-headed sections that are actually
+a scattered island list (see above); `_ISLAND_POINT_OVERRIDES` (keyed by
+individual `ref_id`) for the same problem at single-point granularity; and
+`_NONCOASTAL_EXCEPTION_SECTIONS` (keyed by `(book.map, section)`) for the
+mirror-image problem - a coastal-*sounding* header whose points are really
+inland. E.g. book.map "2.03" section "17" is headed "Hafenreicher Golf"
+("harbor-rich gulf") but its points are Eboracum (York), Camulodunum
+(Colchester), and Petuaria (Brough-on-Humber) - inland Roman-Britain towns,
+not capes or mouths - which had spliced a detour up to York into the
+middle of the England coastline between East Anglia and Kent.
 
 A third, similarly narrow exception list handles the loop-closing ratio
 check (see `_CLOSE_LOOP_MAX_GAP_RATIO` above) getting it wrong: Sardinia's

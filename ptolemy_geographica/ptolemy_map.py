@@ -174,6 +174,15 @@ _ISLAND_APPENDIX_SECTIONS = {
     ("3.01", "79"),  # Planasia..Capreae - Pianosa/Ponza/Ischia/Capri
     ("3.11", "14"),  # Kyaneen/Proikonesos/Thasos/Samothrake
     ("3.13", "47"),  # Saso/Skiathos/Peparethos/Skopelos (Sporades)
+    ("3.14", "11"),  # Kassiope/Ptychia/Korkyra + Kap Leukimma/Amphipagos/Phalakron - Corfu
+    ("3.15", "23"),  # Kap Kenaion/Atalante/Aidepsos - Euboea (NW coast)
+    ("3.15", "24"),  # Chalkis/Eretria/Amarynthos/Karystos/Geraistos - Euboea (cities)
+    ("3.15", "25"),  # Kap Kaphereus/Budoros-Mündung/Kerinthos/Kap Phalassia/Kap Dion - Euboea (S/E coast)
+    ("3.15", "27"),  # Koressos/Iulis/Karthaia - Kea (Cyclades)
+    ("3.15", "28"),  # Ios/Polyaigos/Therasia/Delos/Oliaros/Kythnos/Rhene (Cyclades)
+    ("3.15", "29"),  # Kap Phorbia + Stadt auf Mykonos (Cyclades)
+    ("3.15", "30"),  # Andros/Tenos/Syros/Naxos/Paros/Siphnos + a 2nd "Kap Sunion" citation (Cyclades)
+    ("3.15", "31"),  # Seriphos/Pholegandros/Sikinos (Cyclades)
     ("5.02", "31"),  # Arkesine/Kos/Astypalaia (Cyclades/Dodecanese)
     ("5.02", "32"),  # Syme/Kasos (Dodecanese)
     ("6.07", "43"),  # Red Sea islands
@@ -181,6 +190,18 @@ _ISLAND_APPENDIX_SECTIONS = {
     ("6.07", "46"),  # Sachalitic Gulf islands
     ("6.07", "47"),  # Persian Gulf islands incl. Tylos (Bahrain)
     ("7.01", "95"),  # Ganges-delta islands ("Heptanesia" = "seven islands")
+}
+
+# The same problem at single-point granularity: a lone island reference
+# embedded in an otherwise-mainland section, where force-islanding the
+# *whole* section (as above) would wrongly reclassify real mainland points
+# alongside it. Book.map "3.14" section "06" is Akarnania's mainland coast
+# (Ambrakia/Arta, Aktion/Actium, Alyzeia, the Acheloos' mouth) except for
+# one entry - "Kap Leukas" (Cape Doukato, the southern tip of the island of
+# Lefkada) - sitting in the middle of that mainland run and pulling the
+# Epirus/Akarnania coastline out onto the island and back. Keyed by ref_id.
+_ISLAND_POINT_OVERRIDES = {
+    "3.14.06.05",  # Kap Leukas - Cape Doukato, island of Lefkada
 }
 
 # The mirror-image problem: sections manually verified to be inland cities
@@ -200,11 +221,24 @@ _KAP_PREFIX_RE = re.compile(r"^kap\b", re.IGNORECASE)
 
 
 def _classify_locality(
-    name: str, section_is_coastal: bool, force_island: bool = False, force_noncoastal: bool = False
+    name: str,
+    section_is_coastal: bool,
+    force_island: bool = False,
+    force_island_point: bool = False,
+    force_noncoastal: bool = False,
 ) -> tuple[str, str]:
     """Return (category, naming_observation) - the observation is the audit
     trail for *why* this category was picked, for the "naming_observation"
     column of the annotated dataset (see annotate_dataset.py)."""
+    # A manually-verified island override - whole section or single point -
+    # wins over everything else, including a name that otherwise reads as an
+    # unambiguous cape ("Kap Leukimma" *is* a real cape - it's just a cape on
+    # Corfu, not on the mainland coastline its section would otherwise be
+    # spliced into).
+    if force_island:
+        return "island", "manually verified island-appendix section (_ISLAND_APPENDIX_SECTIONS)"
+    if force_island_point:
+        return "island", "manually verified individual island point amid an otherwise mainland section (_ISLAND_POINT_OVERRIDES)"
     if _KAP_PREFIX_RE.search(name):
         # A name that leads with "Kap" is unambiguously a cape - even when
         # it also carries a mountain-range aside, e.g. "Kap Oiarso,
@@ -216,8 +250,6 @@ def _classify_locality(
         return "coast", "starts with 'Kap' (cape) - coastal regardless of any mountain-range aside"
     if _MOUNTAIN_RE.search(name):
         return "mountain", "matches mountain-range pattern (Gebirge/-berg/Alpes/Alpen)"
-    if force_island:
-        return "island", "manually verified island-appendix section (_ISLAND_APPENDIX_SECTIONS)"
     if force_noncoastal:
         section_is_coastal = False
     if _RIVERFEAT_RE.search(name):
@@ -471,7 +503,11 @@ def load_xlsx(path: Path) -> list[Reference]:
             id_map = (id_map or "").strip()
             continent = _CONTINENT_NAMES.get(id_map[:2], id_map[:2])
             category, observation = _classify_locality(
-                name, section_is_coastal, force_island=force_island, force_noncoastal=force_noncoastal
+                name,
+                section_is_coastal,
+                force_island=force_island,
+                force_island_point=str(_id) in _ISLAND_POINT_OVERRIDES,
+                force_noncoastal=force_noncoastal,
             )
             refs.append(
                 Reference(
