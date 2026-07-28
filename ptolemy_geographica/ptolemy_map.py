@@ -525,6 +525,22 @@ _SAME_POINT_TOL_DEG = 0.05
 _CLOSE_LOOP_MAX_GAP_DEG = 6.0
 _CLOSE_LOOP_MAX_GAP_RATIO = 0.3
 
+# The ratio check above isn't perfectly separable: a genuine island closure
+# and a false one can land at essentially the same ratio. Sardinia's real
+# closure (Kap Hermaeum round to Kap Errebantium, book.map "3.03") sits at
+# a 24.3% ratio - and Macedonia's mainland coast (Neapolis/Kavala down to
+# the Spercheios river mouth near Thessaly, book.map "3.13") happens to
+# close at the same 24.3%, even though it's a continuous mainland walk,
+# not an island - "closing" it drew a diagonal line straight back up the
+# country from Thessaly to Kavala. No ratio threshold can separate these
+# two - one has to be excluded by hand. Keyed by (first ref_id, last
+# ref_id) of the trail build_coastlines would otherwise close, verified
+# against Modern_location/known ancient geography the same way as
+# _ISLAND_APPENDIX_SECTIONS and _NONCOASTAL_EXCEPTION_SECTIONS.
+_NO_CLOSE_LOOP_TRAILS = {
+    ("3.13.09.03", "3.13.17.10"),  # Neapolis (Kavala) -> Spercheios-Mündung: mainland Macedonia/Thessaly coast, not an island
+}
+
 # Separate trails within the same book.map region are stitched together if
 # their nearest endpoints are closer than this - a run breaks whenever a
 # non-coastal point interrupts an otherwise-continuous coast (a city point
@@ -731,7 +747,8 @@ def build_coastlines(refs: list[Reference]) -> list[list[Reference]]:
     final: list[list[Reference]] = []
     for trail_refs in polylines:
         first, last = trail_refs[0], trail_refs[-1]
-        if len(trail_refs) >= 4 and first is not last:
+        no_close = (first.ref_id, last.ref_id) in _NO_CLOSE_LOOP_TRAILS or (last.ref_id, first.ref_id) in _NO_CLOSE_LOOP_TRAILS
+        if len(trail_refs) >= 4 and first is not last and not no_close:
             closing_gap = _ref_dist(first, last)
             path_length = sum(_ref_dist(trail_refs[i], trail_refs[i + 1]) for i in range(len(trail_refs) - 1))
             if closing_gap <= _CLOSE_LOOP_MAX_GAP_DEG and closing_gap <= _CLOSE_LOOP_MAX_GAP_RATIO * path_length:

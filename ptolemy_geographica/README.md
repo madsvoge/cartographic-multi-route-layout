@@ -160,6 +160,19 @@ Roman-Britain towns, not capes or mouths - which had spliced a detour up
 to York into the middle of the England coastline between East Anglia and
 Kent.
 
+A third, similarly narrow exception list handles the loop-closing ratio
+check (see `_CLOSE_LOOP_MAX_GAP_RATIO` above) getting it wrong: Sardinia's
+real closure (Kap Hermaeum round to Kap Errebantium, book.map "3.03") and
+Macedonia's mainland coast (Neapolis/Kavala down to the Spercheios river
+mouth near Thessaly, book.map "3.13") close at the *same* ratio - 24.3% -
+even though only one of them is an island. No ratio threshold can tell
+those two apart, so `_NO_CLOSE_LOOP_TRAILS` excludes the Macedonia one by
+its trail's start/end `ref_id` pair, verified the same way as the other
+two lists. If a coastline still visibly closes into a loop across open
+water or straight across a mainland, tell me the two endpoint `ref_id`s
+(hover the line's ends in the interactive map, or read them off
+`--label-coastlines` in the static one) and I'll add it here.
+
 ## River lines
 
 **Rivers** are drawn as their own light-blue lines (`build_river_lines` in
