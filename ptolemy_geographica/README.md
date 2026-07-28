@@ -118,11 +118,25 @@ This is all heuristic (regex over the German `Locality` text plus section
 structure and graph reconstruction), not a verified ground truth - expect
 the occasional misclassified point, or a coastline that runs oddly
 straight in a region where Ptolemy's own coordinates were badly distorted
-(Sarmatia/Scythia are the worst-known cases - compared against a
-15th-century Nicolaus Germanus redrawing of the same catalogue, the
-straight-line distortion there turned out to already be present in
-Ptolemy's original data, not a bug in this reconstruction). Use `--dry-run`
-to inspect the `category` assigned to any point.
+(Sarmatia/Scythia are the worst-known cases, and central-eastern Spain is
+another - compared against a 15th-century Nicolaus Germanus redrawing of
+the same catalogue, that kind of straight-line distortion turned out to
+already be present in Ptolemy's original data, not a bug in this
+reconstruction). Use `--dry-run` to inspect the `category` assigned to any
+point.
+
+Two exception lists handle cases neither the header nor the point-name
+regexes can resolve on their own, both keyed by `(book.map, section)` and
+manually verified against `Modern_location` plus known ancient geography:
+`_ISLAND_APPENDIX_SECTIONS` for sea-headed sections that are actually a
+scattered island list (see above), and `_NONCOASTAL_EXCEPTION_SECTIONS`
+for the mirror-image problem - a coastal-*sounding* header whose points
+are really inland. E.g. book.map "2.03" section "17" is headed
+"Hafenreicher Golf" ("harbor-rich gulf") but its points are Eboracum
+(York), Camulodunum (Colchester), and Petuaria (Brough-on-Humber) - inland
+Roman-Britain towns, not capes or mouths - which had spliced a detour up
+to York into the middle of the England coastline between East Anglia and
+Kent.
 
 ## Data
 

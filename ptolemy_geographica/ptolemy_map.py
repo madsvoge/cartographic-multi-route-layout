@@ -136,7 +136,15 @@ _MOUTH_RE = re.compile(r"mündung", re.IGNORECASE)
 _CAPE_RE = re.compile(r"^kap\b|spitze|vorgebirge|promont", re.IGNORECASE)
 _HARBOR_RE = re.compile(r"\bhafen\b|portus", re.IGNORECASE)
 _ESTUARY_RE = re.compile(r"ästuar", re.IGNORECASE)
-_MOUNTAIN_RE = re.compile(r"gebirge|-berg\b|^berg\b", re.IGNORECASE)
+# Note: matched *before* _CAPE_RE below - "Alpes (S-Spitzen)"/"(N-Spitzen)"
+# ("Alps, southern/northern peaks") contains "Spitzen", the plural of
+# "Spitze" (cape/headland - "Nordspitze" etc.), and was caught by the cape
+# pattern before this check ran, connecting the Alps' two ends straight
+# across Bavaria/Austria as if they were coastal points. Other ranges in
+# the same catalogue section ("Abnoba-Gebirge (S-Spitzen)", "Sudeta-Gebirge
+# (...)") already say "Gebirge" and were unaffected - only "Alpes" lacks a
+# mountain-range word of its own.
+_MOUNTAIN_RE = re.compile(r"gebirge|-berg\b|^berg\b|\balpes\b|\balpen\b", re.IGNORECASE)
 _ISLAND_RE = re.compile(r"\binsel\b|inseln", re.IGNORECASE)
 # A name ending in "(N)" - "Kassiteriden (10)", "Pityussae (2)" - denotes an
 # island group given as a single count-labelled entry, a standard
@@ -174,12 +182,28 @@ _ISLAND_APPENDIX_SECTIONS = {
     ("7.01", "95"),  # Ganges-delta islands ("Heptanesia" = "seven islands")
 }
 
+# The mirror-image problem: sections manually verified to be inland cities
+# despite a coastal-sounding section header, so the section-level fallback
+# must NOT apply to them. "2.03" section "17" is headed "Hafenreicher Golf"
+# ("harbor-rich gulf") but its actual points - Eboracum (York), Camulodunum
+# (Colchester), Petuaria (Brough-on-Humber) - are inland Roman-Britain
+# towns/legion camps, not capes or mouths. Spliced into the England
+# coastline as "coastal" points, they connected East Anglia straight to
+# Kent via a detour up to York and back.
+_NONCOASTAL_EXCEPTION_SECTIONS = {
+    ("2.03", "17"),  # Eboracum/Camulodunum/Petuaria - York/Colchester/Brough
+}
 
-def _classify_locality(name: str, section_is_coastal: bool, force_island: bool = False) -> str:
+
+def _classify_locality(
+    name: str, section_is_coastal: bool, force_island: bool = False, force_noncoastal: bool = False
+) -> str:
     if _MOUNTAIN_RE.search(name):
         return "mountain"
     if force_island:
         return "island"
+    if force_noncoastal:
+        section_is_coastal = False
     if _RIVERFEAT_RE.search(name):
         return "river"
     if _RIVER_COURSE_RE.search(name) and not _GULF_RE.search(name):
@@ -319,6 +343,7 @@ def load_xlsx(path: Path) -> list[Reference]:
         id_parts = str(section_rows[0][0]).split(".")
         book_map_section = (".".join(id_parts[:2]), id_parts[2] if len(id_parts) > 2 else "")
         force_island = book_map_section in _ISLAND_APPENDIX_SECTIONS
+        force_noncoastal = book_map_section in _NONCOASTAL_EXCEPTION_SECTIONS
 
         for row in section_rows:
             _id, id_map, locality, modern_location, lon_o, lat_o, lon_x, lat_x = row
@@ -342,7 +367,9 @@ def load_xlsx(path: Path) -> list[Reference]:
                     source=path.name,
                     modern_location=str(modern_location).strip() if modern_location else "",
                     recension=recension,
-                    category=_classify_locality(name, section_is_coastal, force_island=force_island),
+                    category=_classify_locality(
+                        name, section_is_coastal, force_island=force_island, force_noncoastal=force_noncoastal
+                    ),
                     ref_id=str(_id),
                 )
             )
