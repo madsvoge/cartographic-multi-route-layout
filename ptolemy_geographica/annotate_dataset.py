@@ -24,6 +24,9 @@ the answers into `data/ptolemy_catalogue_annotated.csv`:
     the river line (if any) this point belongs to. Separate columns
     because a river mouth sits on both a coastline and a river line at
     once, and each is its own line with its own draw order.
+  - `island_feature_id` / `island_sequence_in_feature` /
+    `island_feature_closes_loop` - the same, but for an island's own
+    coastal outline (if any) - see _ISLAND_LINE_GROUPS.
 
 Once generated, drawing the map from this file is exactly what a
 15th-century cartographer working from the Geographica's text did: place
@@ -46,6 +49,7 @@ from pathlib import Path
 
 from ptolemy_map import (
     assign_coastline_features,
+    assign_island_features,
     assign_river_features,
     load_xlsx,
     write_annotated_csv,
@@ -74,6 +78,7 @@ def main(argv: list[str] | None = None) -> int:
 
     assign_coastline_features(plausible)
     assign_river_features(plausible)
+    assign_island_features(plausible)
     write_annotated_csv(plausible, args.output)
 
     categories = Counter(r.category for r in plausible)
@@ -81,10 +86,13 @@ def main(argv: list[str] | None = None) -> int:
     in_feature = sum(1 for r in plausible if r.feature_id)
     river_features = {r.river_feature_id for r in plausible if r.river_feature_id}
     in_river_feature = sum(1 for r in plausible if r.river_feature_id)
+    island_features = {r.island_feature_id for r in plausible if r.island_feature_id}
+    in_island_feature = sum(1 for r in plausible if r.island_feature_id)
     print(f"wrote {len(plausible)} references -> {args.output}")
     print(f"categories: {dict(categories)}")
     print(f"{len(features)} coastline features, {in_feature} points assigned to one")
     print(f"{len(river_features)} river lines, {in_river_feature} points assigned to one")
+    print(f"{len(island_features)} island lines, {in_island_feature} points assigned to one")
     return 0
 
 

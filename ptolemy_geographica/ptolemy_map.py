@@ -208,6 +208,33 @@ _ISLAND_POINT_OVERRIDES = {
     "3.14.06.05",  # Kap Leukas - Cape Doukato, island of Lefkada
 }
 
+# _ISLAND_APPENDIX_SECTIONS covers two structurally different things: a
+# section that's one island's own detailed coastal walk (Corfu's section
+# "11" - Kassiope, Ptychia, Korkyra, then three capes in catalogue order
+# around the shore), and a section that's a *list* of several different
+# islands (the Cyclades' section "28" - Ios, Polyaigos, Therasia, Delos...
+# are seven different islands, not seven points on one island's coast).
+# Connecting every point in an island-appendix section into one line would
+# be right for the former and draw a nonsensical inter-island line for the
+# latter - and gap size alone can't tell them apart, the same way it
+# couldn't for loop-closing (see _NO_CLOSE_LOOP_TRAILS): Corfu's own
+# capes sit 0.3-0.8 degrees apart, but so do plenty of *different*
+# Cycladic islands in Ptolemy's own compressed coordinates. So island
+# lines are opt-in, not automatic: only sections manually confirmed to be
+# one island's own coastal walk are listed here, mapped to that island's
+# name so sections describing the *same* island (Euboea's coast is told
+# across three consecutive sections) merge into a single line. Everything
+# else stays plotted as individual, unconnected island points.
+_ISLAND_LINE_GROUPS: dict[tuple[str, str], str] = {
+    ("3.14", "11"): "Corfu",
+    ("3.15", "23"): "Euboea",
+    ("3.15", "24"): "Euboea",
+    ("3.15", "25"): "Euboea",
+    ("5.02", "29"): "Lesbos",
+    ("5.02", "33"): "Karpathos",
+    ("5.02", "34"): "Rhodes",
+}
+
 # The mirror-image problem: sections manually verified to be inland cities
 # despite a coastal-sounding section header, so the section-level fallback
 # must NOT apply to them. "2.03" section "17" is headed "Hafenreicher Golf"
@@ -301,6 +328,9 @@ class Reference:
     feature_closes_loop: bool = False  # if true, after the last point re-connect to the first (an island etc.)
     river_feature_id: str = ""  # which drawn river line this point belongs to, once resolved (separate from feature_id: a river mouth is on both a coastline and a river line)
     river_sequence_in_feature: int = -1  # draw order within river_feature_id, once resolved
+    island_feature_id: str = ""  # which drawn island outline this point belongs to, once resolved (see _ISLAND_LINE_GROUPS)
+    island_sequence_in_feature: int = -1  # draw order within island_feature_id, once resolved
+    island_feature_closes_loop: bool = False  # if true, after the last point re-connect to the first
 
     @property
     def lon_modern(self) -> float:
@@ -372,6 +402,9 @@ _ANNOTATED_CSV_FIELDS = [
     "feature_closes_loop",
     "river_feature_id",
     "river_sequence_in_feature",
+    "island_feature_id",
+    "island_sequence_in_feature",
+    "island_feature_closes_loop",
 ]
 
 
@@ -402,6 +435,9 @@ def write_annotated_csv(refs: list[Reference], path: Path) -> None:
                     "feature_closes_loop": "1" if ref.feature_closes_loop else "",
                     "river_feature_id": ref.river_feature_id,
                     "river_sequence_in_feature": ref.river_sequence_in_feature if ref.river_feature_id else "",
+                    "island_feature_id": ref.island_feature_id,
+                    "island_sequence_in_feature": ref.island_sequence_in_feature if ref.island_feature_id else "",
+                    "island_feature_closes_loop": "1" if ref.island_feature_closes_loop else "",
                 }
             )
 
@@ -434,6 +470,11 @@ def load_annotated_csv(path: Path) -> list[Reference]:
                     river_sequence_in_feature=int(row["river_sequence_in_feature"])
                     if row.get("river_sequence_in_feature")
                     else -1,
+                    island_feature_id=row.get("island_feature_id", ""),
+                    island_sequence_in_feature=int(row["island_sequence_in_feature"])
+                    if row.get("island_sequence_in_feature")
+                    else -1,
+                    island_feature_closes_loop=row.get("island_feature_closes_loop") == "1",
                 )
             )
     return refs
@@ -1012,6 +1053,92 @@ def get_river_lines(refs: list[Reference]) -> list[list[Reference]]:
     return build_river_lines(refs)
 
 
+def _island_line_group(ref: Reference) -> str | None:
+    """Which _ISLAND_LINE_GROUPS island (if any) a point belongs to, by its
+    (book.map, section) - or None if its section isn't one of the
+    manually-verified single-island coastal walks."""
+    parts = ref.ref_id.split(".")
+    if len(parts) < 3:
+        return None
+    return _ISLAND_LINE_GROUPS.get((".".join(parts[:2]), parts[2]))
+
+
+def build_island_lines(refs: list[Reference]) -> list[list[Reference]]:
+    """Connect an island's own points into a line tracing its shore, in
+    catalogue order - grouped by _ISLAND_LINE_GROUPS rather than a graph,
+    since (unlike coastlines) there's no reliable distance-based way to
+    tell one island's own coastal walk apart from a list of several
+    different islands (see _ISLAND_LINE_GROUPS). Closes into a loop if the
+    trail's two ends land close enough relative to its own length - the
+    same check build_coastlines uses (_CLOSE_LOOP_MAX_GAP_DEG/_RATIO)."""
+
+    def sort_key(ref: Reference) -> tuple:
+        return tuple(int(p) if p.isdigit() else p for p in ref.ref_id.split("."))
+
+    groups: dict[tuple[str, str], list[Reference]] = {}
+    for ref in refs:
+        if ref.category != "island" or not ref.ref_id or not ref.is_plausible():
+            continue
+        island = _island_line_group(ref)
+        if island is None:
+            continue
+        groups.setdefault((ref.source, island), []).append(ref)
+
+    lines: list[list[Reference]] = []
+    for items in groups.values():
+        if len(items) < 2:
+            continue
+        items.sort(key=sort_key)
+        first, last = items[0], items[-1]
+        closing_gap = _ref_dist(first, last)
+        path_length = sum(_ref_dist(items[i], items[i + 1]) for i in range(len(items) - 1))
+        if closing_gap <= _CLOSE_LOOP_MAX_GAP_DEG and closing_gap <= _CLOSE_LOOP_MAX_GAP_RATIO * path_length:
+            items = items + [first]
+        lines.append(items)
+    return lines
+
+
+def assign_island_features(refs: list[Reference]) -> None:
+    """Materialize build_island_lines()'s output as data, the same way
+    assign_coastline_features()/assign_river_features() do."""
+    lines = build_island_lines(refs)
+    for line_idx, trail in enumerate(lines):
+        closes_loop = len(trail) > 1 and trail[0] is trail[-1]
+        points = trail[:-1] if closes_loop else trail
+        feature_id = f"island_{line_idx:03d}_{_island_line_group(points[0])}"
+        for position, ref in enumerate(points):
+            ref.island_feature_id = feature_id
+            ref.island_sequence_in_feature = position
+            ref.island_feature_closes_loop = closes_loop
+
+
+def build_island_lines_from_features(refs: list[Reference]) -> list[list[Reference]]:
+    """The trivial counterpart to build_island_lines(): group by
+    island_feature_id, sort by island_sequence_in_feature."""
+    groups: dict[str, list[Reference]] = {}
+    for ref in refs:
+        if not ref.island_feature_id:
+            continue
+        groups.setdefault(ref.island_feature_id, []).append(ref)
+
+    lines: list[list[Reference]] = []
+    for points in groups.values():
+        points.sort(key=lambda r: r.island_sequence_in_feature)
+        if points[0].island_feature_closes_loop and len(points) >= 2:
+            points = points + [points[0]]
+        lines.append(points)
+    return lines
+
+
+def get_island_lines(refs: list[Reference]) -> list[list[Reference]]:
+    """Trivial reconstruction if the dataset already carries resolved
+    island_feature_id/island_sequence_in_feature, falling back to
+    build_island_lines() otherwise - mirrors get_coastlines()."""
+    if any(r.island_feature_id for r in refs):
+        return build_island_lines_from_features(refs)
+    return build_island_lines(refs)
+
+
 def _is_annotated_csv(path: Path) -> bool:
     """Distinguish an annotate_dataset.py output from a plain
     Ptolemy-Geography-schema CSV by its header - the former carries
@@ -1152,6 +1279,18 @@ def build_map(
             coords = [(r.lat_modern, r.lon_modern) for r in line]
             folium.PolyLine(coords, color=CATEGORIES["river_mouth"]["color"], weight=2, opacity=0.8).add_to(river_layer)
 
+    island_lines = get_island_lines(plausible)
+    island_position: dict[str, tuple[int, int]] = {}
+    for line_idx, line in enumerate(island_lines):
+        for i, ref in enumerate(line):
+            island_position.setdefault(ref.ref_id, (line_idx, i))
+
+    if island_lines:
+        island_layer = folium.FeatureGroup(name=f"Island outlines ({len(island_lines)})").add_to(fmap)
+        for line in island_lines:
+            coords = [(r.lat_modern, r.lon_modern) for r in line]
+            folium.PolyLine(coords, color=CATEGORIES["island"]["color"], weight=3, opacity=0.85).add_to(island_layer)
+
     clusters = {
         cat: MarkerCluster(name=f"{info['label']} ({sum(1 for r in plausible if r.category == cat)})").add_to(fmap)
         for cat, info in CATEGORIES.items()
@@ -1172,12 +1311,18 @@ def build_map(
         if ref.ref_id in river_position:
             river_idx, river_pos = river_position[ref.ref_id]
             river_line_info = f"River line #{river_idx}, position #{river_pos}<br>"
+        island_line_info = ""
+        if ref.ref_id in island_position:
+            island_idx, island_pos = island_position[ref.ref_id]
+            island_line_info = f"Island outline #{island_idx}, position #{island_pos}<br>"
+            seq_label = seq_label or str(island_pos)
         popup_html = (
             f"<b>{html.escape(ref.name)}</b><br>"
             f"{modern_line}"
             f"{category_line}"
             f"{seq_line}"
             f"{river_line_info}"
+            f"{island_line_info}"
             f"Map ID: {html.escape(ref.ref_id) or '?'} "
             f"&mdash; Book {html.escape(ref.book) or '?'}, {html.escape(ref.tabula) or 'unlabelled table'}<br>"
             f"Ptolemy coords: {ref.lon_ptolemy:.2f}° (Ferro), {ref.lat_ptolemy:.2f}°{recension_line}<br>"
@@ -1185,7 +1330,7 @@ def build_map(
             f"<i>source: {html.escape(ref.source)}</i>"
         )
         color = CATEGORIES[ref.category]["color"]
-        is_coast_family = ref.category in _COASTLINE_CATEGORIES
+        is_coast_family = ref.category in _COASTLINE_CATEGORIES or ref.ref_id in island_position
         marker = folium.CircleMarker(
             location=[ref.lat_modern, ref.lon_modern],
             radius=8 if is_coast_family else 5,
@@ -1216,7 +1361,8 @@ def build_map(
     fmap.save(str(output))
     print(
         f"plotted {len(plausible)} geographical reference(s) "
-        f"({len(coastlines)} coastline segments, {len(river_lines)} river lines) -> {output}"
+        f"({len(coastlines)} coastline segments, {len(river_lines)} river lines, "
+        f"{len(island_lines)} island outlines) -> {output}"
     )
 
 

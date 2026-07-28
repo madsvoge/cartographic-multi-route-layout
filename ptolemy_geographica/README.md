@@ -251,6 +251,27 @@ Osten", relying on context from a neighbouring row that this heuristic
 doesn't reconstruct). Those points still plot individually; they just
 don't get a connecting line.
 
+## Island outlines
+
+**Islands** are drawn as their own pink lines (`build_island_lines` in
+`ptolemy_map.py`), the same color as the `island` category's points.
+Unlike coastlines and rivers, this isn't automatic: it's an explicit,
+manually-verified allow-list (`_ISLAND_LINE_GROUPS`), because gap size
+can't tell "these points trace one island's own shore" apart from "these
+points are a *list* of several different islands" - Corfu's own capes sit
+0.3-0.8° apart in catalogue order, but so do plenty of different Cycladic
+islands cited back to back. Only sections confirmed to be one island's own
+detailed coastal walk are connected: Corfu, Euboea (told across three
+consecutive sections, merged into one line), Lesbos, Karpathos, and Rhodes
+so far. Everything else classified `island` - the Cyclades, the Sporades,
+the Balearics, Elba/Capraia, the Dodecanese, Red Sea and Persian Gulf
+islands, the Ganges delta - is a *list* of separate islands with no
+reliable way to tell where one ends and the next begins from the text
+alone, so those still plot as individual, unconnected points. If you know
+a section is actually one island's own coastal walk, tell me its
+`(book.map, section)` and which island, and I'll add it to
+`_ISLAND_LINE_GROUPS`.
+
 ## Compiling the catalogue to data: `annotate_dataset.py`
 
 Everything described above - classification, graph reconstruction, distance
@@ -288,14 +309,20 @@ catalogue and writes the result as data, in
   `feature_id`, because a river mouth is a member of both a coastline *and*
   a river line at once and needs to record both memberships (there's no
   loop-closing flag here - a river line never closes into a loop).
+- `island_feature_id` / `island_sequence_in_feature` /
+  `island_feature_closes_loop` - the same, but for an island's own coastal
+  outline (if any) a point belongs to, materialized from
+  `build_island_lines()` and the manually-verified `_ISLAND_LINE_GROUPS`
+  allow-list.
 
 `data/ptolemy_catalogue_annotated.csv` is the new default input
 (`DEFAULT_INPUT` in `ptolemy_map.py`), for both `ptolemy_map.py` and
-`static_map.py`. `get_coastlines()`/`get_river_lines()` pick the trivial
-group-and-sort reconstruction whenever the loaded data already carries a
-`feature_id`/`river_feature_id` (i.e. whenever you're reading the annotated
-CSV); they fall back to the from-scratch algorithms (`build_coastlines`,
-`build_river_lines`, both described above) for the raw xlsx or any plain
+`static_map.py`. `get_coastlines()`/`get_river_lines()`/`get_island_lines()`
+pick the trivial group-and-sort reconstruction whenever the loaded data
+already carries a `feature_id`/`river_feature_id`/`island_feature_id`
+(i.e. whenever you're reading the annotated CSV); they fall back to the
+from-scratch algorithms (`build_coastlines`, `build_river_lines`,
+`build_island_lines`, all described above) for the raw xlsx or any plain
 CSV that hasn't been through the compiler - so pointing `--input` at
 another source, or at a custom text file, still works exactly as before.
 
@@ -313,14 +340,17 @@ python3 annotate_dataset.py --input data/ptolemy_catalogue_stueckelberger.xlsx -
 - `data/ptolemy_catalogue_annotated.csv` (default) — the compiled dataset
   described above: every plottable reference from the full catalogue
   (6,372 rows), already classified and, where applicable, already assigned
-  to a coastline feature and/or river line and draw position. Columns:
-  `ref_id, name, category, book, tabula, modern_location, recension,
-  lon_ptolemy, lat_ptolemy, naming_observation, feature_id,
-  sequence_in_feature, feature_closes_loop, river_feature_id,
-  river_sequence_in_feature`. Regenerate it with `annotate_dataset.py`
-  (above) after any change to the classifier or either line-building
+  to a coastline feature and/or river line and/or island outline and draw
+  position. Columns: `ref_id, name, category, book, tabula,
+  modern_location, recension, lon_ptolemy, lat_ptolemy,
+  naming_observation, feature_id, sequence_in_feature,
+  feature_closes_loop, river_feature_id, river_sequence_in_feature,
+  island_feature_id, island_sequence_in_feature,
+  island_feature_closes_loop`. Regenerate it with `annotate_dataset.py`
+  (above) after any change to the classifier or any line-building
   algorithm - don't hand-edit it except to correct a specific row's
-  `category`/`naming_observation`/`feature_*`/`river_feature_*` fields.
+  `category`/`naming_observation`/`feature_*`/`river_feature_*`/
+  `island_feature_*` fields.
 - `data/ptolemy_catalogue_stueckelberger.xlsx` (compile source) —
   10,049 rows covering all 27 regional maps of the Geographica (10 Europe, 12
   Asia, 4 Africa + Ireland), columns:
