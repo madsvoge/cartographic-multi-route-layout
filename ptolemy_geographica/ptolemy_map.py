@@ -131,14 +131,41 @@ _ISLAND_RE = re.compile(r"\binsel\b|inseln", re.IGNORECASE)
 _ISLAND_GROUP_RE = re.compile(r"\(\d+\)\s*$")
 _LAKE_RE = re.compile(r"\bsee\b|\bpalus\b", re.IGNORECASE)
 
+# Sections manually verified (via the Modern_location column and known
+# ancient geography) to be island enumerations rather than coastal walks,
+# even though neither the section header nor the point names carry any
+# island-specific keyword. A sea-headed section is structurally ambiguous
+# between "coastal points along this sea's shore" (e.g. book.map "3.01"
+# section "14": Hydruntum/Lupiae/Brundisium - real coastal cities, Otranto/
+# Lecce/Brindisi) and "islands scattered across this sea" (section "79" of
+# that same book.map: Planasia/Pontia/.../Capreae - Pianosa/Ponza/.../Capri)
+# - both look identical from the text alone, so this can't be a general
+# regex rule without also breaking the former. Keyed by (book.map, section).
+_ISLAND_APPENDIX_SECTIONS = {
+    ("2.06", "77"),  # Ophiussa/Ebusus - Formentera/Ibiza (Balearics)
+    ("3.01", "78"),  # Aethalia/Capraria/Ilva - Elba/Capraia
+    ("3.01", "79"),  # Planasia..Capreae - Pianosa/Ponza/Ischia/Capri
+    ("3.11", "14"),  # Kyaneen/Proikonesos/Thasos/Samothrake
+    ("3.13", "47"),  # Saso/Skiathos/Peparethos/Skopelos (Sporades)
+    ("5.02", "31"),  # Arkesine/Kos/Astypalaia (Cyclades/Dodecanese)
+    ("5.02", "32"),  # Syme/Kasos (Dodecanese)
+    ("6.07", "43"),  # Red Sea islands
+    ("6.07", "45"),  # Red Sea islands incl. Dioskorides (Socotra)
+    ("6.07", "46"),  # Sachalitic Gulf islands
+    ("6.07", "47"),  # Persian Gulf islands incl. Tylos (Bahrain)
+    ("7.01", "95"),  # Ganges-delta islands ("Heptanesia" = "seven islands")
+}
 
-def _classify_locality(name: str, section_is_coastal: bool) -> str:
+
+def _classify_locality(name: str, section_is_coastal: bool, force_island: bool = False) -> str:
+    if _MOUNTAIN_RE.search(name):
+        return "mountain"
+    if force_island:
+        return "island"
     if _RIVERFEAT_RE.search(name):
         return "river"
     if _MOUTH_RE.search(name) or _CAPE_RE.search(name) or _HARBOR_RE.search(name) or _ESTUARY_RE.search(name):
         return "coast"
-    if _MOUNTAIN_RE.search(name):
-        return "mountain"
     if _ISLAND_RE.search(name) or _ISLAND_GROUP_RE.search(name):
         return "island"
     if _LAKE_RE.search(name):
@@ -267,6 +294,9 @@ def load_xlsx(path: Path) -> list[Reference]:
         section_rows = list(section_rows)
         headers = [r for r in section_rows if not _xlsx_has_coord(r)]
         section_is_coastal = any(_COASTAL_HDR_RE.search(str(h[2])) for h in headers)
+        id_parts = str(section_rows[0][0]).split(".")
+        book_map_section = (".".join(id_parts[:2]), id_parts[2] if len(id_parts) > 2 else "")
+        force_island = book_map_section in _ISLAND_APPENDIX_SECTIONS
 
         for row in section_rows:
             _id, id_map, locality, modern_location, lon_o, lat_o, lon_x, lat_x = row
@@ -290,7 +320,7 @@ def load_xlsx(path: Path) -> list[Reference]:
                     source=path.name,
                     modern_location=str(modern_location).strip() if modern_location else "",
                     recension=recension,
-                    category=_classify_locality(name, section_is_coastal),
+                    category=_classify_locality(name, section_is_coastal, force_island=force_island),
                     ref_id=str(_id),
                 )
             )
@@ -299,9 +329,15 @@ def load_xlsx(path: Path) -> list[Reference]:
 
 # Coastal runs are broken if consecutive points (in catalogue order) are
 # further apart than this (degrees, roughly) - a safety valve against
-# wrongly bridging two disjoint landmasses that happen to sit adjacent in
-# the catalogue's row order.
-_MAX_COASTAL_GAP_DEG = 15.0
+# wrongly bridging two disjoint landmasses/coastal stretches that happen to
+# sit adjacent in the catalogue's row order despite not being geographically
+# adjacent (e.g. a description jumping from Kent to the north tip of
+# Scotland between two sections). 5 degrees was picked empirically: the
+# largest *verified-legitimate* cross-section gap found (Africa's book.map
+# "4.03", capes strung along the coast in separate one-point sections) is
+# 3.7 degrees, while the jumps this cap needs to reject start around 7-9
+# degrees.
+_MAX_COASTAL_GAP_DEG = 5.0
 
 # Two catalogue points are treated as "the same physical spot" (a shared
 # corner where two separate coastal walks both start/end) if within this

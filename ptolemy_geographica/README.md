@@ -71,9 +71,29 @@ grouped by the catalogue's "book.map" prefix (e.g. "2.02"), not the
 printed tabula (e.g. "EU01") - a tabula routinely bundles several distinct
 book.map sub-regions onto one sheet (EU01 = Ireland "2.02" *and* Britain
 "2.03"), which used to draw a line straight across the sea between the
-two. A run also breaks at an implausibly large jump between points
-(15°), which is also the outer bound the stitching and loop-closing above
-stay well under.
+two. A run also breaks at an implausibly large jump between points (5°) -
+picked empirically: the largest verified-legitimate cross-section gap
+found (Africa's book.map "4.03", capes strung along the coast each in
+their own one-point section) is 3.7°, while jumps that need rejecting
+(e.g. Kent straight to the north tip of Scotland, or the Biscay coast
+straight to Baetica's Mediterranean side - both catalogue-adjacent but
+nowhere near each other) start around 7-9°.
+
+A second, harder-to-generalize problem: some sea-headed sections aren't a
+coastal walk at all but a list of scattered islands (Elba/Capraia/Pianosa;
+the Balearics; the Sporades; Red Sea and Persian Gulf islands...), and nothing
+in the text reliably tells them apart from a real coastal-city section
+headed the same way (Ptolemy's Gulf-of-Taranto cities - Croto, Thurii,
+Tarentum - are headed by "Golf von Tarent" exactly like the island lists
+are headed by "Tyrrhenisches Meer"). A blanket rule would misclassify one
+or the other, so `_ISLAND_APPENDIX_SECTIONS` is a small, manually verified
+exception list (checked against the `Modern_location` column and known
+ancient geography) of the specific `(book.map, section)` pairs confirmed to
+be island enumerations - not a general heuristic. If you spot another
+sea-crossing line, check the two points' `Modern_location` in the
+spreadsheet (or click them in the interactive map) - if they're islands,
+tell me their section (`book.section` prefix of the `ref_id`, e.g. "6.08")
+and I can add it.
 
 This is all heuristic (regex over the German `Locality` text plus section
 structure and graph reconstruction), not a verified ground truth - expect
