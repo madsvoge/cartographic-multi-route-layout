@@ -182,9 +182,36 @@ mouth near Thessaly, book.map "3.13") close at the *same* ratio - 24.3% -
 even though only one of them is an island. No ratio threshold can tell
 those two apart, so `_NO_CLOSE_LOOP_TRAILS` excludes the Macedonia one by
 its trail's start/end `ref_id` pair, verified the same way as the other
-two lists. If a coastline still visibly closes into a loop across open
-water or straight across a mainland, tell me the two endpoint `ref_id`s
-(hover the line's ends in the interactive map, or read them off
+two lists.
+
+A fourth handles a different structural quirk: Ptolemy sometimes opens a
+region's description with a boundary point ("this region extends south to
+the mouth of the Acheloos") before the region's own coastal enumeration
+begins, then cites that same point again, correctly, where the walk
+actually reaches it. Book.map "3.14" (Epirus/Akarnania) section "01" is a
+single-row section - "Acheloos-Mündung" - sitting alone right before the
+walk starts at "Akrokeraunische Berge" in section "02"; the same point (same
+name, same coordinates) shows up again, correctly, as the walk's actual
+last point in section "06". Both citations are real edges under ordinary
+catalogue adjacency, so node-collapsing merged the two "Acheloos" rows
+into one graph node connected to *both* ends of the walk - turning an
+open coastal walk into a closed loop and drawing its first line as a jump
+straight across the region. `_COASTLINE_SKIP_REF_IDS` excludes the
+introductory citation from coastline-edge-building by its `ref_id` (it
+still plots normally as a river-mouth marker - it just doesn't get
+treated as a step in the coastal walk). Checked the rest of the catalogue
+for the same signature (a book.map's first coastal-category citation
+exactly duplicating a later one's coordinates) - most either exceed the
+gap cap on both sides (so they never form a spurious edge to begin with)
+or are genuine cases the graph reconstruction already handles correctly
+(Ireland's "Nordspitze", cited at the start of both its north and west
+coast walks; the Oxos' mouth, genuinely re-cited to close a small real
+loop in Central Asia) - only the Acheloos case produced this failure mode.
+
+If a coastline still visibly closes into a loop across open water or
+straight across a mainland, or jumps in a way that looks like this
+introductory-citation pattern, tell me the two endpoint `ref_id`s (hover
+the line's ends in the interactive map, or read them off
 `--label-coastlines` in the static one) and I'll add it here.
 
 ## River lines

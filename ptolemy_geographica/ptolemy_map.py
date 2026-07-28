@@ -543,6 +543,30 @@ def load_xlsx(path: Path) -> list[Reference]:
 # degrees.
 _MAX_COASTAL_GAP_DEG = 5.0
 
+# Ptolemy sometimes opens a region's description with a boundary point
+# ("this region extends south to the mouth of the Acheloos") *before* the
+# region's own coastal enumeration begins - then cites that same point
+# again, correctly, at the point in the walk where it's actually reached.
+# Book.map "3.14" (Epirus/Akarnania) section "01" is a single-row section -
+# "Acheloos-Mündung" - sitting alone right before the walk proper starts at
+# "Akrokeraunische Berge" in section "02"; the same "Acheloos-Mündung" (same
+# name, same coordinates) shows up again, correctly, as the walk's actual
+# last point in section "06". Both citations are real edges under the
+# ordinary catalogue-adjacency rule (the intro one sits within the 5-degree
+# gap cap of Akrokeraunia), so node-collapsing merges the two "Acheloos"
+# rows into one graph node with edges to *both* ends of the walk - turning
+# an 11-point open coastal walk into a closed loop and drawing its very
+# first line as a jump from the Akarnanian coast straight to the Albanian
+# border. A general rule ("a single-row section right before the walk
+# starts is always introductory") risks discarding real single-point
+# coastal sections elsewhere, so this is a small, manually-verified
+# exclusion instead: these ref_ids keep their normal category (they still
+# plot as an ordinary river-mouth marker) but are skipped when building
+# coastline edges, the same way a non-coastal row already is.
+_COASTLINE_SKIP_REF_IDS = {
+    "3.14.01.04",  # Acheloos-Mündung - introductory boundary citation, duplicated (correctly) at 3.14.06.07
+}
+
 # Two catalogue points are treated as "the same physical spot" (a shared
 # corner where two separate coastal walks both start/end) if within this
 # many degrees of each other.
@@ -702,7 +726,7 @@ def build_coastlines(refs: list[Reference]) -> list[list[Reference]]:
         edges: list[tuple[Reference, Reference]] = []
         prev: Reference | None = None
         for ref in items:
-            if ref.category not in _COASTLINE_CATEGORIES:
+            if ref.category not in _COASTLINE_CATEGORIES or ref.ref_id in _COASTLINE_SKIP_REF_IDS:
                 continue
             if prev is not None and _dist((prev.lat_modern, prev.lon_modern), (ref.lat_modern, ref.lon_modern)) <= _MAX_COASTAL_GAP_DEG:
                 edges.append((prev, ref))
