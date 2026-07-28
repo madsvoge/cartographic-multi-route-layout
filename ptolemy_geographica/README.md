@@ -16,8 +16,8 @@ Leaflet/OpenStreetMap page with a marker for each of the ~6,400 plottable
 references, clustered so the browser stays responsive. Coastal points are
 drawn larger than other categories; click one for its name, category, map
 ID, its position within its reconstructed coastline (segment #, position
-#), and both its ancient and modernized coordinates - useful for auditing
-why two particular points ended up connected.
+#) and/or river line, and both its ancient and modernized coordinates -
+useful for auditing why two particular points ended up connected.
 
 ## Point classification & coastlines
 
@@ -30,7 +30,8 @@ this structure well enough to classify every plotted point into one of:
 
 | Category | Color | How it's detected |
 |---|---|---|
-| Coastal point | blue | the point's catalogue section is headed by a sea/ocean/gulf name, or its own name matches a cape/harbor/estuary pattern |
+| Coastal point | blue | the point's catalogue section is headed by a sea/ocean/gulf name, or its own name matches a cape/estuary pattern |
+| Harbor town | purple | name matches "Hafen"/"Portus" - a distinct color from "Coastal point" so a harbor's own commercial/settlement role stands out, but otherwise treated identically: still sized like a coastal point and still a full participant in coastline reconstruction (see below) |
 | River mouth | light blue | name matches "Mündung" - a distinct shade from "Coastal point" for visual identification, but otherwise treated identically: still sized like a coastal point and still a full participant in coastline reconstruction (see below) |
 | City / inland settlement | orange | default, for points not in a coastal section and not matching another pattern |
 | River source / confluence / bend | teal | name matches "Quelle" (source), "Einmündung" (confluence), "Zusammenfluss" (two rivers joining), "(Mitte)"/"Biegung" (a river's midpoint/bend), "Abzweigung"/"Aufteilung" (a delta fork) - checked *before* the coastal mouth pattern, since e.g. "Einmündung" contains the substring "mündung" and would otherwise be misread as a coastal river mouth |
@@ -43,7 +44,9 @@ regardless of their section, the same as capes and river mouths - they used
 to only get classified as coastal when their section happened to be headed
 by a sea name, which missed a real chunk of them (most catalogue sections
 are headed by the local tribe's name even for points sitting right on the
-shore).
+shore). Harbor towns get their own color rather than folding into "Coastal
+point" because a harbor is also a settlement - the same distinction river
+mouths already got.
 
 Landmarks *along* a river's course - a bend ("Biegung"), its midpoint
 ("(Mitte)"), or a delta fork ("Abzweigung"/"Aufteilung") - are river
@@ -157,14 +160,52 @@ Roman-Britain towns, not capes or mouths - which had spliced a detour up
 to York into the middle of the England coastline between East Anglia and
 Kent.
 
+## River lines
+
+**Rivers** are drawn as their own light-blue lines (`build_river_lines` in
+`ptolemy_map.py`), separate from the coastline reconstruction above. A
+river's points aren't laid out as one continuous walk the way a shoreline
+is - Ptolemy's catalogue instead returns to the same named river at
+different points in its regional entry (a mouth in the coastal run,
+a bend or confluence, a source), so a river line is built by grouping
+`river`/`river_mouth` points that share a base name - stripping the
+course/mouth suffix ("-Mündung", "(Quelle)", "(Biegung ...)", etc.) - and
+connecting them in catalogue order, the same categorization-plus-sequence
+approach as coastlines, just grouped by name instead of by graph edges.
+
+Grouped by `book` (continent) as well as name, since a bare name isn't a
+safe key on its own: the catalogue reuses common river names for entirely
+unrelated rivers - three separate entries are each named "Deva" (two in
+Roman Britain, one in Iberia) - and a single real river can legitimately
+span several book.map entries within the same book (the Danube's course is
+told across three, "2.11" through "3.09"). A run also breaks wherever
+consecutive points are more than ~10° apart - there's no gap size that
+cleanly separates "a genuine long-distance jump" from "different river,
+same name": the worst-distorted Asian rivers (Indus, Ganges) have real
+internal jumps of ~18-22°, which overlaps the ~13-19° gaps seen between
+different rivers that merely share a name (Deva, Rha, Lykos). Given that
+overlap, the cap errs toward splitting a real river into several shorter,
+individually-trustworthy lines rather than ever drawing a confident-looking
+connection between two unrelated ones - so a badly-distorted river like the
+Indus may end up as two or three disconnected line segments instead of
+one continuous course.
+
+This covers a bit under half of all `river`/`river_mouth` points (some
+names never repeat - a mouth cited once with no matching source/bend
+elsewhere - and a handful of rows name no river at all, e.g. "Biegung gegen
+Osten", relying on context from a neighbouring row that this heuristic
+doesn't reconstruct). Those points still plot individually; they just
+don't get a connecting line.
+
 ## Compiling the catalogue to data: `annotate_dataset.py`
 
 Everything described above - classification, graph reconstruction, distance
-thresholds, the two exception lists - is *reasoning* the xlsx loader has to
-redo every time it runs, because nobody had gone through and settled those
-questions once and written the answers down. `annotate_dataset.py` does
-exactly that: it runs the classifier and the coastline graph algorithm once
-over the whole catalogue and writes the result as data, in
+thresholds, the two exception lists, river-line name grouping - is
+*reasoning* the xlsx loader has to redo every time it runs, because nobody
+had gone through and settled those questions once and written the answers
+down. `annotate_dataset.py` does exactly that: it runs the classifier, the
+coastline graph algorithm, and the river-line grouping once over the whole
+catalogue and writes the result as data, in
 `data/ptolemy_catalogue_annotated.csv`:
 
 - `category` - unchanged from the xlsx loader's output.
@@ -187,17 +228,24 @@ over the whole catalogue and writes the result as data, in
   `ptolemy_map.py`). That's the same two-step process - set the points,
   connect the dots - a cartographer working from the Geographica's text
   would have followed by hand.
+- `river_feature_id` / `river_sequence_in_feature` - the same, but for the
+  river line (if any) a point belongs to, materialized from
+  `build_river_lines()`. A separate pair of columns rather than reusing
+  `feature_id`, because a river mouth is a member of both a coastline *and*
+  a river line at once and needs to record both memberships (there's no
+  loop-closing flag here - a river line never closes into a loop).
 
 `data/ptolemy_catalogue_annotated.csv` is the new default input
 (`DEFAULT_INPUT` in `ptolemy_map.py`), for both `ptolemy_map.py` and
-`static_map.py`. `get_coastlines()` picks `build_coastlines_from_features`
-whenever the loaded data already carries a `feature_id` (i.e. whenever
-you're reading the annotated CSV); it falls back to the from-scratch graph
-algorithm (`build_coastlines`, the one described above) for the raw xlsx or
-any plain CSV that hasn't been through the compiler - so pointing `--input`
-at another source, or at a custom text file, still works exactly as before.
+`static_map.py`. `get_coastlines()`/`get_river_lines()` pick the trivial
+group-and-sort reconstruction whenever the loaded data already carries a
+`feature_id`/`river_feature_id` (i.e. whenever you're reading the annotated
+CSV); they fall back to the from-scratch algorithms (`build_coastlines`,
+`build_river_lines`, both described above) for the raw xlsx or any plain
+CSV that hasn't been through the compiler - so pointing `--input` at
+another source, or at a custom text file, still works exactly as before.
 
-If you change a classification rule or the coastline algorithm itself,
+If you change a classification rule or either line-building algorithm,
 regenerate the annotated CSV from the raw catalogue:
 
 ```bash
@@ -211,13 +259,14 @@ python3 annotate_dataset.py --input data/ptolemy_catalogue_stueckelberger.xlsx -
 - `data/ptolemy_catalogue_annotated.csv` (default) — the compiled dataset
   described above: every plottable reference from the full catalogue
   (6,372 rows), already classified and, where applicable, already assigned
-  to a coastline feature and draw position. Columns:
+  to a coastline feature and/or river line and draw position. Columns:
   `ref_id, name, category, book, tabula, modern_location, recension,
   lon_ptolemy, lat_ptolemy, naming_observation, feature_id,
-  sequence_in_feature, feature_closes_loop`. Regenerate it with
-  `annotate_dataset.py` (above) after any change to the classifier or
-  coastline algorithm - don't hand-edit it except to correct a specific
-  row's `category`/`naming_observation`/`feature_*` fields.
+  sequence_in_feature, feature_closes_loop, river_feature_id,
+  river_sequence_in_feature`. Regenerate it with `annotate_dataset.py`
+  (above) after any change to the classifier or either line-building
+  algorithm - don't hand-edit it except to correct a specific row's
+  `category`/`naming_observation`/`feature_*`/`river_feature_*` fields.
 - `data/ptolemy_catalogue_stueckelberger.xlsx` (compile source) —
   10,049 rows covering all 27 regional maps of the Geographica (10 Europe, 12
   Asia, 4 Africa + Ireland), columns:

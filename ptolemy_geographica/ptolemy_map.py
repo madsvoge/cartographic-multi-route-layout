@@ -94,6 +94,7 @@ _CONTINENT_NAMES = {"EU": "Europe", "AS": "Asia", "AF": "Africa"}
 # color each gets on the map (dataviz reference palette, fixed hue order).
 CATEGORIES = {
     "coast": {"label": "Coastal point / coastline", "color": "#2a78d6"},
+    "harbor": {"label": "Harbor town", "color": "#8a63d2"},
     "river_mouth": {"label": "River mouth", "color": "#86b6ef"},
     "city": {"label": "City / inland settlement", "color": "#eb6834"},
     "river": {"label": "River source / confluence / bend", "color": "#1baf7a"},
@@ -104,10 +105,10 @@ CATEGORIES = {
 }
 
 # Categories that participate in coastline reconstruction (build_coastlines)
-# as if they were "coast" - river mouths are a distinct color for display,
-# but they're still real points on the shore and stay part of the traced
-# coastline, same as a cape or harbor.
-_COASTLINE_CATEGORIES = ("coast", "river_mouth")
+# as if they were "coast" - river mouths and harbor towns are each a
+# distinct color for display, but they're still real points on the shore
+# and stay part of the traced coastline, same as a plain cape.
+_COASTLINE_CATEGORIES = ("coast", "river_mouth", "harbor")
 
 # Section-header keywords (German, this catalogue's Locality language) that
 # mark a catalogue section as a run of coastal points.
@@ -228,7 +229,7 @@ def _classify_locality(
     if _CAPE_RE.search(name):
         return "coast", "matches cape pattern (Spitze/Vorgebirge/Promont)"
     if _HARBOR_RE.search(name):
-        return "coast", "matches harbor pattern (Hafen/Portus)"
+        return "harbor", "matches harbor pattern (Hafen/Portus) - coastal, colored separately"
     if _ESTUARY_RE.search(name):
         return "coast", "matches estuary pattern (Ästuar)"
     if _ISLAND_RE.search(name):
@@ -256,12 +257,14 @@ class Reference:
     source: str
     modern_location: str = ""
     recension: str = ""
-    category: str = ""  # "coast" | "city" | "river" | "mountain" | "island" | "" (unclassified)
+    category: str = ""  # "coast" | "harbor" | "river_mouth" | "city" | "river" | "mountain" | "island" | "lake" | "" (unclassified)
     ref_id: str = ""  # catalogue ID (book.map.section.item), used to reconstruct coastlines
     naming_observation: str = ""  # why _classify_locality picked this category (audit trail)
-    feature_id: str = ""  # which drawn line this point belongs to, once resolved (see annotate_dataset.py)
+    feature_id: str = ""  # which drawn coastline this point belongs to, once resolved (see annotate_dataset.py)
     sequence_in_feature: int = -1  # draw order within feature_id, once resolved
     feature_closes_loop: bool = False  # if true, after the last point re-connect to the first (an island etc.)
+    river_feature_id: str = ""  # which drawn river line this point belongs to, once resolved (separate from feature_id: a river mouth is on both a coastline and a river line)
+    river_sequence_in_feature: int = -1  # draw order within river_feature_id, once resolved
 
     @property
     def lon_modern(self) -> float:
@@ -331,6 +334,8 @@ _ANNOTATED_CSV_FIELDS = [
     "feature_id",
     "sequence_in_feature",
     "feature_closes_loop",
+    "river_feature_id",
+    "river_sequence_in_feature",
 ]
 
 
@@ -359,6 +364,8 @@ def write_annotated_csv(refs: list[Reference], path: Path) -> None:
                     "feature_id": ref.feature_id,
                     "sequence_in_feature": ref.sequence_in_feature if ref.feature_id else "",
                     "feature_closes_loop": "1" if ref.feature_closes_loop else "",
+                    "river_feature_id": ref.river_feature_id,
+                    "river_sequence_in_feature": ref.river_sequence_in_feature if ref.river_feature_id else "",
                 }
             )
 
@@ -387,6 +394,10 @@ def load_annotated_csv(path: Path) -> list[Reference]:
                     feature_id=row.get("feature_id", ""),
                     sequence_in_feature=int(row["sequence_in_feature"]) if row.get("sequence_in_feature") else -1,
                     feature_closes_loop=row.get("feature_closes_loop") == "1",
+                    river_feature_id=row.get("river_feature_id", ""),
+                    river_sequence_in_feature=int(row["river_sequence_in_feature"])
+                    if row.get("river_sequence_in_feature")
+                    else -1,
                 )
             )
     return refs
@@ -793,6 +804,133 @@ def get_coastlines(refs: list[Reference]) -> list[list[Reference]]:
     return build_coastlines(refs)
 
 
+# Categories that can be a step along a drawn river line.
+_RIVER_LINE_CATEGORIES = ("river", "river_mouth")
+
+# Strips a river-course/mouth suffix off a name to get the name shared by
+# every point along one river's course - "Danuvius (Einmündung des Savus)"
+# and "Danuvius-Quellen" both reduce to "Danuvius". Matched as a suffix
+# (anchored to the end of the string) so an alternate name folded into the
+# same parenthetical ("Vidua-Mündung (Udia-Mündung)") is stripped along
+# with it rather than mistaken for part of the base name.
+_RIVER_SUFFIX_RE = re.compile(
+    r"-mündung\b.*$|-quellen?\b.*$|"
+    r"\s*\([^)]*(?:mitte|biegung|abzweigung|aufteilung|teilung|einmündung|"
+    r"zusammenfluss|ursprung|mündungsarm|mündung|quelle)[^)]*\)\s*$",
+    re.IGNORECASE,
+)
+# A generic placeholder ("Namenloser Fluss" - "unnamed river") reused for
+# many unrelated rivers throughout the catalogue - never a real shared name,
+# so never a safe grouping key.
+_GENERIC_RIVER_NAME_RE = re.compile(r"namenlos", re.IGNORECASE)
+
+# A river line breaks wherever consecutive points (in catalogue order) are
+# further apart than this. Needed because the catalogue reuses common river
+# names for entirely unrelated rivers - three separate catalogue entries are
+# each named "Deva" (two in Roman Britain, one in Iberia, ~19 degrees apart)
+# - and book-level grouping alone doesn't catch it, since a single real
+# river can legitimately span several book.map entries (the Danube's course
+# is told across three). There's no gap size that cleanly separates "long
+# real jump" from "different river, same name": Asia's worst-distorted
+# rivers (Indus, Ganges) have genuine internal jumps of ~18-22 degrees,
+# overlapping the ~13-19 degree gaps seen between different same-named
+# rivers (Deva, Rha, Lykos, Hippos). Given that overlap, the cap is set
+# below it - erring toward splitting a genuine long-distance river into
+# several shorter, individually-trustworthy lines rather than ever drawing
+# a confident-looking connection between two unrelated rivers.
+_RIVER_LINE_MAX_GAP_DEG = 10.0
+
+
+def _river_base_name(name: str) -> str:
+    """The name shared by every point along one river's course, with any
+    course/mouth-position suffix stripped. Rows that name no river at all
+    ("Biegung gegen Osten", contextually understood from a preceding row)
+    or use the generic "Namenloser Fluss" placeholder reduce to something
+    that never repeats, so they end up in their own single-point group and
+    never get drawn as a line - there's nothing in the text alone to safely
+    connect them to."""
+    return _RIVER_SUFFIX_RE.sub("", name).strip()
+
+
+def build_river_lines(refs: list[Reference]) -> list[list[Reference]]:
+    """Connect river/river-mouth points that share a base name into a line
+    tracing that river's course, in catalogue order - the same
+    "categorization + sequence" approach as build_coastlines, just grouped
+    by name instead of by graph edges (a river's points aren't laid out as
+    one continuous coastal walk the way a shoreline is, but the catalogue
+    does return to the same named river - mouth, bends, source - across its
+    entries). Grouped by `book` (continent) as well as name, since a bare
+    name isn't a safe key on its own (see _RIVER_LINE_MAX_GAP_DEG); split
+    further wherever a gap is too large to be the same river.
+    """
+
+    def sort_key(ref: Reference) -> tuple:
+        return tuple(int(p) if p.isdigit() else p for p in ref.ref_id.split("."))
+
+    groups: dict[tuple[str, str, str], list[Reference]] = {}
+    for ref in refs:
+        if ref.category not in _RIVER_LINE_CATEGORIES or not ref.ref_id or not ref.is_plausible():
+            continue
+        base = _river_base_name(ref.name)
+        if not base or _GENERIC_RIVER_NAME_RE.search(base):
+            continue
+        groups.setdefault((ref.source, ref.book, base), []).append(ref)
+
+    lines: list[list[Reference]] = []
+    for items in groups.values():
+        items.sort(key=sort_key)
+        run = [items[0]]
+        for prev, cur in zip(items, items[1:]):
+            if _ref_dist(prev, cur) > _RIVER_LINE_MAX_GAP_DEG:
+                if len(run) >= 2:
+                    lines.append(run)
+                run = [cur]
+            else:
+                run.append(cur)
+        if len(run) >= 2:
+            lines.append(run)
+    return lines
+
+
+def assign_river_features(refs: list[Reference]) -> None:
+    """Materialize build_river_lines()'s output as data, the same way
+    assign_coastline_features() does for coastlines - into river_feature_id/
+    river_sequence_in_feature rather than feature_id/sequence_in_feature, so
+    a river-mouth point (part of both a coastline and a river line) can
+    carry both memberships at once."""
+    lines = build_river_lines(refs)
+    for line_idx, points in enumerate(lines):
+        feature_id = f"river_{line_idx:03d}_{_river_base_name(points[0].name)}"
+        for position, ref in enumerate(points):
+            ref.river_feature_id = feature_id
+            ref.river_sequence_in_feature = position
+
+
+def build_river_lines_from_features(refs: list[Reference]) -> list[list[Reference]]:
+    """The trivial counterpart to build_river_lines(): group by
+    river_feature_id, sort by river_sequence_in_feature."""
+    groups: dict[str, list[Reference]] = {}
+    for ref in refs:
+        if not ref.river_feature_id:
+            continue
+        groups.setdefault(ref.river_feature_id, []).append(ref)
+
+    lines: list[list[Reference]] = []
+    for points in groups.values():
+        points.sort(key=lambda r: r.river_sequence_in_feature)
+        lines.append(points)
+    return lines
+
+
+def get_river_lines(refs: list[Reference]) -> list[list[Reference]]:
+    """Trivial reconstruction if the dataset already carries resolved
+    river_feature_id/river_sequence_in_feature, falling back to
+    build_river_lines() otherwise - mirrors get_coastlines()."""
+    if any(r.river_feature_id for r in refs):
+        return build_river_lines_from_features(refs)
+    return build_river_lines(refs)
+
+
 def _is_annotated_csv(path: Path) -> bool:
     """Distinguish an annotate_dataset.py output from a plain
     Ptolemy-Geography-schema CSV by its header - the former carries
@@ -921,6 +1059,18 @@ def build_map(
             coords = [(r.lat_modern, r.lon_modern) for r in line]
             folium.PolyLine(coords, color=CATEGORIES["coast"]["color"], weight=2, opacity=0.75).add_to(coast_layer)
 
+    river_lines = get_river_lines(plausible)
+    river_position: dict[str, tuple[int, int]] = {}
+    for line_idx, line in enumerate(river_lines):
+        for i, ref in enumerate(line):
+            river_position.setdefault(ref.ref_id, (line_idx, i))
+
+    if river_lines:
+        river_layer = folium.FeatureGroup(name=f"Rivers ({len(river_lines)} lines)").add_to(fmap)
+        for line in river_lines:
+            coords = [(r.lat_modern, r.lon_modern) for r in line]
+            folium.PolyLine(coords, color=CATEGORIES["river_mouth"]["color"], weight=2, opacity=0.8).add_to(river_layer)
+
     clusters = {
         cat: MarkerCluster(name=f"{info['label']} ({sum(1 for r in plausible if r.category == cat)})").add_to(fmap)
         for cat, info in CATEGORIES.items()
@@ -937,11 +1087,16 @@ def build_map(
             trail_idx, pos = trail_position[ref.ref_id]
             seq_line = f"Coastline segment #{trail_idx}, position #{pos}<br>"
             seq_label = str(pos)
+        river_line_info = ""
+        if ref.ref_id in river_position:
+            river_idx, river_pos = river_position[ref.ref_id]
+            river_line_info = f"River line #{river_idx}, position #{river_pos}<br>"
         popup_html = (
             f"<b>{html.escape(ref.name)}</b><br>"
             f"{modern_line}"
             f"{category_line}"
             f"{seq_line}"
+            f"{river_line_info}"
             f"Map ID: {html.escape(ref.ref_id) or '?'} "
             f"&mdash; Book {html.escape(ref.book) or '?'}, {html.escape(ref.tabula) or 'unlabelled table'}<br>"
             f"Ptolemy coords: {ref.lon_ptolemy:.2f}° (Ferro), {ref.lat_ptolemy:.2f}°{recension_line}<br>"
@@ -978,7 +1133,10 @@ def build_map(
     folium.LayerControl(collapsed=False).add_to(fmap)
     output.parent.mkdir(parents=True, exist_ok=True)
     fmap.save(str(output))
-    print(f"plotted {len(plausible)} geographical reference(s) ({len(coastlines)} coastline segments) -> {output}")
+    print(
+        f"plotted {len(plausible)} geographical reference(s) "
+        f"({len(coastlines)} coastline segments, {len(river_lines)} river lines) -> {output}"
+    )
 
 
 def _add_legend(fmap, refs: list[Reference]) -> None:

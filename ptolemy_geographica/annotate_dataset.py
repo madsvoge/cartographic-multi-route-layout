@@ -18,14 +18,19 @@ the answers into `data/ptolemy_catalogue_annotated.csv`:
     manual exception matched), so a reviewer can audit or correct a call
     without reading the classifier's source.
   - `feature_id` / `sequence_in_feature` / `feature_closes_loop` - which
-    drawn line (if any) this point belongs to, and where in the draw order.
+    drawn coastline (if any) this point belongs to, and where in the draw
+    order.
+  - `river_feature_id` / `river_sequence_in_feature` - the same, but for
+    the river line (if any) this point belongs to. Separate columns
+    because a river mouth sits on both a coastline and a river line at
+    once, and each is its own line with its own draw order.
 
 Once generated, drawing the map from this file is exactly what a
 15th-century cartographer working from the Geographica's text did: place
 each point (its coordinates + category), and connect the dots along each
-feature in sequence. See build_coastlines_from_features() in
-ptolemy_map.py - no graph, no distance thresholds, no stitching needed
-against this file.
+feature in sequence. See build_coastlines_from_features() and
+build_river_lines_from_features() in ptolemy_map.py - no graph, no
+distance thresholds, no stitching needed against this file.
 
 Usage
 -----
@@ -39,7 +44,12 @@ import argparse
 from collections import Counter
 from pathlib import Path
 
-from ptolemy_map import DEFAULT_INPUT, assign_coastline_features, load_xlsx, write_annotated_csv
+from ptolemy_map import (
+    assign_coastline_features,
+    assign_river_features,
+    load_xlsx,
+    write_annotated_csv,
+)
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 DEFAULT_SOURCE = SCRIPT_DIR / "data" / "ptolemy_catalogue_stueckelberger.xlsx"
@@ -63,14 +73,18 @@ def main(argv: list[str] | None = None) -> int:
         print(f"dropped {dropped} reference(s) with out-of-range coordinates")
 
     assign_coastline_features(plausible)
+    assign_river_features(plausible)
     write_annotated_csv(plausible, args.output)
 
     categories = Counter(r.category for r in plausible)
     features = {r.feature_id for r in plausible if r.feature_id}
     in_feature = sum(1 for r in plausible if r.feature_id)
+    river_features = {r.river_feature_id for r in plausible if r.river_feature_id}
+    in_river_feature = sum(1 for r in plausible if r.river_feature_id)
     print(f"wrote {len(plausible)} references -> {args.output}")
     print(f"categories: {dict(categories)}")
     print(f"{len(features)} coastline features, {in_feature} points assigned to one")
+    print(f"{len(river_features)} river lines, {in_river_feature} points assigned to one")
     return 0
 
 

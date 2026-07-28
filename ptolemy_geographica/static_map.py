@@ -23,7 +23,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from ptolemy_map import CATEGORIES, DEFAULT_INPUT, get_coastlines, load_inputs
+from ptolemy_map import CATEGORIES, DEFAULT_INPUT, get_coastlines, get_river_lines, load_inputs
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 
@@ -87,11 +87,22 @@ def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False)
                     zorder=6,
                 )
 
+    river_lines = get_river_lines(refs)
+    river_lines_drawn = 0
+    for line in river_lines:
+        line_in_view = [r for r in line if _in_bbox(r.lon_modern, r.lat_modern, bbox)]
+        if len(line_in_view) < 2:
+            continue
+        coords = [(r.lon_modern, r.lat_modern) for r in line]
+        xs, ys = zip(*coords)
+        ax.plot(xs, ys, color=CATEGORIES["river_mouth"]["color"], linewidth=1.1, alpha=0.8, zorder=3)
+        river_lines_drawn += 1
+
     present_categories = [cat for cat in CATEGORIES if any(r.category == cat for r in in_view)]
     for cat in present_categories:
         pts = [(r.lon_modern, r.lat_modern) for r in in_view if r.category == cat]
         xs, ys = zip(*pts)
-        is_coast_family = cat in ("coast", "river_mouth")
+        is_coast_family = cat in ("coast", "harbor", "river_mouth")
         ax.scatter(
             xs,
             ys,
@@ -124,7 +135,8 @@ def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False)
     fig.text(
         0.06,
         0.925,
-        f"{len(in_view)} of {len(refs)} catalogue references shown ({coastline_segments_drawn} coastline segments) "
+        f"{len(in_view)} of {len(refs)} catalogue references shown "
+        f"({coastline_segments_drawn} coastline segments, {river_lines_drawn} river lines) "
         "at modernized (Ferro-offset) coordinates",
         fontsize=11.5,
         color=TEXT_SECONDARY,
@@ -142,7 +154,10 @@ def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False)
 
     output.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output, facecolor=fig.get_facecolor())
-    print(f"plotted {len(in_view)} reference(s), {coastline_segments_drawn} coastline segments -> {output}")
+    print(
+        f"plotted {len(in_view)} reference(s), {coastline_segments_drawn} coastline segments, "
+        f"{river_lines_drawn} river lines -> {output}"
+    )
     return len(in_view)
 
 
