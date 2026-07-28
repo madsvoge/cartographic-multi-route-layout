@@ -279,7 +279,12 @@ def extract_from_text(path: Path) -> list[Reference]:
     return refs
 
 
-def build_map(refs: list[Reference], output: Path) -> None:
+def build_map(
+    refs: list[Reference],
+    output: Path,
+    center: tuple[float, float] | None = None,
+    zoom_start: int = 5,
+) -> None:
     try:
         import folium
         from folium.plugins import MarkerCluster
@@ -296,10 +301,13 @@ def build_map(refs: list[Reference], output: Path) -> None:
     if not plausible:
         raise SystemExit("no plottable geographical references found")
 
-    center_lat = sum(r.lat_modern for r in plausible) / len(plausible)
-    center_lon = sum(r.lon_modern for r in plausible) / len(plausible)
+    if center is None:
+        center_lat = sum(r.lat_modern for r in plausible) / len(plausible)
+        center_lon = sum(r.lon_modern for r in plausible) / len(plausible)
+    else:
+        center_lat, center_lon = center
 
-    fmap = folium.Map(location=[center_lat, center_lon], zoom_start=5, tiles="OpenStreetMap")
+    fmap = folium.Map(location=[center_lat, center_lon], zoom_start=zoom_start, tiles="OpenStreetMap")
     cluster = MarkerCluster(name="Ptolemy Geographica references").add_to(fmap)
 
     for ref in plausible:
@@ -350,6 +358,20 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT, help="Output HTML map path")
     parser.add_argument(
+        "--center",
+        nargs=2,
+        type=float,
+        default=None,
+        metavar=("LAT", "LON"),
+        help="Initial map center (default: mean of all plotted points)",
+    )
+    parser.add_argument(
+        "--zoom-start",
+        type=int,
+        default=5,
+        help="Initial zoom level (default: 5)",
+    )
+    parser.add_argument(
         "--ferro-offset",
         type=float,
         default=FERRO_OFFSET_DEG,
@@ -390,7 +412,8 @@ def main(argv: list[str] | None = None) -> int:
         print(f"\n{len(refs)} reference(s) total")
         return 0
 
-    build_map(refs, args.output)
+    center = tuple(args.center) if args.center else None
+    build_map(refs, args.output, center=center, zoom_start=args.zoom_start)
 
     if args.open:
         webbrowser.open(args.output.resolve().as_uri())

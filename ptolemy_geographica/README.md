@@ -64,6 +64,23 @@ ground truth.
 --text PATH [PATH ...]    Plain-text file(s) to regex-extract references from
 --output PATH             Output HTML map path (default: ptolemy_map.html)
 --ferro-offset DEGREES    Ferro-to-Greenwich meridian offset (default: 17.6667)
+--center LAT LON          Initial map center (default: mean of all plotted points)
+--zoom-start N            Initial zoom level (default: 5)
 --open                    Open the resulting map in a browser
 --dry-run                 Print extracted references instead of building a map
 ```
+
+## Static image (no tile server needed)
+
+`static_map.py` renders a static PNG using an offline basemap (public-domain
+Natural Earth country outlines) instead of live OpenStreetMap tiles - useful
+when there's no network access to a tile server, or for a plain image to
+drop into a document:
+
+```bash
+pip install -r requirements-static.txt
+python3 static_map.py --region europe --output europe.png
+```
+
+Built-in `--region` choices: `world` (default), `europe`, `mediterranean`,
+`asia`, `africa`. Or pass a custom `--bbox LON_MIN LAT_MIN LON_MAX LAT_MAX`.

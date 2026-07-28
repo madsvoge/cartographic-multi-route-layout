@@ -1,0 +1,8 @@
+# Extra dependencies for static_map.py (offline PNG rendering).
+# geopandas<1.0 is pinned because it still bundles the public-domain
+# Natural Earth "naturalearth_lowres" basemap as local package data -
+# 1.0+ dropped it in favor of an online download.
+geopandas<1.0
+fiona<1.10
+shapely
+matplotlib
