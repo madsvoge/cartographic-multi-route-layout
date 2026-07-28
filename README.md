@@ -5,6 +5,7 @@ This repository contains a QGIS Python script for cartographic route layout and 
 ## Contents
 
 - `CartographicMultiRouteLayout_v8_1.py` - main QGIS processing engine and route layout implementation.
+- `ptolemy_geographica/` - standalone script that extracts geographical references from Ptolemy's *Geographica* and plots them on an OpenStreetMap-based interactive map. See `ptolemy_geographica/README.md`.
 - `LICENSE` - MIT license.
 - `metadata.txt` - basic project metadata.
 
