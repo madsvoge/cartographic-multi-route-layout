@@ -78,7 +78,7 @@ def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False)
         if label_coastlines:
             for lon, lat, i, r in line_in_view:
                 ax.annotate(
-                    f"{trail_idx}.{i} {r.name} [{r.ref_id}]",
+                    r.ref_id,
                     (lon, lat),
                     fontsize=6.5,
                     color="#0b0b0b",
@@ -178,7 +178,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--label-coastlines",
         action="store_true",
-        help="Annotate each coastal point with 'trail.position name [ref_id]' - "
+        help="Annotate each coastal point with its ref_id - "
         "for auditing a specific --bbox, not for wide views (gets unreadable fast)",
     )
     return parser.parse_args(argv)
