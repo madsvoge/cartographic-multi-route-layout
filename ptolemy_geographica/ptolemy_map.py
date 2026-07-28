@@ -114,6 +114,17 @@ _COASTAL_HDR_RE = re.compile(r"ozean|meer(?!wärts)|golf|meerbusen|kanal|bucht",
 # another river inland) contains the substring "mündung" and would
 # otherwise be caught by the coastal mouth pattern first.
 _RIVERFEAT_RE = re.compile(r"quelle|einmündung|ursprung|zusammenfluss", re.IGNORECASE)
+# Landmarks *along* a river's course - a bend, its midpoint, or a delta
+# fork/split - as opposed to "Mündung" (river mouth, i.e. actually on the
+# coast). These are inland, but nothing in the word itself says so (unlike
+# "Quelle"/"Ursprung" = source), so a river bend sitting in a sea-headed
+# section (e.g. "Garumna (Mitte)", the Garonne's midpoint, in the same
+# section as Aquitania's coastal capes) fell through to "coast" and got
+# spliced into the middle of that coastal walk out of geographic order.
+# One legitimate exception: a bend *in a gulf's own coastline* ("Elanitischer
+# Golf (Biegung)") isn't a river feature, hence the golf/bay guard.
+_RIVER_COURSE_RE = re.compile(r"\(mitte\)|biegung|abzweigung|aufteilung", re.IGNORECASE)
+_GULF_RE = re.compile(r"golf|meerbusen|bucht", re.IGNORECASE)
 _MOUTH_RE = re.compile(r"mündung", re.IGNORECASE)
 _CAPE_RE = re.compile(r"^kap\b|spitze|vorgebirge|promont", re.IGNORECASE)
 _HARBOR_RE = re.compile(r"\bhafen\b|portus", re.IGNORECASE)
@@ -163,6 +174,8 @@ def _classify_locality(name: str, section_is_coastal: bool, force_island: bool =
     if force_island:
         return "island"
     if _RIVERFEAT_RE.search(name):
+        return "river"
+    if _RIVER_COURSE_RE.search(name) and not _GULF_RE.search(name):
         return "river"
     if _MOUTH_RE.search(name) or _CAPE_RE.search(name) or _HARBOR_RE.search(name) or _ESTUARY_RE.search(name):
         return "coast"
@@ -344,10 +357,22 @@ _MAX_COASTAL_GAP_DEG = 5.0
 # many degrees of each other.
 _SAME_POINT_TOL_DEG = 0.05
 
-# A traced coastline whose two loose ends land within this distance is
-# assumed to be a real closed loop (an island, or a peninsula walk that
-# just didn't re-state its own starting point) and gets closed.
+# A traced coastline whose two loose ends land within this distance is a
+# candidate closed loop (an island, or a peninsula walk that just didn't
+# re-state its own starting point) - but distance alone isn't enough: an
+# open coastal stretch's two ends can easily land within a few degrees of
+# each other purely by chance (France's Atlantic coast, Aturus-Mündung to
+# Liger-Mündung, is a real 6.9-degree-long walk whose ends happen to sit
+# 3.9 degrees apart - closing it drew a diagonal straight back down through
+# the country). What actually distinguishes a real loop is that a closing
+# edge that short relative to how far the path travelled is closing a
+# genuine loop; the same absolute distance relative to a *short* path is
+# just two nearby-but-unconnected points. So the gap must also be a small
+# fraction of the trail's own total length - Ireland's real loop closes a
+# 1.3-degree gap over a 23-degree path (6%); France's false one would have
+# closed a 3.9-degree gap over a 6.9-degree path (56%).
 _CLOSE_LOOP_MAX_GAP_DEG = 6.0
+_CLOSE_LOOP_MAX_GAP_RATIO = 0.3
 
 # Separate trails within the same book.map region are stitched together if
 # their nearest endpoints are closer than this - a run breaks whenever a
@@ -539,12 +564,11 @@ def build_coastlines(refs: list[Reference]) -> list[list[Reference]]:
         # returns near its own start.
         for trail_refs in _stitch_trails(trails):
             first, last = trail_refs[0], trail_refs[-1]
-            if (
-                len(trail_refs) >= 4
-                and first is not last
-                and _dist((first.lat_modern, first.lon_modern), (last.lat_modern, last.lon_modern)) <= _CLOSE_LOOP_MAX_GAP_DEG
-            ):
-                trail_refs = trail_refs + [first]
+            if len(trail_refs) >= 4 and first is not last:
+                closing_gap = _ref_dist(first, last)
+                path_length = sum(_ref_dist(trail_refs[i], trail_refs[i + 1]) for i in range(len(trail_refs) - 1))
+                if closing_gap <= _CLOSE_LOOP_MAX_GAP_DEG and closing_gap <= _CLOSE_LOOP_MAX_GAP_RATIO * path_length:
+                    trail_refs = trail_refs + [first]
             polylines.append(trail_refs)
 
     return polylines

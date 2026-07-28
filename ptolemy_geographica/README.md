@@ -44,6 +44,16 @@ by a sea name, which missed a real chunk of them (most catalogue sections
 are headed by the local tribe's name even for points sitting right on the
 shore).
 
+Landmarks *along* a river's course - a bend ("Biegung"), its midpoint
+("(Mitte)"), or a delta fork ("Abzweigung"/"Aufteilung") - are river
+points too, not coastal, even though (unlike "Quelle"/source) nothing in
+the word says so on its own. "Garumna (Mitte)" (the Garonne's midpoint)
+sitting in the same sea-headed section as Aquitania's coastal capes used
+to get pulled into the France Atlantic coastline out of geographic order,
+splicing an inland river point into the middle of an otherwise-clean
+coastal walk. One exception is carved out for a bend *in a gulf's own
+shoreline* ("Elanitischer Golf (Biegung)"), which is genuinely coastal.
+
 **Coastlines** are reconstructed from catalogue-order neighbours, but not
 by naive end-to-end concatenation. Ptolemy regularly walks a coastline out
 from a corner point and back to a *different* stretch starting at that
@@ -65,8 +75,16 @@ grouping them the way Ireland's entry does, and hard-breaking on each one
 dropped those points entirely. Trails still separated afterwards (a
 genuine gap, or a non-coastal detour too long to bridge) are stitched back
 together if their loose ends land within ~2.5° of each other, and a
-trail whose two remaining ends land within ~6° is closed into a loop -
-this is what closes an island's coastline back to its own start. Runs are
+trail whose two remaining ends land within ~6° *and within 30% of the
+trail's own total length* is closed into a loop - this is what closes an
+island's coastline back to its own start. The length check matters:
+distance alone isn't enough to tell "this path wrapped back around to
+where it started" (Ireland: a 1.3° gap closing a 23°-long path, 6%) from
+"these are just two points on an open stretch that happen to be
+somewhat close" (France's Atlantic coast, Aturus-Mündung to
+Liger-Mündung, is a real 6.9°-long walk whose ends sit 3.9° apart, 56% -
+closing that drew a diagonal straight back down through the country).
+Runs are
 grouped by the catalogue's "book.map" prefix (e.g. "2.02"), not the
 printed tabula (e.g. "EU01") - a tabula routinely bundles several distinct
 book.map sub-regions onto one sheet (EU01 = Ireland "2.02" *and* Britain
