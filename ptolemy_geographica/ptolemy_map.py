@@ -183,8 +183,12 @@ _ISLAND_APPENDIX_SECTIONS = {
     ("3.15", "29"),  # Kap Phorbia + Stadt auf Mykonos (Cyclades)
     ("3.15", "30"),  # Andros/Tenos/Syros/Naxos/Paros/Siphnos + a 2nd "Kap Sunion" citation (Cyclades)
     ("3.15", "31"),  # Seriphos/Pholegandros/Sikinos (Cyclades)
+    ("5.02", "29"),  # Kap Sigrion/Pyrra/Eresos/Mytilene/Methymna/Antissa - Lesbos
+    ("5.02", "30"),  # Ikaria + Kap Histoi/Chios/Kap Phanaia/Samos/Kap Ampelos - Ikaria/Chios/Samos (+ a 2nd "Myndos" citation)
     ("5.02", "31"),  # Arkesine/Kos/Astypalaia (Cyclades/Dodecanese)
     ("5.02", "32"),  # Syme/Kasos (Dodecanese)
+    ("5.02", "33"),  # Kap Thoanteion/Kap Ephialtion/Potidaion - Karpathos
+    ("5.02", "34"),  # Kap des Pan/Kameiros/Lindos/Rhodos/Ielyssos - Rhodes
     ("6.07", "43"),  # Red Sea islands
     ("6.07", "45"),  # Red Sea islands incl. Dioskorides (Socotra)
     ("6.07", "46"),  # Sachalitic Gulf islands

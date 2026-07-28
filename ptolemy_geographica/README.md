@@ -123,7 +123,8 @@ the other half of that same Spain/France gap.
 A second, harder-to-generalize problem: some sea-headed sections aren't a
 coastal walk at all but a list of scattered islands (Elba/Capraia/Pianosa;
 the Balearics; the Sporades; Red Sea and Persian Gulf islands; Corfu;
-Euboea; the Cyclades...), and nothing in the text reliably tells them apart
+Euboea; the Cyclades; Lesbos, Chios, Samos and Ikaria; Karpathos; Rhodes...),
+and nothing in the text reliably tells them apart
 from a real coastal-city section headed the same way (Ptolemy's
 Gulf-of-Taranto cities - Croto, Thurii, Tarentum - are headed by "Golf von
 Tarent" exactly like the island lists are headed by "Tyrrhenisches Meer").
