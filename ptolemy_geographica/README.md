@@ -98,6 +98,25 @@ their own one-point section) is 3.7°, while jumps that need rejecting
 straight to Baetica's Mediterranean side - both catalogue-adjacent but
 nowhere near each other) start around 7-9°.
 
+Grouping by book.map fixes wrong cross-region connections, but as a side
+effect it also stops two *genuinely* adjacent regions from connecting:
+Ptolemy's regional maps re-cite their shared boundary point in both
+catalogue entries (Kap Oiarso/Cabo Higuer, right at the Spain/France
+border, appears once at the end of Iberia's "2.06" and once at the start
+of Aquitania's "2.07"), but since each book.map group is only stitched
+against itself, those two citations never met - leaving Spain's Biscay
+coast and France's Atlantic coast as two disconnected trails. A final
+global pass reconnects trails across *any* book.map whose endpoints are
+essentially the same point (within 0.1°, tight enough to only catch a
+real shared citation, not reopen the cross-region guessing that grouping
+by book.map was added to prevent).
+
+Also, "Kap X" (a name that leads with "cape") is now always coastal even
+when it also names a mountain range in passing - "Kap Oiarso, Pyrene-
+Gebirge (NW-Ende)" ("cape Oiarso, Pyrenees' NW end") was losing to the
+mountain check and getting dropped from the coastline entirely, which was
+the other half of that same Spain/France gap.
+
 A second, harder-to-generalize problem: some sea-headed sections aren't a
 coastal walk at all but a list of scattered islands (Elba/Capraia/Pianosa;
 the Balearics; the Sporades; Red Sea and Persian Gulf islands...), and nothing

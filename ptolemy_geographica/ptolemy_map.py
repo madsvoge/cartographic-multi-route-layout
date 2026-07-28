@@ -195,9 +195,21 @@ _NONCOASTAL_EXCEPTION_SECTIONS = {
 }
 
 
+_KAP_PREFIX_RE = re.compile(r"^kap\b", re.IGNORECASE)
+
+
 def _classify_locality(
     name: str, section_is_coastal: bool, force_island: bool = False, force_noncoastal: bool = False
 ) -> str:
+    if _KAP_PREFIX_RE.search(name):
+        # A name that leads with "Kap" is unambiguously a cape - even when
+        # it also carries a mountain-range aside, e.g. "Kap Oiarso,
+        # Pyrene-Gebirge (NW-Ende)" (Cabo Higuer, right at the Spain/France
+        # border - also happens to be where the Pyrenees end). Classifying
+        # it "mountain" dropped it from the coastline entirely, leaving a
+        # gap between Spain's Biscay coast and France's Atlantic coast that
+        # this cape would otherwise have bridged.
+        return "coast"
     if _MOUNTAIN_RE.search(name):
         return "mountain"
     if force_island:
@@ -427,7 +439,7 @@ def _ref_dist(a: "Reference", b: "Reference") -> float:
     return _dist((a.lat_modern, a.lon_modern), (b.lat_modern, b.lon_modern))
 
 
-def _stitch_trails(trails: list[list["Reference"]]) -> list[list["Reference"]]:
+def _stitch_trails(trails: list[list["Reference"]], max_gap_deg: float = _STITCH_MAX_GAP_DEG) -> list[list["Reference"]]:
     """Greedily join trails whose nearest endpoints are within range."""
     trails = [list(t) for t in trails]
     merged = True
@@ -444,7 +456,7 @@ def _stitch_trails(trails: list[list["Reference"]]) -> list[list["Reference"]]:
                     "start-end": (a[0], b[-1]),
                 }.items():
                     d = _ref_dist(pa, pb)
-                    if d <= _STITCH_MAX_GAP_DEG and (best is None or d < best[0]):
+                    if d <= max_gap_deg and (best is None or d < best[0]):
                         best = (d, i, j, orientation)
         if best is not None:
             _, i, j, orientation = best
@@ -599,15 +611,31 @@ def build_coastlines(refs: list[Reference]) -> list[list[Reference]]:
         # land close together, then closed into a loop if the final trail
         # returns near its own start.
         for trail_refs in _stitch_trails(trails):
-            first, last = trail_refs[0], trail_refs[-1]
-            if len(trail_refs) >= 4 and first is not last:
-                closing_gap = _ref_dist(first, last)
-                path_length = sum(_ref_dist(trail_refs[i], trail_refs[i + 1]) for i in range(len(trail_refs) - 1))
-                if closing_gap <= _CLOSE_LOOP_MAX_GAP_DEG and closing_gap <= _CLOSE_LOOP_MAX_GAP_RATIO * path_length:
-                    trail_refs = trail_refs + [first]
             polylines.append(trail_refs)
 
-    return polylines
+    # Adjacent book.map regions often re-cite the same boundary point in
+    # both their catalogue entries (Kap Oiarso/Cabo Higuer, right at the
+    # Spain/France border, closes both Iberia's "2.06" and Aquitania's
+    # "2.07"). Grouping by book.map is what fixed Ireland/Britain wrongly
+    # merging, but as a side effect it also stops two *genuinely* adjacent
+    # regions' trails from ever being stitched, since each group is only
+    # stitched against itself. A final global pass reconnects trails whose
+    # endpoints are essentially the same point (not just nearby) - tight
+    # enough to only catch real shared citations, not reintroduce
+    # cross-region guessing.
+    polylines = _stitch_trails(polylines, max_gap_deg=_SAME_POINT_TOL_DEG * 2)
+
+    final: list[list[Reference]] = []
+    for trail_refs in polylines:
+        first, last = trail_refs[0], trail_refs[-1]
+        if len(trail_refs) >= 4 and first is not last:
+            closing_gap = _ref_dist(first, last)
+            path_length = sum(_ref_dist(trail_refs[i], trail_refs[i + 1]) for i in range(len(trail_refs) - 1))
+            if closing_gap <= _CLOSE_LOOP_MAX_GAP_DEG and closing_gap <= _CLOSE_LOOP_MAX_GAP_RATIO * path_length:
+                trail_refs = trail_refs + [first]
+        final.append(trail_refs)
+
+    return final
 
 
 def load_inputs(paths: list[Path]) -> list[Reference]:
