@@ -194,6 +194,7 @@ _ISLAND_APPENDIX_SECTIONS = {
     ("6.07", "46"),  # Sachalitic Gulf islands
     ("6.07", "47"),  # Persian Gulf islands incl. Tylos (Bahrain)
     ("7.01", "95"),  # Ganges-delta islands ("Heptanesia" = "seven islands")
+    ("4.05", "75"),  # Aedonis/Tyndarische Klippen/Ainesippa/Phokussai/Pedonia - small islands/reefs off the Marmarica coast, Egypt
 }
 
 # The same problem at single-point granularity: a lone island reference
@@ -624,6 +625,11 @@ _COASTLINE_SKIP_REF_IDS = {
 # Keyed by the two ref_ids, order doesn't matter.
 _BOUNDARY_STITCH_REF_ID_PAIRS = {
     ("3.14.06.07", "3.15.02.05"),  # Acheloos-Mündung (end of Epirus/Akarnania) -> Kap einer Halbinsel (start of Aetolia)
+    ("3.11.02.01", "3.13.09.03"),  # Nessos-Mündung (end of Thrace) -> Neapolis/Kavala (start of Macedonia) - the Nestos, a real Thrace/Macedonia border river
+    ("3.13.05.03", "3.14.02.03"),  # Kelydnos-Mündung/Dukati (end of the Illyria fragment) -> Akrokeraunische Berge/Karaburun (start of Epirus) - the Ceraunian mountains, the real Illyria/Epirus border
+    ("2.06.20.04", "2.10.02.07"),  # Clodianus-Mündung/Fluvià (end of Iberia's Mediterranean coast) -> Heiligtum der Venus/Cap Béar (start of Gaul's) - the real Spain/France Mediterranean border, a second Kap-Oiarso-style hand-off on the Mediterranean side
+    ("4.01.07.06", "4.02.02.05"),  # Malua-Mündung/Moulouya (end of Mauretania Tingitana) -> Siga-Mündung/Tafna (start of Mauretania Caesariensis) - the real Morocco/Algeria border river
+    ("4.02.11.06", "4.03.03.05"),  # Ampsaga-Mündung/Oued el-Kebir (end of Mauretania Caesariensis) -> Kap Treton/Bougaroun (start of Africa Proconsularis) - the real Algeria/Tunisia border river
 }
 
 # Two catalogue points are treated as "the same physical spot" (a shared

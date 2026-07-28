@@ -123,8 +123,9 @@ the other half of that same Spain/France gap.
 A second, harder-to-generalize problem: some sea-headed sections aren't a
 coastal walk at all but a list of scattered islands (Elba/Capraia/Pianosa;
 the Balearics; the Sporades; Red Sea and Persian Gulf islands; Corfu;
-Euboea; the Cyclades; Lesbos, Chios, Samos and Ikaria; Karpathos; Rhodes...),
-and nothing in the text reliably tells them apart
+Euboea; the Cyclades; Lesbos, Chios, Samos and Ikaria; Karpathos; Rhodes;
+a handful of small reefs/islets off Egypt's Marmarica coast...), and
+nothing in the text reliably tells them apart
 from a real coastal-city section headed the same way (Ptolemy's
 Gulf-of-Taranto cities - Croto, Thurii, Tarentum - are headed by "Golf von
 Tarent" exactly like the island lists are headed by "Tyrrhenisches Meer").
@@ -144,7 +145,21 @@ all-mainland section is actually on an island - book.map "3.14" section
 "06" is Akarnania's mainland coast except for "Kap Leukas" (Cape Doukato,
 on the island of Lefkada), where force-islanding the whole section would
 have wrongly reclassified the real mainland points sitting right next to
-it. If you spot another sea-crossing line, check the two points'
+it.
+
+A section can also mix island points and coastal points and only get
+*partly* caught: book.map "4.05" section "75" (a handful of reefs/islets
+just off Egypt's Marmarica coast, `Modern_location` names like "Geziret
+el-Maracheb" - Arabic for "island") had 2 of its 5 entries already
+correctly tagged `island` (their names end in a count, "(3)"/"(2)", the
+count-labelled-group pattern), but the other 3 didn't match any
+island-specific keyword and fell through to `coast` - which spliced them
+into the *main* coastal walk as if they were more mainland capes, drawing
+a visible second line doubling back over the same stretch of coast this
+section's points were already scattered along. Adding the whole section to
+`_ISLAND_APPENDIX_SECTIONS` (rather than patching the 3 stray entries
+individually) fixed all 5 at once and removed the double line. If you spot
+another sea-crossing line, check the two points'
 `Modern_location` in the spreadsheet (or click them in the interactive
 map) - if they're islands, tell me their section (`book.section` prefix of
 the `ref_id`, e.g. "6.08") or the individual `ref_id` and I can add it.
@@ -221,7 +236,25 @@ describes it under two regional headings, but just outside the
 auto-stitch window. Rather than loosen that window everywhere (and risk a
 false stitch elsewhere), `_BOUNDARY_STITCH_REF_ID_PAIRS` force-joins
 specific endpoint `ref_id` pairs manually verified to be the same
-hand-off, regardless of the exact distance between them.
+hand-off, regardless of the exact distance between them. The same pattern
+recurs at real political/geographic borders throughout the catalogue, each
+its own book.map hand-off just outside the auto-stitch window: Thrace into
+Macedonia at the Nestos' mouth, Illyria into Epirus at the Ceraunian
+mountains, Spain into Gaul at the Mediterranean border (a second,
+independent gap from the Atlantic-side Kap Oiarso case above), and
+Mauretania Tingitana into Mauretania Caesariensis into Africa
+Proconsularis (Morocco - Algeria - Tunisia) at the Moulouya and
+Oued-el-Kebir rivers - five pairs in total so far.
+
+Not every gap between adjacent book.map trails is this kind of bug,
+though - some are genuinely sparse source material, not a missed
+same-point citation. Libya's coast has a real ~4-degree jump between Kap
+Misurata (end of book.map "4.03") and the start of "4.04" - Ptolemy simply
+named few points along the vast, sweeping Gulf of Sidra (Syrtis Major),
+matching its real geography. Forcing a stitch there would draw a line
+based on nothing; left alone, the visible gap honestly reflects a real gap
+in the source. Only stitch a pair once you can identify what real place
+sits at both ends.
 
 If a coastline still visibly closes into a loop across open water or
 straight across a mainland, jumps in a way that looks like the
