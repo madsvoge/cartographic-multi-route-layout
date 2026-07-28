@@ -116,7 +116,7 @@ def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False)
         )
 
     if present_categories:
-        legend = ax.legend(loc="lower right", fontsize=8.5, framealpha=0.9, facecolor="#fcfcfb", edgecolor=BORDER)
+        legend = ax.legend(loc="upper right", fontsize=8.5, framealpha=0.9, facecolor="#fcfcfb", edgecolor=BORDER)
         for text in legend.get_texts():
             text.set_color(TEXT_PRIMARY)
 
