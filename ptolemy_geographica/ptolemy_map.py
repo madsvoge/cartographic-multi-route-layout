@@ -288,6 +288,9 @@ _ISLAND_APPENDIX_SECTIONS = {
     ("3.10", "17"),  # Borysthenis + Achilles-Insel - the two islands off Lower Moesia (topostext: "the so-called Borysthenes island...and Achilleos or Leuke island")
     ("3.16", "23"),  # Strophaden/Prote/Sphagia/Theganusa/Kythera/Aigila/Salamis/Aigine - the islands adjoining the Peloponnese (topostext: "Islands adjoining the Peloponnese: the Strophades...")
     ("3.17", "11"),  # Kaudos/Letoa/Dia/Kimolos/Melos - the islands adjacent to Crete (topostext: "Islands adjacent to Crete Klaudos island...")
+    ("4.01", "16"),  # Paina/Erytheia - islands off Mauritania Tingitana in the Outer Ocean
+    ("4.03", "44"),  # Hydras/Galata/Drakontios/Aigimoros/Larunesen/Anemussa/Lopadusa/Aithusa - islands along the coast of Africa (topostext: "Islands along the coast of Africa, which are near the coast: Hydras...")
+    ("4.03", "46"),  # Misynos/Pontia/Gaia - three more islands off Africa
 }
 
 # The same problem at single-point granularity: a lone island reference
@@ -301,6 +304,11 @@ _ISLAND_APPENDIX_SECTIONS = {
 _ISLAND_POINT_OVERRIDES = {
     "3.14.06.05",  # Kap Leukas - Cape Doukato, island of Lefkada
     "3.05.31.02",  # Alopekia bzw. Tanais - the island off the Tanais' mouth (topostext: "An island lies off the mouth of the Tanais river, Alopekia or Tanais island")
+    "4.02.35.02",  # Iulia Caesarea - the island off Mauritania Caesariensis' capital, sharing its name (topostext: "An island lies off Iulia Caesarea, with the same name, with a city")
+    "4.03.45.01",  # Cercina - an island in a section (4.03.45) that also names Gerra/Meninx, two cities *on* a different island (Lotophagitis) with no coordinate of its own - not safe to force-island the whole section
+    "4.03.47.02",  # Kossura (Pantelleria) - one of three real islands in a section (4.03.47) that also names Melite's own peninsula/shrines, not islands themselves
+    "4.03.47.03",  # Gaulos (Gozo)
+    "4.03.47.05",  # Melite (Malta)
 }
 
 # _ISLAND_APPENDIX_SECTIONS covers two structurally different things: a
@@ -340,6 +348,7 @@ _ISLAND_LINE_GROUPS: dict[tuple[str, str], str] = {
 # Kent via a detour up to York and back.
 _NONCOASTAL_EXCEPTION_SECTIONS = {
     ("2.03", "17"),  # Eboracum/Camulodunum/Petuaria - York/Colchester/Brough
+    ("4.01", "10"),  # Pyrrhon-Ebene - an inland plain embedded in a tribal-boundary description (topostext: "...below whom are the Nectiberes; and next is the Pyrrhon Plain...Below these are the Zegrenses..."), not a coastal point
 }
 
 # The mountain-side counterpart of _ISLAND_APPENDIX_SECTIONS: a section
@@ -355,6 +364,7 @@ _NONCOASTAL_EXCEPTION_SECTIONS = {
 _MOUNTAIN_APPENDIX_SECTIONS = {
     ("3.13", "19"),  # Bertiskos/Bermion/Berketesios/Kitarion/Olympos/Ossa/Pelion/Othrys - Macedonia's named mountains, including Mt. Olympus itself
     ("3.16", "14"),  # Pholoe/Stymphalos/Minthe/Taygetos/Kronion/Zarex - the Peloponnese's named mountains
+    ("4.01", "12"),  # Diur (+ the already-"-Gebirge" Durdon-Gebirge W/O-Ende) - Mauritania Tingitana's named mountains (topostext: "The noteworthy mountains in this land are the so-called Diur...")
 }
 
 # The mountain-side counterpart of _ISLAND_POINT_OVERRIDES: a lone mountain

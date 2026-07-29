@@ -386,7 +386,7 @@ have belonged to (Narmades, Nanagunas, Pseudostomos, Baris, Solen, Tynas,
 and others' source points) but couldn't reach while miscategorized as
 mountains: 103 → 111 river lines, 263 → 281 points-in-a-line.
 
-This covers 121 of 249 `mountain` points, grouped into 59 lines (a
+This covers 121 of 250 `mountain` points, grouped into 59 lines (a
 single-citation range - most of the catalogue's ~150 named peaks/ranges
 only ever appear once, with no second point to connect to - still plots as
 an individual point, no line).
@@ -674,6 +674,47 @@ sections:
   Salamis, Aigine, all in `city`, no "-Insel" keyword present anywhere in
   the list), and the islands adjacent to Crete (`3.17.11` - Kaudos, Letoa,
   Dia, Kimolos, Melos, same pattern).
+
+A sixth pilot run (Mauritania Tingitana, Mauritania Caesariensis, and
+Africa proper, `§4.1.1`-`§4.3.47`) found a genuine coastline-building bug
+underneath a category fix, plus more of the same mountain/island-list
+shapes:
+
+- Two islands "offshore to the west in the Outer ocean" (Paena/Erythia,
+  `4.01.16`) were sitting in `coast`, not `city` - because a *third* point,
+  "Pyrrhon-Ebene" ("Pyrrhon Plain", `4.01.10.16`), was *also* wrongly
+  `coast` via the section-header sea-fallback despite being an inland
+  landmark embedded in a tribal-boundary description (topostext: "...below
+  whom are the Nectiberes; and next is the Pyrrhon Plain...Below these are
+  the Zegrenses..."), and the coastline-reconstruction graph had strung
+  all three together into a spurious 3-point "coastline" purely because
+  they happened to sit within stitching distance of each other - Africa's
+  real mainland coast, two offshore islands, and an inland plain, none of
+  which trace a real shore. Fixing the islands' category first actually
+  *revealed* this - `annotate_dataset.py`'s coastline count dropped by one
+  when the fix landed, which is exactly backwards for a category-only
+  change and was the tell to go looking. Fixed both: Paena/Erythia added
+  to `_ISLAND_APPENDIX_SECTIONS`, Pyrrhon-Ebene's section added to
+  `_NONCOASTAL_EXCEPTION_SECTIONS` (the same mechanism as York/Colchester/
+  Brough) - the phantom coastline disappears entirely once neither endpoint
+  is coastal any more, rather than becoming a real 2-point or 1-point one.
+- "Diur" (`4.01.12`, Mauritania Tingitana's own named-mountains list,
+  alongside the already-`-Gebirge`-suffixed Durdon-Gebirge W/O-Ende) was
+  the same missing-keyword mountain-list shape as Macedonia/the
+  Peloponnese - added to `_MOUNTAIN_APPENDIX_SECTIONS`.
+- Two more island-list sections safe to force whole-section (`4.03.44`,
+  eight islands "along the coast of Africa"; `4.03.46`, three more) and
+  four islands needing a point-level fix instead, because their sections
+  *also* contain a city sitting on a different island with no coordinate
+  of its own for the island itself - "Iulia Caesarea" (an island sharing
+  its name with the mainland capital it lies off), "Cercina" (its section
+  also names Gerra/Meninx, two cities on the separate island Lotophagitis),
+  and "Kossura"/"Gaulos"/"Melite" (Pantelleria/Gozo/Malta - their section
+  also names Melite's own peninsula and two shrines, not islands
+  themselves) - all four added to `_ISLAND_POINT_OVERRIDES` rather than
+  their whole sections, to avoid mis-islanding those city-on-an-island
+  siblings the same way `_ISLAND_POINT_OVERRIDES` was designed to avoid in
+  the first place.
 
 ## Compiling the catalogue to data: `annotate_dataset.py`
 
