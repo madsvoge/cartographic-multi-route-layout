@@ -5163,7 +5163,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 6,7,8,2,Sanina city,75°30',11°45',75.5,11.75,yes,6.07.08.04,Sanina,90.8
 6,7,8,3,Kaboubathra mountain,76°15',11°15',76.25,11.25,yes,6.07.08.05,Kabubathra,100.0
 6,7,9,1,Country of the Homerites: Madoke city,77°00',11°45',77.0,11.75,yes,6.07.09.02,Madoke (Makode),100.0
-6,7,9,2,Mardache city,78°00',11°00',78.0,11.0,yes,6.07.09.03,Mardache (Marache),58.0
+6,7,9,2,Mardache city,78°00',11°00',78.0,11.0,yes,6.07.09.03,Mardache (Marache),50.0
 6,7,9,3,Lees kome,78°40',11°30',78.6667,11.5,yes,6.07.09.04,Lees (Leis),100.0
 6,7,9,4,Ammonion promontory,79°20',11°10',79.3333,11.1667,yes,6.07.09.05,Kap des Ammonios,93.0
 6,7,9,5,Arabias trading post,80°00',11°30',80.0,11.5,yes,6.07.09.06,Arabia* (Arabias* ),100.0
@@ -5174,7 +5174,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 6,7,10,3,Mada kome,83°00',11°30',83.0,11.5,yes,6.07.10.04,Mada (Ada),100.0
 6,7,10,4,Eristhe city,83°30',11°45',83.5,11.75,yes,6.07.10.05,Eristhe (Etisthe),100.0
 6,7,10,5,Mikros Aigialos (Small Shore),83°40',11°30',83.6667,11.5,yes,6.07.10.06,Kleiner Strand,100.0
-6,7,10,6,Kane trading post and promontory,84°00',11°30',84.0,11.5,yes,6.07.10.07,Kane*,63.3
+6,7,10,6,Kane trading post and promontory,84°00',11°30',84.0,11.5,yes,6.07.10.07,Kane*,71.3
 6,7,10,7,Troulla harbor,84°00',12°40',84.0,12.6667,yes,6.07.10.08,Trulla,100.0
 6,7,10,8,Maithath kome,84°20',13°00',84.3333,13.0,yes,6.07.10.09,Maithath (Maphath),100.0
 6,7,10,9,Prionoton mountain,84°40',13°00',84.6667,13.0,yes,6.07.10.10,Prionoton,100.0
@@ -5199,7 +5199,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 6,7,12,1,In the narrows of the Persian Gulf Kryptos harbor,92°40',21°30',92.6667,21.5,yes,6.07.12.02,Kryptos,100.0
 6,7,12,2,[Coastal mountains of Eudaimon Arabia: Hippos Mountain,76°50',27°30',76.8333,27.5,no,6.07.29.04,Lugana (Zutana),33.6
 6,7,12,3,Kaboubathra Mountain,76°15',11°15',76.25,11.25,yes,6.07.08.05,Kabubathra,100.0
-6,7,12,4,Melan Mountain,81°30',11°30',81.5,11.5,yes,6.07.09.08,Schwarzer Berg,76.3
+6,7,12,4,Melan Mountain,81°30',11°30',81.5,11.5,yes,6.07.09.08,Schwarzer Berg,68.3
 6,7,12,5,Prionoton Mountain,84°40',13°00',84.6667,13.0,yes,6.07.10.10,Prionoton,100.0
 6,7,12,6,Didyma Mountains,90°15',19°20',90.25,19.3333,yes,6.07.11.09,Didyma-Berge,100.0
 6,7,12,7,"the so-called Melana mountains of the Asabans, midpoint on the sea at",93°00',22°20',93.0,22.3333,yes,6.07.12.04,Asabon (Asabo)-Berge (Endpunkt am Meer),60.2
@@ -5230,7 +5230,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 6,7,18,1,of the Leanitai: Mallaba city,80°10',26°10',80.1667,26.1667,yes,6.07.18.02,Mallada,100.0
 6,7,18,2,Chersonesos promontory,80°20',26°30',80.3333,26.5,yes,6.07.18.03,Kap Chersonesos,100.0
 6,7,18,3,Leanites gulf,79°15',27°00',79.25,27.0,yes,6.07.18.04,Golf Laianites,77.7
-6,7,18,4,Itamos harbor,79°40',27°30',79.6667,27.5,yes,6.07.18.05,Itamos,93.9
+6,7,18,4,Itamos harbor,79°40',27°30',79.6667,27.5,yes,6.07.18.05,Itamos,100.0
 6,7,18,5,Adaroupolis,79°15',27°40',79.25,27.6667,yes,6.07.18.06,Stadt des Adaros,100.0
 6,7,19,1,of the Aboukaians: Hieros gulf,78°15',28°15',78.25,28.25,no,6.07.19.02,Heiliger Golf,40.8
 6,7,19,2,Koromanis city,79°00',28°45',79.0,28.75,yes,6.07.19.03,Koromanis,100.0

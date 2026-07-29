@@ -404,6 +404,54 @@ _MOUNTAIN_APPENDIX_SECTIONS = {
     ("6.02", "04"),  # Zagros(Mitte)/Orontes(Mitte)/Iasonion(Mitte) + already-"-Gebirge" Koronos(W/O-Ende) - Media's named mountains (topostext: "The most important mountains of Media are the Zagros, midpoint...the Orontes, midpoint...the Iasonion, midpoint...and the western part of Korono...")
 }
 
+# The coastal-walk counterpart of _NONCOASTAL_EXCEPTION_SECTIONS' mirror
+# image: sections manually verified to be a genuine continuation of a
+# coastal walk despite a section header that names a *tribe*, not a sea -
+# so _COASTAL_HDR_RE never fires for them and every plain-named point falls
+# through to the default "city". Found by inspection of a rendered map: the
+# whole Arabian side of the Red Sea (book.map "6.07", Arabia Felix) was
+# missing its coastline entirely, replaced by an unconnected scatter of
+# "city" points, while the opposite African shore (book.map "4.07") was
+# correctly traced - reported by the user as "as if one coastline is
+# missing, full of little islands". Ptolemy's own catalogue narrates this
+# coast tribe-by-tribe ("In the country of the Kinaidokolpitans...", "The
+# Kassanite country...", "Country of the Elisarans...") rather than
+# re-stating "Arabian Gulf"/"Red Sea" at every section, and only sections
+# 02, 08 (and a few later ones already caught by _GULF_RE on their own
+# points) happen to carry an explicit sea-name header - topostext's English
+# translation confirms the whole span 02-19 is one continuous coastal
+# enumeration ("border of the Arabian Gulf in the inmost part of the
+# Elanite gulf, Onne" opens it; "Country of the Adramitans", "Sachalites",
+# "In the narrows of the Persian Gulf" carry it on down the Arabian Sea
+# coast and round into the Persian Gulf; section 20, the named-mountains
+# appendix, is where it ends - already handled by _MOUNTAIN_APPENDIX_SECTIONS
+# above). Forcing section_is_coastal here is safe even for the sections that
+# also contain real river mouths/sources (05's "Baitios-Quellen", 10's
+# "Prion-Mündung"/springs) since _RIVERFEAT_RE/_MOUTH_RE are checked before
+# the section-level coastal fallback ever gets a turn - only the plain
+# harbor-town citations that had nothing else to match on are affected
+# (Kopar, Zabram, Thebai, Badeo, Mamala, Muza, Okelis and more - several of
+# them well-attested real Red Sea ports).
+_COASTAL_APPENDIX_SECTIONS = {
+    ("6.07", "02"),
+    ("6.07", "03"),
+    ("6.07", "05"),
+    ("6.07", "06"),
+    ("6.07", "07"),
+    ("6.07", "08"),
+    ("6.07", "09"),
+    ("6.07", "10"),
+    ("6.07", "11"),
+    ("6.07", "12"),
+    ("6.07", "13"),
+    ("6.07", "14"),
+    ("6.07", "15"),
+    ("6.07", "16"),
+    ("6.07", "17"),
+    ("6.07", "18"),
+    ("6.07", "19"),
+}
+
 # The mountain-side counterpart of _ISLAND_POINT_OVERRIDES: a lone mountain
 # reference embedded in an otherwise-coastal section, where force-mountaining
 # the whole section (as above) would wrongly pull its genuine coastal points
@@ -446,10 +494,19 @@ def _classify_locality(
     force_noncoastal: bool = False,
     force_mountain: bool = False,
     force_mountain_point: bool = False,
+    force_coastal: bool = False,
 ) -> tuple[str, str]:
     """Return (category, naming_observation) - the observation is the audit
     trail for *why* this category was picked, for the "naming_observation"
     column of the annotated dataset (see annotate_dataset.py)."""
+    if force_coastal:
+        # A manually-verified coastal-appendix section (see
+        # _COASTAL_APPENDIX_SECTIONS) - the header-based section_is_coastal
+        # guess missed it because the header names a tribe, not a sea.
+        # Applied this early so it participates like any other
+        # section_is_coastal=True in every check below (river/mountain/lake
+        # keywords still win first - only the plain-city fallback changes).
+        section_is_coastal = True
     # A manually-verified island override - whole section or single point -
     # wins over everything else, including a name that otherwise reads as an
     # unambiguous cape ("Kap Leukimma" *is* a real cape - it's just a cape on
@@ -774,6 +831,7 @@ def load_xlsx(path: Path) -> list[Reference]:
         force_island = book_map_section in _ISLAND_APPENDIX_SECTIONS
         force_noncoastal = book_map_section in _NONCOASTAL_EXCEPTION_SECTIONS
         force_mountain = book_map_section in _MOUNTAIN_APPENDIX_SECTIONS
+        force_coastal = book_map_section in _COASTAL_APPENDIX_SECTIONS
 
         for row in section_rows:
             _id, id_map, locality, modern_location, lon_o, lat_o, lon_x, lat_x = row
@@ -795,6 +853,7 @@ def load_xlsx(path: Path) -> list[Reference]:
                 force_noncoastal=force_noncoastal,
                 force_mountain=force_mountain,
                 force_mountain_point=str(_id) in _MOUNTAIN_POINT_OVERRIDES,
+                force_coastal=force_coastal,
             )
             refs.append(
                 Reference(

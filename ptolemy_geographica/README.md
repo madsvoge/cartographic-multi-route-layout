@@ -1069,6 +1069,53 @@ without needing any parser changes.
   keyword match" reasoning as `_MOUNTAIN_BAREWORD_BERG_RE`'s guard, left
   alone rather than broken for the sake of a stricter mountain match.
 
+**Found by visual inspection, not cross-referencing**: rendering a static
+map of the Red Sea/Arabia region turned up a real gap that topostext
+cross-checking alone hadn't caught, since the mismatch is between the
+catalogue's own points and how they're *classified*, not between the
+catalogue and topostext - the user reported "it's as if one coastline is
+missing, and there's what looks like a row of coastal cities marked as
+cities" and "some coastline is blocking the mouth of the Red Sea". Arabia
+Felix's own Red Sea-facing coast (`6.07`, sections `02`-`19`) was entirely
+missing its `coast` classification: Ptolemy narrates this coastal walk
+tribe-by-tribe ("In the country of the Kinaidokolpitans...", "The
+Kassanite country...", "Country of the Elisarans...") rather than
+repeating "Arabian Gulf"/"Red Sea" at every section, so `_COASTAL_HDR_RE`
+(which looks for a sea/gulf word in the section header) only fired for a
+few of those sections - every other plain-named port town on that coast
+(Kopar, Zabram, Thebai, Badeo, Mamala, Muza, Okelis, and more - several
+well-attested real Red Sea/Gulf-of-Aden ports) fell through to the default
+`city`, so no coastline was ever traced there at all. The opposite African
+shore (`4.07`) was already correctly traced, so the rendered map showed
+one real coastline and one gap dense with city dots and the Red Sea
+islands (`6.07.43`/`45`/`46`/`47`) - reading, at a glance, like the
+islands themselves ought to have been the missing coast. (The "blocking
+the mouth" impression was a side effect of the same gap, not a separate
+bug: with only the African coastline drawn, its own real bend around the
+Adulitic Bay and the Horn of Africa - confirmed against topostext, "in the
+Adulitic Bay, Sabat city...Mountainous peninsula...Adulis...Krouos or
+Kronos promontory" - reads as if it cuts across the strait; with the
+Arabian coast now also drawn alongside it, the gap between the two reads
+as open water again, as it should.) Fixed with a new override list,
+`_COASTAL_APPENDIX_SECTIONS` - the coastal-walk counterpart of
+`_NONCOASTAL_EXCEPTION_SECTIONS` - forcing `section_is_coastal = True` for
+the verified sections regardless of header wording; safe even where a
+section also has a genuine river source/mouth (`_RIVERFEAT_RE`/`_MOUTH_RE`
+are still checked first) or a genuine coastal-mountain citation (Melan/
+"Schwarzer Berg" in `6.07.09`, previously miscategorized `mountain` by the
+*same* underlying bug - `_MOUNTAIN_BAREWORD_BERG_RE`'s bare-word tier only
+skips a point when its section already reads as coastal, so the missing
+`section_is_coastal` had also been quietly stealing this point from the
+coastline it belongs to). Confirmed against topostext's English
+translation, which frames the whole `02`-`19` span as one continuous
+enumeration down the Arabian Gulf coast and round into the Persian Gulf.
+`coast`: 619 → 669, `city`: 4306 → 4257, `mountain`: 293 → 292 (net zero -
+all reclassified into `coast`); coastline feature count actually *dropped*
+(61 → 58, 1099 → 1135 points) even though more points became coastal,
+because several formerly-isolated points on this stretch turned out to
+share a real, continuous walk once correctly classified and merged into
+fewer, longer lines instead of many short ones.
+
 topostext's covered range is now **all of books 2 through 7** (book 2
 maps 02-16, book 3 maps 01-17, book 4 maps 01-08, and all of books 5, 6,
 and 7 in full - book 1 has no coordinate data to check, being Ptolemy's
