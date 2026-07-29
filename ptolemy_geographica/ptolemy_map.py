@@ -450,6 +450,45 @@ _COASTAL_APPENDIX_SECTIONS = {
     ("6.07", "17"),
     ("6.07", "18"),
     ("6.07", "19"),
+    # Same pattern, found the same way (user-reported gap in a rendered
+    # map), on the Black Sea: Paphlagonia/Pontus's own coast (book.map
+    # "5.04") is headed by "Pontos Euxeinos" (Greek for "Black Sea") only
+    # once, at the very start of the book.map (section "01") - every
+    # section actually enumerating the coast is headed by a place name
+    # instead ("Kytoros", section "02"'s own header), so almost every
+    # plain-named point fell through to `city`, including two of antiquity's
+    # best-known Black Sea ports, Sinope and Amisos (Sinop/Samsun today).
+    # The real cape "Kap Karambis" and the two river mouths already caught
+    # via `_MOUTH_RE` were the only survivors.
+    ("5.04", "02"),
+    ("5.04", "03"),
+    # Bithynia's own coast (book.map "5.01"): section "03" (Astakos, Olbia,
+    # Nikomedeia, on the Gulf of Astakos/Izmit) sits directly between two
+    # promontory citations (section "02"'s Akritas cape, section "04"'s
+    # Posideion cape) with no sea-header of its own - a bay indentation in
+    # the same shape as Arabia's Adulitic Bay detour, not the genuinely
+    # inland cities of section "13" (which topostext itself introduces as
+    # "The following are the inland cities" - correctly left as `city`,
+    # not added here).
+    ("5.01", "03"),
+    # Sarmatia-in-Asia's own coast (book.map "5.09", the Sea of Azov/Kerch
+    # strait/NE Black Sea shore down to the Colchis border) - previously
+    # documented below (see the Coverage section of the README) as
+    # "confirmed, not fixed" for lack of an override mechanism at the time;
+    # fixed now that one exists. Real Bosporan-kingdom port towns
+    # (Phanagoria, Hermonassa, Sindikos - topostext explicitly calls the
+    # latter a "harbor") were sitting in `city` between coast/river_mouth
+    # points precisely because most of this coastal walk's own points never
+    # individually matched a keyword and the section headers are Greek
+    # place/tribe names, not `_COASTAL_HDR_RE`'s German sea words.
+    ("5.09", "02"),
+    ("5.09", "03"),
+    ("5.09", "04"),
+    ("5.09", "05"),
+    ("5.09", "06"),
+    ("5.09", "08"),
+    ("5.09", "09"),
+    ("5.09", "10"),
 }
 
 # The mountain-side counterpart of _ISLAND_POINT_OVERRIDES: a lone mountain
@@ -907,7 +946,42 @@ _MAX_COASTAL_GAP_DEG = 5.0
 # coastline edges, the same way a non-coastal row already is.
 _COASTLINE_SKIP_REF_IDS = {
     "3.14.01.04",  # Acheloos-Mündung - introductory boundary citation, duplicated (correctly) at 3.14.06.07
+    "3.10.14.01",  # Borysthenes-Mündung - the same pattern the other way round: Lower Moesia's own coastal
+    # walk resumes at book.map "3.10" section "14" (Dniester-area river mouths, a genuinely new stretch)
+    # by re-stating the Dnieper's mouth as an orientation point first - the exact same coordinate already
+    # given, correctly, as Sarmatia-in-Europe's own citation (3.05.07.01). Left in as an edge, this
+    # duplicate coordinate became a node with edges to *both* its own real neighbour (3.10.14.02) and,
+    # via catalogue-order adjacency within its own book.map, the far end of a >4.5-degree jump back across
+    # section "08"'s last coastal point (an intervening digression into inland Danube-bank legionary
+    # camps, sections "09"-"13", correctly left `city`) - a zigzag with no geographic basis, reported by
+    # the user as "two strange lines...as if it's trying to connect the wrong features". Skipping this one
+    # re-citation lets 3.10's own walk connect directly to its real next point instead.
 }
+
+# A different, self-marking version of the same "same point re-cited"
+# problem above, found from a user-reported zigzag in the Arabia
+# Felix/Persian Gulf area: book.map "6.07" sections "12" and "13" are each
+# a *summary recap* - "[Coastal mountains of Eudaimon Arabia:] Hippos
+# Mountain...Kaboubathra Mountain...Didyma Mountains..." (topostext) and
+# "Coastal rivers: Baitios river...Prionos river mouth..." - re-listing
+# points already cited earlier in the same book.map, each one explicitly
+# marked in the catalogue's own Locality text with a back-reference arrow
+# ("Didyma-Berge –> 6.7.11", "Lar-Mündung < 6,7,14"). Unlike the
+# Acheloos-Mündung case, these recap citations land at (essentially) the
+# *exact same coordinate* as their original, so node-collapsing doesn't
+# just merge two ends of one walk - it turns the original point into a
+# junction with extra edges to whatever precedes/follows it in the recap
+# list, which has no geographic relationship to the original's real
+# neighbours at all. The result was a coastline graph walk that left its
+# real path to detour through the recap list and back, a zigzag with no
+# geographic basis (checked across the whole catalogue via this same
+# regex - all 15 matches are these two sections, nowhere else). Matched by
+# pattern rather than a hand-picked ref_id list since the arrow itself
+# *is* the "this is a duplicate, not a new point" signal - skipped from
+# coastline edges, river-line and mountain-line grouping alike (a mountain
+# name recap would create the exact same kind of junction if one ever
+# shows up elsewhere).
+_RECAP_BACKREF_RE = re.compile(r"–>|->|<\s*\d")
 
 # The final global stitching pass below (see _SAME_POINT_TOL_DEG * 2)
 # reconnects two book.map trails only when their endpoints land within a
@@ -1100,7 +1174,11 @@ def build_coastlines(refs: list[Reference]) -> list[list[Reference]]:
         edges: list[tuple[Reference, Reference]] = []
         prev: Reference | None = None
         for ref in items:
-            if ref.category not in _COASTLINE_CATEGORIES or ref.ref_id in _COASTLINE_SKIP_REF_IDS:
+            if (
+                ref.category not in _COASTLINE_CATEGORIES
+                or ref.ref_id in _COASTLINE_SKIP_REF_IDS
+                or _RECAP_BACKREF_RE.search(ref.name)
+            ):
                 continue
             if prev is not None and _dist((prev.lat_modern, prev.lon_modern), (ref.lat_modern, ref.lon_modern)) <= _MAX_COASTAL_GAP_DEG:
                 edges.append((prev, ref))
@@ -1329,7 +1407,12 @@ def build_river_lines(refs: list[Reference]) -> list[list[Reference]]:
 
     groups: dict[tuple[str, str, str], list[Reference]] = {}
     for ref in refs:
-        if ref.category not in _RIVER_LINE_CATEGORIES or not ref.ref_id or not ref.is_plausible():
+        if (
+            ref.category not in _RIVER_LINE_CATEGORIES
+            or not ref.ref_id
+            or not ref.is_plausible()
+            or _RECAP_BACKREF_RE.search(ref.name)
+        ):
             continue
         base = _river_base_name(ref.name)
         if not base or _GENERIC_RIVER_NAME_RE.search(base):
@@ -1475,7 +1558,12 @@ def build_mountain_lines(refs: list[Reference]) -> list[list[Reference]]:
 
     groups: dict[tuple[str, str, str], list[Reference]] = {}
     for ref in refs:
-        if ref.category not in _MOUNTAIN_LINE_CATEGORIES or not ref.ref_id or not ref.is_plausible():
+        if (
+            ref.category not in _MOUNTAIN_LINE_CATEGORIES
+            or not ref.ref_id
+            or not ref.is_plausible()
+            or _RECAP_BACKREF_RE.search(ref.name)
+        ):
             continue
         base = _mountain_base_name(ref.name)
         # Same guard as build_river_lines: "Namenlose(r) Berg(e)" ("unnamed
@@ -1571,7 +1659,7 @@ def build_island_lines(refs: list[Reference]) -> list[list[Reference]]:
 
     groups: dict[tuple[str, str], list[Reference]] = {}
     for ref in refs:
-        if ref.category != "island" or not ref.ref_id or not ref.is_plausible():
+        if ref.category != "island" or not ref.ref_id or not ref.is_plausible() or _RECAP_BACKREF_RE.search(ref.name):
             continue
         island = _island_line_group(ref)
         if island is None:

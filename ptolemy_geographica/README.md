@@ -1005,20 +1005,23 @@ genuinely new bug class: a lake sharing the mountain-name lists'
   (`_LAKE_LOCATION_REF_RE`, mirroring `_MOUNTAIN_LOCATION_REF_RE`) so a
   river point mentioning a lake as its location doesn't get swept up
   alongside the lake's own citations. `lake`: 30 → 34.
-- Confirmed, not fixed: a short run of Sarmatia-in-Asia's Pontos/Maiotis
-  lake-shore coastal points (`5.09.02`'s Paniardis/Patarue, `5.09.08`'s
-  Sindikos/Bata, topostext explicitly calling the latter two "harbor")
-  sitting in `city` because their sections' own headers name the sea by
-  Greek proper noun ("Pontos Euxeinos", "Maiotis-See") rather than a
+- Confirmed, not fixed *at the time*: a short run of Sarmatia-in-Asia's
+  Pontos/Maiotis lake-shore coastal points (`5.09.02`'s Paniardis/Patarue,
+  `5.09.08`'s Sindikos/Bata, topostext explicitly calling the latter two
+  "harbor") sitting in `city` because their sections' own headers name the
+  sea by Greek proper noun ("Pontos Euxeinos", "Maiotis-See") rather than a
   generic German sea word `_COASTAL_HDR_RE` recognizes. Checked whether
   broadening the header regex to catch a bare "Mündung" header would fix
   it generally first - it would not: a scan of every such header across
   the whole catalogue found the pattern is mostly *inland* river-boundary
   recaps (Rhône/Rhine/Danube tributary sections listing ordinary interior
   cities), so a blanket fix would have wrongly coastal-ized dozens of
-  unrelated points. This handful needs individual treatment (a `coast`/
-  `harbor` point-override mechanism, which doesn't exist yet) rather than
-  a quick regex change, and was left for a future pass rather than rushed.
+  unrelated points. This handful needed individual treatment (a `coast`/
+  `harbor` point-override mechanism, which didn't exist yet) rather than a
+  quick regex change, and was left for a future pass rather than rushed -
+  see the second round of visual-inspection fixes further down, where that
+  mechanism (`_COASTAL_APPENDIX_SECTIONS`) got built and this exact section
+  range was the first thing it was used to fix.
 
 A twelfth pilot run - Babylonia (`§5.20`, closing book 5), and all of
 books 6 and 7 (Assyria through Taprobane/Sri Lanka, `§6.1`-`§7.4.14`,
@@ -1115,6 +1118,88 @@ all reclassified into `coast`); coastline feature count actually *dropped*
 because several formerly-isolated points on this stretch turned out to
 share a real, continuous walk once correctly classified and merged into
 fewer, longer lines instead of many short ones.
+
+**A second round of visual-inspection fixes**, from the same map, after
+the Red Sea fix above: the user reported the Arabian peninsula's own
+coastline "doesn't close correctly", a zigzag where Oman rounds into the
+Strait of Hormuz, and - on the opposite side of the catalogue entirely -
+"two strange lines connecting inland points on the Black Sea's west coast,
+as if it's trying to connect the wrong features", plus general gaps in the
+Black Sea coast (Turkey's north coast by name).
+
+- **The Hormuz zigzag** turned out to be the same underlying shape as the
+  Red Sea gap, but showing up as a *graph* bug rather than a
+  classification one: book.map `6.07` sections `12`-`13` are Ptolemy's own
+  summary recap of "the coastal mountains of Eudaimon Arabia" and "coastal
+  rivers", re-listing points already cited earlier *at the same
+  coordinate*, each one self-marked in the catalogue's own text with a
+  back-reference arrow ("Didyma-Berge –> 6.7.11", "Lar-Mündung < 6,7,14").
+  Node-collapsing (any two points within 0.05°) merges a recap citation
+  into the *same graph node* as its original, turning an ordinary coastal
+  point into a spurious junction with edges to whatever precedes/follows
+  it in the recap list - which has no real geographic relationship to the
+  original's actual neighbours. The result: `build_coastlines`'s graph
+  walk left the real path to detour through the recap list and back. Fixed
+  with `_RECAP_BACKREF_RE`, a regex on the arrow notation itself (checked
+  against the whole catalogue - all 15 matches are exactly these two
+  sections, nowhere else) - excluded from coastline edges, river-line and
+  mountain-line grouping alike, the same signal working for all three
+  since the arrow marks "this is a duplicate, not a new point" regardless
+  of which kind of line it would otherwise join.
+- **The "peninsula doesn't close" impression** wasn't a separate bug - it
+  was the same Red Sea/Hormuz gaps read differently: with roughly a third
+  of Arabia's own coastline missing or zigzagging, the traced line looked
+  broken rather than like a single open arc from the Persian Gulf around
+  to the Red Sea. Arabia's coastline was never *supposed* to close into a
+  loop - it's a peninsula joined to the mainland at the top, not an island
+  - and with both fixes in place it now reads as the open arc it should
+  be.
+- **The two "strange lines" on the Black Sea** are two different things
+  bundled into one impression. One is real Ptolemaic distortion, not a
+  bug: the Danube's course through Pannonia/Dacia/Moesia (cited under
+  three different names for different stretches - `Danuvius` upstream,
+  `Danubios` and `Ister` downstream, all confirmed the same river by
+  `Modern_location` = "Donau") is one of Ptolemy's least accurate regions,
+  and a straight line between two real, correctly-classified river bends
+  can visibly cross the modern coastline when his own coordinates for
+  inland Dacia/Pannonia are this far off true position - the same
+  "systematically stretched and skewed" distortion already disclosed for
+  the catalogue generally, just unusually visible here. The other *is* a
+  bug, the same duplicate-citation shape as Hormuz but without an arrow
+  marker to catch it generically: `3.10.14.01` ("Borysthenes-Mündung",
+  Lower Moesia's own coastal description resuming after a digression into
+  inland Danube-bank legionary camps) is a bit-identical coordinate
+  duplicate of `3.05.07.01` (Sarmatia-in-Europe's own citation of the same
+  Dnieper mouth) - an orientation reference opening the resumed walk, not
+  a new point, but with nothing in its text marking it as such. Added to
+  `_COASTLINE_SKIP_REF_IDS` by hand, the same mechanism (and the same
+  "introductory boundary citation" shape) as the pre-existing
+  Acheloos-Mündung entry.
+- **The Black Sea coastal gaps** were a third occurrence of the Red Sea's
+  own bug shape: Paphlagonia/Pontus's coast (book.map `5.04`, sections
+  `02`-`03`) states "Pontos Euxeinos" (Black Sea) only once at the very
+  start of the book.map, then heads every section that actually
+  enumerates the coast with a place name instead - so two of antiquity's
+  best-known Black Sea ports, Sinope and Amisos (Sinop and Samsun today),
+  were sitting in plain `city`. Bithynia's own Gulf-of-Astakos bay
+  indentation (`5.01.03` - Astakos, Olbia, Nikomedeia) had the same gap,
+  distinguished from the genuinely inland cities `5.01.13`/`14` right next
+  to it by topostext's own text, which introduces *that* list explicitly
+  as "the following are the inland cities" and says nothing of the sort
+  about section `03`. And Sarmatia-in-Asia's own Sea of Azov/Kerch-strait
+  coast (book.map `5.09`, sections `02`-`10`, real Bosporan-kingdom port
+  towns - Phanagoria, Hermonassa, Sindikos, the last one topostext calls a
+  "harbor" outright) was the exact case already documented above as
+  "confirmed, not fixed... needs individual treatment (a `coast`/`harbor`
+  point-override mechanism, which doesn't exist yet)" - now fixed, using
+  the section-override mechanism (`_COASTAL_APPENDIX_SECTIONS`) the Red
+  Sea fix introduced.
+- `coast`: 669 → 706, `city`: 4257 → 4220 (net zero, all reclassified);
+  river lines dropped the two spurious 2-point Hormuz recap groups
+  (111 → 109 lines, 281 → 277 points); coastline count itself rose only
+  slightly (58 → 59) despite far more points joining, since most of the
+  newly `coast` points filled gaps *within* already-existing trails rather
+  than starting new ones.
 
 topostext's covered range is now **all of books 2 through 7** (book 2
 maps 02-16, book 3 maps 01-17, book 4 maps 01-08, and all of books 5, 6,
