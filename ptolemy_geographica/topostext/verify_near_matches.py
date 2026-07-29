@@ -63,6 +63,13 @@ _TRANSLATIONS = [
     ("west", "west western"),
     ("mitte", "middle"),
     ("ende", "end"),
+    ("grenzpunkt", "boundary point border limit"),
+    ("quellgebiet", "headwaters source region"),
+    ("klippe", "cliff rock reef"),
+    ("halbinsel", "peninsula"),
+    ("meerenge", "strait"),
+    ("ebene", "plain"),
+    ("hügel", "hill"),
 ]
 
 _STRIP_RE = re.compile(r"[^a-z0-9\s]")
@@ -94,28 +101,54 @@ def _normalize(text: str) -> str:
     return _WS_RE.sub(" ", text).strip()
 
 
-def _tokens_match(t1: str, t2: str) -> bool:
-    """Looser-than-equality token match, so plural/inflection/transliteration
-    drift ("isca"/"iscas", "boderia"/"boderias") still counts: exact match,
-    or one is a >=4-letter prefix of the other, or they're a near-identical
-    short edit away (SequenceMatcher ratio >=0.82)."""
+_TOKEN_RATIO_FLOOR = 0.6  # see _token_sim - separates real variant spelling from coincidence
+
+def _token_sim(t1: str, t2: str) -> float:
+    """Graduated token similarity (0..1), not a yes/no match - so a shared
+    stem or a variant spelling earns partial credit instead of nothing just
+    because it falls short of being identical. The better of two signals:
+    (a) the shared *leading* run of characters, scaled by the longer
+    token's length ("taurische"/"taurianus" -> 5/9, "sipontum"/"sipus" ->
+    3/8 - a 4-letter stem shared by two 9-letter words counts for less than
+    the same stem shared by two 5-letter words); (b) a whole-token edit-
+    distance ratio, but only above a floor - catches drift the prefix
+    check misses because it isn't at the very start of the word
+    ("ilipa"/"illipa" -> 0.91, "orospeda"/"ortospeda" -> 0.94,
+    "messalias"/"messalia" -> 0.94), gated at 0.6 because below that the
+    ratio stops meaning anything: "tyana"/"kydnos" - two words with
+    nothing in common - still scores 0.36 from scattered shared letters,
+    the same coincidental-overlap failure the phrase-level seq_score
+    fallback below has to guard against too."""
     if t1 == t2:
-        return True
-    if len(t1) >= 4 and len(t2) >= 4 and (t1.startswith(t2) or t2.startswith(t1)):
-        return True
-    return len(t1) >= 4 and len(t2) >= 4 and SequenceMatcher(None, t1, t2).ratio() >= 0.82
+        return 1.0
+    if len(t1) < 3 or len(t2) < 3:
+        return 0.0
+    common_prefix = 0
+    for c1, c2 in zip(t1, t2):
+        if c1 != c2:
+            break
+        common_prefix += 1
+    prefix_score = common_prefix / max(len(t1), len(t2)) if common_prefix >= 3 else 0.0
+    ratio = SequenceMatcher(None, t1, t2).ratio()
+    ratio_score = ratio if ratio >= _TOKEN_RATIO_FLOOR else 0.0
+    return max(prefix_score, ratio_score)
 
 
 def _name_similarity(a: str, b: str) -> float:
     na, nb = _normalize(a), _normalize(b)
     if not na or not nb:
         return 0.0
-    # token-overlap (order-independent, handles "with city" / lead-in noise),
-    # counting a *soft* match (see _tokens_match) rather than requiring
-    # exact token equality.
+    # For each token on the *shorter* side (order-independent, handles
+    # "with city" / lead-in noise), its best graduated similarity to any
+    # token on the other side - averaged, not counted as a hit/miss, so a
+    # partial stem match nudges the score up without needing to clear a
+    # hard bar the way the old boolean version did.
     ta, tb = na.split(), nb.split()
-    matched = sum(1 for t1 in ta if any(_tokens_match(t1, t2) for t2 in tb))
-    token_score = matched / max(1, min(len(ta), len(tb)))
+    shorter, longer = (ta, tb) if len(ta) <= len(tb) else (tb, ta)
+    if not shorter:
+        return 0.0
+    per_token = [max((_token_sim(t, o) for o in longer), default=0.0) for t in shorter]
+    token_score = sum(per_token) / len(per_token)
     # sequence-ratio as a fallback, but *only* for single-token proper
     # nouns that differ purely by transliteration ("Ebusus" vs "Ebussos")
     # - applied to longer phrases it stops being a name check at all and

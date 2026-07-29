@@ -953,24 +953,30 @@ name, used everywhere "matched" is decided now:
   lead-in prose ("...among whom are the towns: X"), and matches tokens
   loosely (a >=4-letter prefix or a >=0.82 edit-distance ratio counts, so
   "isca"/"iscas" or "boderia"/"boderias" still match) rather than requiring
-  exact token equality. A small bonus is added when the phrase's implied
-  type (`crossref_topostext.py`'s `_TYPE_HINTS` - "mouth of"/"estuary"
-  implies `river_mouth`/`coast`/`harbor`, etc.) agrees with the candidate's
-  actual category, to break ties between two real, differently-named
-  points sitting close together (a plain city right next to the river-mouth
-  point a "mouth of the X river" phrase is actually describing).
+  exact token equality. Per-token similarity is itself graduated, not a
+  yes/no (`_token_sim`): a shared *leading* stem, scaled by the longer
+  token's length ("taurische"/"taurianus" -> 0.56, "sipontum"/"sipus" ->
+  0.38), or - for drift not at the very start of the word - a whole-token
+  edit-distance ratio, but gated at 0.6 ("ilipa"/"illipa" -> 0.91,
+  "orospeda"/"ortospeda" -> 0.94 pass; "tyana"/"kydnos" -> 0.36, two words
+  with nothing in common beyond scattered shared letters, doesn't). A
+  small bonus is added when the phrase's implied type
+  (`crossref_topostext.py`'s `_TYPE_HINTS` - "mouth of"/"estuary" implies
+  `river_mouth`/`coast`/`harbor`, etc.) agrees with the candidate's actual
+  category, to break ties between two real, differently-named points
+  sitting close together (a plain city right next to the river-mouth point
+  a "mouth of the X river" phrase is actually describing).
 - **distance > 1.2°: not a candidate at all**, regardless of name.
-- A single-token sequence-ratio fallback (for pure transliteration drift
-  like "Ebusus"/"Ebussos") only applies when *both* names are a single
-  token - applied to longer phrases it stops being a name check and starts
-  rewarding coincidental character overlap between unrelated text ("Kydnos
-  sources" vs "Tyana" scored 0.21 this way before the fix, entirely from
-  scattered shared letters).
+- A whole-*phrase* sequence-ratio fallback (for a short name that's pure
+  transliteration drift, "Ebusus"/"Ebussos") only applies when both names
+  are themselves a single token - applied to longer phrases it stops being
+  a name check and starts rewarding coincidental character overlap
+  between unrelated text, the same failure mode the per-token ratio gate
+  above guards against.
 - A candidate scoring below 45 isn't recorded as a match - see
   `link_matches.py`'s docstring for the full formula and reasoning. This
-  raised matched coverage from roughly a third to roughly a fifth left
-  over: **944 → 149 unmapped catalogue points, 921 → 102 unmapped
-  topostext citations**, at the time of writing.
+  raised matched coverage substantially: **944 → 122 unmapped catalogue
+  points, 921 → 90 unmapped topostext citations**, at the time of writing.
 
 Three scripts, run in this order:
 
