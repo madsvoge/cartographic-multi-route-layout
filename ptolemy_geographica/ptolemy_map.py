@@ -298,6 +298,8 @@ _ISLAND_APPENDIX_SECTIONS = {
     ("4.07", "37"),  # Thrisitides/Magon/Daphnine/Akanthine/Makaria/Orneon (+ already-island Kathathrai/Chelonitides) - more of the same Arabian Gulf island list, continuing 4.07.36
     ("4.07", "39"),  # Mondu - the island in the Bay of Avalites
     ("4.07", "40"),  # Amiku/Myrsiake (+ already-island Menan) - the islands next to Aromata
+    ("5.01", "15"),  # Thynias bzw. Daphnusa/Klippen Erythinoi (+ already-island Kyaneen) - islands off Bithynia
+    ("5.05", "10"),  # Krambusa/Attelebusa - the two islands lying off Pamphylia
 }
 
 # The same problem at single-point granularity: a lone island reference
@@ -317,6 +319,7 @@ _ISLAND_POINT_OVERRIDES = {
     "4.03.47.03",  # Gaulos (Gozo)
     "4.03.47.05",  # Melite (Malta)
     "4.05.76.02",  # Pharos - the island of the Alexandria lighthouse; its section (4.05.76) also names "Argaiu", an unrelated point not confirmed as an island
+    "5.02.28.03",  # Tenedos - a single citation covering both the island and "a city of the same name" (topostext), the same shared-name shape as Iulia Caesarea
 }
 
 # _ISLAND_APPENDIX_SECTIONS covers two structurally different things: a
@@ -373,6 +376,10 @@ _MOUNTAIN_APPENDIX_SECTIONS = {
     ("3.13", "19"),  # Bertiskos/Bermion/Berketesios/Kitarion/Olympos/Ossa/Pelion/Othrys - Macedonia's named mountains, including Mt. Olympus itself
     ("3.16", "14"),  # Pholoe/Stymphalos/Minthe/Taygetos/Kronion/Zarex - the Peloponnese's named mountains
     ("4.01", "12"),  # Diur (+ the already-"-Gebirge" Durdon-Gebirge W/O-Ende) - Mauritania Tingitana's named mountains (topostext: "The noteworthy mountains in this land are the so-called Diur...")
+    ("5.01", "10"),  # Orminios/Mysischer Olymp - Bithynia's named mountains
+    ("5.02", "13"),  # Ida/Killaion/Temnon/Dindymos(W-Ende)/Sipylos/Tmolos/Mesogis/Mykale/Kadmos/Mimas/Phoinix - "the named mountains in Asia" (topostext: "These are the named mountains in Asia, of which the central points are: Mt. Ida...")
+    ("5.03", "04"),  # Kragos - Lykia's named mountain
+    ("5.04", "04"),  # Oligas(Gigas)/Dindymos(O-Ende)/Huegel von Kelainai - Galatia's named mountains, including Dindymos' other end (see 5.02.13 above - same range, re-cited across the book.map boundary)
 }
 
 # The mountain-side counterpart of _ISLAND_POINT_OVERRIDES: a lone mountain
@@ -386,6 +393,12 @@ _MOUNTAIN_APPENDIX_SECTIONS = {
 # nothing in the bare name "Athos" itself to redirect it. Keyed by ref_id.
 _MOUNTAIN_POINT_OVERRIDES = {
     "3.13.11.05",  # Athos (Mitte) - the mountain's own midpoint, not a coastal point
+    "5.06.08.02",  # Argaios (NW-Ende) - Kappadokia's named mountains, section 5.06.08, force-mountain unsafe there since the same section also has 5.06.08.04, a genuine Euphrat/Melas river confluence point mentioned as an aside during the range's own boundary description
+    "5.06.08.03",  # Argaios (SO-Ende)
+    "5.06.08.08",  # Anti-Tauros W (W-Ende)
+    "5.06.08.09",  # Anti-Tauros W (O-Ende)
+    "5.06.08.10",  # Anti-Tauros O (W-Ende)
+    "5.06.08.11",  # Anti-Tauros O (O-Ende)
 }
 
 

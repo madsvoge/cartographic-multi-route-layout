@@ -3635,8 +3635,8 @@ ref_id,name,category,book,tabula,modern_location,recension,lon_ptolemy,lat_ptole
 5.01.07.11,Kytoros,city,Asia,AS01,Kidros,Omega,60.75,43.5833333333333,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.01.08.03,"Grenzpunkt (eigentliches Asien, Galatien, Pontos und Bithynien)",city,Asia,AS01,,Omega,61.0,41.25,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.01.09.03,"Grenzpunkt (eigentliches Asien, Galatien, Pontos und Bithynien)",city,Asia,AS01,,Omega,61.0,41.25,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-5.01.10.01,Orminios (Mitte),river,Asia,AS01,Köruglu Daglari (Mitte),Omega,59.6666666666667,42.6666666666667,"matches river-course pattern (Mitte/Biegung/Abzweigung/Aufteilung/Oberlauf/Unterlauf), not a gulf bend",,,,,,,,,,
-5.01.10.02,Mysischer Olymp (Mitte),river,Asia,AS01,Uludagi (Mitte),Omega,57.0,41.5,"matches river-course pattern (Mitte/Biegung/Abzweigung/Aufteilung/Oberlauf/Unterlauf), not a gulf bend",,,,,,,,,,
+5.01.10.01,Orminios (Mitte),mountain,Asia,AS01,Köruglu Daglari (Mitte),Omega,59.6666666666667,42.6666666666667,manually verified mountain-appendix section (_MOUNTAIN_APPENDIX_SECTIONS),,,,,,,,,,
+5.01.10.02,Mysischer Olymp (Mitte),mountain,Asia,AS01,Uludagi (Mitte),Omega,57.0,41.5,manually verified mountain-appendix section (_MOUNTAIN_APPENDIX_SECTIONS),,,,,,,,,,
 5.01.13.02,Libyssa,city,Asia,AS01,Tavsancil,Omega,57.3333333333333,42.25,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.01.13.03,Eriboia,city,Asia,AS01,Sakar Köy,Omega,57.1666666666667,42.3333333333333,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.01.13.04,Gallika,city,Asia,AS01,,Omega,57.75,42.4166666666667,no specific keyword match; section not sea-headed (default),,,,,,,,,,
@@ -3656,9 +3656,9 @@ ref_id,name,category,book,tabula,modern_location,recension,lon_ptolemy,lat_ptole
 5.01.14.10,Dableis,city,Asia,AS01,Çayköy,Omega,58.6666666666667,41.6666666666667,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.01.14.11,Dadastana,city,Asia,AS01,Karahisar,Omega,59.5,41.75,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.01.14.12,Iuliopolis,city,Asia,AS01,Sarilar,Omega,60.1666666666667,42.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-5.01.15.01,Kyaneen (östliche Insel),island,Asia,AS01,Örektasi,Omega,56.5,43.4166666666667,matches 'Insel'/'Inseln' (island),,,,,,,,,,
-5.01.15.02,Thynias bzw. Daphnusa,city,Asia,AS01,Kefken Adasi,Omega,57.6666666666667,43.3333333333333,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-5.01.15.03,Klippen Erythinoi,city,Asia,AS01,,Omega,58.5,43.25,no specific keyword match; section not sea-headed (default),,,,,,,,,,
+5.01.15.01,Kyaneen (östliche Insel),island,Asia,AS01,Örektasi,Omega,56.5,43.4166666666667,manually verified island-appendix section (_ISLAND_APPENDIX_SECTIONS),,,,,,,,,,
+5.01.15.02,Thynias bzw. Daphnusa,island,Asia,AS01,Kefken Adasi,Omega,57.6666666666667,43.3333333333333,manually verified island-appendix section (_ISLAND_APPENDIX_SECTIONS),,,,,,,,,,
+5.01.15.03,Klippen Erythinoi,island,Asia,AS01,,Omega,58.5,43.25,manually verified island-appendix section (_ISLAND_APPENDIX_SECTIONS),,,,,,,,,,
 5.02.02.04,Kyzikos*,city,Asia,AS01,Belkiz,Omega,56.0,41.5,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.02.02.05,Aisepos-Mündung,river_mouth,Asia,AS01,Gönen Çayi-Mündung,Omega,56.0,41.3333333333333,"matches 'Mündung' (river mouth) - coastal, colored separately",coastline_027_AS01,0,,,,,,,,
 5.02.02.06,Parion,city,Asia,AS01,Kemer,Omega,55.75,41.5,no specific keyword match; section not sea-headed (default),,,,,,,,,,
@@ -3728,17 +3728,17 @@ ref_id,name,category,book,tabula,modern_location,recension,lon_ptolemy,lat_ptole
 5.02.12.06,"Grenzpunkt (eigentliches Asien, Lykien, Pamphylien)",city,Asia,AS01,,Omega,61.0,37.8333333333333,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.02.12.08,"Grenzpunkt (eigentliches Asien, Galatien, Pamphylien)",city,Asia,AS01,,Omega,61.3333333333333,38.5833333333333,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.02.12.12,"Grenze eigentliches Asien, Galatien (Krümmung nach O)",city,Asia,AS01,,Omega,62.25,39.25,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-5.02.13.02,Ida (Mitte),river,Asia,AS01,Kaz Dagi,Omega,56.0,41.0,"matches river-course pattern (Mitte/Biegung/Abzweigung/Aufteilung/Oberlauf/Unterlauf), not a gulf bend",,,,,,,,,,
-5.02.13.03,Killaion (Mitte),river,Asia,AS01,Koçakatran Dagi,Omega,56.0,40.6666666666667,"matches river-course pattern (Mitte/Biegung/Abzweigung/Aufteilung/Oberlauf/Unterlauf), not a gulf bend",,,,,,,,,,
-5.02.13.04,Temnon (Mitte),river,Asia,AS01,Demirci Dagi,Omega,57.6666666666667,40.5,"matches river-course pattern (Mitte/Biegung/Abzweigung/Aufteilung/Oberlauf/Unterlauf), not a gulf bend",,,,,,,,,,
-5.02.13.05,Dindymos (W-Ende),city,Asia,AS01,Günüzü Dagi,Omega,61.0,40.6666666666667,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-5.02.13.06,Sipylos (Mitte),river,Asia,AS01,Manisa Dagi,Omega,59.0,39.5,"matches river-course pattern (Mitte/Biegung/Abzweigung/Aufteilung/Oberlauf/Unterlauf), not a gulf bend",,,,,,,,,,
-5.02.13.07,Tmolos (Mitte),river,Asia,AS01,Boz Dagi,Omega,58.5,38.5,"matches river-course pattern (Mitte/Biegung/Abzweigung/Aufteilung/Oberlauf/Unterlauf), not a gulf bend",,,,,,,,,,
-5.02.13.08,Mesogis (Mitte),river,Asia,AS01,Aydjn Dagi,Omega,58.6666666666667,38.5,"matches river-course pattern (Mitte/Biegung/Abzweigung/Aufteilung/Oberlauf/Unterlauf), not a gulf bend",,,,,,,,,,
-5.02.13.09,Mykale (Mitte),river,Asia,AS01,Samsun Dagi,Omega,58.0,37.6666666666667,"matches river-course pattern (Mitte/Biegung/Abzweigung/Aufteilung/Oberlauf/Unterlauf), not a gulf bend",,,,,,,,,,
-5.02.13.10,Kadmos (Mitte),river,Asia,AS01,Esler Dagi,Omega,57.66666667,37.66666667,"matches river-course pattern (Mitte/Biegung/Abzweigung/Aufteilung/Oberlauf/Unterlauf), not a gulf bend",,,,,,,,,,
-5.02.13.11,Mimas (Mitte),river,Asia,AS01,Ak Dagi,Omega,57.0,38.5,"matches river-course pattern (Mitte/Biegung/Abzweigung/Aufteilung/Oberlauf/Unterlauf), not a gulf bend",,,,,,,,,,
-5.02.13.12,Phoinix (Mitte),river,Asia,AS01,Karayüksek Dagi,Omega,58.0,36.5,"matches river-course pattern (Mitte/Biegung/Abzweigung/Aufteilung/Oberlauf/Unterlauf), not a gulf bend",,,,,,,,,,
+5.02.13.02,Ida (Mitte),mountain,Asia,AS01,Kaz Dagi,Omega,56.0,41.0,manually verified mountain-appendix section (_MOUNTAIN_APPENDIX_SECTIONS),,,,,,,,,,
+5.02.13.03,Killaion (Mitte),mountain,Asia,AS01,Koçakatran Dagi,Omega,56.0,40.6666666666667,manually verified mountain-appendix section (_MOUNTAIN_APPENDIX_SECTIONS),,,,,,,,,,
+5.02.13.04,Temnon (Mitte),mountain,Asia,AS01,Demirci Dagi,Omega,57.6666666666667,40.5,manually verified mountain-appendix section (_MOUNTAIN_APPENDIX_SECTIONS),,,,,,,,,,
+5.02.13.05,Dindymos (W-Ende),mountain,Asia,AS01,Günüzü Dagi,Omega,61.0,40.6666666666667,manually verified mountain-appendix section (_MOUNTAIN_APPENDIX_SECTIONS),,,,,,,,,mountain_025_Dindymos,0
+5.02.13.06,Sipylos (Mitte),mountain,Asia,AS01,Manisa Dagi,Omega,59.0,39.5,manually verified mountain-appendix section (_MOUNTAIN_APPENDIX_SECTIONS),,,,,,,,,,
+5.02.13.07,Tmolos (Mitte),mountain,Asia,AS01,Boz Dagi,Omega,58.5,38.5,manually verified mountain-appendix section (_MOUNTAIN_APPENDIX_SECTIONS),,,,,,,,,,
+5.02.13.08,Mesogis (Mitte),mountain,Asia,AS01,Aydjn Dagi,Omega,58.6666666666667,38.5,manually verified mountain-appendix section (_MOUNTAIN_APPENDIX_SECTIONS),,,,,,,,,,
+5.02.13.09,Mykale (Mitte),mountain,Asia,AS01,Samsun Dagi,Omega,58.0,37.6666666666667,manually verified mountain-appendix section (_MOUNTAIN_APPENDIX_SECTIONS),,,,,,,,,,
+5.02.13.10,Kadmos (Mitte),mountain,Asia,AS01,Esler Dagi,Omega,57.66666667,37.66666667,manually verified mountain-appendix section (_MOUNTAIN_APPENDIX_SECTIONS),,,,,,,,,,
+5.02.13.11,Mimas (Mitte),mountain,Asia,AS01,Ak Dagi,Omega,57.0,38.5,manually verified mountain-appendix section (_MOUNTAIN_APPENDIX_SECTIONS),,,,,,,,,,
+5.02.13.12,Phoinix (Mitte),mountain,Asia,AS01,Karayüksek Dagi,Omega,58.0,36.5,manually verified mountain-appendix section (_MOUNTAIN_APPENDIX_SECTIONS),,,,,,,,,,
 5.02.14.03,Skepsis,city,Asia,AS01,Kursunlu Tepe,Omega,56.5,41.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.02.14.04,Hiera Germe,city,Asia,AS01,Kiresun,Omega,56.25,41.25,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.02.14.06,Ilion,city,Asia,AS01,Hisarlik,Omega,55.8333333333333,41.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
@@ -3831,7 +3831,7 @@ ref_id,name,category,book,tabula,modern_location,recension,lon_ptolemy,lat_ptole
 5.02.26.06,Phylakaion,city,Asia,AS01,,Omega,60.3333333333333,38.1666666666667,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.02.26.07,Sala,city,Asia,AS01,Güney,Omega,60.25,38.3333333333333,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.02.26.08,Gazena,city,Asia,AS01,,Omega,60.6666666666667,38.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-5.02.28.03,Tenedos,city,Asia,AS01,Bozcaada,Omega,55.0,40.9166666666667,no specific keyword match; section not sea-headed (default),,,,,,,,,,
+5.02.28.03,Tenedos,island,Asia,AS01,Bozcaada,Omega,55.0,40.9166666666667,manually verified individual island point amid an otherwise mainland section (_ISLAND_POINT_OVERRIDES),,,,,,,,,,
 5.02.29.03,Kap Sigrion,island,Asia,AS01,Kap Sigri,Omega,55.0,40.0,manually verified island-appendix section (_ISLAND_APPENDIX_SECTIONS),,,,,,island_002_Lesbos,0,1,,
 5.02.29.04,Pyrra,island,Asia,AS01,Koloni,Omega,55.25,39.6666666666667,manually verified island-appendix section (_ISLAND_APPENDIX_SECTIONS),,,,,,island_002_Lesbos,1,1,,
 5.02.29.05,Eresos,island,Asia,AS01,Skala,Omega,55.4166666666667,39.5,manually verified island-appendix section (_ISLAND_APPENDIX_SECTIONS),,,,,,island_002_Lesbos,2,1,,
@@ -3880,7 +3880,7 @@ ref_id,name,category,book,tabula,modern_location,recension,lon_ptolemy,lat_ptole
 5.03.03.07,Heiliges Kap,coast,Asia,AS01,Yedi Burun,Omega,61.5,36.25,contains 'Kap' (cape) - coastal regardless of any mountain-range aside,coastline_028_AS01,3,1,,,,,,,
 5.03.03.08,Olympos,city,Asia,AS01,Çirali,Omega,61.6666666666667,36.3333333333333,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.03.03.09,Phaselis,city,Asia,AS01,Tekirova,Omega,61.8333333333333,36.4166666666667,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-5.03.04.01,Kragos (Mitte),river,Asia,AS01,Sandak Dagi,Omega,60.0,36.6666666666667,"matches river-course pattern (Mitte/Biegung/Abzweigung/Aufteilung/Oberlauf/Unterlauf), not a gulf bend",,,,,,,,,,
+5.03.04.01,Kragos (Mitte),mountain,Asia,AS01,Sandak Dagi,Omega,60.0,36.6666666666667,manually verified mountain-appendix section (_MOUNTAIN_APPENDIX_SECTIONS),,,,,,,,,,
 5.03.05.03,Kydna,city,Asia,AS01,,Omega,59.5,37.1666666666667,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.03.05.04,Symbra,city,Asia,AS01,,Omega,59.6666666666667,36.8333333333333,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.03.05.05,Oktapolis,city,Asia,AS01,Kizilkaya,Omega,59.5833333333333,36.5833333333333,no specific keyword match; section not sea-headed (default),,,,,,,,,,
@@ -3925,9 +3925,9 @@ ref_id,name,category,book,tabula,modern_location,recension,lon_ptolemy,lat_ptole
 5.04.03.05,Halys-Mündung,river_mouth,Asia,AS01,Kizil Irmak-Mündung,Omega,64.5,43.1666666666667,"matches 'Mündung' (river mouth) - coastal, colored separately",coastline_029_AS01,2,,river_053_Halys,0,,,,,
 5.04.03.06,Halys (Biegung),river,Asia,AS01,Kizil Irmak (Biegung),Omega,64.25,41.25,"matches river-course pattern (Mitte/Biegung/Abzweigung/Aufteilung/Oberlauf/Unterlauf), not a gulf bend",,,,river_053_Halys,1,,,,,
 5.04.03.07,Amisos*,city,Asia,AS01,Samsun,Omega,65.0,43.0833333333333,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-5.04.04.02,Oligas (Gigas)(Mitte),river,Asia,AS01,Ilgaz Dagi,Omega,63.0,42.6666666666667,"matches river-course pattern (Mitte/Biegung/Abzweigung/Aufteilung/Oberlauf/Unterlauf), not a gulf bend",,,,,,,,,,
-5.04.04.03,Dindymos (O-Ende),city,Asia,AS01,Arayit Dagi,Omega,62.0,41.3333333333333,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-5.04.04.04,Hügel von Kelainai,city,Asia,AS01,Diner,Omega,62.5,39.5,no specific keyword match; section not sea-headed (default),,,,,,,,,,
+5.04.04.02,Oligas (Gigas)(Mitte),mountain,Asia,AS01,Ilgaz Dagi,Omega,63.0,42.6666666666667,manually verified mountain-appendix section (_MOUNTAIN_APPENDIX_SECTIONS),,,,,,,,,,
+5.04.04.03,Dindymos (O-Ende),mountain,Asia,AS01,Arayit Dagi,Omega,62.0,41.3333333333333,manually verified mountain-appendix section (_MOUNTAIN_APPENDIX_SECTIONS),,,,,,,,,mountain_025_Dindymos,1
+5.04.04.04,Hügel von Kelainai,mountain,Asia,AS01,Diner,Omega,62.5,39.5,manually verified mountain-appendix section (_MOUNTAIN_APPENDIX_SECTIONS),,,,,,,,,,
 5.04.05.02,Zageira (Gadeira),city,Asia,AS01,,Omega,61.6666666666667,43.6666666666667,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.04.05.03,Plegra,city,Asia,AS01,,Omega,62.5,43.5,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.04.05.04,Sakora,city,Asia,AS01,,Omega,63.3333333333333,43.6666666666667,no specific keyword match; section not sea-headed (default),,,,,,,,,,
@@ -4036,8 +4036,8 @@ ref_id,name,category,book,tabula,modern_location,recension,lon_ptolemy,lat_ptole
 5.05.09.04,Lyrbe,city,Asia,AS01,Sihlar,Omega,63.75,37.0833333333333,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.05.09.05,Kolobrassos,city,Asia,AS01,,Omega,63.3333333333333,37.1666666666667,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.05.09.06,Kibyra,city,Asia,AS01,Karaburun,Omega,64.0,37.75,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-5.05.10.02,Krambusa,city,Asia,AS01,Sulu Ada,Omega,62.5,35.8333333333333,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-5.05.10.03,Attelebusa,city,Asia,AS01,Raschat,Omega,63.25,35.8333333333333,no specific keyword match; section not sea-headed (default),,,,,,,,,,
+5.05.10.02,Krambusa,island,Asia,AS01,Sulu Ada,Omega,62.5,35.8333333333333,manually verified island-appendix section (_ISLAND_APPENDIX_SECTIONS),,,,,,,,,,
+5.05.10.03,Attelebusa,island,Asia,AS01,Raschat,Omega,63.25,35.8333333333333,manually verified island-appendix section (_ISLAND_APPENDIX_SECTIONS),,,,,,,,,,
 5.06.01.05,"Grenzpunkt (Kappadokien, Kilikien, Pamphylien)",city,Asia,AS01,,Omega,64.0,37.6666666666667,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.06.01.08,"Grenzpunkt (Kappadokien, Kilikien, Syrien)",city,Asia,AS01,,Omega,70.0,37.3333333333333,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.06.01.11,"Euphrat (Grenzpunkt Kappadokien, Gross-Armenien, Syrien, Mesopotamien)",city,Asia,AS01,Euphrat,Omega,71.6666666666667,38.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
@@ -4076,15 +4076,15 @@ ref_id,name,category,book,tabula,modern_location,recension,lon_ptolemy,lat_ptole
 5.06.07.04,Glaukos-Quellen,river,Asia,AS01,Oltu Çayi-Quellen,Omega,72.75,43.0,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,,,,,,,
 5.06.07.05,Lykos-Quellen,river,Asia,AS01,Kelkit Çayi-Quellen,Xi,71.25,43.0,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,river_051_Lykos,0,,,,,
 5.06.07.06,Sebastopolis 1,city,Asia,AS01,Sulusaray,Omega,72.3333333333333,44.75,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-5.06.08.02,Argaios (NW-Ende),city,Asia,AS01,Erciyes Dagi,Omega,65.5,40.5,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-5.06.08.03,Argaios (SO-Ende),city,Asia,AS01,Erciyes Dagi,Omega,66.0,39.6666666666667,no specific keyword match; section not sea-headed (default),,,,,,,,,,
+5.06.08.02,Argaios (NW-Ende),mountain,Asia,AS01,Erciyes Dagi,Omega,65.5,40.5,manually verified individual mountain point amid an otherwise coastal section (_MOUNTAIN_POINT_OVERRIDES),,,,,,,,,mountain_026_Argaios,0
+5.06.08.03,Argaios (SO-Ende),mountain,Asia,AS01,Erciyes Dagi,Omega,66.0,39.6666666666667,manually verified individual mountain point amid an otherwise coastal section (_MOUNTAIN_POINT_OVERRIDES),,,,,,,,,mountain_026_Argaios,1
 5.06.08.04,Euphrat (Einmündung des Melas)/Melas (Einm[ndung in Euphrat),river,Asia,AS01,Euphrat (Einmündung des Kara Su),Omega,71.0,39.3333333333333,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,,,,,,,
-5.06.08.08,Anti-Tauros W (W-Ende),city,Asia,AS01,Ala Dagi,Omega,65.5,38.5,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-5.06.08.09,Anti-Tauros W (O-Ende),city,Asia,AS01,Ala Dagi,Omega,67.25,39.25,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-5.06.08.10,Anti-Tauros O (W-Ende),city,Asia,AS01,Ala Dagi,Omega,67.5,39.6666666666667,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-5.06.08.11,Anti-Tauros O (O-Ende),city,Asia,AS01,Ala Dagi,Omega,71.5,41.25,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-5.06.08.12,Skordiskos-Gebirge (SW-Ende),mountain,Asia,AS01,Karadeniz Daglari,Omega,68.0,41.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_025_Skordiskos-Gebirge,0
-5.06.08.13,Skordiskos-Gebirge (NO-Ende),mountain,Asia,AS01,Karadeniz Daglari,Omega,69.0,42.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_025_Skordiskos-Gebirge,1
+5.06.08.08,Anti-Tauros W (W-Ende),mountain,Asia,AS01,Ala Dagi,Omega,65.5,38.5,manually verified individual mountain point amid an otherwise coastal section (_MOUNTAIN_POINT_OVERRIDES),,,,,,,,,mountain_027_Anti-Tauros W,0
+5.06.08.09,Anti-Tauros W (O-Ende),mountain,Asia,AS01,Ala Dagi,Omega,67.25,39.25,manually verified individual mountain point amid an otherwise coastal section (_MOUNTAIN_POINT_OVERRIDES),,,,,,,,,mountain_027_Anti-Tauros W,1
+5.06.08.10,Anti-Tauros O (W-Ende),mountain,Asia,AS01,Ala Dagi,Omega,67.5,39.6666666666667,manually verified individual mountain point amid an otherwise coastal section (_MOUNTAIN_POINT_OVERRIDES),,,,,,,,,mountain_028_Anti-Tauros O,0
+5.06.08.11,Anti-Tauros O (O-Ende),mountain,Asia,AS01,Ala Dagi,Omega,71.5,41.25,manually verified individual mountain point amid an otherwise coastal section (_MOUNTAIN_POINT_OVERRIDES),,,,,,,,,mountain_028_Anti-Tauros O,1
+5.06.08.12,Skordiskos-Gebirge (SW-Ende),mountain,Asia,AS01,Karadeniz Daglari,Omega,68.0,41.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_029_Skordiskos-Gebirge,0
+5.06.08.13,Skordiskos-Gebirge (NO-Ende),mountain,Asia,AS01,Karadeniz Daglari,Omega,69.0,42.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_029_Skordiskos-Gebirge,1
 5.06.09.05,Boinasa,city,Asia,AS01,Uluköy,Omega,65.5,42.75,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.06.09.06,Sebastopolis 2,city,Asia,AS01,,Omega,66.0,42.3333333333333,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.06.09.07,Tebenda,city,Asia,AS01,,Omega,66.6666666666667,42.1666666666667,no specific keyword match; section not sea-headed (default),,,,,,,,,,
@@ -4329,12 +4329,12 @@ ref_id,name,category,book,tabula,modern_location,recension,lon_ptolemy,lat_ptole
 5.09.13.03,Namenlose Flüsse vom  Hyperboreischen Gebirge (Zusammenfluss),river,Asia,AS02,,Omega,79.0,58.5,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,,,,,,,
 5.09.13.05,Hyperboreisches Gebirge (W-Ende)/Quellfluss vom Hyperboreischen Gebirge (westliche Quelle des Rha),river,Asia,AS02,,Omega,70.0,61.0,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,,,,,,,
 5.09.13.06,Hyperboreisches Gebirge (O-Ende)/Quellfluss vom Hyperboreischen Gebirge (östliche Quelle des Rha),river,Asia,AS02,,Omega,90.0,61.0,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,,,,,,,
-5.09.15.01,Hippisches Gebirge (W-Ende),mountain,Asia,AS02,,Omega,74.0,54.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_026_Hippisches Gebirge,0
-5.09.15.02,Hippisches Gebirge (O-Ende),mountain,Asia,AS02,,Omega,81.0,52.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_026_Hippisches Gebirge,1
-5.09.15.03,Keraunisches Gebirge (S-Ende),mountain,Asia,AS02,,Omega,82.5,49.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_027_Keraunisches Gebirge,0
-5.09.15.04,Keraunisches Gebirge (N-Ende),mountain,Asia,AS02,,Omega,84.0,52.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_027_Keraunisches Gebirge,1
-5.09.15.05,Korax-Berg (W-Ende),mountain,Asia,AS02,W-Kaukasus,Omega,69.0,48.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_028_Korax-Berg,0
-5.09.15.06,Korax-Berg (O-Ende),mountain,Asia,AS02,W-Kaukasus,Omega,75.0,48.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_028_Korax-Berg,1
+5.09.15.01,Hippisches Gebirge (W-Ende),mountain,Asia,AS02,,Omega,74.0,54.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_030_Hippisches Gebirge,0
+5.09.15.02,Hippisches Gebirge (O-Ende),mountain,Asia,AS02,,Omega,81.0,52.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_030_Hippisches Gebirge,1
+5.09.15.03,Keraunisches Gebirge (S-Ende),mountain,Asia,AS02,,Omega,82.5,49.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_031_Keraunisches Gebirge,0
+5.09.15.04,Keraunisches Gebirge (N-Ende),mountain,Asia,AS02,,Omega,84.0,52.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_031_Keraunisches Gebirge,1
+5.09.15.05,Korax-Berg (W-Ende),mountain,Asia,AS02,W-Kaukasus,Omega,69.0,48.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_032_Korax-Berg,0
+5.09.15.06,Korax-Berg (O-Ende),mountain,Asia,AS02,W-Kaukasus,Omega,75.0,48.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_032_Korax-Berg,1
 5.09.15.07,Kaukasus (W-Ende),city,Asia,AS02,Kaukasus,Omega,75.0,47.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.09.15.08,Kaukasus (O-Ende),city,Asia,AS02,Kaukasus,Omega,85.0,48.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.09.15.09,Säulen Alexanders,city,Asia,AS02,,Omega,80.0,51.5,no specific keyword match; section not sea-headed (default),,,,,,,,,,
@@ -4423,10 +4423,10 @@ ref_id,name,category,book,tabula,modern_location,recension,lon_ptolemy,lat_ptole
 5.12.08.02,sumpfige Inseln (2),island,Asia,AS03,,Omega,87.5,45.0,matches 'Insel'/'Inseln' (island),,,,,,,,,,
 5.13.03.03,"Grenzpunkt (Gross-Armenien, Medien)",coast,Asia,AS03,,Omega,79.75,43.3333333333333,no specific keyword match; section header names a sea/ocean/gulf,coastline_033_AS03,0,,,,,,,,
 5.13.03.04,Araxes-Mündung,river_mouth,Asia,AS03,Aras-Mündung,Omega,79.75,43.8333333333333,"matches 'Mündung' (river mouth) - coastal, colored separately",coastline_033_AS03,1,,river_064_Araxes,0,,,,,
-5.13.03.07,Kaspisches Gebirge (N-Ende),mountain,Asia,AS03,,Omega,79.0,42.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_029_Kaspisches Gebirge,0
-5.13.03.08,Kaspisches Gebirge (S-Ende),mountain,Asia,AS03,,Omega,80.5,40.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_029_Kaspisches Gebirge,1
-5.13.04.04,Tauros-Gebirge (W-Ende am Euphrat),mountain,Asia,AS03,Toros Daglari,Omega,71.6666666666667,38.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_030_Tauros-Gebirge,0
-5.13.04.06,Tauros-Gebirge (O-Ende am Tigris),mountain,Asia,AS03,Toros Daglari,Omega,75.5,38.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_030_Tauros-Gebirge,1
+5.13.03.07,Kaspisches Gebirge (N-Ende),mountain,Asia,AS03,,Omega,79.0,42.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_033_Kaspisches Gebirge,0
+5.13.03.08,Kaspisches Gebirge (S-Ende),mountain,Asia,AS03,,Omega,80.5,40.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_033_Kaspisches Gebirge,1
+5.13.04.04,Tauros-Gebirge (W-Ende am Euphrat),mountain,Asia,AS03,Toros Daglari,Omega,71.6666666666667,38.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_034_Tauros-Gebirge,0
+5.13.04.06,Tauros-Gebirge (O-Ende am Tigris),mountain,Asia,AS03,Toros Daglari,Omega,75.5,38.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_034_Tauros-Gebirge,1
 5.13.05.04,Paryardes (NW-Ende),city,Asia,AS03,Ararat,Omega,75.0,43.3333333333333,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.13.05.05,Paryardes (SO-Ende),city,Asia,AS03,Ararat,Omega,77.0,42.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.13.05.06,Udakespes (Mitte),river,Asia,AS03,,Omega,80.5,40.0,"matches river-course pattern (Mitte/Biegung/Abzweigung/Aufteilung/Oberlauf/Unterlauf), not a gulf bend",,,,,,,,,,
@@ -4959,8 +4959,8 @@ ref_id,name,category,book,tabula,modern_location,recension,lon_ptolemy,lat_ptole
 5.20.08.06,Chiriphe (Cheiriphe),city,Asia,AS04,,Omega,79.25,31.1666666666667,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 5.20.08.07,Rhatta,city,Asia,AS04,,Omega,79.25,30.8333333333333,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 6.01.01.07,"Grenzpunkt (Assyrien, Medien, Persis, Susiane)",city,Asia,AS05,,Omega,84.0,36.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-6.01.01.09,Choathras-Gebirge (W-Ende),mountain,Asia,AS05,,Omega,80.0,39.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_031_Choathras-Gebirge,0
-6.01.01.10,Choathras-Gebirge (O-Ende),mountain,Asia,AS05,,Omega,83.0,38.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_031_Choathras-Gebirge,1
+6.01.01.09,Choathras-Gebirge (W-Ende),mountain,Asia,AS05,,Omega,80.0,39.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_035_Choathras-Gebirge,0
+6.01.01.10,Choathras-Gebirge (O-Ende),mountain,Asia,AS05,,Omega,83.0,38.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_035_Choathras-Gebirge,1
 6.01.03.03,Marde,city,Asia,AS05,,Omega,76.0,38.25,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 6.01.03.04,Sauara,city,Asia,AS05,,Omega,76.25,37.25,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 6.01.03.05,Bessara,city,Asia,AS05,,Omega,77.0,37.3333333333333,no specific keyword match; section not sea-headed (default),,,,,,,,,,
@@ -5025,8 +5025,8 @@ ref_id,name,category,book,tabula,modern_location,recension,lon_ptolemy,lat_ptole
 6.02.04.02,Zagros (Mitte),river,Asia,AS05,Zagros,Omega,85.0,38.0,"matches river-course pattern (Mitte/Biegung/Abzweigung/Aufteilung/Oberlauf/Unterlauf), not a gulf bend",,,,,,,,,,
 6.02.04.03,Orontes (Mitte),river,Asia,AS05,Alvand,Omega,88.5,38.0,"matches river-course pattern (Mitte/Biegung/Abzweigung/Aufteilung/Oberlauf/Unterlauf), not a gulf bend",,,,,,,,,,
 6.02.04.04,Iasonion (Mitte),river,Asia,AS05,Elburs,Omega,90.5,36.0,"matches river-course pattern (Mitte/Biegung/Abzweigung/Aufteilung/Oberlauf/Unterlauf), not a gulf bend",,,,,,,,,,
-6.02.04.05,Koronos-Gebirge (W–Ende),mountain,Asia,AS05,Elburs,Omega,92.0,38.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_032_Koronos-Gebirge,0
-6.02.04.06,Koronos-Gebirge (O-Ende),mountain,Asia,AS05,Elburs,Omega,101.0,39.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_032_Koronos-Gebirge,1
+6.02.04.05,Koronos-Gebirge (W–Ende),mountain,Asia,AS05,Elburs,Omega,92.0,38.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_036_Koronos-Gebirge,0
+6.02.04.06,Koronos-Gebirge (O-Ende),mountain,Asia,AS05,Elburs,Omega,101.0,39.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_036_Koronos-Gebirge,1
 6.02.07.01,Pforte des Zagros,city,Asia,AS05,,Omega,84.5,37.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 6.02.07.02,Kaspische Pforte,city,Asia,AS05,,Omega,94.0,37.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 6.02.08.02,Skambeina (Skabina),city,Asia,AS05,,Omega,79.5,42.5,no specific keyword match; section not sea-headed (default),,,,,,,,,,
@@ -5547,8 +5547,8 @@ ref_id,name,category,book,tabula,modern_location,recension,lon_ptolemy,lat_ptole
 6.11.03.02,Zariaspes (Einmündung in den Oxos)/Oxos (Einmündung des Zariaspes),river,Asia,AS07,,Omega,112.5,44.0,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,,,,,,,
 6.11.04.01,Dargomanes (Dorgomanis) (Zusammenfluss mit Ochos)/Ochos (Zusammenfluss mit Dargomanes),river,Asia,AS07,,Omega,109.0,40.1666666666667,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,,,,,,,
 6.11.04.02,Ochos (Einmündung in den Oxos)/Oxos (Einmündung des Ochos),river,Asia,AS07,,Omega,109.0,44.3333333333333,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,,,,,,,
-6.11.05.01,Paropanisos-Gebirge (W-Ende),mountain,Asia,AS07,Hindukusch-Gebirge,Omega,111.5,39.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_033_Paropanisos-Gebirge,0
-6.11.05.02,Paropanisos-Gebirge (O-Ende),mountain,Asia,AS07,Hindukusch-Gebirge,Omega,119.5,39.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_033_Paropanisos-Gebirge,1
+6.11.05.01,Paropanisos-Gebirge (W-Ende),mountain,Asia,AS07,Hindukusch-Gebirge,Omega,111.5,39.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_037_Paropanisos-Gebirge,0
+6.11.05.02,Paropanisos-Gebirge (O-Ende),mountain,Asia,AS07,Hindukusch-Gebirge,Omega,119.5,39.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_037_Paropanisos-Gebirge,1
 6.11.07.03,Charracharta* (Katracharta*),city,Asia,AS07,,Omega,110.0,44.1666666666667,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 6.11.07.04,Zariaspa*,city,Asia,AS07,Balch,Omega,115.0,44.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 6.11.07.05,Choana,city,Asia,AS07,,Omega,117.0,42.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
@@ -5570,8 +5570,8 @@ ref_id,name,category,book,tabula,modern_location,recension,lon_ptolemy,lat_ptole
 6.12.01.08,Iaxartes (Biegung),river,Asia,AS07,Syr-Darja (Biegung),Omega,120.0,48.5,"matches river-course pattern (Mitte/Biegung/Abzweigung/Aufteilung/Oberlauf/Unterlauf), not a gulf bend",,,,river_082_Iaxartes,0,,,,,
 6.12.01.11,Iaxartes-Quellen,river,Asia,AS07,Syr-Darja-Quellen,Omega,125.0,43.0,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,river_082_Iaxartes,1,,,,,
 6.12.01.12,"Grenzpunkt (Land der Saken, Land der Sogdianer)",city,Asia,AS07,,Omega,125.0,38.5,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-6.12.02.01,Sogdisches (Sugdisches) Gebirge (W–Ende),mountain,Asia,AS07,Serafschan-Gebirge,Omega,111.0,47.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_034_Sogdisches,0
-6.12.02.02,Sogdisches (Sugdisches) Gebirge (O–Ende),mountain,Asia,AS07,Serafschan-Gebirge,Omega,122.0,46.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_034_Sogdisches,1
+6.12.02.01,Sogdisches (Sugdisches) Gebirge (W–Ende),mountain,Asia,AS07,Serafschan-Gebirge,Omega,111.0,47.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_038_Sogdisches,0
+6.12.02.02,Sogdisches (Sugdisches) Gebirge (O–Ende),mountain,Asia,AS07,Serafschan-Gebirge,Omega,122.0,46.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_038_Sogdisches,1
 6.12.03.04,Oxeiane–See (Mittelpunkt),lake,Asia,AS07,Aral-See,Omega,111.0,45.0,matches 'See'/'Palus' (lake/marsh),,,,,,,,,,
 6.12.03.06,Dymos (Demos)-Quellen,river,Asia,AS07,,Omega,124.0,43.0,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,,,,,,,
 6.12.03.07,Dymos (Demos) (Mündung in den Iaxartes)/Iaxartes (Einmündung des Dymos (Demos)),river,Asia,AS07,,Omega,123.0,47.0,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,,,,,,,
@@ -5601,29 +5601,29 @@ ref_id,name,category,book,tabula,modern_location,recension,lon_ptolemy,lat_ptole
 6.14.02.06,Iastos-Mündung,river_mouth,Asia,AS07,,Omega,100.0,47.3333333333333,"matches 'Mündung' (river mouth) - coastal, colored separately",coastline_059_AS07,1,,,,,,,,
 6.14.02.07,Polytimetos-Mündung,river_mouth,Asia,AS07,,Omega,103.0,45.5,"matches 'Mündung' (river mouth) - coastal, colored separately",coastline_059_AS07,0,,,,,,,,
 6.14.02.08,Aspabota*,city,Asia,AS07,,Omega,102.0,44.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-6.14.03.03,Alana-Gebirge (W-Ende),mountain,Asia,AS07,,Omega,105.0,59.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_035_Alana-Gebirge,0
-6.14.03.04,Alana-Gebirge (O-Ende),mountain,Asia,AS07,,Omega,118.0,59.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_035_Alana-Gebirge,1
-6.14.04.01,Rhymmika-Gebirge (W-Ende),mountain,Asia,AS07,,Omega,90.0,54.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_036_Rhymmika-Gebirge,0
-6.14.04.02,Rhymmika-Gebirge (O-Ende),mountain,Asia,AS07,,Omega,99.0,57.1666666666667,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_036_Rhymmika-Gebirge,1
-6.14.05.01,Norosson-Gebirge (W-Ende) (Orosson-Gebirge (W-Ende)),mountain,Asia,AS07,,Omega,97.0,53.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_037_Norosson-Gebirge,0
-6.14.05.02,Norosson-Gebirge (O-Ende) (Orosson-Gebirge (O-Ende)),mountain,Asia,AS07,,Omega,106.0,52.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_037_Norosson-Gebirge,1
-6.14.06.01,Aspisia-Gebirge (W-Ende),mountain,Asia,AS07,,Omega,111.0,55.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_038_Aspisia-Gebirge,0
-6.14.06.02,Aspisia-Gebirge (O-Ende),mountain,Asia,AS07,,Omega,117.0,52.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_038_Aspisia-Gebirge,1
+6.14.03.03,Alana-Gebirge (W-Ende),mountain,Asia,AS07,,Omega,105.0,59.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_039_Alana-Gebirge,0
+6.14.03.04,Alana-Gebirge (O-Ende),mountain,Asia,AS07,,Omega,118.0,59.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_039_Alana-Gebirge,1
+6.14.04.01,Rhymmika-Gebirge (W-Ende),mountain,Asia,AS07,,Omega,90.0,54.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_040_Rhymmika-Gebirge,0
+6.14.04.02,Rhymmika-Gebirge (O-Ende),mountain,Asia,AS07,,Omega,99.0,57.1666666666667,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_040_Rhymmika-Gebirge,1
+6.14.05.01,Norosson-Gebirge (W-Ende) (Orosson-Gebirge (W-Ende)),mountain,Asia,AS07,,Omega,97.0,53.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_041_Norosson-Gebirge,0
+6.14.05.02,Norosson-Gebirge (O-Ende) (Orosson-Gebirge (O-Ende)),mountain,Asia,AS07,,Omega,106.0,52.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_041_Norosson-Gebirge,1
+6.14.06.01,Aspisia-Gebirge (W-Ende),mountain,Asia,AS07,,Omega,111.0,55.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_042_Aspisia-Gebirge,0
+6.14.06.02,Aspisia-Gebirge (O-Ende),mountain,Asia,AS07,,Omega,117.0,52.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_042_Aspisia-Gebirge,1
 6.14.07.01,Tapura (Tapuren)-Gebirge (W-Ende),mountain,Asia,AS07,,Omega,120.0,56.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,,
 6.14.07.02,Tapura-Gebirge (O-Ende),mountain,Asia,AS07,,Omega,125.0,49.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,,
-6.14.08.02,Syeba-Gebirge (W-Ende),mountain,Asia,AS07,,Omega,121.0,58.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_039_Syeba-Gebirge,0
-6.14.08.03,Syeba-Gebirge (O-Ende),mountain,Asia,AS07,,Omega,132.0,62.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_039_Syeba-Gebirge,1
-6.14.08.04,Anaraia-Gebirge (W-Ende),mountain,Asia,AS07,,Omega,130.0,56.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_040_Anaraia-Gebirge,0
-6.14.08.05,Anaraia-Gebirge (O-Ende),mountain,Asia,AS07,,Omega,137.0,50.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_040_Anaraia-Gebirge,1
+6.14.08.02,Syeba-Gebirge (W-Ende),mountain,Asia,AS07,,Omega,121.0,58.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_043_Syeba-Gebirge,0
+6.14.08.03,Syeba-Gebirge (O-Ende),mountain,Asia,AS07,,Omega,132.0,62.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_043_Syeba-Gebirge,1
+6.14.08.04,Anaraia-Gebirge (W-Ende),mountain,Asia,AS07,,Omega,130.0,56.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_044_Anaraia-Gebirge,0
+6.14.08.05,Anaraia-Gebirge (O-Ende),mountain,Asia,AS07,,Omega,137.0,50.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_044_Anaraia-Gebirge,1
 6.14.14.09,Dauaba*,city,Asia,AS07,,Omega,104.0,45.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 6.15.01.07,"Grenzpunkt (Serike, Skythien jenseits des Imaon, Unbekanntes Land)",city,Asia,AS08,,Omega,150.0,63.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 6.15.01.08,"Grenzpunkt (Indien jenseits des Ganges, Skythien jenseits des Imaon, Serike)",city,Asia,AS08,,Omega,160.0,35.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-6.15.02.01,Auzakia–Gebirge (W-Ende),mountain,Asia,AS08,,Omega,149.0,49.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_041_Auzakia–Gebirge,0
-6.15.02.02,Auzakia–Gebirge (O-Ende),mountain,Asia,AS08,,Omega,165.0,54.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_041_Auzakia–Gebirge,1
-6.15.02.03,"Kasia–Gebirge (westl. Teil, W-Ende)",mountain,Asia,AS08,,Omega,152.0,41.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_042_Kasia–Gebirge  (westl. Teil),0
-6.15.02.04,"Kasia–Gebirge (westl. Teil, O-Ende)",mountain,Asia,AS08,,Omega,162.0,44.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_042_Kasia–Gebirge  (westl. Teil),1
-6.15.02.05,Emoda–Gebirge (W-Ende),mountain,Asia,AS08,,Omega,153.0,36.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_043_Emoda–Gebirge,0
-6.15.02.06,Emoda–Gebirge (O-Ende),mountain,Asia,AS08,,Omega,165.0,36.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_043_Emoda–Gebirge,1
+6.15.02.01,Auzakia–Gebirge (W-Ende),mountain,Asia,AS08,,Omega,149.0,49.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_045_Auzakia–Gebirge,0
+6.15.02.02,Auzakia–Gebirge (O-Ende),mountain,Asia,AS08,,Omega,165.0,54.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_045_Auzakia–Gebirge,1
+6.15.02.03,"Kasia–Gebirge (westl. Teil, W-Ende)",mountain,Asia,AS08,,Omega,152.0,41.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_046_Kasia–Gebirge  (westl. Teil),0
+6.15.02.04,"Kasia–Gebirge (westl. Teil, O-Ende)",mountain,Asia,AS08,,Omega,162.0,44.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_046_Kasia–Gebirge  (westl. Teil),1
+6.15.02.05,Emoda–Gebirge (W-Ende),mountain,Asia,AS08,,Omega,153.0,36.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_047_Emoda–Gebirge,0
+6.15.02.06,Emoda–Gebirge (O-Ende),mountain,Asia,AS08,,Omega,165.0,36.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_047_Emoda–Gebirge,1
 6.15.02.07,Oichardes-Quelle am Auzakia-Gebirge),river,Asia,AS08,,Omega,153.0,51.0,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,,,,,,,
 6.15.04.01,Auzakia*,city,Asia,AS08,,Omega,144.0,49.6666666666667,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 6.15.04.02,Skythisches Issedon* (Essedon* ),city,Asia,AS08,,Omega,150.0,48.5,no specific keyword match; section not sea-headed (default),,,,,,,,,,
@@ -5632,17 +5632,17 @@ ref_id,name,category,book,tabula,modern_location,recension,lon_ptolemy,lat_ptole
 6.16.01.05,"Grenzpunkt (Serike NO, Unbekanntes Land)",city,Asia,AS08,,Omega,180.0,63.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 6.16.01.06,"Grenzpunkt (Land der Sinen, Serike SO, Unbekanntes Land)/Indien jenseits des Ganges",city,Asia,AS08,,Omega,180.0,35.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 6.16.01.07,"Grenzpunkt (Indien jenseits des Ganges, Land der Sinen, Serike)",city,Asia,AS08,,Omega,173.0,35.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-6.16.02.02,Anniba (Aniba)-Gebirge (W-Ende),mountain,Asia,AS08,,Omega,153.0,60.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_044_Anniba,0
-6.16.02.03,Anniba (Aniba)-Gebirge (O-Ende),mountain,Asia,AS08,,Omega,171.0,56.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_044_Anniba,1
+6.16.02.02,Anniba (Aniba)-Gebirge (W-Ende),mountain,Asia,AS08,,Omega,153.0,60.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_048_Anniba,0
+6.16.02.03,Anniba (Aniba)-Gebirge (O-Ende),mountain,Asia,AS08,,Omega,171.0,56.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_048_Anniba,1
 6.16.02.04,Auzakia-Gebirge (O-Ende),mountain,Asia,AS08,,Omega,165.0,54.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,,
-6.16.02.05,"Kasia-Gebirge (östl. Teil, W-Ende)",mountain,Asia,AS08,,Omega,162.0,44.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_045_Kasia-Gebirge  (östl. Teil),0
-6.16.02.06,"Kasia-Gebirge (östl. Teil, O-Ende)",mountain,Asia,AS08,,Omega,171.0,40.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_045_Kasia-Gebirge  (östl. Teil),1
-6.16.02.07,Asmiraia (Asmirea)-Gebirge (W-Ende),mountain,Asia,AS08,,Omega,167.0,47.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_046_Asmiraia,0
-6.16.02.08,Asmiraia (Asmirea)-Gebirge (O-Ende),mountain,Asia,AS08,,Omega,174.0,47.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_046_Asmiraia,1
+6.16.02.05,"Kasia-Gebirge (östl. Teil, W-Ende)",mountain,Asia,AS08,,Omega,162.0,44.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_049_Kasia-Gebirge  (östl. Teil),0
+6.16.02.06,"Kasia-Gebirge (östl. Teil, O-Ende)",mountain,Asia,AS08,,Omega,171.0,40.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_049_Kasia-Gebirge  (östl. Teil),1
+6.16.02.07,Asmiraia (Asmirea)-Gebirge (W-Ende),mountain,Asia,AS08,,Omega,167.0,47.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_050_Asmiraia,0
+6.16.02.08,Asmiraia (Asmirea)-Gebirge (O-Ende),mountain,Asia,AS08,,Omega,174.0,47.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_050_Asmiraia,1
 6.16.02.09,Thaguron (Ithagur)-Gebirge (Mittelpunkt),mountain,Asia,AS08,,Omega,170.0,43.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,,
 6.16.02.10,Emoda-Gebirge (O-Ende) bzw. Serisches Gebirge,mountain,Asia,AS08,,Omega,165.0,36.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,,
-6.16.02.11,Ottorokoras-Gebirge (W-Ende),mountain,Asia,AS08,,Omega,169.0,36.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_047_Ottorokoras-Gebirge,0
-6.16.02.12,Ottorokoras-Gebirge (O-Ende),mountain,Asia,AS08,,Omega,176.0,39.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_047_Ottorokoras-Gebirge,1
+6.16.02.11,Ottorokoras-Gebirge (W-Ende),mountain,Asia,AS08,,Omega,169.0,36.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_051_Ottorokoras-Gebirge,0
+6.16.02.12,Ottorokoras-Gebirge (O-Ende),mountain,Asia,AS08,,Omega,176.0,39.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_051_Ottorokoras-Gebirge,1
 6.16.03.03,Oichardes-Quelle am Asmiraia,river,Asia,AS08,,Omega,174.0,47.5,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,,,,,,,
 6.16.03.05,Oichardes (Einmündung vom Kasia),river,Asia,AS08,,Omega,160.0,49.5,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,river_083_Oichardes,0,,,,,
 6.16.03.07,Oichardes-Quelle am Kasia,river,Asia,AS08,,Omega,161.0,44.25,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,river_083_Oichardes,1,,,,,
@@ -5665,11 +5665,11 @@ ref_id,name,category,book,tabula,modern_location,recension,lon_ptolemy,lat_ptole
 6.16.08.05,Ottorokora*,city,Asia,AS08,,Omega,165.0,37.25,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 6.16.08.06,Solana,city,Asia,AS08,,Omega,169.0,37.5,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 6.16.08.07,Sera* Metropolis,city,Asia,AS08,Xi'an,Omega,177.25,38.5833333333333,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-6.17.01.08,Bagoon-Gebirge (O-Ende),mountain,Asia,AS09,,Omega,111.0,34.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_048_Bagoon-Gebirge,0
-6.17.01.09,Bagoon-Gebirge (Biegung),mountain,Asia,AS09,,Omega,105.0,32.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_048_Bagoon-Gebirge,1
+6.17.01.08,Bagoon-Gebirge (O-Ende),mountain,Asia,AS09,,Omega,111.0,34.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_052_Bagoon-Gebirge,0
+6.17.01.09,Bagoon-Gebirge (Biegung),mountain,Asia,AS09,,Omega,105.0,32.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_052_Bagoon-Gebirge,1
 6.17.01.12,Paropanisos/Paopanisos-Gebirge (südliches Grenzzeichen),mountain,Asia,AS09,Hindukusch-Gebirge,Omega,111.0,36.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,,
-6.17.01.13,Paropanisos/Paropanisos-Gebirge (nördliches Grenzzeichen),mountain,Asia,AS09,Hindukusch-Gebirge,Omega,111.5,39.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_049_Paropanisos/Paropanisos-Gebirge,0
-6.17.01.14,Paropanisos/Paropanisos-Gebirge (östliches Grenzzeichen),mountain,Asia,AS09,Hindukusch-Gebirge,Omega,119.5,39.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_049_Paropanisos/Paropanisos-Gebirge,1
+6.17.01.13,Paropanisos/Paropanisos-Gebirge (nördliches Grenzzeichen),mountain,Asia,AS09,Hindukusch-Gebirge,Omega,111.5,39.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_053_Paropanisos/Paropanisos-Gebirge,0
+6.17.01.14,Paropanisos/Paropanisos-Gebirge (östliches Grenzzeichen),mountain,Asia,AS09,Hindukusch-Gebirge,Omega,119.5,39.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_053_Paropanisos/Paropanisos-Gebirge,1
 6.17.02.01,Areios (Arias)-Quellen im Paropanisos,river,Asia,AS09,Heri-Rud-Quellen,Omega,111.0,38.25,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,,,,,,,
 6.17.02.02,Areios-Quellen im Saripha-Gebirge,river,Asia,AS09,Heri-Rud-Quellen,Omega,103.0,38.6666666666667,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,,,,,,,
 6.17.02.04,Areia-See,lake,Asia,AS09,,Omega,108.666666666667,36.0,matches 'See'/'Palus' (lake/marsh),,,,,,,,,,
@@ -5764,8 +5764,8 @@ ref_id,name,category,book,tabula,modern_location,recension,lon_ptolemy,lat_ptole
 6.21.02.09,Koiamba (Koilamba),city,Asia,AS09,,Omega,108.0,20.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 6.21.02.10,Rhizana,city,Asia,AS09,,Omega,108.666666666667,20.25,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 6.21.02.11,"Grenzpunkt (Gedrosien, Indien)",city,Asia,AS09,,Omega,109.0,20.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-6.21.03.02,Arbita-Gebirge (W-Ende),mountain,Asia,AS09,,Omega,107.0,22.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_050_Arbita-Gebirge,0
-6.21.03.03,Arbita-Gebirge (O-Ende),mountain,Asia,AS09,,Omega,113.0,26.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_050_Arbita-Gebirge,1
+6.21.03.02,Arbita-Gebirge (W-Ende),mountain,Asia,AS09,,Omega,107.0,22.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_054_Arbita-Gebirge,0
+6.21.03.03,Arbita-Gebirge (O-Ende),mountain,Asia,AS09,,Omega,113.0,26.5,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_054_Arbita-Gebirge,1
 6.21.03.07,Quelle eines der namenlosen Flüsse,river,Asia,AS09,,Omega,111.0,25.5,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,,,,,,,
 6.21.05.02,Kuni* (Koni*),city,Asia,AS09,,Omega,110.0,27.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 6.21.05.03,Badara,city,Asia,AS09,,Omega,113.0,27.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
@@ -5867,18 +5867,18 @@ ref_id,name,category,book,tabula,modern_location,recension,lon_ptolemy,lat_ptole
 7.01.18.05,Tilogrammon,city,Asia,AS10,,Omega,147.0,18.5,no specific keyword match; section not sea-headed (default),,,,,,,,,,
 7.01.18.06,Ganges-Mündung bzw. Pseudostomon-Mündung (Ganges),river_mouth,Asia,AS10,,Omega,147.666666666667,18.5,"matches 'Mündung' (river mouth) - coastal, colored separately",coastline_048_AS10,43,,river_099_Ganges,3,,,,,
 7.01.18.07,Ganges-Mündung bzw. Antibole-Mündung,river_mouth,Asia,AS10,,Omega,148.5,18.25,"matches 'Mündung' (river mouth) - coastal, colored separately",coastline_048_AS10,44,,river_099_Ganges,4,,,,,
-7.01.19.02,Apokopa-Gebirge (W-Ende) bzw. Poinai-Theon-Gebirge (W-Ende),mountain,Asia,AS10,Aravalli-Gebirge,Omega,116.0,23.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_051_Apokopa-Gebirge,0
-7.01.19.03,Apokopa-Gebirge (O-Ende) bzw. Poinai-Theon-Gebirge (O-Ende),mountain,Asia,AS10,Aravalli-Gebirge,Omega,124.0,26.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_051_Apokopa-Gebirge,1
+7.01.19.02,Apokopa-Gebirge (W-Ende) bzw. Poinai-Theon-Gebirge (W-Ende),mountain,Asia,AS10,Aravalli-Gebirge,Omega,116.0,23.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_055_Apokopa-Gebirge,0
+7.01.19.03,Apokopa-Gebirge (O-Ende) bzw. Poinai-Theon-Gebirge (O-Ende),mountain,Asia,AS10,Aravalli-Gebirge,Omega,124.0,26.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_055_Apokopa-Gebirge,1
 7.01.20.01,Sardonyx-Gebirge (Mitte),mountain,Asia,AS10,Satpura-Gebirge,Omega,117.5,21.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,,
-7.01.21.01,Vindion-Gebirge (W-Ende),mountain,Asia,AS10,Vindhya-Gebirge,Omega,127.0,27.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_052_Vindion-Gebirge,0
-7.01.21.02,Vindion-Gebirge (O-Ende),mountain,Asia,AS10,Vindhya-Gebirge,Omega,135.0,27.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_052_Vindion-Gebirge,1
-7.01.22.01,Bettigo-Gebirge (W-Ende),mountain,Asia,AS10,S-Ghats,Omega,123.0,21.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_053_Bettigo-Gebirge,0
-7.01.22.02,Bettigo-Gebirge (O-Ende),mountain,Asia,AS10,S-Ghats,Omega,130.0,20.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_053_Bettigo-Gebirge,1
+7.01.21.01,Vindion-Gebirge (W-Ende),mountain,Asia,AS10,Vindhya-Gebirge,Omega,127.0,27.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_056_Vindion-Gebirge,0
+7.01.21.02,Vindion-Gebirge (O-Ende),mountain,Asia,AS10,Vindhya-Gebirge,Omega,135.0,27.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_056_Vindion-Gebirge,1
+7.01.22.01,Bettigo-Gebirge (W-Ende),mountain,Asia,AS10,S-Ghats,Omega,123.0,21.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_057_Bettigo-Gebirge,0
+7.01.22.02,Bettigo-Gebirge (O-Ende),mountain,Asia,AS10,S-Ghats,Omega,130.0,20.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_057_Bettigo-Gebirge,1
 7.01.23.01,Adisathron (Mitte),river,Asia,AS10,,Omega,132.0,23.0,"matches river-course pattern (Mitte/Biegung/Abzweigung/Aufteilung/Oberlauf/Unterlauf), not a gulf bend",,,,,,,,,,
-7.01.24.01,Uxenton-Gebirge (W-Ende),mountain,Asia,AS10,,Omega,136.0,22.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_054_Uxenton-Gebirge,0
-7.01.24.02,Uxenton-Gebirge (O-Ende),mountain,Asia,AS10,,Omega,143.0,24.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_054_Uxenton-Gebirge,1
-7.01.25.01,Aruraia (Aruaia)-Gebirge (O-Ende),mountain,Asia,AS10,,Omega,138.0,18.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_055_Aruraia,0
-7.01.25.02,Aruraia (Aruaia)-Gebirge (W-Ende),mountain,Asia,AS10,,Omega,133.0,16.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_055_Aruraia,1
+7.01.24.01,Uxenton-Gebirge (W-Ende),mountain,Asia,AS10,,Omega,136.0,22.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_058_Uxenton-Gebirge,0
+7.01.24.02,Uxenton-Gebirge (O-Ende),mountain,Asia,AS10,,Omega,143.0,24.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_058_Uxenton-Gebirge,1
+7.01.25.01,Aruraia (Aruaia)-Gebirge (O-Ende),mountain,Asia,AS10,,Omega,138.0,18.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_059_Aruraia,0
+7.01.25.02,Aruraia (Aruaia)-Gebirge (W-Ende),mountain,Asia,AS10,,Omega,133.0,16.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_059_Aruraia,1
 7.01.26.03,Koas-Quellen,river,Asia,AS10,Konar-Quellen,Omega,120.0,37.0,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,,,,,,,
 7.01.26.04,Suastos-Quellen,river,Asia,AS10,Swat-Quellen,Omega,122.5,36.0,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,,,,,,,
 7.01.26.05,Indus-Quelle,river,Asia,AS10,Indus-Quelle,Omega,125.0,37.0,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,,,,,,,
@@ -6213,12 +6213,12 @@ im Adisathron",Omega,132.0,22.0,matches river-feature pattern (Quelle/Quellgebie
 7.02.07.13,"Grenzpunkt (Indien jenseits des Ganges, Land der Sinen)",coast,Asia,AS11,,Omega,173.0,17.3333333333333,no specific keyword match; section header names a sea/ocean/gulf,coastline_050_AS11,13,,,,,,,,
 7.02.08.01,Bepyrron- (Bepyron)-Gebirge (NW-Ende),mountain,Asia,AS11,Östlicher Himalaja,Omega,148.0,34.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,,
 7.02.08.02,Bepyrron- (Bepyron)-Gebrige (SO-Ende),city,Asia,AS11,Östlicher Himalaja,Omega,154.0,26.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,
-7.02.08.03,Maiandros-Gebirge (NW-Ende),mountain,Asia,AS11,Arakan Yoma,Omega,152.0,24.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_056_Maiandros-Gebirge,0
-7.02.08.04,Maiandros-Gebirge (SO-Ende),mountain,Asia,AS11,Arakan Yoma,Omega,160.0,16.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_056_Maiandros-Gebirge,1
-7.02.08.05,Damasa-Gebirge (S-Ende),mountain,Asia,AS11,,Omega,162.0,23.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_057_Damasa-Gebirge,0
-7.02.08.06,Damasa-Gebirge (N-Ende),mountain,Asia,AS11,,Omega,166.0,33.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_057_Damasa-Gebirge,1
-7.02.08.07,Semanthinon-Gebirge (W-Ende),mountain,Asia,AS11,,Omega,170.0,33.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_058_Semanthinon-Gebirge,0
-7.02.08.08,Semanthinon-Gebirge (O-Ende),mountain,Asia,AS11,,Omega,180.0,26.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_058_Semanthinon-Gebirge,1
+7.02.08.03,Maiandros-Gebirge (NW-Ende),mountain,Asia,AS11,Arakan Yoma,Omega,152.0,24.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_060_Maiandros-Gebirge,0
+7.02.08.04,Maiandros-Gebirge (SO-Ende),mountain,Asia,AS11,Arakan Yoma,Omega,160.0,16.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_060_Maiandros-Gebirge,1
+7.02.08.05,Damasa-Gebirge (S-Ende),mountain,Asia,AS11,,Omega,162.0,23.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_061_Damasa-Gebirge,0
+7.02.08.06,Damasa-Gebirge (N-Ende),mountain,Asia,AS11,,Omega,166.0,33.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_061_Damasa-Gebirge,1
+7.02.08.07,Semanthinon-Gebirge (W-Ende),mountain,Asia,AS11,,Omega,170.0,33.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_062_Semanthinon-Gebirge,0
+7.02.08.08,Semanthinon-Gebirge (O-Ende),mountain,Asia,AS11,,Omega,180.0,26.0,"matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location",,,,,,,,,mountain_062_Semanthinon-Gebirge,1
 7.02.09.02,Namenloser Fluss (nördl.) zum Ganges (Quellen im Bepyrron-Gebirge),river,Asia,AS11,,Omega,148.0,33.0,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,,,,,,,
 7.02.09.03,Namenloser Fluss (nördl.) zum Ganges (Einmündung vom  Bepyrron-Gebirge),river,Asia,AS11,,Omega,140.25,30.3333333333333,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,,,,,,,
 7.02.09.04,Namenloser Fluss (südl.) zum Ganges (Quellen im Bepyrron-Gebirge),river,Asia,AS11,,Omega,152.0,27.0,matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss),,,,,,,,,,

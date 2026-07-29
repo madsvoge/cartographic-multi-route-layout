@@ -386,7 +386,7 @@ have belonged to (Narmades, Nanagunas, Pseudostomos, Baris, Solen, Tynas,
 and others' source points) but couldn't reach while miscategorized as
 mountains: 103 → 111 river lines, 263 → 281 points-in-a-line.
 
-This covers 121 of 250 `mountain` points, grouped into 59 lines (a
+This covers 129 of 273 `mountain` points, grouped into 63 lines (a
 single-citation range - most of the catalogue's ~150 named peaks/ranges
 only ever appear once, with no second point to connect to - still plots as
 an individual point, no line).
@@ -806,6 +806,40 @@ Paena/Erythia kind:
   section: Libya's Western Ocean islands (`4.06.33`), the rest of the
   Arabian Gulf island list (`4.07.37`), the lone island in the Bay of
   Avalites (`4.07.39`), and the islands next to Aromata (`4.07.40`).
+
+A ninth pilot run - the start of Book 5 (Pontos/Bithynia, Asia proper,
+Lykia, Galatia, Pamphylia, the start of Kappadokia, `§5.1.1`-`§5.6.17`) -
+found the same "named-mountains list, no `-Gebirge`/`-berg` suffix to
+catch" shape as the third/sixth pilot runs, but at a much larger scale:
+Book 5's Anatolian provinces name almost every mountain by a bare
+classical proper name ("Mt. Ida", "Mykale mountain", "the Argaion") rather
+than the "X-Gebirge" convention common elsewhere, and several of those
+bare names also carry a `"(Mitte)"` position marker that the river-course
+pattern was claiming first, since nothing in the name itself said
+"mountain":
+
+- Four more sections safe to force whole: Bithynia's named mountains
+  (`5.01.10` - Orminios, the Mysian Olympos), "the named mountains in
+  Asia" (`5.02.13` - Ida, Killaion, Temnon, Sipylos, Tmolos, Mesogis,
+  Mykale, Kadmos, Mimas, Phoinix, and one end of Dindymos - eleven points,
+  the largest single named-mountains list found so far), Lykia's
+  (`5.03.04` - Kragos), and Galatia's (`5.04.04` - Oligas/Gigas, "the hill
+  of Kelainon", and Dindymos' *other* end - the same range re-cited across
+  the book.map boundary the way Buzara-Gebirge/Koronos-Gebirge were,
+  correctly reconnecting into its own two-point line once both ends share
+  a category).
+- One section needing point-level fixes instead: Kappadokia's named
+  mountains (`5.06.08` - Argaion's two ends, and two separately-numbered
+  segments of the Antitauros range, "Anti-Tauros W" and "Anti-Tauros O",
+  each with its own W/O-Ende) sits in the same section as a genuine river
+  confluence point (the Euphrates meeting the Melas, cited as an aside
+  during the range's own boundary description) that a whole-section force
+  would have wrongly swept up - six points added individually to
+  `_MOUNTAIN_POINT_OVERRIDES` instead.
+- Two more island-list sections (Bithynia's, `5.01.15`; Pamphylia's,
+  `5.05.10`) and one single-point fix, "Tenedos" (`5.02.28.03`) - a lone
+  citation covering both the island and, per topostext, "a city of the
+  same name", the same shared-name shape as Iulia Caesarea earlier.
 
 ## Compiling the catalogue to data: `annotate_dataset.py`
 

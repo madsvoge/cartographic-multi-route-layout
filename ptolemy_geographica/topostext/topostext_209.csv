@@ -3524,3 +3524,559 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal
 4,9,6,5,"Mount Barditon, the centre of which is",45°,6° S,45.0,-6.0
 4,9,6,6,Mount Selene,57°,12°20' S,57.0,-12.3333
 4,9,6,7,,67°,12°20' S,67.0,-12.3333
+5,1,2,1,"The promontory of Bithynia at the mouth of the Pontos, on which are: Hieron of Artemis",56°25',43°20',56.4167,43.3333
+5,1,2,2,Chalkedon,56°05',43°05',56.0833,43.0833
+5,1,2,3,Akritas promontory,56°30',42°55',56.5,42.9167
+5,1,2,4,Trarion,56°50',42°45',56.8333,42.75
+5,1,3,1,Astakos,57°20',42°30',57.3333,42.5
+5,1,3,2,Olbia,57°00',42°30',57.0,42.5
+5,1,3,3,Nikomedeia,57°30',42°30',57.5,42.5
+5,1,4,1,Posideion promontory,56°10',42°25',56.1667,42.4167
+5,1,4,2,mouth of the Askanios river,56°45',42°15',56.75,42.25
+5,1,4,3,Askania lake,56°45',42°00',56.75,42.0
+5,1,4,4,Prousias,56°40',42°05',56.6667,42.0833
+5,1,4,5,Daskylion,56°35',41°55',56.5833,41.9167
+5,1,4,6,Apameia,56°40',41°55',56.6667,41.9167
+5,1,4,7,mouth of the Ryndakos river,56°20',41°45',56.3333,41.75
+5,1,4,8,river sources,57°00',40°30',57.0,40.5
+5,1,5,1,mouth of the Pontos and the sanctuary of Artemis Bithynian promontory,56°45',43°20',56.75,43.3333
+5,1,5,2,Artake kome,57°00',43°05',57.0,43.0833
+5,1,5,3,mouth of the Psyllis and Reba river,57°15',43°20',57.25,43.3333
+5,1,5,4,mouth of the Kalpas river,57°40',43°05',57.6667,43.0833
+5,1,6,1,mouth of the Sangarios river,58°00',42°45',58.0,42.75
+5,1,6,2,first turn of the river,57°30',42°00',57.5,42.0
+5,1,6,3,second turn,61°20',42°00',61.3333,42.0
+5,1,6,4,third turn,58°45',41°00',58.75,41.0
+5,1,6,5,river sources,60°50',40°50',60.8333,40.8333
+5,1,7,1,mouth of the Hyppios river,58°40',42°45',58.6667,42.75
+5,1,7,2,mouth of the Elata river,58°50',43°00',58.8333,43.0
+5,1,7,3,Diospolis,58°45',43°20',58.75,43.3333
+5,1,7,4,Herakleia on the Pontos,59°00',43°30',59.0,43.5
+5,1,7,5,Psylleion,59°30',43°30',59.5,43.5
+5,1,7,6,Tion,60°00',43°30',60.0,43.5
+5,1,7,7,mouth of the Parthenios river,60°15',43°30',60.25,43.5
+5,1,7,8,river sources,62°30',43°30',62.5,43.5
+5,1,7,9,Kromna,60°35',43°35',60.5833,43.5833
+5,1,7,10,Kytoron,60°45',43°35',60.75,43.5833
+5,1,8,1,Ryndakos river to the point at,61°00',41°15',61.0,41.25
+5,1,9,1,"mentioned point, i.e",61°00',31°15',61.0,31.25
+5,1,9,2,at the city Kytoron of the Pontos,61°00',33°45',61.0,33.75
+5,1,10,1,The most noted mountains in this region are Orminion the midpoint of which is at,59°40',42°40',59.6667,42.6667
+5,1,10,2,the Mysian Olympos mountain,57°00',41°30',57.0,41.5
+5,1,13,1,The following are the inland cities: Libyssa,57°15',42°45',57.25,42.75
+5,1,13,2,Eriboia,57°10',42°20',57.1667,42.3333
+5,1,13,3,Gallika,57°45',42°25',57.75,42.4167
+5,1,13,4,Pataouion,57°45',42°00',57.75,42.0
+5,1,13,5,Prousa by the Hyppios river,58°30',42°35',58.5,42.5833
+5,1,13,6,Dedakana,59°00',42°25',59.0,42.4167
+5,1,13,7,Protomakrai,58°45',42°00',58.75,42.0
+5,1,13,8,Klaudiopolis or Bithynion,59°20',42°45',59.3333,42.75
+5,1,14,1,Flaviopolis or Krateiaa,60°00',43°00',60.0,43.0
+5,1,14,2,Timaia,59°45',42°20',59.75,42.3333
+5,1,14,3,Klitai,60°30',43°00',60.5,43.0
+5,1,14,4,Lataneia,60°35',42°30',60.5833,42.5
+5,1,14,5,Nikaia,57°00',41°55',57.0,41.9167
+5,1,14,6,Kaisareia or Smyraleia or Smyrdiane,56°40',41°40',56.6667,41.6667
+5,1,14,7,Prousa near Mount Olympos,57°00',41°40',57.0,41.6667
+5,1,14,8,Agrilion,57°30',41°40',57.5,41.6667
+5,1,14,9,Dableis,58°40',41°40',58.6667,41.6667
+5,1,14,10,Dadastana,59°30',41°45',59.5,41.75
+5,1,14,11,Iouliopolis,60°10',42°00',60.1667,42.0
+5,1,15,1,"the islands lying off this country are, the easternmost of the Kyaneans, at",56°30',43°25',56.5,43.4167
+5,1,15,2,Thynias and Daphnousia,57°40',43°20',57.6667,43.3333
+5,1,15,3,"the Erythinoi lookouts, islands",58°30',43°15',58.5,43.25
+5,2,2,1,"In the Propontis of Lesser Mysia on the Hellespont, Kyzikos",56°00',41°30',56.0,41.5
+5,2,2,2,mouth of the Aisepos river,56°00',41°20',56.0,41.3333
+5,2,2,3,Parion,55°35',41°25',55.5833,41.4167
+5,2,2,4,mouth of the Grenios or Grenikos river,55°50',41°30',55.8333,41.5
+5,2,2,5,Lampsakos,55°00',41°25',55.0,41.4167
+5,2,3,1,on the Hellespont: Abydos,55°20',41°15',55.3333,41.25
+5,2,3,2,mouth of the Simoeis river,55°20',41°10',55.3333,41.1667
+5,2,3,3,Dardanon,55°15',41°05',55.25,41.0833
+5,2,3,4,mouth of the Skamander river,55°15',41°00',55.25,41.0
+5,2,3,5,Sigeion promontory,55°10',41°00',55.1667,41.0
+5,2,4,1,"In the Aegean Sea, of Phrygia Minor or Troas, Alexandria Troas",55°25',40°40',55.4167,40.6667
+5,2,4,2,Lekton promontory,55°25',40°25',55.4167,40.4167
+5,2,4,3,Assos,56°00',40°15',56.0,40.25
+5,2,5,1,Iarganon,56°10',40°20',56.1667,40.3333
+5,2,5,2,Palaiskepsis,56°15',40°30',56.25,40.5
+5,2,5,3,Antandros,56°30',40°20',56.5,40.3333
+5,2,5,4,Adramyttion,56°30',40°00',56.5,40.0
+5,2,5,5,Poroselene,56°30',39°45',56.5,39.75
+5,2,5,6,mouth of the Kaikos river,56°30',39°35',56.5,39.5833
+5,2,5,7,river sources,58°00',40°30',58.0,40.5
+5,2,6,1,Kaine promontory,56°15',39°30',56.25,39.5
+5,2,6,2,Pitane; the river Euenos flows around it,56°30',39°15',56.5,39.25
+5,2,6,3,Elaia,57°00',39°25',57.0,39.4167
+5,2,6,4,Myrina,57°15',39°15',57.25,39.25
+5,2,6,5,Hydra promontory,57°00',39°05',57.0,39.0833
+5,2,6,6,Kyme,57°20',39°00',57.3333,39.0
+5,2,6,7,Phokaia,57°10',38°50',57.1667,38.8333
+5,2,6,8,mouth of the Hermos river,57°30',38°45',57.5,38.75
+5,2,6,9,where the Hermos and the Paktolos rivers unite,58°10',39°20',58.1667,39.3333
+5,2,6,10,sources of the Hermos river,60°00',40°00',60.0,40.0
+5,2,6,11,sources of the Paktolos river,59°00',39°00',59.0,39.0
+5,2,7,1,In Ionia: Smyrna,57°40',38°35',57.6667,38.5833
+5,2,7,2,Klazomenai,57°00',38°35',57.0,38.5833
+5,2,7,3,Argennon promontory,56°30',38°25',56.5,38.4167
+5,2,7,4,on the Ikarian sea Erythrai,56°40',38°35',56.6667,38.5833
+5,2,7,5,Teos,57°10',38°25',57.1667,38.4167
+5,2,7,6,Lebedos,57°30',38°20',57.5,38.3333
+5,2,7,7,Kolophon,57°40',38°00',57.6667,38.0
+5,2,7,8,mouth of the Kayster river,57°45',37°50',57.75,37.8333
+5,2,7,9,river sources,60°15',39°20',60.25,39.3333
+5,2,8,1,Ephesos,57°40',37°40',57.6667,37.6667
+5,2,8,2,Trogilion promontory,57°10',37°40',57.1667,37.6667
+5,2,8,3,mouth of the Maiandros river,57°40',37°30',57.6667,37.5
+5,2,8,4,where the Lykos river unites with it,59°00',38°40',59.0,38.6667
+5,2,8,5,sources of the Maiandros,62°30',39°30',62.5,39.5
+5,2,8,6,sources of the Lykos,60°00',37°45',60.0,37.75
+5,2,9,1,In Karia by the Myrtoon sea: Pyrra,57°50',37°10',57.8333,37.1667
+5,2,9,2,Herakleia by Latmos,58°00',37°10',58.0,37.1667
+5,2,9,3,Miletos,58°00',37°00',58.0,37.0
+5,2,9,4,Iassos,57°30',36°50',57.5,36.8333
+5,2,9,5,Bargylia,57°40',36°40',57.6667,36.6667
+5,2,9,6,Myndos,57°40',36°25',57.6667,36.4167
+5,2,10,1,In Doris: Skopia promontory,57°20',36°25',57.3333,36.4167
+5,2,10,2,Halikarnassos,57°50',36°10',57.8333,36.1667
+5,2,10,3,Keramos,57°00',37°00',57.0,37.0
+5,2,10,4,Knidos city and promontory,56°15',36°00',56.25,36.0
+5,2,11,1,"On the south by the Rhodian sea, with Onugnathos promontory",56°40',35°50',56.6667,35.8333
+5,2,11,2,Loryma,57°20',35°35',57.3333,35.5833
+5,2,11,3,Kresso harbor,57°40',36°00',57.6667,36.0
+5,2,11,4,Phoenix kome,58°00',36°10',58.0,36.1667
+5,2,11,5,Phouska,58°15',36°10',58.25,36.1667
+5,2,11,6,mouth of the Kalbis river,58°45',36°05',58.75,36.0833
+5,2,11,7,Kaunos,59°10',36°00',59.1667,36.0
+5,2,12,1,point after Kaunos to,59°30',37°50',59.5,37.8333
+5,2,12,2,which and to the south it is bounded by Milyas city of Lykia to the limit point at,61°00',37°50',61.0,37.8333
+5,2,12,3,indicated limit until,61°20',38°35',61.3333,38.5833
+5,2,12,4,"by Galatia along the line this side of the common limit of Bithynia, which bulges to the east in the middle, where the location of the bulge is",62°15',39°15',62.25,39.25
+5,2,13,1,"These are the named mountains in Asia, of which the central points are: Mt. Ida",56°00',41°00',56.0,41.0
+5,2,13,2,Kimaion or Kimon mountain,56°00',40°40',56.0,40.6667
+5,2,13,3,Temnon mountain,57°40',40°30',57.6667,40.5
+5,2,13,4,western parts of Didymos,61°00',40°40',61.0,40.6667
+5,2,13,5,eastern parts of Didymos,62°00',41°20',62.0,41.3333
+5,2,13,6,Sipylos mountain,59°00',39°30',59.0,39.5
+5,2,13,7,Tmolos mountain,58°00',38°30',58.0,38.5
+5,2,13,8,"Misetis (Mesites, Mesotes, Mesogis) mountain",58°40',38°40',58.6667,38.6667
+5,2,13,9,Mykale mountain,58°00',37°40',58.0,37.6667
+5,2,13,10,Kadmos mountain,59°40',37°40',59.6667,37.6667
+5,2,13,11,Mimas mountain,57°30',38°30',57.5,38.5
+5,2,13,12,Phoenix mountain,58°00',36°30',58.0,36.5
+5,2,14,1,The interior cities of Mysia Minor in Hellespontika: Skepsis,56°30',41°00',56.5,41.0
+5,2,14,2,Hiera Germe,56°15',41°15',56.25,41.25
+5,2,14,3,The inland city of Phrygia Minor or Troas is Ilion,55°20',41°00',55.3333,41.0
+5,2,14,4,In the interior of Greater Mysia are: Dagouta,57°30',41°20',57.5,41.3333
+5,2,14,5,Apollonia on the Ryndakos river,57°00',41°15',57.0,41.25
+5,2,14,6,Traianopolis,56°40',40°15',56.6667,40.25
+5,2,14,7,Alydda,57°30',40°15',57.5,40.25
+5,2,14,8,Prepenissos,56°50',40°25',56.8333,40.4167
+5,2,14,9,Pergamos,57°25',39°45',57.4167,39.75
+5,2,16,1,Cities of Lydia and Maionia: Perpere (or Permere),57°50',40°00',57.8333,40.0
+5,2,16,2,Mostenoi,58°00',39°55',58.0,39.9167
+5,2,16,3,Hierokaisareia,57°15',39°30',57.25,39.5
+5,2,16,4,Nakrasa,58°20',39°30',58.3333,39.5
+5,2,16,5,Thyateira metropolis,58°00',39°30',58.0,39.5
+5,2,16,6,Magnesia near Sipylos,58°40',39°10',58.6667,39.1667
+5,2,16,7,Iouliogordos,59°00',39°55',59.0,39.9167
+5,2,16,8,Aigara,57°50',38°50',57.8333,38.8333
+5,2,16,9,Hypaipa,58°00',38°25',58.0,38.4167
+5,2,17,1,Sardeis,58°20',38°45',58.3333,38.75
+5,2,17,2,Philadelpheia,59°00',38°50',59.0,38.8333
+5,2,17,3,Dios hieron,59°40',38°55',59.6667,38.9167
+5,2,17,4,Metropolis,58°00',38°00',58.0,38.0
+5,2,18,1,In Karia: Tripolis,59°30',38°30',59.5,38.5
+5,2,18,2,Laodikeia on the Lykos,59°45',38°20',59.75,38.3333
+5,2,18,3,Antiocheia on the Maiandros,59°10',38°30',59.1667,38.5
+5,2,18,4,Itoana,59°15',38°25',59.25,38.4167
+5,2,18,5,Trapezopolis,59°30',38°15',59.5,38.25
+5,2,18,6,Nyssa,59°00',38°15',59.0,38.25
+5,2,18,7,Aphrodisias,59°20',38°10',59.3333,38.1667
+5,2,19,1,Tralleis,58°40',38°05',58.6667,38.0833
+5,2,19,2,Magnesia on the Maiandros,58°30',37°50',58.5,37.8333
+5,2,19,3,Apollonia by Albanos,59°25',37°55',59.4167,37.9167
+5,2,19,4,Herakleia by Albanos,59°30',37°55',59.5,37.9167
+5,2,19,5,Priene,58°00',37°25',58.0,37.4167
+5,2,19,6,Harpasa,58°25',37°35',58.4167,37.5833
+5,2,19,7,Orthosia,59°00',37°35',59.0,37.5833
+5,2,19,8,Neapolis,59°25',37°35',59.4167,37.5833
+5,2,19,9,Bargasa,58°20',37°25',58.3333,37.4167
+5,2,19,10,Amyzon,58°15',37°10',58.25,37.1667
+5,2,19,11,Alabanda,58°40',37°20',58.6667,37.3333
+5,2,20,1,Stratonike,59°00',37°10',59.0,37.1667
+5,2,20,2,Alinda,59°10',36°50',59.1667,36.8333
+5,2,20,3,Adessos,58°00',36°15',58.0,36.25
+5,2,20,4,Mylassa,58°20',36°30',58.3333,36.5
+5,2,20,5,Hydissa,58°30',36°30',58.5,36.5
+5,2,20,6,Idymos,59°00',36°35',59.0,36.5833
+5,2,20,7,Thera,59°00',36°15',59.0,36.25
+5,2,20,8,Pystos,59°00',36°00',59.0,36.0
+5,2,21,1,"In Maionia on the border with Mysia, Lydia and Phrygia, Settai or Saettai",58°10',40°15',58.1667,40.25
+5,2,21,2,Dadaleis,58°00',40°20',58.0,40.3333
+5,2,21,3,Kadoi,58°30',40°25',58.5,40.4167
+5,2,22,1,Cities of Greater Phrygia: Synnaos,58°00',41°15',58.0,41.25
+5,2,22,2,Dorylleion or Dorylaeion,58°15',41°20',58.25,41.3333
+5,2,22,3,Midaion or Midaeion,59°30',41°20',59.5,41.3333
+5,2,22,4,Trikomia,60°00',41°10',60.0,41.1667
+5,2,22,5,Ankyra of Phrygia,58°20',41°10',58.3333,41.1667
+5,2,22,6,Nakoleia,59°00',41°00',59.0,41.0
+5,2,22,7,Tribanta,59°40',40°35',59.6667,40.5833
+5,2,23,1,Diokleia,60°00',40°55',60.0,40.9167
+5,2,23,2,Amorion,60°30',41°15',60.5,41.25
+5,2,23,3,Abrostola,60°30',40°50',60.5,40.8333
+5,2,23,4,Kotyaeion,58°40',40°40',58.6667,40.6667
+5,2,23,5,Azanoi or Aizanis,59°00',40°20',59.0,40.3333
+5,2,23,6,Konna,59°15',40°30',59.25,40.5
+5,2,23,7,Lysias,59°50',40°30',59.8333,40.5
+5,2,23,8,Kerkopia,59°25',40°15',59.4167,40.25
+5,2,24,1,Eukarpia,60°00',40°05',60.0,40.0833
+5,2,24,2,Prymnesia,60°20',40°20',60.3333,40.3333
+5,2,24,3,Dokimaion,60°15',40°30',60.25,40.5
+5,2,24,4,Synada,60°50',40°05',60.8333,40.0833
+5,2,24,5,Gamboua or Gammaousa,61°15',40°40',61.25,40.6667
+5,2,24,6,Melitara,61°30',40°20',61.5,40.3333
+5,2,24,7,Iouliopolis,61°30',40°10',61.5,40.1667
+5,2,24,8,Akmonia,59°50',39°20',59.8333,39.3333
+5,2,25,1,Eumenia,60°10',39°50',60.1667,39.8333
+5,2,25,2,Drouzon,60°20',39°55',60.3333,39.9167
+5,2,25,3,Tiberioupolis,60°15',39°30',60.25,39.5
+5,2,25,4,Bleandros,60°30',39°10',60.5,39.1667
+5,2,25,5,Stektorion,61°00',39°15',61.0,39.25
+5,2,25,6,Silbion,61°40',39°15',61.6667,39.25
+5,2,25,7,Philomelion,62°15',39°20',62.25,39.3333
+5,2,25,8,Peltai,62°20',39°10',62.3333,39.1667
+5,2,25,9,Metropolis,61°15',39°25',61.25,39.4167
+5,2,25,10,Apameia Kibotos,61°10',38°55',61.1667,38.9167
+5,2,26,1,Hierapolis,60°00',38°15',60.0,38.25
+5,2,26,2,Kibyra,60°10',38°35',60.1667,38.5833
+5,2,26,3,Diokaisarea,61°00',38°35',61.0,38.5833
+5,2,26,4,Sanis,61°00',38°30',61.0,38.5
+5,2,26,5,Themisonion,60°10',38°10',60.1667,38.1667
+5,2,26,6,Phylakeion (or Pylakaion),60°20',38°20',60.3333,38.3333
+5,2,26,7,Sala,60°15',38°20',60.25,38.3333
+5,2,26,8,Gazena,60°40',38°00',60.6667,38.0
+5,2,28,1,The islands: lying off Asia toward the Hellespont is Tenedos island with a city of the same name,55°00',40°55',55.0,40.9167
+5,2,29,1,"In the Aegean sea Lesbos, an Aiolian island, described as follows: Sigrion promontory",55°00',40°00',55.0,40.0
+5,2,29,2,Pyrrha,55°15',39°40',55.25,39.6667
+5,2,29,3,Eressos,55°25',39°30',55.4167,39.5
+5,2,29,4,Mania promontory,56°00',39°25',56.0,39.4167
+5,2,29,5,Mytilene,55°40',39°40',55.6667,39.6667
+5,2,29,6,Argeno promontory,55°40',39°50',55.6667,39.8333
+5,2,29,7,Methymna,55°25',40°25',55.4167,40.4167
+5,2,29,8,Antissa,55°15',40°20',55.25,40.3333
+5,2,30,1,Islands in the Ikarian sea: Ikaros island,56°45',37°20',56.75,37.3333
+5,2,30,2,Myndos,57°40',36°25',57.6667,36.4167
+5,2,30,3,Chios city,56°20',38°35',56.3333,38.5833
+5,2,30,4,Phanaia promontory,56°20',38°15',56.3333,38.25
+5,2,30,5,Poseidion,56°25',38°25',56.4167,38.4167
+5,2,30,6,Samos island and city,57°00',37°35',57.0,37.5833
+5,2,30,7,Ampelos promontory,56°30',37°30',56.5,37.5
+5,2,31,1,"In the Myrtoon sea, islands, and cities of Amourgos: Arkesine",56°00',37°00',56.0,37.0
+5,2,31,2,Begialis,56°10',36°50',56.1667,36.8333
+5,2,31,3,Minuia,55°50',36°50',55.8333,36.8333
+5,2,31,4,city of Kos island,55°40',36°25',55.6667,36.4167
+5,2,31,5,city of Astypalaia island,55°40',36°25',55.6667,36.4167
+5,2,32,1,Islands in the Rhodian and Karpathian seas Syme island,56°40',35°40',56.6667,35.6667
+5,2,32,2,city of Kasos island,56°30',35°15',56.5,35.25
+5,2,33,1,Description of Karpathos: Thoantion promontory,57°00',35°20',57.0,35.3333
+5,2,33,2,Ephialtion promontory,57°20',35°20',57.3333,35.3333
+5,2,33,3,Poseidion city,57°20',35°25',57.3333,35.4167
+5,2,33,4,Description of Rhodes island: Panos promontory,58°00',35°55',58.0,35.9167
+5,2,33,5,Kameiros,58°20',35°15',58.3333,35.25
+5,2,33,6,Lindos,58°40',36°00',58.6667,36.0
+5,2,33,7,Ielyssos,58°20',36°00',58.3333,36.0
+5,3,1,1,"limit of Asia through the Masikytos mountain, as far as the sea at",61°50',36°30',61.8333,36.5
+5,3,2,1,Kaunos Kalinda,59°20',35°55',59.3333,35.9167
+5,3,2,2,Chydai or Lydai,59°40',35°55',59.6667,35.9167
+5,3,2,3,Karya,59°50',35°55',59.8333,35.9167
+5,3,2,4,Daidala place,60°00',35°55',60.0,35.9167
+5,3,2,5,Telmessos,60°10',35°55',60.1667,35.9167
+5,3,2,6,mouth of the Xanthos river,60°20',36°00',60.3333,36.0
+5,3,2,7,river sources,60°00',37°40',60.0,37.6667
+5,3,3,1,Patara,60°30',36°00',60.5,36.0
+5,3,3,2,Antiphellos,60°30',36°20',60.5,36.3333
+5,3,3,3,Andriake,61°00',36°20',61.0,36.3333
+5,3,3,4,mouth of the Limyros river,61°00',36°20',61.0,36.3333
+5,3,3,5,Apirai or Aperrai,61°10',36°25',61.1667,36.4167
+5,3,3,6,Hiera promontory,61°30',36°15',61.5,36.25
+5,3,3,7,Olympos city,61°40',36°15',61.6667,36.25
+5,3,3,8,Phaselis,61°50',36°25',61.8333,36.4167
+5,3,4,1,Kragos mountain midpoint,60°00',36°40',60.0,36.6667
+5,3,5,1,"The inland cities in Lykia, near Kragosmountain: Kydna",59°30',37°10',59.5,37.1667
+5,3,5,2,Symbra,59°40',36°50',59.6667,36.8333
+5,3,5,3,Oktapolis,59°35',36°35',59.5833,36.5833
+5,3,5,4,Komba,59°50',36°30',59.8333,36.5
+5,3,5,5,Sidyma,59°50',36°40',59.8333,36.6667
+5,3,5,6,Pinara,59°50',36°25',59.8333,36.4167
+5,3,5,7,Araxa,59°50',36°05',59.8333,36.0833
+5,3,5,8,Tlos,60°15',36°30',60.25,36.5
+5,3,5,9,Xanthos,60°15',36°10',60.25,36.1667
+5,3,6,1,near Masikytos mountain: Korydalla,60°15',36°50',60.25,36.8333
+5,3,6,2,Sagalassos,60°40',36°55',60.6667,36.9167
+5,3,6,3,Rodia,61°00',36°45',61.0,36.75
+5,3,6,4,Trebenda,61°10',37°15',61.1667,37.25
+5,3,6,5,Phellos,60°35',36°30',60.5833,36.5
+5,3,6,6,Myra,61°00',36°40',61.0,36.6667
+5,3,6,7,Limyra,61°05',36°35',61.0833,36.5833
+5,3,7,1,Of Milyas: Podalaia,60°00',37°30',60.0,37.5
+5,3,7,2,Nysa,60°00',37°15',60.0,37.25
+5,3,7,3,Choma,60°20',37°20',60.3333,37.3333
+5,3,7,4,Kondyka,60°40',37°10',60.6667,37.1667
+5,3,8,1,Of Kabalia Boubon,60°20',37°40',60.3333,37.6667
+5,3,8,2,Oineanda,61°00',37°40',61.0,37.6667
+5,3,8,3,Balboura,60°40',37°30',60.6667,37.5
+5,3,9,1,Islands off Lykia: Megiste,60°40',35°45',60.6667,35.75
+5,3,9,2,Dolichiste,61°15',35°45',61.25,35.75
+5,3,9,3,Chelidoniai lookouts,61°30',36°00',61.5,36.0
+5,4,1,1,limit of Asia indicated to another on this same parallel at,64°15',38°35',64.25,38.5833
+5,4,1,2,"this point to the shore of Pontos, at",65°10',43°10',65.1667,43.1667
+5,4,2,1,Kytoron city on the shore: Klimax village,61°10',43°50',61.1667,43.8333
+5,4,2,2,Teuthrania or Thymaina,61°30',44°00',61.5,44.0
+5,4,2,3,Karambis promontory,61°20',44°25',61.3333,44.4167
+5,4,2,4,Zephyrion,61°30',44°15',61.5,44.25
+5,4,2,5,Kallistratia,61°45',44°05',61.75,44.0833
+5,4,2,6,Abonou Teichos,62°00',44°00',62.0,44.0
+5,4,2,7,Kimolis,62°30',44°00',62.5,44.0
+5,4,2,8,Armene,62°55',43°55',62.9167,43.9167
+5,4,2,9,Stephane kome,63°55',43°50',63.9167,43.8333
+5,4,3,1,Sinope,63°50',44°00',63.8333,44.0
+5,4,3,2,Kyptasia,63°40',43°40',63.6667,43.6667
+5,4,3,3,mouth of the Zaliskos river,64°00',43°30',64.0,43.5
+5,4,3,4,Galoron,64°15',43°20',64.25,43.3333
+5,4,3,5,mouth of the Halys river,64°30',43°10',64.5,43.1667
+5,4,3,6,bend in the river,64°15',41°15',64.25,41.25
+5,4,3,7,Amisos,65°00',43°05',65.0,43.0833
+5,4,4,1,"The noteworthy mountains in Galatiaare the Ligas (or Gigas), midpoint",63°00',42°40',63.0,42.6667
+5,4,4,2,the eastern parts of the Didymosmountain,62°00',41°20',62.0,41.3333
+5,4,4,3,"the so-called hill of Kelainon, midpoint",62°30',39°30',62.5,39.5
+5,4,5,1,"Those in Paphlagonia control the coast, whose cities and komai inland are: Zageira",61°40',43°40',61.6667,43.6667
+5,4,5,2,Plegra,62°30',43°30',62.5,43.5
+5,4,5,3,Sakora,63°20',43°40',63.3333,43.6667
+5,4,5,4,Eloua (or Helouia),61°40',43°00',61.6667,43.0
+5,4,5,5,Tobata,62°20',43°00',62.3333,43.0
+5,4,5,6,Germanopolis,63°00',43°00',63.0,43.0
+5,4,5,7,Gelaka or Selka,63°40',43°15',63.6667,43.25
+5,4,5,8,Xoana or Zolka,63°15',43°15',63.25,43.25
+5,4,5,9,Dakasye,61°40',42°40',61.6667,42.6667
+5,4,5,10,Mosion,61°05',42°20',61.0833,42.3333
+5,4,6,1,Sakorsa,62°00',42°15',62.0,42.25
+5,4,6,2,Pompeiopolis,62°30',42°15',62.5,42.25
+5,4,6,3,Konika,62°45',42°30',62.75,42.5
+5,4,6,4,Andrapa or New Klaudiopolis,63°15',42°20',63.25,42.3333
+5,4,6,5,Sabanis,63°50',42°20',63.8333,42.3333
+5,4,6,6,Titoua,64°15',42°30',64.25,42.5
+5,4,6,7,Eusene,60°40',42°40',60.6667,42.6667
+5,4,7,1,"Inland of Paphlagonia toward the west are the Tolibostoi, with these cities: Germa or Thema colonia",61°30',42°00',61.5,42.0
+5,4,7,2,Pessinos,61°10',41°30',61.1667,41.5
+5,4,7,3,Ouindia,61°40',41°40',61.6667,41.6667
+5,4,7,4,Anaros or Andros,61°30',41°20',61.5,41.3333
+5,4,7,5,Tolastachora,61°15',40°55',61.25,40.9167
+5,4,7,6,Oueteston,62°20',40°40',62.3333,40.6667
+5,4,8,1,these toward the east are the Tektosagai with these cities: Ankyra metropolis,62°00',42°00',62.0,42.0
+5,4,8,2,Olenos,62°15',42°00',62.25,42.0
+5,4,8,3,Korbeountos,62°40',41°40',62.6667,41.6667
+5,4,8,4,Agrizama,62°00',41°30',62.0,41.5
+5,4,8,5,Ouinzela,62°30',41°20',62.5,41.3333
+5,4,8,6,Orosologia,63°00',41°25',63.0,41.4167
+5,4,8,7,Sarmalia,63°20',41°25',63.3333,41.4167
+5,4,8,8,Diktis,62°40',40°50',62.6667,40.8333
+5,4,8,9,Karima,63°00',40°40',63.0,40.6667
+5,4,8,10,Landosia,63°40',40°45',63.6667,40.75
+5,4,9,1,"Further east of there are the Trokmoi, with these cities: Taouion",63°55',41°40',63.9167,41.6667
+5,4,9,2,Laskoria,63°15',42°00',63.25,42.0
+5,4,9,3,Androsia,64°20',42°05',64.3333,42.0833
+5,4,9,4,Klaudioupolis,63°50',42°00',63.8333,42.0
+5,4,9,5,Karissa,64°40',41°40',64.6667,41.6667
+5,4,9,6,Phoubatina,64°10',41°30',64.1667,41.5
+5,4,9,7,Doudousa,63°50',41°20',63.8333,41.3333
+5,4,9,8,Saralos,64°30',41°20',64.5,41.3333
+5,4,9,9,Oukena,64°10',40°55',64.1667,40.9167
+5,4,9,10,Rastia,64°30',41°00',64.5,41.0
+5,4,10,1,"Below the above-mentioned peoples extend the Proserlimenitai adjoining them. Below these, the Byzenoi and part of Lykaonia, with the cities: Petenessos",62°15',40°30',62.25,40.5
+5,4,10,2,Ekdaumaua,63°20',40°25',63.3333,40.4167
+5,4,10,3,Seiouata,64°15',40°25',64.25,40.4167
+5,4,10,4,Ardistama,64°00',40°10',64.0,40.1667
+5,4,10,5,Kinna,63°20',40°00',63.3333,40.0
+5,4,10,6,Kongoustos,62°40',39°50',62.6667,39.8333
+5,4,10,7,Tetradion,63°00',39°30',63.0,39.5
+5,4,10,8,Laodikeia katakekaumene,63°40',39°40',63.6667,39.6667
+5,4,10,9,Ouasada,64°00',39°25',64.0,39.4167
+5,4,10,10,Perta,64°20',39°30',64.3333,39.5
+5,4,11,1,"below these to the west is a part of Pisidia, with cities Apollonia",62°00',39°00',62.0,39.0
+5,4,11,2,Antiocheia of Pisidia,62°30',39°00',62.5,39.0
+5,4,11,3,Amblada,61°50',38°50',61.8333,38.8333
+5,4,11,4,Neapolis,62°40',48°45',62.6667,48.75
+5,4,12,1,Eastward is Isauria with cities: Sauatra,64°20',39°15',64.3333,39.25
+5,4,12,2,Lystra,64°00',39°00',64.0,39.0
+5,4,12,3,Isaura,63°50',38°40',63.8333,38.6667
+5,4,12,4,Among these the Orondikoi people and cities: Misthion,63°00',39°15',63.0,39.25
+5,4,12,5,Pappa,63°20',38°55',63.3333,38.9167
+5,5,1,1,"limit point near Galatia to the Pamphylian sea, the limit point of this line at the sea is",63°50',36°45',63.8333,36.75
+5,5,2,1,"Phaselis, city of Lykia, the shores of Pamphylia: Olbia",62°00',36°55',62.0,36.9167
+5,5,2,2,Attaleia,62°15',36°30',62.25,36.5
+5,5,2,3,mouth of the river Katarraktes,62°15',36°35',62.25,36.5833
+5,5,2,4,Magydos,62°40',36°30',62.6667,36.5
+5,5,2,5,mouth of Kestros river,62°50',36°30',62.8333,36.5
+5,5,2,6,mouth of Eurymedon river,63°00',36°35',63.0,36.5833
+5,5,2,7,Side,63°05',36°40',63.0833,36.6667
+5,5,3,1,Coast of Kilikia Tracheia: Korakesion,63°35',36°40',63.5833,36.6667
+5,5,3,2,Syedra,63°50',36°45',63.8333,36.75
+5,5,4,1,"The cities in the interior, of the province of Pisidian Phrygia are: Seleukeia of Pisidia",62°00',38°30',62.0,38.5
+5,5,4,2,Antiocheia,62°30',38°30',62.5,38.5
+5,5,5,1,Old Beudos,61°30',38°10',61.5,38.1667
+5,5,5,2,Baris,61°50',38°25',61.8333,38.4167
+5,5,5,3,Konane,61°50',38°05',61.8333,38.0833
+5,5,5,4,Lysinia,61°15',38°15',61.25,38.25
+5,5,5,5,Kormasa,61°10',37°55',61.1667,37.9167
+5,5,6,1,Cities of Kabalia Kretopolis,61°15',37°30',61.25,37.5
+5,5,6,2,Pogla,61°40',37°40',61.6667,37.6667
+5,5,6,3,Menedemion,61°20',37°40',61.3333,37.6667
+5,5,6,4,Ouranopolis,61°40',37°20',61.6667,37.3333
+5,5,6,5,Pisinda,61°40',37°10',61.6667,37.1667
+5,5,6,6,Ariassos,62°05',37°10',62.0833,37.1667
+5,5,6,7,Milyas,62°30',37°25',62.5,37.4167
+5,5,6,8,Termessos,62°10',37°15',62.1667,37.25
+5,5,6,9,Korbasa,62°20',37°05',62.3333,37.0833
+5,5,7,1,Inland of Pamphylia: Perge,62°15',36°55',62.25,36.9167
+5,5,7,2,Silouon,62°20',36°50',62.3333,36.8333
+5,5,7,3,Aspendos,62°15',36°30',62.25,36.5
+5,5,8,1,Of Pisidia: Prostama,62°15',38°20',62.25,38.3333
+5,5,8,2,Adada,62°55',38°15',62.9167,38.25
+5,5,8,3,Olbasa,62°40',38°00',62.6667,38.0
+5,5,8,4,Dyrzela,63°10',38°20',63.1667,38.3333
+5,5,8,5,Orbanassa,63°20',38°00',63.3333,38.0
+5,5,8,6,Talbonda,63°45',38°00',63.75,38.0
+5,5,8,7,Kremna colonia,63°00',37°50',63.0,37.8333
+5,5,8,8,Kommakon,62°50',37°40',62.8333,37.6667
+5,5,8,9,Pednelissos,63°30',37°50',63.5,37.8333
+5,5,8,10,Ouinzela,63°15',37°30',63.25,37.5
+5,5,8,11,Selge,63°00',37°20',63.0,37.3333
+5,5,8,12,Inland towns of Kilikia Tracheia: Laerte,63°40',37°25',63.6667,37.4167
+5,5,8,13,Kasai,63°50',37°30',63.8333,37.5
+5,5,8,14,Lyrbe,63°45',37°05',63.75,37.0833
+5,5,8,15,Kolobrassos,63°20',37°10',63.3333,37.1667
+5,5,8,16,Kibyra or Kaibyra,63°15',36°45',63.25,36.75
+5,5,8,17,Islands lying off Pamphylia: Krambousa,62°30',35°50',62.5,35.8333
+5,5,8,18,Apelbousa,63°15',35°50',63.25,35.8333
+5,6,1,1,Pontos to the limit point at,64°00',37°40',64.0,37.6667
+5,6,1,2,On the south by Kilikia along the line extending through the Tauros mountains as far as the Amanos mountains to a limit point at,70°00',37°20',70.0,37.3333
+5,6,1,3,"by a part of Syria through the Amanosmountains to the Euphrates river, the location of which is",71°20',38°00',71.3333,38.0
+5,6,1,4,"north, it is then deflected from the east, the location of which is",71°00',42°30',71.0,42.5
+5,6,1,5,along the line of the Moschikos mountains and to the terminal,73°00',44°30',73.0,44.5
+5,6,1,6,city Amisos of Galatia to the terminus which is located in,72°20',44°45',72.3333,44.75
+5,6,2,1,"The coastal part of this section is described as follows: Of the Leukosyroi, Ankon of the Leukosyrians",65°40',43°20',65.6667,43.3333
+5,6,2,2,mouth of the Iris river,66°00',43°00',66.0,43.0
+5,6,2,3,First bend of the river,67°15',41°20',67.25,41.3333
+5,6,2,4,Second bend of the river,66°00',41°20',66.0,41.3333
+5,6,2,5,river sources,68°00',41°00',68.0,41.0
+5,6,3,1,"Of the Galatian Pontos, the plain by Phanagoria: Themiskyra",66°20',43°05',66.3333,43.0833
+5,6,3,2,Herakles promontory,66°50',43°20',66.8333,43.3333
+5,6,4,1,Of Polemonian Pontos: mouth of the Thermodon river,67°00',43°15',67.0,43.25
+5,6,4,2,river sources,68°30',42°15',68.5,42.25
+5,6,4,3,Polemonion,67°15',43°05',67.25,43.0833
+5,6,4,4,Iasonion promontory,67°30',43°15',67.5,43.25
+5,6,4,5,Kyteoron,67°35',43°15',67.5833,43.25
+5,6,4,6,Hermonassa,67°50',43°15',67.8333,43.25
+5,6,5,1,"Kappadokian Pontos, near Sidene: Ischopolis",68°20',43°20',68.3333,43.3333
+5,6,5,2,Kerasous,68°50',43°20',68.8333,43.3333
+5,6,5,3,Pharnakia,69°20',43°05',69.3333,43.0833
+5,6,5,4,Hyssou harbor,70°45',43°20',70.75,43.3333
+5,6,5,5,Trapezous,70°50',43°05',70.8333,43.0833
+5,6,6,1,near the Kissians: Opious (or Pityousa),71°00',43°25',71.0,43.4167
+5,6,6,2,Rizous harbor,71°10',43°35',71.1667,43.5833
+5,6,6,3,Athenon promontory,71°00',43°45',71.0,43.75
+5,6,6,4,Chordybe or Chordyle,71°20',43°45',71.3333,43.75
+5,6,6,5,Morthoula,71°40',43°45',71.6667,43.75
+5,6,6,6,mouth of the Arkadis river,72°00',44°00',72.0,44.0
+5,6,6,7,Xyline,72°05',44°10',72.0833,44.1667
+5,6,6,8,mouth of the Kissa river,72°10',44°20',72.1667,44.3333
+5,6,7,1,Apsorros,72°20',44°30',72.3333,44.5
+5,6,7,2,mouth of the Apsorros river,72°20',44°40',72.3333,44.6667
+5,6,7,3,where it splits into the Glaukos river and the Lykos,72°30',43°45',72.5,43.75
+5,6,7,4,sources of the Glaukos river,72°45',43°00',72.75,43.0
+5,6,7,5,sources of the Lykos,71°15',43°00',71.25,43.0
+5,6,7,6,Sebastopolis,72°20',44°45',72.3333,44.75
+5,6,8,1,"Noteworthy mountains running through Kappadokia are the Argaion, the limit points of which are",65°30',40°30',65.5,40.5
+5,6,8,2,,66°00',39°40',66.0,39.6667
+5,6,8,3,which the Melas river flows to meet the river Euphrates at,71°00',39°20',71.0,39.3333
+5,6,8,4,Taurosmountain to the Euphrates river in a gap of which the section toward Tauros is at,65°30',38°30',65.5,38.5
+5,6,8,5,,67°15',39°15',67.25,39.25
+5,6,8,6,the part by the Euphrates is at,67°30',39°40',67.5,39.6667
+5,6,8,7,,71°30',41°15',71.5,41.25
+5,6,8,8,Skordiskos mountain with limit points at,68°00',41°00',68.0,41.0
+5,6,8,9,,69°00',42°30',69.0,42.5
+5,6,9,1,Leukosyrianson the borders of Galatia: In the interior of Galatian Pontos: Boinasa,65°30',42°45',65.5,42.75
+5,6,9,2,Sebastopolis the other,66°00',41°20',66.0,41.3333
+5,6,9,3,Tebenda,66°40',42°10',66.6667,42.1667
+5,6,9,4,Amaseia,65°30',42°00',65.5,42.0
+5,6,9,5,Choloe or Chologi,66°00',42°00',66.0,42.0
+5,6,9,6,Etonia,65°00',41°30',65.0,41.5
+5,6,9,7,Piala,65°45',41°40',65.75,41.6667
+5,6,9,8,Pleumamis or Pleumaris,65°15',41°20',65.25,41.3333
+5,6,9,9,Pida,66°40',41°45',66.6667,41.75
+5,6,9,10,Sermouga,66°20',41°25',66.3333,41.4167
+5,6,9,11,Komana Pontike,67°00',41°30',67.0,41.5
+5,6,10,1,In the interior of Polemonian Pontos: Gozalene or Gazaline,66°30',42°40',66.5,42.6667
+5,6,10,2,Eudiphos,67°20',42°10',67.3333,42.1667
+5,6,10,3,Karouanis,67°40',42°10',67.6667,42.1667
+5,6,10,4,Barbanissa (or Sarbanissa),68°00',42°20',68.0,42.3333
+5,6,10,5,Ablata,68°20',42°00',68.3333,42.0
+5,6,10,6,Neokaisareia,67°20',41°50',67.3333,41.8333
+5,6,10,7,Saunaria,68°00',41°45',68.0,41.75
+5,6,10,8,Megaloula,67°40',41°40',67.6667,41.6667
+5,6,10,9,Zela,67°30',41°20',67.5,41.3333
+5,6,10,10,Danati or Danae,68°00',41°00',68.0,41.0
+5,6,10,11,Sebasteia,68°00',40°40',68.0,40.6667
+5,6,10,12,Mesorome,68°30',41°45',68.5,41.75
+5,6,10,13,Sabalia,68°20',41°40',68.3333,41.6667
+5,6,10,14,Megalossos,68°10',41°20',68.1667,41.3333
+5,6,11,1,In Kappadokian Pontos inland Zephyrion,68°20',43°00',68.3333,43.0
+5,6,11,2,Aza,69°00',42°30',69.0,42.5
+5,6,11,3,Kokalia,69°30',42°45',69.5,42.75
+5,6,11,4,Kordyle,70°00',43°00',70.0,43.0
+5,6,11,5,Trapezousai,70°30',43°05',70.5,43.0833
+5,6,11,6,Asiba,71°20',43°15',71.3333,43.25
+5,6,11,7,Mardara,71°30',43°40',71.5,43.6667
+5,6,11,8,Kamouresarbon,72°00',43°30',72.0,43.5
+5,6,12,1,In Chamane (or Chamanene) prefecture Zama,65°40',40°45',65.6667,40.75
+5,6,12,2,Andraka,65°00',40°20',65.0,40.3333
+5,6,12,3,Gadasena,65°45',40°55',65.75,40.9167
+5,6,12,4,Ouadata,65°20',40°00',65.3333,40.0
+5,6,12,5,Sarouena,65°40',40°30',65.6667,40.5
+5,6,12,6,Odogra,66°00',40°20',66.0,40.3333
+5,6,13,1,In Sargarausena (or Sargabrasene) prefecture Phiara,67°00',41°00',67.0,41.0
+5,6,13,2,Sadagena,66°20',40°45',66.3333,40.75
+5,6,13,3,Gauraina,67°00',40°30',67.0,40.5
+5,6,13,4,Sabalassos,66°30',40°25',66.5,40.4167
+5,6,13,5,Ariarathira,67°20',40°45',67.3333,40.75
+5,6,13,6,Maroga,67°30',40°30',67.5,40.5
+5,6,14,1,In Garsaouria prefecture Phreata,65°00',40°00',65.0,40.0
+5,6,14,2,Archelais,64°45',39°40',64.75,39.6667
+5,6,14,3,Nanessos,65°30',39°45',65.5,39.75
+5,6,14,4,Diokaisareia,65°30',39°30',65.5,39.5
+5,6,14,5,Salambria or Sarabraka,65°15',39°20',65.25,39.3333
+5,6,14,6,Tetrapyrgia,60°00',39°20',60.0,39.3333
+5,6,15,1,In Kilikia prefecture Moustilia,66°15',40°20',66.25,40.3333
+5,6,15,2,Sioua (or Seioua),66°30',40°05',66.5,40.0833
+5,6,15,3,Kampai,66°15',39°45',66.25,39.75
+5,6,15,4,Maza or Mazaka and Kaisareia,66°30',39°30',66.5,39.5
+5,6,15,5,Kyzistra,67°00',39°20',67.0,39.3333
+5,6,15,6,Ebagena or Sebagena,67°10',40°15',67.1667,40.25
+5,6,15,7,Archalla,67°30',40°00',67.5,40.0
+5,6,15,8,Sobara,67°10',39°40',67.1667,39.6667
+5,6,16,1,In Lykaonia Adopissos,64°40',39°15',64.6667,39.25
+5,6,16,2,Kanna,64°45',39°00',64.75,39.0
+5,6,16,3,Ikonion,64°30',38°45',64.5,38.75
+5,6,16,4,Paralais,64°45',38°45',64.75,38.75
+5,6,16,5,Korna,65°00',38°25',65.0,38.4167
+5,6,16,6,Chasbia,65°10',38°45',65.1667,38.75
+5,6,16,7,Barattha,65°30',38°30',65.5,38.5
+5,6,17,1,In Antiochiane Derbe,64°20',38°15',64.3333,38.25
+5,6,17,2,Laranda,64°45',38°05',64.75,38.0833
+5,6,17,3,Olbasa,65°20',38°10',65.3333,38.1667
+5,6,17,4,Mousbanda,64°50',37°50',64.8333,37.8333
+5,6,17,5,In Tyanis prefecture Dratai,65°30',39°00',65.5,39.0
+5,6,17,6,Tyana,66°00',38°55',66.0,38.9167
+5,6,17,7,Bazis,66°15',38°55',66.25,38.9167
+5,6,17,8,Siala,66°30',38°55',66.5,38.9167
