@@ -16,8 +16,9 @@ Leaflet/OpenStreetMap page with a marker for each of the ~6,400 plottable
 references, clustered so the browser stays responsive. Coastal points are
 drawn larger than other categories; click one for its name, category, map
 ID, its position within its reconstructed coastline (segment #, position
-#) and/or river line, and both its ancient and modernized coordinates -
-useful for auditing why two particular points ended up connected.
+#) and/or river line and/or mountain-range line, and both its ancient and
+modernized coordinates - useful for auditing why two particular points
+ended up connected.
 
 ## Point classification & coastlines
 
@@ -332,6 +333,63 @@ meaning (all of them are drawn the same size) - it's a stylistic
 placeholder for "this is an island we don't have a shape for," not a
 claim about the island's real extent.
 
+## Mountain-range lines
+
+**Mountain ranges** are drawn as thick brown lines (`build_mountain_lines`
+in `ptolemy_map.py`), the same "categorization + sequence" approach as
+river lines. A range in the catalogue is never a continuous walk either -
+Ptolemy cites its own named ends ("(W-Ende)"/"(O-Ende)", or "(N-Ende)"/
+"(S-Ende)", "(SW-Ende)"/"(NO-Ende)", etc.) and sometimes a midpoint
+("(Mitte)"/"(Mittelpunkt)"), each its own catalogue entry - so
+`_mountain_base_name()` groups points by the range's own name with its
+position marker cut off (everything from the first `(`, ` bzw.`, or ` / `
+onward - there's too much free-form variety in how a position is phrased
+to enumerate, unlike a river's fixed set of course words), the same shape
+as `_river_base_name()`. The two largest ranges (Kasia, Emoda's
+neighbour in Book 6) are each cited as two separately-numbered halves,
+"(westl. Teil, ...)"/"(östl. Teil, ...)" ("western part"/"eastern part") -
+recognized and kept rather than stripped, so the two halves stay in their
+own groups instead of merging into one line that jumps across the gap
+between them.
+
+Grouped by `book` as well as name (mirroring `_RIVER_LINE_MAX_GAP_DEG`),
+but with a looser 20° gap cap and no evidence it's needed for name-collision
+safety the way the river cap is: every mountain base name checked, even the
+widest real span (18.4° for Anniba-Gebirge in India), turned out to be one
+range's own genuine end-to-end extent - unlike rivers, no case of two
+*different* ranges sharing a bare name inside one book turned up in this
+catalogue. The same re-citation dedup as river lines applies too: a range's
+end is sometimes re-cited verbatim where it's later reused as a boundary
+marker between two book.map sections (Buzara-Gebirge, Koronos-Gebirge, and
+Mondgebirge's - the classical "Mountains of the Moon," Ptolemy's legendary
+source of the Nile - O-Ende/W-Ende all reappear this way), collapsed the
+same way a river's revisited point is.
+
+Building this surfaced a real classification bug, independent of the
+mountain-line feature itself: 31 river source/mouth/confluence points
+across Book 7 (India) - "Namenloser Fluss (Quelle am Arbita-Gebirge)"
+("unnamed river, source at the Arbita mountains"), "Narmades-Quellen im
+Vindion-Gebirge" ("...source in the Vindion mountains") - were sitting in
+`mountain` instead of `river`, because the classifier's name-anchored
+`_MOUNTAIN_NAME_RE` tier ("-Gebirge"/"-berg", meant to always win - see the
+Alps false-positive fix above) matched the mountain's name wherever it
+appeared, even as a river point's *location* rather than its own identity.
+Distinguishing this case from a genuine range point that also happens to
+match a river-course keyword (~50 "X-Gebirge (Mitte)" entries match
+`_RIVER_COURSE_RE`'s "(mitte)" too, and must *not* flip) needed a more
+specific signal than "is this also river-like": a new `_MOUNTAIN_LOCATION_REF_RE`
+checks whether the range name sits as the object of "am"/"im"/"vom"/"von"/
+"zum" ("at/in/from/to the ... mountains") rather than as the point's own
+leading name, and only then does a river keyword win over `_MOUNTAIN_NAME_RE`.
+Fixing this also *repaired* several river lines that these points should
+have belonged to (Narmades, Nanagunas, Pseudostomos, Baris, Solen, Tynas,
+and others' source points) but couldn't reach while miscategorized as
+mountains: 103 → 111 river lines, 263 → 281 points-in-a-line.
+
+This covers 56 of 209 `mountain` points (a single-citation range - most of
+the catalogue's ~150 named peaks/ranges only ever appear once, with no
+second point to connect to - still plots as an individual point, no line).
+
 ## Cross-checking against topostext.org (`topostext/`)
 
 Every classification and stitching decision so far has been verified
@@ -519,6 +577,15 @@ catalogue and writes the result as data, in
   outline (if any) a point belongs to, materialized from
   `build_island_lines()` and the manually-verified `_ISLAND_LINE_GROUPS`
   allow-list.
+- `mountain_feature_id` / `mountain_sequence_in_feature` - the same, but
+  for a mountain range's own line (if any) a point belongs to, from
+  `build_mountain_lines()`. A range is catalogued the same way a river's
+  course is - its own named ends ("(W-Ende)"/"(O-Ende)", "(N-Ende)"/
+  "(S-Ende)", ...) and sometimes a midpoint ("(Mitte)"), each its own
+  entry - so `_mountain_base_name()` groups by the range's own name with
+  its position marker cut off, the same shape as `_river_base_name()`,
+  reusing the same re-citation dedup and a book-scoped gap cap (drawn as
+  thick brown lines - see "Mountain-range lines" below).
 
 `data/ptolemy_catalogue_annotated.csv` is the new default input
 (`DEFAULT_INPUT` in `ptolemy_map.py`), for both `ptolemy_map.py` and
@@ -545,17 +612,18 @@ python3 annotate_dataset.py --input data/ptolemy_catalogue_stueckelberger.xlsx -
 - `data/ptolemy_catalogue_annotated.csv` (default) — the compiled dataset
   described above: every plottable reference from the full catalogue
   (6,372 rows), already classified and, where applicable, already assigned
-  to a coastline feature and/or river line and/or island outline and draw
-  position. Columns: `ref_id, name, category, book, tabula,
+  to a coastline feature and/or river line and/or island outline and/or
+  mountain-range line and draw position. Columns: `ref_id, name, category, book, tabula,
   modern_location, recension, lon_ptolemy, lat_ptolemy,
   naming_observation, feature_id, sequence_in_feature,
   feature_closes_loop, river_feature_id, river_sequence_in_feature,
   island_feature_id, island_sequence_in_feature,
-  island_feature_closes_loop`. Regenerate it with `annotate_dataset.py`
+  island_feature_closes_loop, mountain_feature_id,
+  mountain_sequence_in_feature`. Regenerate it with `annotate_dataset.py`
   (above) after any change to the classifier or any line-building
   algorithm - don't hand-edit it except to correct a specific row's
   `category`/`naming_observation`/`feature_*`/`river_feature_*`/
-  `island_feature_*` fields.
+  `island_feature_*`/`mountain_feature_*` fields.
 - `data/ptolemy_catalogue_stueckelberger.xlsx` (compile source) —
   10,049 rows covering all 27 regional maps of the Geographica (10 Europe, 12
   Asia, 4 Africa + Ireland), columns:

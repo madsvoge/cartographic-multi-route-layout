@@ -23,7 +23,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from ptolemy_map import CATEGORIES, DEFAULT_INPUT, get_coastlines, get_island_lines, get_river_lines, load_inputs
+from ptolemy_map import CATEGORIES, DEFAULT_INPUT, get_coastlines, get_island_lines, get_mountain_lines, get_river_lines, load_inputs
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 
@@ -41,6 +41,7 @@ OCEAN = "#dbe6ee"
 BORDER = "#c3c2b7"
 TEXT_PRIMARY = "#0b0b0b"
 TEXT_SECONDARY = "#52514e"
+MOUNTAIN_LINE_COLOR = "#6b4226"
 
 
 def _in_bbox(lon: float, lat: float, bbox: tuple[float, float, float, float]) -> bool:
@@ -112,6 +113,17 @@ def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False)
         ax.plot(xs, ys, color=CATEGORIES["island"]["color"], linewidth=1.8, alpha=0.9, zorder=4)
         island_lines_drawn += 1
 
+    mountain_lines = get_mountain_lines(refs)
+    mountain_lines_drawn = 0
+    for line in mountain_lines:
+        line_in_view = [r for r in line if _in_bbox(r.lon_modern, r.lat_modern, bbox)]
+        if len(line_in_view) < 2:
+            continue
+        coords = [(r.lon_modern, r.lat_modern) for r in line]
+        xs, ys = zip(*coords)
+        ax.plot(xs, ys, color=MOUNTAIN_LINE_COLOR, linewidth=3.0, alpha=0.85, zorder=3, solid_capstyle="round")
+        mountain_lines_drawn += 1
+
     # No known coastal walk for these - a single citation, or one entry in
     # a list of several different islands (see _ISLAND_LINE_GROUPS). A real
     # cartographer working from just one reported position wouldn't have
@@ -171,7 +183,7 @@ def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False)
         0.925,
         f"{len(in_view)} of {len(refs)} catalogue references shown "
         f"({coastline_segments_drawn} coastline segments, {river_lines_drawn} river lines, "
-        f"{island_lines_drawn} island outlines) "
+        f"{island_lines_drawn} island outlines, {mountain_lines_drawn} mountain-range lines) "
         "at modernized (Ferro-offset) coordinates",
         fontsize=11.5,
         color=TEXT_SECONDARY,
@@ -191,7 +203,8 @@ def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False)
     fig.savefig(output, facecolor=fig.get_facecolor())
     print(
         f"plotted {len(in_view)} reference(s), {coastline_segments_drawn} coastline segments, "
-        f"{river_lines_drawn} river lines, {island_lines_drawn} island outlines -> {output}"
+        f"{river_lines_drawn} river lines, {island_lines_drawn} island outlines, "
+        f"{mountain_lines_drawn} mountain-range lines -> {output}"
     )
     return len(in_view)
 

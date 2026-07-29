@@ -50,6 +50,7 @@ from pathlib import Path
 from ptolemy_map import (
     assign_coastline_features,
     assign_island_features,
+    assign_mountain_features,
     assign_river_features,
     load_xlsx,
     write_annotated_csv,
@@ -79,6 +80,7 @@ def main(argv: list[str] | None = None) -> int:
     assign_coastline_features(plausible)
     assign_river_features(plausible)
     assign_island_features(plausible)
+    assign_mountain_features(plausible)
     write_annotated_csv(plausible, args.output)
 
     categories = Counter(r.category for r in plausible)
@@ -88,11 +90,14 @@ def main(argv: list[str] | None = None) -> int:
     in_river_feature = sum(1 for r in plausible if r.river_feature_id)
     island_features = {r.island_feature_id for r in plausible if r.island_feature_id}
     in_island_feature = sum(1 for r in plausible if r.island_feature_id)
+    mountain_features = {r.mountain_feature_id for r in plausible if r.mountain_feature_id}
+    in_mountain_feature = sum(1 for r in plausible if r.mountain_feature_id)
     print(f"wrote {len(plausible)} references -> {args.output}")
     print(f"categories: {dict(categories)}")
     print(f"{len(features)} coastline features, {in_feature} points assigned to one")
     print(f"{len(river_features)} river lines, {in_river_feature} points assigned to one")
     print(f"{len(island_features)} island lines, {in_island_feature} points assigned to one")
+    print(f"{len(mountain_features)} mountain-range lines, {in_mountain_feature} points assigned to one")
     return 0
 
 

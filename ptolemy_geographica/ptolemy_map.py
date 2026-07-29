@@ -166,6 +166,20 @@ _ESTUARY_RE = re.compile(r"ästuar", re.IGNORECASE)
 # "-berg" suffix of its own.
 _MOUNTAIN_NAME_RE = re.compile(r"gebirge|-berg\b|^berg\b|\bcalpe\b", re.IGNORECASE)
 _ALPS_BAREWORD_RE = re.compile(r"\balpes\b|\balpen\b", re.IGNORECASE)
+# A third, more specific case of the same problem the two tiers above guard
+# against: a river's source/mouth/confluence point routinely names the
+# mountain range it rises from or passes as its *location*, not its own
+# identity - "Namenloser Fluss (Quelle am Arbita-Gebirge)" ("unnamed river,
+# source at the Arbita mountains"), "Narmades-Quellen im Vindion-Gebirge"
+# ("...source in the Vindion mountains"). Unlike the bare "Alpes"/"Alpen"
+# case, these carry a full "-Gebirge" suffix and would otherwise win even
+# the strong, name-anchored tier above, mis-plotting 31 river points as
+# mountains across Book 7 (India). Distinguished from a genuine range point
+# like "Marianum-Gebirge (Mitte)" (which also matches a river-course keyword
+# via "(Mitte)"/"(Biegung)" and must NOT be reclassified) by *where* the
+# range name sits: as the object of "am"/"im"/"vom"/"von"/"zum" ("at/in/
+# from/to the ... mountains") rather than as the point's own leading name.
+_MOUNTAIN_LOCATION_REF_RE = re.compile(r"\b(?:am|im|vom|von|zum)\s+[\w\-\s]*?(?:gebirge|berg)\b", re.IGNORECASE)
 _ISLAND_RE = re.compile(r"\binsel\b|inseln", re.IGNORECASE)
 # A name ending in "(N)" - "Kassiteriden (10)", "Pityussae (2)" - denotes an
 # island group given as a single count-labelled entry, a standard
@@ -311,9 +325,9 @@ def _classify_locality(
         # gap between Spain's Biscay coast and France's Atlantic coast that
         # this cape would otherwise have bridged.
         return "coast", "starts with 'Kap' (cape) - coastal regardless of any mountain-range aside"
-    if _MOUNTAIN_NAME_RE.search(name):
-        return "mountain", "matches mountain-range name pattern (Gebirge/-berg/Calpe)"
     is_river_like = _RIVERFEAT_RE.search(name) or _RIVER_COURSE_RE.search(name) or _MOUTH_RE.search(name)
+    if _MOUNTAIN_NAME_RE.search(name) and not (is_river_like and _MOUNTAIN_LOCATION_REF_RE.search(name)):
+        return "mountain", "matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location"
     if _ALPS_BAREWORD_RE.search(name) and not is_river_like:
         return "mountain", "matches 'Alpes'/'Alpen' (bare, not also a river-course/source/mouth pattern)"
     if force_noncoastal:
@@ -375,6 +389,8 @@ class Reference:
     island_feature_id: str = ""  # which drawn island outline this point belongs to, once resolved (see _ISLAND_LINE_GROUPS)
     island_sequence_in_feature: int = -1  # draw order within island_feature_id, once resolved
     island_feature_closes_loop: bool = False  # if true, after the last point re-connect to the first
+    mountain_feature_id: str = ""  # which drawn mountain-range line this point belongs to, once resolved (see build_mountain_lines)
+    mountain_sequence_in_feature: int = -1  # draw order within mountain_feature_id, once resolved
 
     @property
     def lon_modern(self) -> float:
@@ -449,6 +465,8 @@ _ANNOTATED_CSV_FIELDS = [
     "island_feature_id",
     "island_sequence_in_feature",
     "island_feature_closes_loop",
+    "mountain_feature_id",
+    "mountain_sequence_in_feature",
 ]
 
 
@@ -482,6 +500,8 @@ def write_annotated_csv(refs: list[Reference], path: Path) -> None:
                     "island_feature_id": ref.island_feature_id,
                     "island_sequence_in_feature": ref.island_sequence_in_feature if ref.island_feature_id else "",
                     "island_feature_closes_loop": "1" if ref.island_feature_closes_loop else "",
+                    "mountain_feature_id": ref.mountain_feature_id,
+                    "mountain_sequence_in_feature": ref.mountain_sequence_in_feature if ref.mountain_feature_id else "",
                 }
             )
 
@@ -519,6 +539,10 @@ def load_annotated_csv(path: Path) -> list[Reference]:
                     if row.get("island_sequence_in_feature")
                     else -1,
                     island_feature_closes_loop=row.get("island_feature_closes_loop") == "1",
+                    mountain_feature_id=row.get("mountain_feature_id", ""),
+                    mountain_sequence_in_feature=int(row["mountain_sequence_in_feature"])
+                    if row.get("mountain_sequence_in_feature")
+                    else -1,
                 )
             )
     return refs
@@ -1007,6 +1031,9 @@ def get_coastlines(refs: list[Reference]) -> list[list[Reference]]:
 # Categories that can be a step along a drawn river line.
 _RIVER_LINE_CATEGORIES = ("river", "river_mouth")
 
+# The only category that can be a step along a drawn mountain-range line.
+_MOUNTAIN_LINE_CATEGORIES = ("mountain",)
+
 # Strips a river-course/mouth suffix off a name to get the name shared by
 # every point along one river's course - "Danuvius (Einmündung des Savus)"
 # and "Danuvius-Quellen" both reduce to "Danuvius". Matched as a suffix
@@ -1151,6 +1178,135 @@ def get_river_lines(refs: list[Reference]) -> list[list[Reference]]:
     if any(r.river_feature_id for r in refs):
         return build_river_lines_from_features(refs)
     return build_river_lines(refs)
+
+
+# A mountain range is catalogued the same way a river's course is: its own
+# named ends ("(W-Ende)"/"(O-Ende)", or "(N-Ende)"/"(S-Ende)" etc.) and
+# sometimes a midpoint ("(Mitte)"/"(Mittelpunkt)"), each its own entry -
+# never a continuous walk the way a shoreline is. Grouped by book as well
+# as name for the same reason a river line is (see _RIVER_LINE_MAX_GAP_DEG)
+# - but unlike rivers, no case of two *different* ranges sharing a base
+# name within one book was found in this catalogue (every W-Ende/O-Ende
+# pair checked, even the widest at 18.4 degrees for Anniba-Gebirge in
+# India, is a real range's own extent), so the gap cap here only needs to
+# rule out a wildly implausible jump, not a genuine name collision.
+_MOUNTAIN_LINE_MAX_GAP_DEG = 20.0
+_MOUNTAIN_LINE_COLOR = "#6b4226"
+
+# The two largest ranges in the catalogue (Kasia, spanning Book 6 maps
+# 6.15/6.16) are each cited as two separately-numbered halves - "(westl.
+# Teil, ...)" and "(östl. Teil, ...)" - rather than one continuous range.
+# Recognized and kept (not stripped like a plain position marker) so the
+# two halves stay in their own groups instead of merging into one line
+# that would jump across the gap between them.
+_MOUNTAIN_PART_RE = re.compile(r"\((westl\.|östl\.)\s*teil\s*,\s*[^)]*\)", re.IGNORECASE)
+_MOUNTAIN_TOKEN_RE = re.compile(r"-gebirge|-berg\b|\bgebirge\b", re.IGNORECASE)
+
+
+def _mountain_base_name(name: str) -> str:
+    """The name shared by every point along one mountain range's extent,
+    with its position marker and any trailing alias stripped - the range
+    counterpart of _river_base_name. Rather than enumerate every position
+    phrasing the catalogue uses ("(Mitte)", "(W-Ende)", "(nördliches
+    Grenzzeichen)", "(W-Ende am Euphrat)", "(O-Ende) bzw. Serisches
+    Gebirge", ...), cut at the *first* parenthesis/alias marker after the
+    range's own name - whatever position or alternate-name detail follows
+    carries no grouping identity of its own. A leading descriptive aside
+    naming something else first ("Heiligtum der Venus, Pyrene-Gebirge
+    (SO-Ende)") is reduced to just the comma-segment that actually names a
+    range, first."""
+    name = _MOUNTAIN_PART_RE.sub(lambda m: f" [{m.group(1)} Teil]", name)
+    head = name.split("(", 1)[0]
+    if "," in head:
+        parts = [p.strip() for p in name.split(",", 1)]
+        if _MOUNTAIN_TOKEN_RE.search(parts[-1]):
+            name = parts[-1].strip()
+    cut_at = [i for i in (name.find(" bzw."), name.find(" / "), name.find("(")) if i != -1]
+    if cut_at:
+        name = name[: min(cut_at)]
+    return name.strip().replace("[", "(").replace("]", ")")
+
+
+def build_mountain_lines(refs: list[Reference]) -> list[list[Reference]]:
+    """Connect a mountain range's own points (ends, midpoint) into a line
+    tracing its extent, in catalogue order - build_river_lines()'s approach
+    applied to mountains instead of rivers, including the same re-citation
+    dedup (Ptolemy re-cites an end already given once a range reappears as
+    a boundary marker between two later book.map sections, e.g. Buzara-
+    Gebirge's O-Ende, Koronos-Gebirge's O-Ende, Emoda-Gebirge's O-Ende) and
+    the same book-scoped, gap-capped grouping to avoid trusting a bare
+    range name across unrelated continents."""
+
+    def sort_key(ref: Reference) -> tuple:
+        return tuple(int(p) if p.isdigit() else p for p in ref.ref_id.split("."))
+
+    groups: dict[tuple[str, str, str], list[Reference]] = {}
+    for ref in refs:
+        if ref.category not in _MOUNTAIN_LINE_CATEGORIES or not ref.ref_id or not ref.is_plausible():
+            continue
+        base = _mountain_base_name(ref.name)
+        if not base:
+            continue
+        groups.setdefault((ref.source, ref.book, base), []).append(ref)
+
+    lines: list[list[Reference]] = []
+    for items in groups.values():
+        items.sort(key=sort_key)
+        deduped: list[Reference] = []
+        for item in items:
+            if any(_ref_dist(item, kept) <= _SAME_POINT_TOL_DEG for kept in deduped):
+                continue
+            deduped.append(item)
+        items = deduped
+        if len(items) < 2:
+            continue
+        run = [items[0]]
+        for prev, cur in zip(items, items[1:]):
+            if _ref_dist(prev, cur) > _MOUNTAIN_LINE_MAX_GAP_DEG:
+                if len(run) >= 2:
+                    lines.append(run)
+                run = [cur]
+            else:
+                run.append(cur)
+        if len(run) >= 2:
+            lines.append(run)
+    return lines
+
+
+def assign_mountain_features(refs: list[Reference]) -> None:
+    """Materialize build_mountain_lines()'s output as data, the same way
+    assign_river_features() does."""
+    lines = build_mountain_lines(refs)
+    for line_idx, points in enumerate(lines):
+        feature_id = f"mountain_{line_idx:03d}_{_mountain_base_name(points[0].name)}"
+        for position, ref in enumerate(points):
+            ref.mountain_feature_id = feature_id
+            ref.mountain_sequence_in_feature = position
+
+
+def build_mountain_lines_from_features(refs: list[Reference]) -> list[list[Reference]]:
+    """The trivial counterpart to build_mountain_lines(): group by
+    mountain_feature_id, sort by mountain_sequence_in_feature."""
+    groups: dict[str, list[Reference]] = {}
+    for ref in refs:
+        if not ref.mountain_feature_id:
+            continue
+        groups.setdefault(ref.mountain_feature_id, []).append(ref)
+
+    lines: list[list[Reference]] = []
+    for points in groups.values():
+        points.sort(key=lambda r: r.mountain_sequence_in_feature)
+        lines.append(points)
+    return lines
+
+
+def get_mountain_lines(refs: list[Reference]) -> list[list[Reference]]:
+    """Trivial reconstruction if the dataset already carries resolved
+    mountain_feature_id/mountain_sequence_in_feature, falling back to
+    build_mountain_lines() otherwise - mirrors get_river_lines()."""
+    if any(r.mountain_feature_id for r in refs):
+        return build_mountain_lines_from_features(refs)
+    return build_mountain_lines(refs)
 
 
 def _island_line_group(ref: Reference) -> str | None:
@@ -1391,6 +1547,18 @@ def build_map(
             coords = [(r.lat_modern, r.lon_modern) for r in line]
             folium.PolyLine(coords, color=CATEGORIES["island"]["color"], weight=3, opacity=0.85).add_to(island_layer)
 
+    mountain_lines = get_mountain_lines(plausible)
+    mountain_position: dict[str, tuple[int, int]] = {}
+    for line_idx, line in enumerate(mountain_lines):
+        for i, ref in enumerate(line):
+            mountain_position.setdefault(ref.ref_id, (line_idx, i))
+
+    if mountain_lines:
+        mountain_layer = folium.FeatureGroup(name=f"Mountain ranges ({len(mountain_lines)} lines)").add_to(fmap)
+        for line in mountain_lines:
+            coords = [(r.lat_modern, r.lon_modern) for r in line]
+            folium.PolyLine(coords, color=_MOUNTAIN_LINE_COLOR, weight=4, opacity=0.85).add_to(mountain_layer)
+
     clusters = {
         cat: MarkerCluster(name=f"{info['label']} ({sum(1 for r in plausible if r.category == cat)})").add_to(fmap)
         for cat, info in CATEGORIES.items()
@@ -1416,6 +1584,10 @@ def build_map(
             island_idx, island_pos = island_position[ref.ref_id]
             island_line_info = f"Island outline #{island_idx}, position #{island_pos}<br>"
             seq_label = seq_label or str(island_pos)
+        mountain_line_info = ""
+        if ref.ref_id in mountain_position:
+            mountain_idx, mountain_pos = mountain_position[ref.ref_id]
+            mountain_line_info = f"Mountain-range line #{mountain_idx}, position #{mountain_pos}<br>"
         popup_html = (
             f"<b>{html.escape(ref.name)}</b><br>"
             f"{modern_line}"
@@ -1423,6 +1595,7 @@ def build_map(
             f"{seq_line}"
             f"{river_line_info}"
             f"{island_line_info}"
+            f"{mountain_line_info}"
             f"Map ID: {html.escape(ref.ref_id) or '?'} "
             f"&mdash; Book {html.escape(ref.book) or '?'}, {html.escape(ref.tabula) or 'unlabelled table'}<br>"
             f"Ptolemy coords: {ref.lon_ptolemy:.2f}° (Ferro), {ref.lat_ptolemy:.2f}°{recension_line}<br>"
@@ -1479,7 +1652,7 @@ def build_map(
     print(
         f"plotted {len(plausible)} geographical reference(s) "
         f"({len(coastlines)} coastline segments, {len(river_lines)} river lines, "
-        f"{len(island_lines)} island outlines) -> {output}"
+        f"{len(island_lines)} island outlines, {len(mountain_lines)} mountain-range lines) -> {output}"
     )
 
 
