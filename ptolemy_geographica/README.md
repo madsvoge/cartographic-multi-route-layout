@@ -841,6 +841,36 @@ pattern was claiming first, since nothing in the name itself said
   citation covering both the island and, per topostext, "a city of the
   same name", the same shared-name shape as Iulia Caesarea earlier.
 
+A tenth pass, prompted by spotting it directly on a rendered static map
+rather than a fresh topostext chunk, checked two things the Mediterranean
+overview map made visually obvious: a row of `city`-colored dots sitting
+out in the Adriatic off the Croatian coast, and the Balearic Islands
+showing as plain city dots with no island shape at all.
+
+- The Adriatic row was real: `2.16.14` (Dalmatia's islands - Issa,
+  Tragurium, Pharia, Korkyra Nigra, Melite - Vis, Trogir, Hvar, Korcula,
+  Mljet) has no `"Insel"`/sea-header keyword for any regex to catch, so
+  every point fell through to the default `city` classification. topostext
+  confirms each is a single citation merging an island with its city
+  ("Off Dalmatia are the islands Issa with city...Tragourion with
+  city...Pharia with city...Melite island") - the same shared-name shape as
+  Iulia Caesarea/Tenedos, now `_ISLAND_APPENDIX_SECTIONS`. Category counts:
+  `island` 283 -> 288, `city` 4332 -> 4327, coastline count unchanged at 61
+  (none of the five had ever been part of a coastline - `section_is_coastal`
+  was false here, so they were never miscategorized as coastal in the
+  first place, just as inland-default `city`).
+- The Balearics, checked against the same neighbouring section (`2.16.13`,
+  Liburnia's islands) and topostext, turned out *not* to be a bug: Ptolemy
+  gives Mallorca and Menorca ("Grössere Insel"/"Kleinere Insel") no
+  coordinate of their own, only two named cities each (Palma/Pollentia,
+  Iamo/Mago - topostext: "The larger (Majorca) has two cities:
+  Palma...Pollentia. ...the smaller (Minorca) with the two old cities,
+  Iamna...Mago"), exactly like Liburnia's Apsorros/Kourikta/Skardona
+  (Krepsa+Apsorus, Fulfinium+Curicum, Arba+Colentum) two sections earlier -
+  the established "multiple cities on an island with no coordinate of its
+  own stay `city`" pattern (see the Nile-delta note above), not the
+  single-merged-citation shape that Dalmatia turned out to be. Left as is.
+
 ## Compiling the catalogue to data: `annotate_dataset.py`
 
 Everything described above - classification, graph reconstruction, distance

@@ -282,6 +282,7 @@ _ISLAND_APPENDIX_SECTIONS = {
     ("2.05", "10"),  # Londobris - the Berlengas, off Lusitania ("An island lying off Lusitania, Londobris")
     ("2.10", "21"),  # Agatha/Blasco/Stoechades/Lero - islands off Narbonensis (Agde island, Ile de Brescou, Iles d'Hyeres, Ile Ste-Marguerite)
     ("2.11", "34"),  # Scandia W/O/N/S - the island Scandia's four extremity points (topostext: "This island is itself properly called Scandia"), the same shape as Thule's five points above
+    ("2.16", "14"),  # Issa/Tragurium/Pharia/Korkyra Melaina/Melite - the Dalmatian islands off the Croatian coast (Vis/Trogir/Hvar/Korcula/Mljet), each a single citation merging the island with its city - topostext: "Off Dalmatia are the islands Issa with city...Tragourion with city...Pharia with city...Melite island" - the same shared-name shape as Iulia Caesarea/Tenedos, not the multi-city-per-island shape of neighbouring Liburnia (2.16.13, Apsorros/Kourikta/Skardona, each with *two* named cities and correctly staying `city`)
     ("3.03", "08"),  # Ilva/Nymphaea/Diabate/Ficaria/Hermaea + the already-"-Insel" points - the islands around Sardinia (topostext: "The islands around Sardinia are: Phintonos island...")
     ("3.04", "16"),  # Didyme/Hikesia/Erikodes/Phoinikodes/Euonymos/Lipara/Strongyle + Hephaistos-Insel - the islands around Sicily (topostext: "the islands located around Sicily...are: Didyme island...")
     ("3.04", "17"),  # Ustika/Osteodes/Phorbantia/Aigusa/Hiera/Pakonia + Aiolos-Insel - more islands around Sicily, continuing 3.04.16
