@@ -311,6 +311,11 @@ _ISLAND_APPENDIX_SECTIONS = {
     ("5.01", "15"),  # Thynias bzw. Daphnusa/Klippen Erythinoi (+ already-island Kyaneen) - islands off Bithynia
     ("5.05", "10"),  # Krambusa/Attelebusa - the two islands lying off Pamphylia
     ("5.15", "27"),  # Arados/Tyros - the islands off Syria (topostext: "Islands off Syria: Arados...and Tyros just offshore") - this "Tyros" is the offshore islet citation, distinct from the mainland coastal city of the same name already catalogued at 5.15.05
+    ("6.04", "08"),  # Tabiana/Sophtha + already-island "Insel des Alexander bzw. Arakia" - the islands adjacent to Persis (topostext: "Islands adjacent to Persis: Tabiana...Sophtha...Alexandrou or Arakia")
+    ("6.08", "15"),  # Sagdana/Vorochtha - the islands lying off Karmania in the Persian Gulf (topostext: "The islands lying off Karmania are, in the Persian Gulf, Sagdana...Vorochtha") - both had been wrongly strung onto the *start* of coastline_045_AS06 by the coastline graph (the real coastal walk begins at the next section, 6.08.04's river mouths), the same spurious-tail pattern as Paena/Erythia earlier
+    ("6.08", "16"),  # Polla/Karminna/Liba - "In the Indian sea Palla or Polla...Karminna...Liba island", three more islands off Karmania continuing 6.08.15's list - these three had been strung onto the *end* of that same coastline_045_AS06, after its real endpoint (the Gedrosia/Karmania boundary point, 6.08.10.01)
+    ("7.02", "29"),  # Argyre*/Iabadiu (W-Ende and SO-Ende) - the island Iabadios (topostext: "The island of Iabadios...It lies in [W]...and the eastern limit lies in [E]"), its two extent points in the same shape as Thule/Scandia's W/O/N/S citations
+    ("7.04", "11"),  # Vangana/Kanathra/Orneon/Aigidion/Monache/Ammine - the group of islands in front of Taprobane (topostext: "In front of Taprobane lies a group of islands...Ouangalia...Kanathra...Aigidion...Orneon...Monache...Ammine")
 }
 
 # The same problem at single-point granularity: a lone island reference
@@ -331,6 +336,8 @@ _ISLAND_POINT_OVERRIDES = {
     "4.03.47.05",  # Melite (Malta)
     "4.05.76.02",  # Pharos - the island of the Alexandria lighthouse; its section (4.05.76) also names "Argaiu", an unrelated point not confirmed as an island
     "5.02.28.03",  # Tenedos - a single citation covering both the island and "a city of the same name" (topostext), the same shared-name shape as Iulia Caesarea
+    "6.09.08.02",  # Talka - "a sea island off it [Hyrkania] called Talka" (topostext), a lone island citation amid an otherwise mainland-coastal book.map
+    "7.01.94.03",  # Barake - "Islands lying near the part of India which projects into the ocean in the Gulf of Kanthi: Barake" (topostext), a single-island section
 }
 
 # _ISLAND_APPENDIX_SECTIONS covers two structurally different things: a
@@ -394,6 +401,7 @@ _MOUNTAIN_APPENDIX_SECTIONS = {
     ("5.13", "05"),  # Paryardes(NW/SO-Ende)/Udakespes(Mitte)/Anti-Tauros in Gross-Armenien(Mitte)/Abos(Mitte)/Gordyaische Berge(Mitte) - Greater Armenia's named mountains (topostext: "The named mountains of Armenia are the Moschika...and Paryardes...and the Oudakespes mountain...and the part of Antitauros...and the so-called Abos mountain...and the Gordyaia mountains...")
     ("5.15", "08"),  # Pieria(Mitte)/Kassios(Mitte)/Libanos(W/O-Ende)/Antilibanos(W/O-Ende)/Alsadamos(Mitte)/Hippos(Mitte) - Syria's named mountains (topostext: "The noteworthy mountains in Syria are Pieria mountain, midpoint...and Kassios mountain...and Libanos...and Antilibanos...and beside Arabia Deserta Mt. Alsadamos...Near Judaia Mt. Hippos...")
     ("5.18", "02"),  # Masion(Mitte)/Singaras - Mesopotamia's named mountains (topostext: "The named mountains in Mesopotamia are Masion mountain, midpoint...and Singaras")
+    ("6.02", "04"),  # Zagros(Mitte)/Orontes(Mitte)/Iasonion(Mitte) + already-"-Gebirge" Koronos(W/O-Ende) - Media's named mountains (topostext: "The most important mountains of Media are the Zagros, midpoint...the Orontes, midpoint...the Iasonion, midpoint...and the western part of Korono...")
 }
 
 # The mountain-side counterpart of _ISLAND_POINT_OVERRIDES: a lone mountain
@@ -413,6 +421,8 @@ _MOUNTAIN_POINT_OVERRIDES = {
     "5.06.08.09",  # Anti-Tauros W (O-Ende)
     "5.06.08.10",  # Anti-Tauros O (W-Ende)
     "5.06.08.11",  # Anti-Tauros O (O-Ende)
+    "6.07.20.01",  # Zames (Mitte) - one of Arabia Felix's named mountains (topostext: "the so-called Zames, midpoint..."), section 6.07.20 unsafe to force whole since it also has "Wasser der Styx (Quelle)", a genuine spring/river-source point mentioned as an aside during the range's own description
+    "6.07.20.03",  # Klimax - a bare-name mountain in the same list, confirmed repeatedly elsewhere in the same chunk ("beyond Klimax mountain", "extending as far as Klimax mountain") rather than by a marker on this citation itself
 }
 
 

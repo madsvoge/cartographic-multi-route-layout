@@ -386,7 +386,7 @@ have belonged to (Narmades, Nanagunas, Pseudostomos, Baris, Solen, Tynas,
 and others' source points) but couldn't reach while miscategorized as
 mountains: 103 → 111 river lines, 263 → 281 points-in-a-line.
 
-This covers 129 of 273 `mountain` points, grouped into 63 lines (a
+This covers 135 of 293 `mountain` points, grouped into 66 lines (a
 single-citation range - most of the catalogue's ~150 named peaks/ranges
 only ever appear once, with no second point to connect to - still plots as
 an individual point, no line).
@@ -417,9 +417,8 @@ island/mountain-line reconstruction.
   "Thrakische Chersones" directly in the xlsx, that topostext doesn't
   number separately), so every entry was verified against a sample of its
   book.map's own `Modern_location` values, not assumed from the section
-  number alone. 59 provinces are labelled this way so far, matching
-  topostext's current coverage (book 2 maps 02-16, book 3 maps 01-17,
-  book 4 maps 01-08, all of book 5's maps 01-19).
+  number alone. 85 provinces are labelled this way, covering every book
+  topostext has been cross-checked against - all of books 2 through 7.
 - **Island-group labels** reuse the five confirmed one-island coastal
   walks already in `_ISLAND_LINE_GROUPS` (Corfu, Euboea, Lesbos, Karpathos,
   Rhodes) - no new lookup needed, just the centroid of that built island
@@ -1021,11 +1020,62 @@ genuinely new bug class: a lake sharing the mountain-name lists'
   `harbor` point-override mechanism, which doesn't exist yet) rather than
   a quick regex change, and was left for a future pass rather than rushed.
 
-With Book 5 complete, topostext's covered range is now book 2 maps
-02-16, book 3 maps 01-17, book 4 maps 01-08, and *all* of book 5 (maps
-01-19 of the catalogue's 20) - `link_matches.py`'s `_COVERED_MAPS` and
-`build_labels.py`'s `_PROVINCE_LABELS` updated to match, adding 13 more
-province labels (Lesser Armenia through Eremos Arabia).
+A twelfth pilot run - Babylonia (`§5.20`, closing book 5), and all of
+books 6 and 7 (Assyria through Taprobane/Sri Lanka, `§6.1`-`§7.4.14`,
+the Geographica's own closing paragraph) - covers the **entire remaining
+catalogue**: books 2 through 7 are now fully cross-checked against
+topostext, start to finish. This chunk came from a different, older
+public-domain translation (McCrindle-style, archaic phrasing and a few
+OCR-looking artifacts - stray dashes, a missing "1" here and there)
+rather than topostext's own smoother modern prose, but parses and scores
+the same way; the coordinate+name matching absorbed the rougher text
+without needing any parser changes.
+
+- One more named-mountains section safe to force whole: Media's
+  (`6.02.04` - Zagros, Orontes, Iasonion, and the already-`-Gebirge`
+  Koronos, topostext: "The most important mountains of Media are the
+  Zagros, midpoint...the Orontes, midpoint...the Iasonion...and the
+  western part of Korono...").
+- Two point-level mountain fixes in a section not safe to force whole:
+  Arabia Felix's `6.07.20` names Zames and the bare-name Klimax (the
+  latter confirmed as a mountain not by a marker on its own citation but
+  by three separate later mentions in the same chunk - "beyond Klimax
+  mountain", "extending as far as Klimax mountain") alongside a genuine
+  spring/river-source point, "Wasser der Styx (Quelle)", that a
+  whole-section force would have wrongly swept up.
+- Five more island-list sections safe to force whole: Persis's
+  (`6.04.08` - Tabiana, Sophtha, plus the already-island "Insel des
+  Alexander bzw. Arakia"), Iabadios/Java's own two-point extent citation
+  (`7.02.29` - west and southeast ends, the same shape as Thule/Scandia's
+  W/O/N/S citations), and the group of six islands in front of Taprobane
+  (`7.04.11`). Plus two lone-island point overrides: Talka, "a sea island
+  off" Hyrkania (`6.09.08.02`), and Barake, a single-island section off
+  India's Gulf of Kanthi (`7.01.94.03`).
+- One more real coastline-graph bug, the same spurious-tail pattern as
+  Paena/Erythia and Astarte/Myron earlier, except this time on *both*
+  ends of the same coastline: Karmania's islands (`6.08.15` - Sagdana,
+  Vorochtha, "the islands lying off Karmania...in the Persian Gulf" - and
+  `6.08.16` - Polla, Karminna, Liba, "In the Indian sea") had been strung
+  onto the start and end of `coastline_045_AS06` by simple proximity, the
+  first two before the coastal walk even begins (per topostext, the real
+  description starts at the next section's river mouths) and the last
+  three after its real endpoint (a Gedrosia/Karmania boundary point).
+  Reclassifying both groups trimmed the coastline from 28 points down to
+  its real 23, coastline count itself unchanged (61).
+- Confirmed, not fixed: a small set of named "coastal mountains" (Arabia
+  Felix's Kabubathra, Didyma-Berge, topostext's own "Coastal mountains of
+  Eudaimon Arabia" list) that are already correctly `coast` and part of a
+  real coastline - the same "protect a real coastline over a mountain
+  keyword match" reasoning as `_MOUNTAIN_BAREWORD_BERG_RE`'s guard, left
+  alone rather than broken for the sake of a stricter mountain match.
+
+topostext's covered range is now **all of books 2 through 7** (book 2
+maps 02-16, book 3 maps 01-17, book 4 maps 01-08, and all of books 5, 6,
+and 7 in full - book 1 has no coordinate data to check, being Ptolemy's
+own theoretical/methodological introduction) - `link_matches.py`'s
+`_COVERED_MAPS` and `build_labels.py`'s `_PROVINCE_LABELS` updated to
+match, adding 26 more province labels (Babylonia through Taprobane), for
+85 in total.
 
 ### Coverage: how much of each catalogue is mapped to the other, and a fuzzy match score
 
@@ -1084,14 +1134,17 @@ name, used everywhere "matched" is decided now:
   above guards against.
 - A candidate scoring below 45 isn't recorded as a match - see
   `link_matches.py`'s docstring for the full formula and reasoning. This
-  raised matched coverage substantially: **944 → 84 unmapped catalogue
-  points, 921 → 60 unmapped topostext citations**, at the time of writing.
+  raised matched coverage substantially: **944 → 165 unmapped catalogue
+  points, 921 → 122 unmapped topostext citations**, at the time of
+  writing - now measured across the *entire* catalogue (books 2-7), not
+  just the partial range covered when those thresholds were first tuned.
 
 **The point of this whole exercise was never a 100% match rate** - it was
 to validate the catalogue against an independent source, and it did:
-**4648 of 4732 catalogue points (98%) and 4785 of 4845 topostext
-citations (99%)** in the covered range now cross-confirm each other by
-both coordinate and name. The ~2% left in `unmapped_review.xlsx` isn't
+**6013 of 6178 catalogue points (97%) and 6137 of 6259 topostext
+citations (98%)**, across the whole catalogue, now cross-confirm each
+other by both coordinate and name. The ~2-3% left in
+`unmapped_review.xlsx` isn't
 presumed to be errors in the catalogue - topostext is itself a translated,
 independently-edited secondary source and can just as easily be the one
 that's wrong, abbreviated, or citing a genuinely different point. Chasing
@@ -1116,8 +1169,8 @@ Three scripts, run in this order:
 - `coverage_summary.py` prints the same two-way gap as a summary and
   dumps the full unmatched lists to `forward_unmatched.csv`/
   `reverse_unmatched.csv` (the catalogue side scoped to the book.map range
-  topostext has actually covered so far: book 2 maps 02-16, book 3 maps
-  01-17, book 4 maps 01-08, all of book 5's maps 01-19) - it now just reads the
+  topostext has actually covered: book 2 maps 02-16, book 3 maps 01-17,
+  book 4 maps 01-08, and all of books 5-7) - it now just reads the
   columns `link_matches.py` already wrote rather than recomputing its own
   match, so run `link_matches.py` first.
 - `verify_near_matches.py` is the diagnostic this scoring grew out of -

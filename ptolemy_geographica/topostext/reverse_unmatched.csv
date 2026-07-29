@@ -83,3 +83,85 @@ ref_id,name,category,lon_ptolemy,lat_ptolemy
 4.08.06.01,Dauchis-Gebirge (Mitte),mountain,15.0,-13.0
 5.04.06.07,Eusene,city,64.6666666666667,42.6666666666667
 5.06.09.06,Sebastopolis 2,city,66.0,42.3333333333333
+6.01.07.05,Kapros (Mündung in Tigris)/Tigris (Einmündung des Kapros),river,79.5,36.0833333333333
+6.03.02.04,Charax des Pasines,city,81.6666666666667,31.0
+6.05.01.06,Masdoranon-Gebirge (S-Ende),mountain,101.5,33.3333333333333
+6.05.02.05,Rhoara (Rhiara),city,98.5,38.3333333333333
+6.05.03.04,Aspa,city,95.3333333333333,36.3333333333333
+6.06.01.09,"Grenzpunkt (Areia, Drangiane, Gedrosien, Karmanien, Wüste Karmanien)",city,101.0,29.8333333333333
+6.07.19.02,Heiliger Golf,coast,79.25,28.25
+6.07.36.01,Dorf der Adler,city,84.1666666666667,20.5
+6.07.36.05,Omanon*,city,77.6666666666667,19.3333333333333
+6.07.37.03,Nagara,city,81.75,18.6666666666667
+6.07.43.06,Insel des Polybios,island,67.6666666666667,21.6666666666667
+6.07.45.05,Insel Dioskorides (W-Ende),island,85.0,12.5
+6.07.46.04,Insel des Sarapias (Sarapis)*,island,94.0,17.5
+6.10.01.13,Margos-Quellen,river,105.0,39.0
+6.11.01.07,"Grenzpunkt (Areia, Baktrien, Land der Paropanisaden)",city,111.0,39.0
+6.11.08.03,Kuriandra (Koriandra),city,109.5,42.1666666666667
+6.12.01.07,"Iaxartes (Grenzpunkt Sogdianer, Skythien)",city,110.0,49.0
+6.12.01.08,Iaxartes (Biegung),river,120.0,48.5
+6.12.01.12,"Grenzpunkt (Land der Saken, Land der Sogdianer)",city,125.0,38.5
+6.12.03.04,Oxeiane–See (Mittelpunkt),lake,111.0,45.0
+6.12.03.08,Baskatis-Quellen,river,123.0,43.0
+6.12.05.07,Cholbisina (Chombisina),city,117.666666666667,44.0
+6.12.06.01,Tribaktra (Trybakta),city,112.25,45.5
+6.13.01.04,"Grenzpunkt (Land der Saken, Skythien)",city,130.0,49.0
+6.13.01.06,Ausgangsbasis für den Fernhandel mit Sera,city,140.0,43.0
+6.14.04.02,Rhymmika-Gebirge (O-Ende),mountain,99.0,57.1666666666667
+6.16.01.06,"Grenzpunkt (Land der Sinen, Serike SO, Unbekanntes Land)/Indien jenseits des Ganges",city,180.0,35.0
+6.16.01.07,"Grenzpunkt (Indien jenseits des Ganges, Land der Sinen, Serike)",city,173.0,35.0
+6.17.01.08,Bagoon-Gebirge (O-Ende),mountain,111.0,34.0
+6.17.07.05,Nisibis,city,111.0,35.3333333333333
+6.17.08.01,Darkama,city,111.0,34.6666666666667
+6.18.01.07,"Grenzpunkt (Arachosien, Indien diesseits des Ganges, Land der Paropanisaden)",city,119.0,32.6666666666667
+6.19.05.01,Asta,city,107.5,30.6666666666667
+6.20.02.03,Indus (Namenloser Zufluss aus Arachosien),city,122.5,27.5
+6.20.02.04,Arachotos-Brunnen,city,115.0,29.6666666666667
+7.01.20.01,Sardonyx-Gebirge (Mitte),mountain,117.5,21.0
+7.01.21.02,Vindion-Gebirge (O-Ende),mountain,135.0,27.0
+7.01.22.02,Bettigo-Gebirge (O-Ende),mountain,130.0,20.0
+7.01.23.01,Adisathron (Mitte),river,132.0,23.0
+7.01.24.01,Uxenton-Gebirge (W-Ende),mountain,136.0,22.0
+7.01.24.02,Uxenton-Gebirge (O-Ende),mountain,143.0,24.0
+7.01.25.01,Aruraia (Aruaia)-Gebirge (O-Ende),mountain,138.0,18.0
+7.01.27.05,Bibasis (Zusammenfluss mit dem Zaradros)/Zaradros (Zusammenfluss mit dem Bibasis),river,130.0,34.0
+7.01.28.01,"Namenloser Fluss zum Indus, Einmündung  vom 
+Vindion-Gebirge her",river,122.0,29.5
+7.01.28.05,"Namenloser Fluss zum Indus, Einmündung von Arachosien her",river,122.5,27.5
+7.01.28.09,Namenloser Fluss (Quelle am Arbita-Gebirge),river,111.0,25.5
+7.01.28.13,Namenloser Fluss zum Indus (Einmündung von den Paropanisaden her),river,121.0,33.5
+7.01.53.04,Kanagora,city,131.0,30.6666666666667
+7.01.54.03,Nadubandagar (Naadubada),city,128.666666666667,29.0
+7.01.70.04,Malaita,city,133.333333333333,25.8333333333333
+7.02.05.05,Sabana (Sabara),city,160.0,-3.0
+7.02.05.07,Kap Malëu Kolon (Kap Melëukolon),coast,163.0,-2.0
+7.02.05.08,Attabas-Mündung,river_mouth,164.0,-1.0
+7.02.05.09,Kolipolis (Kolepolis),city,164.333333333333,0.0
+7.02.05.11,Perimulischer Golf,coast,162.5,4.25
+7.02.06.07,Zabai*,city,168.333333333333,4.75
+7.02.07.08,Sinda,coast,167.25,13.6666666666667
+7.02.09.04,Namenloser Fluss (südl.) zum Ganges (Quellen im Bepyrron-Gebirge),river,152.0,27.0
+7.02.09.05,Namenloser Fluss (südl.) zum Ganges (Einmündung vom Bepyrron-Gebirge),river,144.0,27.0
+7.02.11.09,Sobanos-Quelle,river,162.5,13.0
+7.02.12.04,Namenloser Fluss (Aufteilung in den Attabas),river,161.5,3.0
+7.02.23.09,Parisara,city,149.0,22.25
+7.02.23.14,Sipiberis (Sittiberis),city,170.0,21.25
+7.02.25.04,Tharra,city,162.0,1.66666666666667
+7.02.27.03,Insel des Agathos Daimon,island,145.0,4.25
+7.02.31.01,Maniolai (10) (Manionai (10)),city,142.0,-2.0
+7.03.02.07,Gebirge,mountain,177.0,10.0
+7.03.02.13,Kap der Satyrn,coast,175.0,0.0
+7.03.03.03,Kutiaris-Mündung (Kattiaris-Mündung),river_mouth,177.0,-7.0
+7.03.03.04,Kutiaris-Quellen,river,180.0,-2.0
+7.03.03.05,Kutiaris (Aufteilung zum Fluss Sinos),river,179.0,0.0
+7.03.05.04,Kokkoranagara (Kokkosanagora),city,179.0,-2.0
+7.03.06.01,Sinai* (Thinai*),coast,180.0,13.0
+7.04.04.04,Nubartha (Anubartha),city,121.666666666667,0.0
+7.04.04.07,Odoka,city,123.0,-2.0
+7.04.05.01,"Dagana, der Selene heilig (Dagina, der Selene heilig)",city,126.0,-2.0
+7.04.06.03,Grosser Strand,city,130.0,4.66666666666667
+7.04.10.06,Nakaduma,city,128.5,0.0
+7.04.12.01,Karkos,city,118.0,-0.6666666666666671
+7.04.13.01,Zaba,city,135.0,0.0
+7.04.13.04,Susuara,city,130.0,11.25

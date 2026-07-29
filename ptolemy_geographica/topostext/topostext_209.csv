@@ -4844,3 +4844,1422 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 5,19,7,6,Bere,76°40',29°30',76.6667,29.5,yes,5.19.07.06,Bere,100.0
 5,19,7,7,Kalathousa,77°30',29°30',77.5,29.5,yes,5.19.07.07,Kalathua,100.0
 5,19,7,8,Salma,78°20',29°30',78.3333,29.5,yes,5.19.07.08,Salma,100.0
+5,20,1,1,"Babylonia is bounded on the north by Mesopotamia along the the Euphrates river as described, on the west by Arabia Deserta at the mountain chain described; on the east by Susiana along the remaining parts of the Tigris river as far as its outflows into the Persian Gulf at",80°30',31°00',80.5,31.0,yes,5.20.01.08,Tigris-Mündung (östliche),100.0
+5,20,2,1,"The Basileios river flows through this land, and the one running through Babylonia, and the so-called Maarsares, which joins the Euphrates at the point",78°20',35°40',78.3333,35.6667,yes,5.20.02.04,Euphrat (Einmündung des Naarsares)/Naarsares (Einmündung in Euphrat),100.0
+5,20,2,2,The one through Babylon connects at,79°00',34°55',79.0,34.9167,yes,5.20.06.07,Babylon*,96.9
+5,20,2,3,"them form lakes and swamps, the midpoint between which is at",78°30',34°30',78.5,34.5,yes,5.20.06.09,Vologaisia,48.9
+5,20,4,1,These are the cities and komai in Babylonia on the Tigris river to the sea below Apameia city: Bible,79°00',34°00',79.0,34.0,yes,5.20.04.04,Bible (Bilbe),100.0
+5,20,4,2,Didigoua,79°30',33°40',79.5,33.6667,yes,5.20.04.05,Didigua,100.0
+5,20,4,3,Pounda,79°40',33°00',79.6667,33.0,yes,5.20.04.06,Punda (Runda),100.0
+5,20,4,4,Batracharta,79°40',32°40',79.6667,32.6667,yes,5.20.04.07,Batracharta,100.0
+5,20,4,5,Thalatha,80°00',32°10',80.0,32.1667,yes,5.20.04.08,Thalatha,100.0
+5,20,4,6,Altha,79°30',31°15',79.5,31.25,yes,5.20.04.09,Altha,100.0
+5,20,5,1,"Between the mouths of the Tigrisriver, whose eastern mouth is at",80°30',31°00',80.5,31.0,yes,5.20.01.08,Tigris-Mündung (östliche),100.0
+5,20,5,2,western at,79°30',30°15',79.5,30.25,yes,5.20.05.03,Tigris-Mündung (westliche),100.0
+5,20,5,3,Teredon,80°00',31°10',80.0,31.1667,yes,5.20.05.04,Teredon*,100.0
+5,20,6,1,By part of the Euphrates river: Idikara,77°00',33°20',77.0,33.3333,yes,5.20.06.02,Idikara,100.0
+5,20,6,2,Douraba,77°40',34°00',77.6667,34.0,yes,5.20.06.03,Duraba,100.0
+5,20,6,3,Thakkona,77°45',34°30',77.75,34.5,yes,5.20.06.04,Thakkona,100.0
+5,20,6,4,Thelbengane,78°30',35°30',78.5,35.5,yes,5.20.06.05,Thelbenkane,100.0
+5,20,6,5,On the river flowing through Babylon Babylon,79°00',35°00',79.0,35.0,yes,5.20.06.07,Babylon*,100.0
+5,20,6,6,Toward the Maarsares river Ouolgaisia,78°20',34°30',78.3333,34.5,yes,5.20.06.09,Vologaisia,100.0
+5,20,6,7,Barsita,78°45',34°20',78.75,34.3333,yes,5.20.06.10,Borsippa*,100.0
+5,20,7,1,Below these near the swamps and Arabia Deserta Beona or Biana,79°00',32°40',79.0,32.6667,yes,5.20.07.03,Beana,100.0
+5,20,7,2,Choudouka,78°00',33°20',78.0,33.3333,yes,5.20.07.04,Chuduka (Chryduka),100.0
+5,20,7,3,Choumana,79°00',33°10',79.0,33.1667,yes,5.20.07.05,Chumana (Phumana),100.0
+5,20,7,4,Kaisa,76°40',32°50',76.6667,32.8333,yes,5.20.07.06,Kaisa (Kiata),100.0
+5,20,7,5,Birande (or Berarinda),77°30',32°30',77.5,32.5,yes,5.20.07.07,Birande (Birambe),100.0
+5,20,7,6,Orchoe,78°30',32°40',78.5,32.6667,yes,5.20.07.08,Orchoë*,100.0
+5,20,8,1,Bethana,79°00',32°55',79.0,32.9167,yes,5.20.08.01,Beththana,100.0
+5,20,8,2,Thelme,76°40',32°00',76.6667,32.0,yes,5.20.08.02,Thelme,63.3
+5,20,8,3,Sorthida,77°00',32°30',77.0,32.5,yes,5.20.08.03,Sorthida (Sorbida),100.0
+5,20,8,4,Iamba,78°00',31°20',78.0,31.3333,yes,5.20.08.04,Iamba,100.0
+5,20,8,5,Rageia,78°40',31°20',78.6667,31.3333,yes,5.20.08.05,Rhagia,100.0
+5,20,8,6,Chiriphe,79°15',31°10',79.25,31.1667,yes,5.20.08.06,Chiriphe (Cheiriphe),100.0
+5,20,8,7,Ratta,79°15',30°50',79.25,30.8333,yes,5.20.08.07,Rhatta,100.0
+6,1,1,1,Tigris to the limit point at,84°00',36°00',84.0,36.0,yes,6.01.01.07,"Grenzpunkt (Assyrien, Medien, Persis, Susiane)",100.0
+6,1,1,2,"on the east by the part of Media along the line joining those two limit points, on which is Mt. Chaboras, whose limit points are",80°00',39°30',80.0,39.5,yes,6.01.01.09,Choathras-Gebirge (W-Ende),100.0
+6,1,1,3,,83°00',38°00',83.0,38.0,yes,6.01.01.10,Choathras-Gebirge (O-Ende),100.0
+6,1,3,1,The cities and komai of Assyrians in that part along the Tigris: Marde,76°00',38°15',76.0,38.25,yes,6.01.03.03,Marde,100.0
+6,1,3,2,Saouara,76°00',37°15',76.0,37.25,yes,6.01.03.04,Sauara,87.4
+6,1,3,3,Bessara,77°00',37°20',77.0,37.3333,yes,6.01.03.05,Bessara,100.0
+6,1,3,4,Belkiana,77°30',37°00',77.5,37.0,yes,6.01.03.06,Belkiana,100.0
+6,1,3,5,Ninos,78°00',36°40',78.0,36.6667,yes,6.01.03.07,Ninos* bzw. Ninevi*,100.0
+6,1,3,6,Sakada,78°30',36°30',78.5,36.5,yes,6.01.03.08,Sakada,100.0
+6,1,3,7,Oroba,79°20',36°20',79.3333,36.3333,yes,6.01.03.09,Oroba,100.0
+6,1,3,8,Thelde,80°00',36°00',80.0,36.0,yes,6.01.03.10,Thelde,100.0
+6,1,3,9,Ktesiphon,80°00',35°00',80.0,35.0,yes,6.01.03.11,Ktesiphon*,100.0
+6,1,4,1,in the remaining interior region: Bethaba or Bithaba,77°40',38°40',77.6667,38.6667,yes,6.01.04.01,Bethaba (Birthaba),100.0
+6,1,4,2,Dartha,78°30',38°45',78.5,38.75,yes,6.01.04.02,Dartha (Datha),100.0
+6,1,4,3,Zigira,79°40',38°45',79.6667,38.75,yes,6.01.04.03,Zigira (Ziera),100.0
+6,1,4,4,Darna,80°30',39°30',80.5,39.5,yes,6.01.04.04,Darna,100.0
+6,1,4,5,Obana,81°00',39°00',81.0,39.0,yes,6.01.04.05,Obana,100.0
+6,1,4,6,Thesara,81°15',38°20',81.25,38.3333,yes,6.01.04.06,Thesara,93.9
+6,1,4,7,Korkoura,78°20',38°10',78.3333,38.1667,yes,6.01.04.07,Korkura,100.0
+6,1,4,8,Oroba,79°20',38°10',79.3333,38.1667,yes,6.01.04.08,Oroba,100.0
+6,1,5,1,Degia,80°45',38°10',80.75,38.1667,yes,6.01.05.01,Degia,100.0
+6,1,5,2,Komopolis,81°30',38°10',81.5,38.1667,yes,6.01.05.02,Komopolis,87.8
+6,1,5,3,Dosa,79°00',37°45',79.0,37.75,yes,6.01.05.03,Dosa,100.0
+6,1,5,4,Gaugamela,79°30',37°15',79.5,37.25,yes,6.01.05.04,Gaugamela,90.8
+6,1,5,5,Sarbena,79°00',37°00',79.0,37.0,yes,6.01.05.05,Sarbena (Garbina),100.0
+6,1,5,6,Arbela,80°00',37°15',80.0,37.25,yes,6.01.05.06,Arbela*,100.0
+6,1,5,7,Gomara,81°20',37°30',81.3333,37.5,yes,6.01.05.07,Gomara,100.0
+6,1,5,8,Phousiana,82°10',37°40',82.1667,37.6667,yes,6.01.05.08,Phusiana,100.0
+6,1,5,9,Eisone (or Isonoe),82°30',37°30',82.5,37.5,yes,6.01.05.09,Eisone (Sisone),100.0
+6,1,6,1,Soura,83°00',36°40',83.0,36.6667,yes,6.01.06.01,Sura,100.0
+6,1,6,2,Chatracharta,80°30',36°10',80.5,36.1667,yes,6.01.06.02,Chatracharta,100.0
+6,1,6,3,Apollonia,81°30',36°30',81.5,36.5,yes,6.01.06.03,Apollonia,100.0
+6,1,6,4,Theboura,83°20',36°45',83.3333,36.75,yes,6.01.06.04,Bethura,100.0
+6,1,6,5,Arrapa,82°00',36°30',82.0,36.5,yes,6.01.06.05,Arrapa (Arata),100.0
+6,1,6,6,Kinna,83°20',36°10',83.3333,36.1667,yes,6.01.06.06,Kinna,100.0
+6,1,6,7,Artemita,81°15',36°00',81.25,36.0,yes,6.01.06.07,Artemita,100.0
+6,1,6,8,Sittake,82°00',35°30',82.0,35.5,yes,6.01.06.08,Sittake,100.0
+6,1,7,1,"Rivers flowing through this country into the Tigris river are the Lykos, the springs of which at",78°00',39°00',78.0,39.0,yes,6.01.07.02,Lykos-Quellen,100.0
+6,1,7,2,the junction with the Tigris at,79°00',36°30',79.0,36.5,yes,6.01.07.03,Lykos (Mündung in Tigris)/Tigris (Einmündung des Lykos),56.4
+6,1,7,3,"the Kapros river, the springs of which at",79°00',39°30',79.0,39.5,yes,6.01.07.04,Kapros-Quellen,100.0
+6,1,7,4,the junction with the Tigris at,80°00',35°40',80.0,35.6667,yes,6.01.07.07,Gorgos (Mündung in Tigris)/Tigris (Einmündung des Gorgos),100.0
+6,1,7,5,"the Gorgos, whose springs are at",80°20',38°00',80.3333,38.0,yes,6.01.05.06,Arbela*,45.3
+6,1,7,6,junction with the Tigris at,80°00',35°20',80.0,35.3333,yes,6.01.03.10,Thelde,60.6
+6,2,1,1,limit point with Armenia at the Araxes river: Sanina,80°00',43°00',80.0,43.0,yes,6.02.01.04,Sannina,100.0
+6,2,1,2,mouth of the Kambysis river,81°00',42°45',81.0,42.75,yes,6.02.01.05,Kambysos-Mündung,100.0
+6,2,1,3,river sources,80°00',41°00',80.0,41.0,yes,6.02.01.06,Kambysos-Quellen,100.0
+6,2,1,4,Tazeina,81°40',42°30',81.6667,42.5,yes,6.02.01.07,Tazeina (Gazina),100.0
+6,2,1,5,Sabaian Altars,82°30',42°30',82.5,42.5,yes,6.02.01.08,Sabäische (Gabäische) Altäre,100.0
+6,2,1,6,mouth of the Kyros river,83°30',42°15',83.5,42.25,yes,6.02.01.09,Kyros-Mündung,89.7
+6,2,1,7,river sources,82°00',39°30',82.0,39.5,yes,6.02.01.10,Kyros-Quellen,100.0
+6,2,2,1,Of the Kadousians Charax,84°40',42°00',84.6667,42.0,yes,6.02.02.01,Charax der Kadusier,100.0
+6,2,2,2,Kyropolis,85°30',41°30',85.5,41.5,yes,6.02.02.02,Kyropolis*,100.0
+6,2,2,3,mouth of the Amardos river,86°30',41°30',86.5,41.5,yes,6.02.02.03,Amardos-Mündung,100.0
+6,2,2,4,river sources,85°00',38°30',85.0,38.5,yes,6.02.02.04,Amardos-Quellen,100.0
+6,2,2,5,"midpoint of the lake linked to it, called Martiane",82°30',39°20',82.5,39.3333,yes,6.02.02.05,Matiane-See (Margiane-See),100.0
+6,2,2,6,Amana,87°30',40°40',87.5,40.6667,yes,6.02.02.06,Amana,100.0
+6,2,2,7,Akola,88°15',40°15',88.25,40.25,yes,6.02.02.07,Akola,100.0
+6,2,2,8,mouth of the Straton or Staon river,90°20',40°00',90.3333,40.0,yes,6.02.02.08,Straton-Mündung,100.0
+6,2,2,9,river sources,88°00',38°30',88.0,38.5,yes,6.02.02.09,Straton-Quellen,100.0
+6,2,2,10,Mandagarsis,92°00',40°00',92.0,40.0,yes,6.02.02.10,Mandagarsis,100.0
+6,2,2,11,mouth of the Charinda river,93°00',40°30',93.0,40.5,yes,6.02.02.11,Charindas-Mündung,100.0
+6,2,2,12,limit point toward Hyrkania a,94°00',40°30',94.0,40.5,yes,6.02.02.12,"Grenzpunkt (Hyrkanien, Medien)",100.0
+6,2,3,1,On the west it is bounded by Greater Armenia and Assyrians along the eastern lines indicated; on the south by Persis on the line linking the limit point at Assyrians and Sousiane with the point at,94°00',34°30',94.0,34.5,yes,6.02.03.07,"Grenzpunkt (Medien, Parthien, Persis, Wüste Karmanien)",100.0
+6,2,3,2,,101°00',33°00',101.0,33.0,no,6.05.01.06,Masdoranon-Gebirge (S-Ende),24.4
+6,2,3,3,Parthia is at,94°00',39°00',94.0,39.0,yes,6.02.03.11,"Grenzpunkt (Hyrkanien, Medien, Parthien)",100.0
+6,2,4,1,"The most important mountains of Media are the Zagros, midpoint",85°00',38°00',85.0,38.0,yes,6.02.04.02,Zagros (Mitte),100.0
+6,2,4,2,"the Orontes, midpoint",88°30',38°00',88.5,38.0,yes,6.02.04.03,Orontes (Mitte),100.0
+6,2,4,3,"the Iasonion, midpoint",90°30',36°00',90.5,36.0,yes,6.02.04.04,Iasonion (Mitte),100.0
+6,2,4,4,"the western part of Korono, with western limit point at",92°00',38°00',92.0,38.0,yes,6.02.04.05,Koronos-Gebirge (W–Ende),100.0
+6,2,4,5,,101°00',39°00',101.0,39.0,yes,6.02.04.06,Koronos-Gebirge (O-Ende),100.0
+6,2,7,1,The Zagros Gates are at,84°30',37°00',84.5,37.0,yes,6.02.07.01,Pforte des Zagros,100.0
+6,2,7,2,the Kaspian Gates at,94°00',37°00',94.0,37.0,yes,6.02.07.02,Kaspische Pforte,100.0
+6,2,8,1,The cities and komai in the interior of Media: Scabina,79°30',42°00',79.5,42.0,yes,6.02.08.02,Skambeina (Skabina),75.2
+6,2,8,2,Gabale,80°00',42°00',80.0,42.0,yes,6.02.08.03,Gabale,100.0
+6,2,8,3,Ouka,80°40',42°30',80.6667,42.5,yes,6.02.08.04,Uka,100.0
+6,2,8,4,Ouarna,81°00',42°00',81.0,42.0,yes,6.02.08.05,Varna,100.0
+6,2,8,5,Kandys,83°30',42°00',83.5,42.0,yes,6.02.08.06,Kandys,100.0
+6,2,8,6,Gabris,80°20',41°15',80.3333,41.25,yes,6.02.08.07,Gabris,45.0
+6,2,8,7,Sozoa,80°50',41°10',80.8333,41.1667,no,6.02.09.02,Azaga (Azata),39.7
+6,2,9,1,Tonzarma,81°30',41°30',81.5,41.5,yes,6.02.09.01,Tonzarma (Tonzarba),90.8
+6,2,9,2,Azaga,81°15',41°10',81.25,41.1667,yes,6.02.09.02,Azaga (Azata),100.0
+6,2,9,3,Morounda,82°20',41°10',82.3333,41.1667,yes,6.02.09.04,Tigrana,48.6
+6,2,9,4,Tigrana,82°40',41°30',82.6667,41.5,yes,6.02.09.04,Tigrana,100.0
+6,2,9,5,Pharambara,84°10',41°20',84.1667,41.3333,yes,6.02.09.05,Pharambara,100.0
+6,2,9,6,Tachasara,84°20',41°00',84.3333,41.0,yes,6.02.09.06,Tachasara (Tochasara),100.0
+6,2,10,1,Zalake,86°15',41°00',86.25,41.0,yes,6.02.10.01,Zalake,100.0
+6,2,10,2,Alouaka,80°40',40°30',80.6667,40.5,yes,6.02.10.02,Aluaka,100.0
+6,2,10,3,Gauzania,82°00',40°40',82.0,40.6667,yes,6.02.10.03,Gauzania,100.0
+6,2,10,4,Phazaba,82°30',40°10',82.5,40.1667,yes,6.02.10.04,Phazaba (Phazaka),100.0
+6,2,10,5,Pharaspa,85°30',40°30',85.5,40.5,yes,6.02.10.05,Pharaspa,100.0
+6,2,10,6,Kourna,86°15',40°30',86.25,40.5,yes,6.02.10.06,Kurna,100.0
+6,2,10,7,Phanaspa,86°30',40°00',86.5,40.0,yes,6.02.10.07,Phanaspa,100.0
+6,2,10,8,Gabris,84°40',40°20',84.6667,40.3333,yes,6.02.08.07,Gabris,45.0
+6,2,10,9,Nande,81°40',39°40',81.6667,39.6667,yes,6.02.10.09,Nande,100.0
+6,2,10,10,Zazaka,83°40',39°30',83.6667,39.5,yes,6.02.10.10,Gazaka,100.0
+6,2,10,11,Saraka,85°15',39°20',85.25,39.3333,yes,6.02.10.11,Saraka,100.0
+6,2,11,1,Mandagara,87°45',39°30',87.75,39.5,yes,6.02.11.01,Mandagara,100.0
+6,2,11,2,Aganzaba,89°00',39°30',89.0,39.5,yes,6.02.11.02,Aganzaua (Aganzua),100.0
+6,2,11,3,Galla,90°10',39°15',90.1667,39.25,yes,6.02.11.03,Galla,100.0
+6,2,11,4,Orakana,91°00',39°30',91.0,39.5,yes,6.02.11.04,Orakana (Orokana),100.0
+6,2,11,5,Alicadra,93°00',39°00',93.0,39.0,yes,6.02.11.05,Alikadra,100.0
+6,2,11,6,Phanaka,93°20',39°30',93.3333,39.5,yes,6.02.11.06,Phanaka,87.8
+6,2,11,7,Nazada,83°00',38°10',83.0,38.1667,yes,6.02.11.07,Nazada,100.0
+6,2,11,8,Alinza and its mountain,84°00',38°00',84.0,38.0,yes,6.02.11.08,Alinza bzw. Orosa,100.0
+6,2,11,9,Arsisaka,85°00',38°40',85.0,38.6667,yes,6.02.11.09,Arsisaka,100.0
+6,2,12,1,Alisdaka,86°40',38°45',86.6667,38.75,yes,6.02.12.01,Alisdaka,100.0
+6,2,12,2,Dariausa,87°30',38°30',87.5,38.5,yes,6.02.12.02,Dariausa,100.0
+6,2,12,3,Singar,88°00',38°30',88.0,38.5,yes,6.02.02.09,Straton-Quellen,100.0
+6,2,12,4,Batina,89°00',38°40',89.0,38.6667,yes,6.02.12.04,Batina (Batiana),100.0
+6,2,12,5,Ouesaspe,89°40',38°40',89.6667,38.6667,yes,6.02.12.05,Vesaspe,100.0
+6,2,12,6,Nigouza,90°15',38°00',90.25,38.0,no,6.02.16.04,Zania,34.7
+6,2,12,7,Sanais,92°00',38°20',92.0,38.3333,yes,6.02.12.07,Sanais (Sanes),100.0
+6,2,12,8,Razounda,93°20',38°40',93.3333,38.6667,yes,6.02.12.08,Rhazunda,100.0
+6,2,13,1,Oueneka,93°20',38°15',93.3333,38.25,yes,6.02.13.01,Veneka,100.0
+6,2,13,2,Bithia,85°30',37°40',85.5,37.6667,yes,6.02.13.02,Bithia,100.0
+6,2,13,3,Alinza,86°10',37°45',86.1667,37.75,yes,6.02.13.03,Alinza,100.0
+6,2,13,4,Zaranis,86°00',37°00',86.0,37.0,yes,6.02.13.04,Zaranis (Zaniris),100.0
+6,2,13,5,Gabena,87°00',37°30',87.0,37.5,yes,6.02.13.05,Gabena,100.0
+6,2,13,6,Larasa,87°10',37°10',87.1667,37.1667,yes,6.02.13.06,Larasa,100.0
+6,2,14,1,Ekbatana,88°00',37°45',88.0,37.75,yes,6.02.14.01,Akbatana* (Ekbatana*),100.0
+6,2,14,2,Chokastra,89°00',37°40',89.0,37.6667,yes,6.02.14.02,Choastra (Chokastra),100.0
+6,2,14,3,Niphauanda,88°50',37°10',88.8333,37.1667,yes,6.02.14.03,Niphauanda (Niphauana),100.0
+6,2,14,4,Gouriamna,91°00',37°20',91.0,37.3333,yes,6.02.14.04,Guriauna,100.0
+6,2,14,5,Trauaxa,93°00',37°40',93.0,37.6667,yes,6.02.14.06,Trauaxa,100.0
+6,2,14,6,Choana,92°00',37°15',92.0,37.25,yes,6.02.14.05,Choana,100.0
+6,2,15,1,Auradis,93°40',37°15',93.6667,37.25,yes,6.02.15.01,Auradis,100.0
+6,2,15,2,Tibrakana,93°20',36°00',93.3333,36.0,yes,6.02.17.03,Abakaina,74.5
+6,2,15,3,Thebarga,84°15',36°40',84.25,36.6667,yes,6.02.15.03,Betharga (Bitharga),85.7
+6,2,15,4,Karine,85°10',36°20',85.1667,36.3333,yes,6.02.15.04,Karine,100.0
+6,2,15,5,Kaberasa,86°00',36°30',86.0,36.5,yes,6.02.15.05,Kaberasa (Kabirasa),100.0
+6,2,15,6,Parachana,87°40',36°00',87.6667,36.0,yes,6.02.15.06,Parachana (Gothakania),100.0
+6,2,16,1,Arsakia,88°00',36°30',88.0,36.5,yes,6.02.16.01,Arsakia*,100.0
+6,2,16,2,Gauna,83°45',36°30',83.75,36.5,yes,6.01.06.06,Kinna,45.5
+6,2,16,3,Herakleia,89°00',36°40',89.0,36.6667,yes,6.02.16.03,Herakleia,100.0
+6,2,16,4,Zania,90°10',36°50',90.1667,36.8333,yes,6.02.16.04,Zania,96.9
+6,2,16,5,Arouzis,91°00',36°20',91.0,36.3333,yes,6.02.16.05,Aruzis,100.0
+6,2,16,6,Zarama,92°20',36°30',92.3333,36.5,yes,6.02.16.06,Zarama,100.0
+6,2,17,1,Tautike,93°20',36°15',93.3333,36.25,yes,6.02.17.01,Tautike,100.0
+6,2,17,2,Europos,93°40',36°40',93.6667,36.6667,yes,6.02.17.02,Europos*,100.0
+6,2,17,3,Abakaina,93°00',36°00',93.0,36.0,yes,6.02.17.03,Abakaina,100.0
+6,2,17,4,Kigbena,87°00',35°30',87.0,35.5,yes,6.02.17.04,Kigbina (Kisbina),90.5
+6,2,17,5,Dottha,88°00',35°25',88.0,35.4167,yes,6.02.17.05,Doththa (Datha),100.0
+6,2,17,6,Gerepa,89°40',35°20',89.6667,35.3333,yes,6.02.17.06,Gerepa,100.0
+6,2,18,1,Rapsa,90°10',35°40',90.1667,35.6667,yes,6.02.18.01,Rhapsa,100.0
+6,2,18,2,Andriaka,91°00',35°10',91.0,35.1667,yes,6.02.18.02,Andriaka,100.0
+6,2,18,3,Klouaka,92°40',35°10',92.6667,35.1667,yes,6.02.18.03,Kluaka,100.0
+6,2,18,4,Argarausdaka,93°20',35°20',93.3333,35.3333,yes,6.02.18.04,Argarausdaka,100.0
+6,2,18,5,Kanatha,93°30',35°45',93.5,35.75,yes,6.02.18.05,Kanatha,100.0
+6,2,18,6,Aradriphe,93°20',34°45',93.3333,34.75,yes,6.02.18.06,Aradriphe (Hydariphe),100.0
+6,3,1,1,"Tigris to the sea; on the east by Persis along the line linking the limit point of Assyrians and Media to the mouth of the Oroatis river in the Persian Gulf. in the confines of Assyrians and Media to the mouth of the Orontes river emptying into the Persian Gulf, at",86°30',30°30',86.5,30.5,yes,6.03.01.10,Oroatis-Mündung,100.0
+6,3,2,1,this coast is described as follows: the western mouth of the Tigris river is in the description of Babylonia at,79°30',30°15',79.5,30.25,yes,6.03.02.01,Tigris-Mündung (westliche),100.0
+6,3,2,2,The eastern mouth of the Tigris river at,80°30',31°00',80.5,31.0,yes,6.03.02.03,Tigris-Mündung (östliche),100.0
+6,3,2,3,Charax Pasinou,80°00',31°00',80.0,31.0,no,6.03.02.04,Charax des Pasines,38.6
+6,3,2,4,mouth of the Mosaios river,82°00',30°40',82.0,30.6667,yes,6.03.02.05,Mosaios (Moseos)-Mündung,100.0
+6,3,2,5,river sources,82°30',33°00',82.5,33.0,yes,6.03.02.06,Mosaios-Quellen,100.0
+6,3,2,6,Pelodes Gulf,83°00',31°00',83.0,31.0,yes,6.03.02.07,Schlammbucht,100.0
+6,3,2,7,mouth of the Eulaios river,84°30',30°40',84.5,30.6667,yes,6.03.02.08,Eulaios-Mündung,100.0
+6,3,2,8,The sources of the river which are in Susiane,83°00',35°00',83.0,35.0,yes,6.03.02.09,Eulaios-Quellen (westliche),100.0
+6,3,2,9,The sources of the river in Media,86°00',38°00',86.0,38.0,yes,6.03.02.11,Eulaios-Quellen (östliche),100.0
+6,3,2,10,Tenagos Ammodes (sandy),84°30',30°30',84.5,30.5,yes,6.03.02.13,Sandige Lagune,100.0
+6,3,2,11,mouth of the Oroatis river,86°30',30°30',86.5,30.5,yes,6.03.01.10,Oroatis-Mündung,100.0
+6,3,2,12,river sources,88°30',34°40',88.5,34.6667,yes,6.03.02.15,Oroatis-Quellen,100.0
+6,3,4,1,"The cities and komai in Sousiane, by the Tigris river between the Altars of Heraklesat",80°00',34°05',80.0,34.0833,yes,6.03.04.03,Altäre des Herakles,100.0
+6,3,4,2,Agra,80°30',33°45',80.5,33.75,yes,6.03.04.04,Agra (Atra),100.0
+6,3,4,3,Arakka,80°10',32°40',80.1667,32.6667,yes,6.03.04.05,Arakka,100.0
+6,3,4,4,Asia,80°10',31°40',80.1667,31.6667,yes,6.03.04.06,Asia,100.0
+6,3,5,1,The cities in the interior are: Palinza,83°45',35°30',83.75,35.5,yes,6.03.05.01,Palinza,100.0
+6,3,5,2,Sakrone,82°45',35°00',82.75,35.0,yes,6.03.05.02,Sakrone,100.0
+6,3,5,3,Bergan,84°15',34°45',84.25,34.75,yes,6.03.05.03,Bergan (Berga),100.0
+6,3,5,4,Sousa,84°00',34°15',84.0,34.25,yes,6.03.05.04,Susa*,100.0
+6,3,5,5,Saura,85°00',34°00',85.0,34.0,yes,6.03.05.05,Saura,54.2
+6,3,5,6,Dera,81°30',33°40',81.5,33.6667,yes,6.03.05.06,Dera,100.0
+6,3,5,7,Agarra,83°40',33°20',83.6667,33.3333,yes,6.03.05.07,Agarra,100.0
+6,3,5,8,Abinna,85°10',33°10',85.1667,33.1667,yes,6.03.05.08,Abina,100.0
+6,3,5,9,Tareiana,82°00',32°30',82.0,32.5,yes,6.03.05.09,Tarsiana*,100.0
+6,3,5,10,Sele,84°00',32°30',84.0,32.5,yes,6.03.05.10,Sele,100.0
+6,3,5,11,Graan,82°00',31°30',82.0,31.5,yes,6.03.05.11,Graan,100.0
+6,3,5,12,Anouchtha,83°30',31°40',83.5,31.6667,yes,6.03.05.12,Anuchtha,100.0
+6,3,5,13,Ourzan,84°40',31°40',84.6667,31.6667,yes,6.03.05.13,Urzan,100.0
+6,3,5,14,Island adjacent to Susiane: Taxiana,84°00',29°20',84.0,29.3333,yes,6.03.06.02,Taxiana,96.9
+6,4,1,1,limit point by the extended southern line toward Media and Parthia as far as the mouth of the Bagradasriver in the Persian Gulf at,94°00',29°15',94.0,29.25,yes,6.04.01.08,Bagradas-Mündung,100.0
+6,4,2,1,mouth of the Oroatis river Taoke promontory,87°30',30°10',87.5,30.1667,yes,6.04.02.02,Kap Taoke,100.0
+6,4,2,2,mouth of the Rogomanis river,88°30',30°00',88.5,30.0,yes,6.04.02.03,Rhogomanis-Mündung,100.0
+6,4,2,3,river sources,92°00',35°00',92.0,35.0,yes,6.04.02.04,Rhogomanis-Quellen,100.0
+6,4,2,4,Chersonesos promontory,89°40',29°30',89.6667,29.5,yes,6.04.02.05,Kap Chersonesos,100.0
+6,4,2,5,Ionaka city,90°00',29°45',90.0,29.75,yes,6.04.02.06,Ionaka,100.0
+6,4,2,6,mouth of the Brisoana river,92°00',29°40',92.0,29.6667,yes,6.04.02.07,Brisoanas-Mündung,100.0
+6,4,2,7,river sources,93°00',34°30',93.0,34.5,yes,6.04.02.08,Brisoanas-Quellen,100.0
+6,4,2,8,Ausinza,93°00',29°20',93.0,29.3333,yes,6.04.02.09,Ausinza,100.0
+6,4,2,9,mouth of the Bagradas river,94°00',29°15',94.0,29.25,yes,6.04.01.08,Bagradas-Mündung,100.0
+6,4,2,10,river sources,94°00',35°15',94.0,35.25,yes,6.04.02.11,Bagradas-Quellen,100.0
+6,4,4,1,The cities and komai in the interior of Persia: Ozoa,85°45',35°20',85.75,35.3333,yes,6.04.04.02,Ozoa,100.0
+6,4,4,2,Tanagra,86°00',34°30',86.0,34.5,yes,6.04.04.03,Tanagra (Taddama),100.0
+6,4,4,3,Marrasion,92°30',34°30',92.5,34.5,yes,6.04.04.04,Marrasion* (Marasion*),100.0
+6,4,4,4,Aspadana,86°00',33°50',86.0,33.8333,yes,6.04.04.05,Aspadana (Appadana),90.8
+6,4,4,5,Axima,87°45',33°50',87.75,33.8333,yes,6.04.04.06,Axima*,100.0
+6,4,4,6,Poryospana,89°00',33°50',89.0,33.8333,yes,6.04.04.07,Poryospana (Portospana),100.0
+6,4,4,7,Persepolis,90°15',33°20',90.25,33.3333,yes,6.04.04.08,Persopolis*,68.0
+6,4,4,8,Niserge,91°00',34°00',91.0,34.0,yes,6.04.04.09,Niserge,72.5
+6,4,5,1,Sukta,91°30',34°00',91.5,34.0,yes,6.04.05.01,Sukta (Vata),100.0
+6,4,5,2,Arboua,92°15',33°00',92.25,33.0,yes,6.04.05.02,Arbua,100.0
+6,4,5,3,Kotamba,93°30',33°40',93.5,33.6667,yes,6.04.05.03,Kotamba,100.0
+6,4,5,4,Potikara,87°15',32°15',87.25,32.25,yes,6.04.05.04,Potikara,100.0
+6,4,5,5,Ardea,88°00',32°30',88.0,32.5,yes,6.04.05.05,Ardea,100.0
+6,4,5,6,Kauphiaka,89°00',32°30',89.0,32.5,yes,6.04.05.06,Kauphiaka,100.0
+6,4,6,1,Batthina,90°00',32°20',90.0,32.3333,yes,6.04.06.01,Batthina,100.0
+6,4,6,2,Kinna,92°20',32°20',92.3333,32.3333,yes,6.04.06.02,Kinna,100.0
+6,4,6,3,Parodana,93°50',32°15',93.8333,32.25,yes,6.04.06.03,Parodana,100.0
+6,4,6,4,Taepa or Taispa,87°00',31°45',87.0,31.75,yes,6.04.06.04,Taëpa,100.0
+6,4,6,5,Tragonike,87°40',31°40',87.6667,31.6667,yes,6.04.06.05,Tragonike (Tragonie),100.0
+6,4,6,6,Maitona,89°10',31°45',89.1667,31.75,yes,6.04.06.06,Maitona,100.0
+6,4,6,7,Chorodna,90°00',31°15',90.0,31.25,yes,6.04.06.07,Chorodna (Choroana),100.0
+6,4,6,8,Korra,91°20',31°40',91.3333,31.6667,yes,6.04.06.08,Korra (Kora),100.0
+6,4,6,9,Gabra,92°15',31°30',92.25,31.5,yes,6.04.06.09,Gabra,100.0
+6,4,6,10,Orobatis city,87°00',30°50',87.0,30.8333,yes,6.04.06.10,Orobatis (Obithatis),100.0
+6,4,7,1,Taoke,89°00',30°20',89.0,30.3333,yes,6.04.07.01,Taoke*,100.0
+6,4,7,2,Parta,90°00',30°20',90.0,30.3333,yes,6.04.07.02,Parta,100.0
+6,4,7,3,Mammida,91°00',30°20',91.0,30.3333,yes,6.04.07.03,Mammida,100.0
+6,4,7,4,Ouzia,91°40',30°00',91.6667,30.0,yes,6.04.07.04,Uzia,100.0
+6,4,7,5,Pasargada (or Pasarracha),93°00',30°30',93.0,30.5,yes,6.04.07.05,Pasarracha (Passaraka),100.0
+6,4,7,6,Gabai,93°40',30°10',93.6667,30.1667,yes,6.04.07.06,Gabai,100.0
+6,4,7,7,Islands adjacent to Persis: Tabiana,87°00',29°15',87.0,29.25,yes,6.04.08.02,Tabiana (Taxiana),100.0
+6,4,7,8,Sophtha,88°00',29°20',88.0,29.3333,yes,6.04.08.03,Sophtha (Sophath),100.0
+6,4,7,9,Alexandrou or Arakia,90°00',29°00',90.0,29.0,yes,6.04.08.04,Insel des Alexander bzw. Arakia,100.0
+6,5,1,1,"Parthia is bounded on the west by the indicated part of Media, on the north by the Hyrkanian country on a parallel line through Koronos mountain to the limit point at",101°00',39°00',101.0,39.0,yes,6.02.04.06,Koronos-Gebirge (O-Ende),100.0
+6,5,1,2,"point mentioned, leading through the Masdoranos mountain until the point at",102°30',33°00',102.5,33.0,yes,6.17.08.05,Zimyra,45.8
+6,5,1,3,"on the south by Karmania Deserta, on the line joining the points of Parchoathra mountain up to",101°00',33°00',101.0,33.0,yes,6.05.01.06,Masdoranon-Gebirge (S-Ende),47.0
+6,5,2,1,The cities and komai of Parthia are: Ambrodax,94°30',38°20',94.5,38.3333,yes,6.05.02.02,Ambrodax*,100.0
+6,5,2,2,Oinounia (or Sinounia),95°00',38°40',95.0,38.6667,yes,6.05.02.03,Oinunia,100.0
+6,5,2,3,Karipraka heights,97°15',38°40',97.25,38.6667,yes,6.05.02.04,Karipraka (Kariapakra),100.0
+6,5,2,4,Roara,78°30',38°20',78.5,38.3333,yes,6.01.04.07,Korkura,65.3
+6,5,2,5,Souphtha,100°00',38°00',100.0,38.0,yes,6.05.02.06,Suphtha,78.7
+6,5,2,6,Arakiana,94°15',38°00',94.25,38.0,yes,6.05.02.07,Arakiana,100.0
+6,5,2,7,Dordomana,94°15',37°40',94.25,37.6667,yes,6.05.02.08,Dordomana,100.0
+6,5,2,8,Hekatompylon palace,96°00',37°50',96.0,37.8333,yes,6.05.02.09,Hekatonpylos*,100.0
+6,5,2,9,Sindaga,96°10',37°00',96.1667,37.0,yes,6.05.02.10,Sindaga (Sindata),100.0
+6,5,2,10,Parbara,98°50',37°30',98.8333,37.5,yes,6.05.02.11,Parbara,100.0
+6,5,3,1,Mysia,100°30',37°30',100.5,37.5,yes,6.05.03.01,Mysia,100.0
+6,5,3,2,Charax,94°15',36°40',94.25,36.6667,yes,6.05.03.02,Charax,100.0
+6,5,3,3,Apameia,94°15',36°00',94.25,36.0,yes,6.05.03.03,Apameia,100.0
+6,5,3,4,Aspa,95°20',33°20',95.3333,33.3333,no,6.05.03.09,Choana,18.0
+6,5,3,5,Semina,96°00',36°40',96.0,36.6667,yes,6.05.03.05,Semina,100.0
+6,5,3,6,Marriche,98°00',36°40',98.0,36.6667,yes,6.05.03.06,Marriche,100.0
+6,5,3,7,Tastache,99°00',36°20',99.0,36.3333,yes,6.05.03.07,Tastache,100.0
+6,5,3,8,Armiana,101°20',36°10',101.3333,36.1667,yes,6.05.03.08,Armiana,87.8
+6,5,3,9,Choara,95°15',35°30',95.25,35.5,yes,6.05.03.09,Choana,100.0
+6,5,4,1,Pasakartia,94°15',35°15',94.25,35.25,yes,6.05.04.01,Pasakartia (Pasakarta),100.0
+6,5,4,2,Rouda,95°00',35°00',95.0,35.0,yes,6.05.04.02,Rhuda,100.0
+6,5,4,3,Simpsimida,96°30',35°40',96.5,35.6667,yes,6.05.04.03,Simpsimida (Simpsida),100.0
+6,5,4,4,Artakana,96°00',34°30',96.0,34.5,yes,6.05.04.04,Artakana*,100.0
+6,5,4,5,Appha,98°30',35°20',98.5,35.3333,yes,6.05.04.05,Appha,100.0
+6,5,4,6,Ragaia,98°20',34°20',98.3333,34.3333,yes,6.05.04.06,Rhagaia,100.0
+6,6,1,1,Parchoathra mountain to the limit point at,94°00',31°00',94.0,31.0,yes,6.06.01.06,"Grenzpunkt (Karmanien, Persis, Wüste Karmanien)",100.0
+6,6,1,2,on the north by Parthia on the indicated line through Parchoathra mountain; on the east by a part of Areia along the extention of the line indicated until the limit point at,104°00',28°50',104.0,28.8333,no,6.19.05.02,Xarxiare,0.0
+6,7,2,1,"border of the Arabian Gulf in the inmost part of the Elanite gulf, Onne",66°20',28°50',66.3333,28.8333,yes,6.07.02.04,Onne,93.9
+6,7,2,2,Modiana or Modouna,66°40',27°45',66.6667,27.75,yes,6.07.02.05,Modiana,100.0
+6,7,2,3,Hippos mountains,66°30',27°20',66.5,27.3333,yes,6.07.02.06,Hippos-Berg,100.0
+6,7,2,4,Hippos kome,67°00',26°40',67.0,26.6667,yes,6.07.02.07,Hippos,100.0
+6,7,3,1,Phoenikon kome,67°20',26°20',67.3333,26.3333,yes,6.07.03.01,Dorf der Phoiniker,100.0
+6,7,3,2,Raunathou kome,67°15',25°40',67.25,25.6667,yes,6.07.03.02,Dorf des Rhaunathos,100.0
+6,7,3,3,Chersonnesos promontory,67°00',25°40',67.0,25.6667,yes,6.07.03.03,Kap Chersonesos,100.0
+6,7,3,4,Iambia kome,68°00',24°00',68.0,24.0,yes,6.07.03.04,Iambia,100.0
+6,7,5,1,In the country of the Kinaidokolpitans: Kopar kome,68°30',23°15',68.5,23.25,yes,6.07.05.02,Kopar,100.0
+6,7,5,2,Arga kome,69°00',22°40',69.0,22.6667,yes,6.07.05.03,Arga (Agar),100.0
+6,7,5,3,Zabram palace,69°20',22°00',69.3333,22.0,yes,6.07.05.04,Zabram (Zambram),100.0
+6,7,5,4,Kentos kome,69°20',21°30',69.3333,21.5,yes,6.07.05.05,Kentos (Kantosi),100.0
+6,7,5,5,Thebai city,69°40',21°00',69.6667,21.0,yes,6.07.05.06,Thebai,100.0
+6,7,5,6,mouth of Baitios river,69°30',20°40',69.5,20.6667,yes,6.07.05.07,Baitios (Baitiros)-Mündung,100.0
+6,7,5,7,river sources,76°00',24°30',76.0,24.5,yes,6.07.05.08,Baitios (Baitiros)-Quellen,100.0
+6,7,6,1,The Kassanite country Badeo palace,70°00',20°15',70.0,20.25,yes,6.07.06.02,Badeo*,100.0
+6,7,6,2,Ambe city,70°40',19°30',70.6667,19.5,yes,6.07.06.03,Ambe (Armbe),100.0
+6,7,6,3,Mamala kome,71°45',18°10',71.75,18.1667,yes,6.07.06.04,Mamala,100.0
+6,7,6,4,Adedou kome,72°15',17°10',72.25,17.1667,yes,6.07.06.05,Dorf des Adedos,100.0
+6,7,7,1,Country of the Elisarans Poudnou city,72°30',16°30',72.5,16.5,yes,6.07.07.02,Stadt des Pudnos*,100.0
+6,7,7,2,Ailou kome,73°30',16°30',73.5,16.5,yes,6.07.07.03,Dorf des Ailos,100.0
+6,7,7,3,Napegous kome,73°30',15°00',73.5,15.0,yes,6.07.07.04,Dorf des Napeges (Napeguse),100.0
+6,7,7,4,Sakatia city,74°15',14°30',74.25,14.5,yes,6.07.07.05,Sakatia,100.0
+6,7,7,5,Mouza trading post,74°30',14°00',74.5,14.0,yes,6.07.07.06,Muza*,100.0
+6,7,7,6,Sosippou port,74°45',13°00',74.75,13.0,yes,6.07.07.07,Hafen des Sosipos (Sosippos),100.0
+6,7,7,7,Pseudokelis,75°00',12°30',75.0,12.5,yes,6.07.07.08,Pseudokelis,100.0
+6,7,7,8,Okelis trading post,75°00',12°00',75.0,12.0,yes,6.07.07.09,Okelis*,100.0
+6,7,7,9,Palindromos promontory,74°30',11°40',74.5,11.6667,yes,6.07.07.10,Kap Palindromos,100.0
+6,7,8,1,narrows: Poseidion promontory,75°00',11°30',75.0,11.5,yes,6.07.08.03,Kap Poseidion,100.0
+6,7,8,2,Sanina city,75°30',11°45',75.5,11.75,yes,6.07.08.04,Sanina,90.8
+6,7,8,3,Kaboubathra mountain,76°15',11°15',76.25,11.25,yes,6.07.08.05,Kabubathra,100.0
+6,7,9,1,Country of the Homerites: Madoke city,77°00',11°45',77.0,11.75,yes,6.07.09.02,Madoke (Makode),100.0
+6,7,9,2,Mardache city,78°00',11°00',78.0,11.0,yes,6.07.09.03,Mardache (Marache),58.0
+6,7,9,3,Lees kome,78°40',11°30',78.6667,11.5,yes,6.07.09.04,Lees (Leis),100.0
+6,7,9,4,Ammonion promontory,79°20',11°10',79.3333,11.1667,yes,6.07.09.05,Kap des Ammonios,93.0
+6,7,9,5,Arabias trading post,80°00',11°30',80.0,11.5,yes,6.07.09.06,Arabia* (Arabias* ),100.0
+6,7,9,6,Atmanisphe kome,80°40',11°45',80.6667,11.75,yes,6.07.09.07,Agmanisphe (Atmanisphe),100.0
+6,7,9,7,Melan mountain,81°30',11°45',81.5,11.75,yes,6.07.09.08,Schwarzer Berg,100.0
+6,7,10,1,Country of the Adramitans Ebisma city,82°00',11°45',82.0,11.75,yes,6.07.10.02,Abisama,100.0
+6,7,10,2,Megas Aigialos (Big Shore),82°30',11°30',82.5,11.5,yes,6.07.10.03,Grosser Strand,100.0
+6,7,10,3,Mada kome,83°00',11°30',83.0,11.5,yes,6.07.10.04,Mada (Ada),100.0
+6,7,10,4,Eristhe city,83°30',11°45',83.5,11.75,yes,6.07.10.05,Eristhe (Etisthe),100.0
+6,7,10,5,Mikros Aigialos (Small Shore),83°40',11°30',83.6667,11.5,yes,6.07.10.06,Kleiner Strand,100.0
+6,7,10,6,Kane trading post and promontory,84°00',11°30',84.0,11.5,yes,6.07.10.07,Kane*,63.3
+6,7,10,7,Troulla harbor,84°00',12°40',84.0,12.6667,yes,6.07.10.08,Trulla,100.0
+6,7,10,8,Maithath kome,84°20',13°00',84.3333,13.0,yes,6.07.10.09,Maithath (Maphath),100.0
+6,7,10,9,Prionoton mountain,84°40',13°00',84.6667,13.0,yes,6.07.10.10,Prionoton,100.0
+6,7,10,10,mouth of the Prion river,85°00',13°00',85.0,13.0,yes,6.07.10.11,Prion-Mündung,89.7
+6,7,10,11,river sources,82°00',17°30',82.0,17.5,yes,6.07.10.12,Prion-Quellen,100.0
+6,7,10,12,Embolon kome,85°30',13°20',85.5,13.3333,yes,6.07.10.13,Embolon,93.9
+6,7,10,13,Tretos harbor,86°20',13°45',86.3333,13.75,yes,6.07.10.14,Tretos,100.0
+6,7,10,14,Thiallela kome,87°00',14°00',87.0,14.0,yes,6.07.10.15,Thialemath,100.0
+6,7,10,15,Moscha harbor,88°30',14°00',88.5,14.0,yes,6.07.10.16,Moscha,100.0
+6,7,10,16,Syagros promontory,90°00',14°00',90.0,14.0,yes,6.07.10.17,Kap Syagros,100.0
+6,7,11,1,Sachalites Metakon kome,88°00',16°00',88.0,16.0,yes,6.07.11.03,Metakon,100.0
+6,7,11,2,Ausara city,87°20',16°45',87.3333,16.75,yes,6.07.11.04,Ausara,100.0
+6,7,11,3,Ange kome,87°30',17°30',87.5,17.5,yes,6.07.11.05,Ange,100.0
+6,7,11,4,Astoa kome,88°30',18°30',88.5,18.5,yes,6.07.11.06,Astoa,100.0
+6,7,11,5,Neogilla naval station,89°00',19°00',89.0,19.0,yes,6.07.11.07,Neogilla,100.0
+6,7,11,6,mouth of the Hormanos river,89°30',20°30',89.5,20.5,yes,6.07.13.05,Ormanos-Mündung –> 6.7.11,100.0
+6,7,11,7,Didyma mountains,90°15',19°20',90.25,19.3333,yes,6.07.11.09,Didyma-Berge,100.0
+6,7,11,8,Kosara or Koseude city,91°00',20°00',91.0,20.0,yes,6.07.11.10,Koseude (Kosara),100.0
+6,7,11,9,Oracle of Artemis,91°40',20°00',91.6667,20.0,yes,6.07.11.11,Orakel der Artemis,100.0
+6,7,11,10,Abissa city,92°20',20°15',92.3333,20.25,yes,6.07.11.12,Abissa (Abisa),100.0
+6,7,11,11,Korodabon promontory,93°00',20°15',93.0,20.25,yes,6.07.11.13,Kap Korodamon,100.0
+6,7,12,1,In the narrows of the Persian Gulf Kryptos harbor,92°40',21°30',92.6667,21.5,yes,6.07.12.02,Kryptos,100.0
+6,7,12,2,[Coastal mountains of Eudaimon Arabia: Hippos Mountain,76°50',27°30',76.8333,27.5,no,6.07.29.04,Lugana (Zutana),33.6
+6,7,12,3,Kaboubathra Mountain,76°15',11°15',76.25,11.25,yes,6.07.08.05,Kabubathra,100.0
+6,7,12,4,Melan Mountain,81°30',11°30',81.5,11.5,yes,6.07.09.08,Schwarzer Berg,76.3
+6,7,12,5,Prionoton Mountain,84°40',13°00',84.6667,13.0,yes,6.07.10.10,Prionoton,100.0
+6,7,12,6,Didyma Mountains,90°15',19°20',90.25,19.3333,yes,6.07.11.09,Didyma-Berge,100.0
+6,7,12,7,"the so-called Melana mountains of the Asabans, midpoint on the sea at",93°00',22°20',93.0,22.3333,yes,6.07.12.04,Asabon (Asabo)-Berge (Endpunkt am Meer),60.2
+6,7,12,8,Promontory of the Asabans,92°30',23°20',92.5,23.3333,yes,6.07.12.05,Kap Asabon,100.0
+6,7,13,1,Coastal rivers: Baitios river,69°30',20°40',69.5,20.6667,yes,6.07.05.07,Baitios (Baitiros)-Mündung,100.0
+6,7,13,2,springs of the river,76°00',24°30',76.0,24.5,yes,6.07.05.08,Baitios (Baitiros)-Quellen,100.0
+6,7,13,3,Prionos river mouth,85°00',13°30',85.0,13.5,yes,6.07.10.11,Prion-Mündung,100.0
+6,7,13,4,springs of the river,82°00',17°30',82.0,17.5,yes,6.07.10.12,Prion-Quellen,100.0
+6,7,13,5,Hormanos river,89°40',19°30',89.6667,19.5,yes,6.07.11.08,Ormanos-Mündung,45.4
+6,7,13,6,Lar river,86°20',23°30',86.3333,23.5,yes,6.07.13.06,"Lar-Mündung < 6,7,14",71.4
+6,7,13,7,Springs of the river,81°00',18°00',81.0,18.0,yes,6.07.13.07,"Lar-Quellen < 6,7,14",100.0
+6,7,13,8,Kosara city,91°00',20°00',91.0,20.0,yes,6.07.11.10,Koseude (Kosara),100.0
+6,7,14,1,"Of the Persian Gulf; in the widely extended gulfs of the Ichthyophagi, in which are the Makai and then the Nareitai: Regma city",88°00',23°10',88.0,23.1667,yes,6.07.14.06,Rhegama (Rhegma),100.0
+6,7,14,2,Sacred promontory of the Sun,87°20',23°30',87.3333,23.5,yes,6.07.14.07,Heiliges Kap des Helios,100.0
+6,7,14,3,mouth of the Lar river,86°20',23°30',86.3333,23.5,yes,6.07.14.08,Lar-Mündung,100.0
+6,7,14,4,river sources,81°00',18°00',81.0,18.0,yes,6.07.13.07,"Lar-Quellen < 6,7,14",100.0
+6,7,14,5,Kanipsa city,86°00',23°10',86.0,23.1667,yes,6.07.14.10,Kapsina (Kranipsa),100.0
+6,7,14,6,Kabana (or Kauana) city,85°00',23°00',85.0,23.0,yes,6.07.14.11,Kauana (Kuana),100.0
+6,7,15,1,of the Attaians: Sarkoa city,84°15',23°00',84.25,23.0,yes,6.07.15.02,Sarkoe,100.0
+6,7,15,2,Karada city,83°40',23°30',83.6667,23.5,yes,6.07.15.03,Karada,100.0
+6,7,15,3,Atta kome,82°00',23°15',82.0,23.25,yes,6.07.15.04,Atta (Aitta),100.0
+6,7,16,1,of the Gerrhaei: Magindanata city,81°00',23°20',81.0,23.3333,yes,6.07.16.02,Magindanata (Magindana),100.0
+6,7,16,2,Gerra city,80°00',23°20',80.0,23.3333,yes,6.07.16.03,Gerra*,100.0
+6,7,16,3,Bilbana city,80°00',24°10',80.0,24.1667,yes,6.07.16.04,Bilbana (Olbiana),100.0
+6,7,17,1,of the Thaimi Eithar city,80°00',25°00',80.0,25.0,yes,6.07.17.02,Ithar,100.0
+6,7,17,2,Magon gulf,80°00',25°20',80.0,25.3333,yes,6.07.17.03,Golf der Mager,100.0
+6,7,17,3,Istriana city,80°00',25°40',80.0,25.6667,yes,6.07.17.04,Istriana,100.0
+6,7,18,1,of the Leanitai: Mallaba city,80°10',26°10',80.1667,26.1667,yes,6.07.18.02,Mallada,100.0
+6,7,18,2,Chersonesos promontory,80°20',26°30',80.3333,26.5,yes,6.07.18.03,Kap Chersonesos,100.0
+6,7,18,3,Leanites gulf,79°15',27°00',79.25,27.0,yes,6.07.18.04,Golf Laianites,77.7
+6,7,18,4,Itamos harbor,79°40',27°30',79.6667,27.5,yes,6.07.18.05,Itamos,93.9
+6,7,18,5,Adaroupolis,79°15',27°40',79.25,27.6667,yes,6.07.18.06,Stadt des Adaros,100.0
+6,7,19,1,of the Aboukaians: Hieros gulf,78°15',28°15',78.25,28.25,no,6.07.19.02,Heiliger Golf,40.8
+6,7,19,2,Koromanis city,79°00',28°45',79.0,28.75,yes,6.07.19.03,Koromanis,100.0
+6,7,19,3,which the limit point of Desert Arabia and the Maisanites gulf at,79°00',30°10',79.0,30.1667,yes,6.07.19.05,Maisanitischer Golf (Mesanitischer Golf),100.0
+6,7,20,1,"The named mountains of this land are those already mentioned, including in addition of the interior, and also the so-called Zames, midpoint",76°00',25°00',76.0,25.0,yes,6.07.20.01,Zames (Mitte),100.0
+6,7,20,2,the Maritha,80°00',21°10',80.0,21.1667,yes,6.07.20.02,Mareitha-Berge,45.4
+6,7,20,3,Klimax,76°30',16°00',76.5,16.0,yes,6.07.20.03,Klimax,100.0
+6,7,20,4,which the spring with so-called water of Styx,78°00',15°00',78.0,15.0,yes,6.07.20.04,Wasser der Styx (Quelle),100.0
+6,7,20,5,other nameless mountains above the Kinaidokolpitai,71°30',25°00',71.5,25.0,yes,6.07.20.05,Namenlose Berge,71.2
+6,7,20,6,beyond the Katanitai,73°00',20°00',73.0,20.0,yes,6.07.20.07,Namenlose Berge,100.0
+6,7,20,7,below the Mareitha,84°30',17°40',84.5,17.6667,yes,6.07.20.09,Namenlose Berge,100.0
+6,7,20,8,beyond the Asabon mountains,88°00',22°30',88.0,22.5,yes,6.07.20.11,Namenlose Berge,100.0
+6,7,27,1,The cities and komai in Arabia Felixlocated in the interior are the following: Aramaua,67°30',29°10',67.5,29.1667,yes,6.07.27.02,Aramaua,100.0
+6,7,27,2,Hostama,69°30',29°00',69.5,29.0,yes,6.07.27.03,Ostama,100.0
+6,7,27,3,Thapaua,71°40',29°00',71.6667,29.0,yes,6.07.27.04,Thapaua,100.0
+6,7,27,4,Makna or Maina,67°00',28°45',67.0,28.75,yes,6.07.27.05,Makna,100.0
+6,7,27,5,Ankale,68°15',28°45',68.25,28.75,yes,6.07.27.06,Ankale (Akale),100.0
+6,7,27,6,Madiama,68°00',28°15',68.0,28.25,yes,6.07.27.07,Madiama,100.0
+6,7,28,1,Achroua,70°00',28°15',70.0,28.25,yes,6.07.28.01,Achrua (Ochroa),100.0
+6,7,28,2,Obraka,71°30',28°20',71.5,28.3333,yes,6.07.28.02,Obraka (Abrata),100.0
+6,7,28,3,Radou kome,73°30',28°30',73.5,28.5,yes,6.07.28.03,Dorf des Rhados,100.0
+6,7,28,4,Pharatha,73°40',28°40',73.6667,28.6667,yes,6.07.28.04,Pharatha,100.0
+6,7,28,5,Satoula,77°30',28°10',77.5,28.1667,yes,6.07.28.05,Satula,100.0
+6,7,28,6,Laba,68°10',27°40',68.1667,27.6667,yes,6.07.28.06,Laba,100.0
+6,7,29,1,Thaima,71°00',27°00',71.0,27.0,yes,6.07.29.01,Thaima (Thama),100.0
+6,7,29,2,Gaia city,71°15',27°20',71.25,27.3333,yes,6.07.29.02,Gaia (Gea),100.0
+6,7,29,3,Aina,75°40',27°20',75.6667,27.3333,yes,6.07.29.03,Aina,100.0
+6,7,29,4,Lougana or Zougana,76°30',27°15',76.5,27.25,yes,6.07.29.04,Lugana (Zutana),100.0
+6,7,29,5,Gaisa,78°40',27°15',78.6667,27.25,yes,6.07.29.05,Gaisa (Gesa),100.0
+6,7,29,6,Soaka,68°00',26°15',68.0,26.25,yes,6.07.29.06,Soaka,100.0
+6,7,29,7,Egra,70°30',26°00',70.5,26.0,yes,6.07.29.07,Negran (Aigra),100.0
+6,7,29,8,Salma,74°30',26°00',74.5,26.0,yes,6.07.29.08,Salma,100.0
+6,7,30,1,Arrea kome,75°40',26°10',75.6667,26.1667,yes,6.07.30.01,Arre,100.0
+6,7,30,2,Digema or Disima,77°00',26°30',77.0,26.5,yes,6.07.30.02,Digema (Digena),100.0
+6,7,30,3,Saphtha,78°15',26°20',78.25,26.3333,yes,6.07.30.03,Saphtha,100.0
+6,7,30,4,Phigia,79°00',26°00',79.0,26.0,yes,6.07.30.04,Phigeia,100.0
+6,7,30,5,Badais,68°30',25°30',68.5,25.5,yes,6.07.30.05,Badais,100.0
+6,7,30,6,Ausara,71°00',25°00',71.0,25.0,yes,6.07.20.05,Namenlose Berge,100.0
+6,7,30,7,Iabri,74°30',25°00',74.5,25.0,yes,6.07.30.07,Iabri,100.0
+6,7,30,8,Alata city,77°20',25°30',77.3333,25.5,yes,6.07.30.08,Alata,100.0
+6,7,31,1,Mochoura,69°40',24°30',69.6667,24.5,yes,6.07.31.01,Mochura,100.0
+6,7,31,2,Thoumna,70°00',24°50',70.0,24.8333,yes,6.07.31.02,Thumna,53.8
+6,7,31,3,Alouare,70°00',24°15',70.0,24.25,yes,6.07.31.03,Aluare,59.9
+6,7,31,4,Phalbinou,73°15',24°00',73.25,24.0,yes,6.07.31.04,Phalbinu (Phlanu),79.0
+6,7,31,5,Salma,73°20',24°20',73.3333,24.3333,yes,6.07.31.05,Salma,100.0
+6,7,31,6,Gorda,76°10',24°30',76.1667,24.5,yes,6.07.31.06,Gorda,100.0
+6,7,31,7,Marata,79°20',24°20',79.3333,24.3333,yes,6.07.31.07,Marata (Maraga),100.0
+6,7,31,8,Ibirtha,79°40',24°40',79.6667,24.6667,yes,6.07.31.08,Ibirtha,87.8
+6,7,31,9,Lathrippa,71°40',23°20',71.6667,23.3333,yes,6.07.31.09,Lathrippa (Lathrepta),100.0
+6,7,31,10,Karna,73°30',23°15',73.5,23.25,yes,6.07.31.10,Karna,100.0
+6,7,32,1,Biavanna,76°30',23°00',76.5,23.0,yes,6.07.32.01,Biabanna (Veana),100.0
+6,7,32,2,Goiratha,77°40',23°00',77.6667,23.0,yes,6.07.32.02,Giratha (Gyrasa),100.0
+6,7,32,3,Katara,79°30',23°20',79.5,23.3333,yes,6.07.32.03,Katara,100.0
+6,7,32,4,Baiba or Raiba,71°30',22°30',71.5,22.5,yes,6.07.32.04,Baiba,100.0
+6,7,32,5,Makoraba,73°20',22°00',73.3333,22.0,yes,6.07.32.05,Makoraba,100.0
+6,7,33,1,Sata,81°10',22°20',81.1667,22.3333,yes,6.07.33.01,Sata,100.0
+6,7,33,2,Masthala,81°45',22°30',81.75,22.5,yes,6.07.33.02,Masthala,100.0
+6,7,33,3,Domana,82°20',22°30',82.3333,22.5,yes,6.07.33.03,Domana,100.0
+6,7,33,4,Attia,85°00',22°15',85.0,22.25,yes,6.07.33.04,Atia,100.0
+6,7,33,5,Ravana palace,87°00',22°00',87.0,22.0,yes,6.07.33.05,Rhabana (Rhathana),100.0
+6,7,33,6,Chabouata,89°15',22°00',89.25,22.0,no,6.07.33.05,Rhabana (Rhathana),28.1
+6,7,33,7,Thoumata,74°20',21°20',74.3333,21.3333,no,6.07.32.05,Makoraba,16.9
+6,7,34,1,Olaphia,77°40',21°45',77.6667,21.75,yes,6.07.34.01,Olaphia (Alaphia),100.0
+6,7,34,2,Inapha,79°10',21°40',79.1667,21.6667,yes,6.07.34.02,Inapha,100.0
+6,7,34,3,Tiagar,85°00',21°20',85.0,21.3333,yes,6.07.34.03,Tiagar,100.0
+6,7,34,4,Appa,91°00',21°00',91.0,21.0,yes,6.07.34.04,Appa (Aspa),100.0
+6,7,34,5,Agdamou,73°30',20°20',73.5,20.3333,yes,6.07.34.05,Agdamu,100.0
+6,7,34,6,Karman palace,75°15',20°15',75.25,20.25,yes,6.07.34.06,Karman,100.0
+6,7,35,1,Irala,80°20',20°15',80.3333,20.25,yes,6.07.35.01,Irala (Ilara),100.0
+6,7,35,2,Naskos metropolis,81°15',20°40',81.25,20.6667,yes,6.07.35.02,Naskos (Nako),100.0
+6,7,35,3,Labris,82°00',20°15',82.0,20.25,yes,6.07.35.03,Laibris (Labris),100.0
+6,7,35,4,Latea,83°20',20°15',83.3333,20.25,yes,6.07.35.04,Lattha,100.0
+6,7,36,1,Hierakon kome,84°30',20°30',84.5,20.5,no,6.07.36.01,Dorf der Adler,42.8
+6,7,36,2,Albana,74°30',19°15',74.5,19.25,yes,6.07.36.02,Albana (Alabana),100.0
+6,7,36,3,Chargatha,73°10',19°15',73.1667,19.25,yes,6.07.36.03,Chargatha (Chariattha),45.0
+6,7,36,4,Laththa,75°20',19°20',75.3333,19.3333,yes,6.07.36.04,Laththa (Laattha),100.0
+6,7,36,5,Omanon trading post,87°40',19°45',87.6667,19.75,no,6.07.11.06,Astoa,30.0
+6,7,36,6,Marasdou,74°30',18°30',74.5,18.5,yes,6.07.36.06,Marasdu (Maragdu),100.0
+6,7,37,1,Mara metropolis,76°00',18°40',76.0,18.6667,yes,6.07.37.01,Mara* (Maraba*),65.3
+6,7,37,2,Nagara metropolis,84°45',18°30',84.75,18.5,no,6.07.37.04,Iula,24.4
+6,7,37,3,Ioula,85°20',18°00',85.3333,18.0,yes,6.07.37.04,Iula,85.8
+6,7,37,4,Amara,78°30',18°20',78.5,18.3333,yes,6.07.37.02,Amara,87.8
+6,7,37,5,Magoulaua,75°30',17°00',75.5,17.0,yes,6.07.37.05,Magulaua (Magulaba),100.0
+6,7,37,6,Silaion,76°40',17°00',76.6667,17.0,yes,6.07.37.06,Sylaion (Sileon),100.0
+6,7,37,7,Mariama,78°10',17°10',78.1667,17.1667,yes,6.07.37.07,Mariama,100.0
+6,7,37,8,Thoumna,79°00',17°15',79.0,17.25,yes,6.07.37.08,Thumna,100.0
+6,7,38,1,Ouodona,80°00',17°20',80.0,17.3333,yes,6.07.38.01,Vodona,100.0
+6,7,38,2,Marimatha,85°10',17°40',85.1667,17.6667,yes,6.07.38.02,Marimatha,100.0
+6,7,38,3,Sabe,73°40',16°55',73.6667,16.9167,yes,6.07.38.03,Sabe,100.0
+6,7,38,4,Menambis palace,75°45',16°30',75.75,16.5,yes,6.07.38.04,Menambis*,100.0
+6,7,38,5,Thabba,78°40',16°10',78.6667,16.1667,yes,6.07.38.05,Thabba (Thauba),100.0
+6,7,38,6,Sabbatha metropolis,77°00',16°30',77.0,16.5,yes,6.07.38.06,Sabbatha* (Saubatha*),100.0
+6,7,39,1,Sadasara,81°45',16°20',81.75,16.3333,yes,6.07.39.01,Madasara,100.0
+6,7,39,2,Gorda,82°30',16°00',82.5,16.0,yes,6.07.39.02,Gorda,100.0
+6,7,39,3,Thabane,85°40',16°20',85.6667,16.3333,yes,6.07.39.03,Thabane (Thauane),100.0
+6,7,39,4,Meiba,74°20',15°30',74.3333,15.5,yes,6.07.39.04,Meiba,93.9
+6,7,40,1,Source of Styx water,78°00',15°00',78.0,15.0,yes,6.07.20.04,Wasser der Styx (Quelle),100.0
+6,7,40,2,Draga,79°10',15°15',79.1667,15.25,yes,6.07.40.02,Draga (Araga),100.0
+6,7,40,3,Sarouon,80°40',15°15',80.6667,15.25,yes,6.07.40.03,Saruon (Sarbion),100.0
+6,7,41,1,Maipha metropolis,83°15',15°00',83.25,15.0,yes,6.07.41.01,Mepha,100.0
+6,7,41,2,Saraka,75°30',14°30',75.5,14.5,yes,6.07.41.02,Saraka,100.0
+6,7,41,3,Sapphara metropolis,78°00',14°00',78.0,14.0,yes,6.07.41.03,Sapphara*,81.7
+6,7,41,4,Are palace,80°30',14°30',80.5,14.5,yes,6.07.41.04,Are (Arae),100.0
+6,7,41,5,Raida,83°40',14°10',83.6667,14.1667,yes,6.07.41.05,Rhaida (Rheda),100.0
+6,7,41,6,Barnoun (or Bainoun,84°30',14°15',84.5,14.25,yes,6.07.41.06,Bainun (Benun),100.0
+6,7,41,7,Thouris,75°15',13°00',75.25,13.0,yes,6.07.41.07,Thuris,100.0
+6,7,41,8,Lachere,77°30',13°20',77.5,13.3333,yes,6.07.41.08,Lachchere (Lachere),100.0
+6,7,41,9,Hyaila,79°00',13°50',79.0,13.8333,yes,6.07.41.09,Hyaila (Hyela),100.0
+6,7,41,10,Makkala,81°00',13°45',81.0,13.75,yes,6.07.41.10,Makkala,100.0
+6,7,41,11,Sachle,82°40',13°20',82.6667,13.3333,yes,6.07.41.11,Sachle (Sakchle),100.0
+6,7,42,1,Saoue palace,76°00',12°00',76.0,12.0,no,6.07.42.01,Sabe* (Saue*),38.3
+6,7,42,2,Deoua,77°40',12°45',77.6667,12.75,yes,6.07.42.02,Deua (Deoba),100.0
+6,7,42,3,Sochchor,78°30',12°40',78.5,12.6667,yes,6.07.42.03,Sochchor (Sokchor),100.0
+6,7,42,4,Baua,80°20',12°40',80.3333,12.6667,yes,6.07.42.04,Bana (Naba),100.0
+6,7,42,5,Dela,82°00',12°40',82.0,12.6667,yes,6.07.42.05,Dela,100.0
+6,7,42,6,Koa,83°30',12°30',83.5,12.5,yes,6.07.42.06,Kua (Koal),100.0
+6,7,43,1,"Islands adjoining this country, in the Arabian Gulf: Ainou",65°45',27°20',65.75,27.3333,yes,6.07.43.02,Insel des Ainos,100.0
+6,7,43,2,Timagenous,66°00',25°45',66.0,25.75,yes,6.07.43.03,Insel des Timagenes,100.0
+6,7,43,3,Zygaina,66°15',24°20',66.25,24.3333,yes,6.07.43.04,Zygaina,100.0
+6,7,43,4,Daimonon,66°45',23°15',66.75,23.25,yes,6.07.43.05,Insel der Dämonen,100.0
+6,7,43,5,Polybiou,67°40',27°40',67.6667,27.6667,yes,6.07.28.06,Laba,51.7
+6,7,43,6,Hierakon,69°30',19°00',69.5,19.0,yes,6.07.43.07,Insel der Adler,100.0
+6,7,44,1,Sokratous,70°00',16°40',70.0,16.6667,yes,6.07.44.01,Insel des Sokrates,100.0
+6,7,44,2,Kardamine,71°00',16°00',71.0,16.0,yes,6.07.44.02,Kardamine,100.0
+6,7,44,3,Are,71°30',15°20',71.5,15.3333,yes,6.07.44.03,Are,81.7
+6,7,44,4,Katakekaumene,70°30',14°30',70.5,14.5,yes,6.07.44.04,Katakekaumene,100.0
+6,7,44,5,Maliachou (two),71°40',14°00',71.6667,14.0,yes,6.07.44.05,Inseln des Malichas (2),100.0
+6,7,44,6,Adanou (two),72°30',12°30',72.5,12.5,yes,6.07.44.06,Inseln des Adanos (2),100.0
+6,7,45,1,"in the Red sea: Agathokleous (two), the midpoint between at",81°20',10°00',81.3333,10.0,yes,6.07.45.02,Inseln des Agathokles (2),100.0
+6,7,45,2,"Kokkonagou (six), a midpoint for which is",83°00',9°00',83.0,9.0,yes,6.07.45.03,Inseln des Kokkonatos (Kokkonagos) (3),100.0
+6,7,45,3,Dioskoridous city,86°40',9°30',86.6667,9.5,yes,6.07.45.04,Insel u. Stadt des Dioskorides (O-Ende),100.0
+6,7,45,4,western limit point of the island,85°00',10°30',85.0,10.5,no,6.07.10.05,Eristhe (Etisthe),27.0
+6,7,45,5,Trete,86°30',12°00',86.5,12.0,yes,6.07.45.06,Trete,100.0
+6,7,46,1,"near Sachalites bay, the Zenobiou islands (seven) the middle of which is",91°00',16°30',91.0,16.5,yes,6.07.46.02,Inseln des Zenobios (7),100.0
+6,7,46,2,Organa,92°00',19°00',92.0,19.0,yes,6.07.46.03,Organa,100.0
+6,7,46,3,"Sarapias, on which a sanctuary",94°00',10°30',94.0,10.5,no,,,
+6,7,47,1,In the Persian Gulf: Apphana island at,81°20',28°40',81.3333,28.6667,yes,6.07.47.02,Apphana*,100.0
+6,7,47,2,Ichara,82°00',25°00',82.0,25.0,yes,6.07.47.03,Ichara,100.0
+6,7,47,3,Tharro,85°15',24°45',85.25,24.75,yes,6.07.47.04,Tharo,100.0
+6,7,47,4,Gylos,90°00',24°40',90.0,24.6667,yes,6.07.47.05,Tylos,100.0
+6,7,47,5,Arados,91°40',24°40',91.6667,24.6667,yes,6.07.47.06,Arathos,100.0
+6,8,2,1,limit by the Desert until the Indian sea at a place extending,94°,20°,94.0,20.0,no,6.07.12.03,Schwarze Berge (Endpunkt am Meer),11.7
+6,8,4,1,Daras river mouth,95°15',28°40',95.25,28.6667,yes,6.08.04.01,Daras-Mündung,100.0
+6,8,4,2,Kathraps river mouth,95°30',27°40',95.5,27.6667,yes,6.08.04.02,Kathraps-Mündung,100.0
+6,8,4,3,Korios river mouth,96°,26°,96.0,26.0,yes,6.08.04.03,Korios-Mündung,100.0
+6,8,4,4,Achindanas river mouth,96°40',26°,96.6667,26.0,yes,6.08.04.04,Achindanas-Mündung,100.0
+6,8,4,5,Andanis river mouth,96°,25°,96.0,25.0,yes,6.08.04.05,Andanis-Mündung (Ardanis-Mündung ),100.0
+6,8,4,6,Saganos river mouth,95°40',24°30',95.6667,24.5,yes,6.08.04.06,Saganos-Mündung,100.0
+6,8,5,1,Harmouza city,94°30',23°30',94.5,23.5,yes,6.08.05.01,Harmuza*,100.0
+6,8,5,2,Harmozon cape,94°,23°40',94.0,23.6667,yes,6.08.05.02,Kap Harmozon,100.0
+6,8,5,3,Karpella cape,94°,22°10',94.0,22.1667,yes,6.08.05.03,Kap Karpella,100.0
+6,8,7,1,"Cape Karpela in the Gulf of Paragon, Kanthatis city",96°,22°30',96.0,22.5,yes,6.08.07.03,Kanthatis,100.0
+6,8,7,2,Agris city,96°30',23°,96.5,23.0,yes,6.08.07.04,Agris,100.0
+6,8,7,3,Kommana,97°30',23°,97.5,23.0,yes,6.08.07.05,Kombana,100.0
+6,8,7,4,Rhogana,98°15',22°30',98.25,22.5,yes,6.08.07.06,Rhogana,100.0
+6,8,7,5,Saralos river mouth,98°30',22°40',98.5,22.6667,yes,6.08.07.07,Salaros-Mündung,100.0
+6,8,7,6,Masin,99°,22°40',99.0,22.6667,yes,6.08.07.08,Masin (Masida),100.0
+6,8,7,7,Samydake,99°30',22°40',99.5,22.6667,yes,6.08.07.09,Samydake*,100.0
+6,8,8,1,Samydakous river mouth,100°30',22°20',100.5,22.3333,yes,6.08.08.01,Samydaches-Mündung,100.0
+6,8,8,2,springs of the river,104°30',25°,104.5,25.0,yes,6.08.08.02,Samydaches-Quellen,100.0
+6,8,8,3,Teisa city,101°10',22°,101.1667,22.0,yes,6.08.08.03,Tisa (Tesa),100.0
+6,8,8,4,Hydriakes river mouth Kaudriakes river mouth,101°15',21°40',101.25,21.6667,yes,6.08.08.04,Kaudriakes (Hydriakes)-Mündung,100.0
+6,8,8,5,Cape Bagia or Basia,101°,21°,101.0,21.0,yes,6.08.08.05,Kap Bagia (Bapa),100.0
+6,8,8,6,Kyiza harbor,101°15',20°40',101.25,20.6667,yes,6.08.08.06,Kyiza,100.0
+6,8,8,7,Cape Alabagieon,101°,20°,101.0,20.0,yes,6.08.08.07,Kap Alambater (Alambagira),100.0
+6,8,9,1,Until here it is called the Gulf of Paragon; next is Derane Billa,101°30',20°10',101.5,20.1667,yes,6.08.09.01,Moderanibela (Derenobilla),100.0
+6,8,9,2,Kophanta harbor,101°30',20°,101.5,20.0,yes,6.08.09.02,Kophanta,100.0
+6,8,9,3,Zorombas or Zorambos river mouth,102°30',20°,102.5,20.0,yes,6.08.09.03,Zorombas (Zorambos)-Mündung,100.0
+6,8,9,4,Badara,103°,20°10',103.0,20.1667,yes,6.08.09.04,Badara,100.0
+6,8,9,5,Mousarna,103°15',20°10',103.25,20.1667,yes,6.08.09.05,Musarna,100.0
+6,8,10,1,which the earlier mentioned limit of the Indian sea extends,104°,20°,104.0,20.0,yes,6.08.02.06,"Grenzpunkt (Gedrosien, Karmanien)",100.0
+6,8,11,1,"above-mentioned, beside the Desert and Gedrosia, one called both Semiramis and Strongylon (round) from the shape, the midpoint of which extends",94°30',23°,94.5,23.0,yes,6.08.11.04,Strongylon (Mitte) bzw. Berg der Semiramis,100.0
+6,8,11,2,"which flows the more westerly of the Samydakous rivers, the between point of",99°,26°,99.0,26.0,yes,6.08.11.06,Berge aus denen die Flüsse westlich des Samydaches fliessen (Mitte),100.0
+6,8,13,1,These are the cities and villages of inland Karmania: Portospana,96°,28°45',96.0,28.75,yes,6.08.13.02,Portospana,100.0
+6,8,13,2,Karmana metropolis,100°,29°,100.0,29.0,yes,6.08.13.03,Karmana*,100.0
+6,8,13,3,Thaspis,98°,27°40',98.0,27.6667,yes,6.08.13.04,Thaspis,100.0
+6,8,13,4,Nipista,97°30',26°,97.5,26.0,yes,6.08.13.05,Nipista,100.0
+6,8,13,5,Chodda,101°30',25°,101.5,25.0,yes,6.08.13.06,Chodda,100.0
+6,8,13,6,Tarsiana or Tarouana,96°,24°30',96.0,24.5,yes,6.08.13.07,Taruana (Tarsiana),100.0
+6,8,14,1,Alexandreia,99°,24°20',99.0,24.3333,yes,6.08.14.01,Alexandreia,100.0
+6,8,14,2,Sabis,97°30',24°30',97.5,24.5,yes,6.08.14.02,Sabis,100.0
+6,8,14,3,Throaska,99°40',23°40',99.6667,23.6667,yes,6.08.14.03,Throaska,100.0
+6,8,14,4,Ora,102°20',23°40',102.3333,23.6667,yes,6.08.14.04,Ora,100.0
+6,8,14,5,Kophanta,102°15',23°,102.25,23.0,yes,6.08.14.05,Kophanta,100.0
+6,8,15,1,"The islands lying off Karmania are, in the Persian Gulf, Sagdana, in which Miltos",94°,27°15',94.0,27.25,yes,6.08.15.03,Sagdana,100.0
+6,8,15,2,Vorochtha,94°20',25°30',94.3333,25.5,yes,6.08.15.05,Vorochtha (Borochtha),100.0
+6,8,16,1,In the Indian sea Palla or Polla,98°,19°,98.0,19.0,yes,6.08.16.02,Polla,100.0
+6,8,16,2,Karminna,102°,18°,102.0,18.0,yes,6.08.16.03,Karminna*,100.0
+6,8,16,3,Liba island,104°,19°,104.0,19.0,yes,6.08.16.04,Liba,100.0
+6,9,1,1,"limit toward Media until the mouths of the river Oxus, degrees",100°,43°,100.0,43.0,yes,6.09.01.05,Oxos-Mündung,100.0
+6,9,2,1,In this section are the following cities: Saramanne city,94°45',40°30',94.75,40.5,yes,6.09.02.01,Saramanne,100.0
+6,9,2,2,Maxeras river mouth,97°20',41°30',97.3333,41.5,yes,6.09.02.02,Maxeras-Mündung,100.0
+6,9,2,3,Springs of the Maxeras,98°,38°40',98.0,38.6667,yes,6.09.02.03,Maxeras-Quellen,100.0
+6,9,2,4,Sokandas river mouth,97°30',42°,97.5,42.0,yes,6.09.02.04,Sokanda bzw. Sokandas-Mündung,100.0
+6,9,2,5,Oxus river mouth,100°,43°,100.0,43.0,yes,6.09.01.05,Oxos-Mündung,100.0
+6,9,6,1,Inland cities in it are said to be Barange,99°,42°,99.0,42.0,yes,6.09.06.02,Barange,100.0
+6,9,6,2,Adrapsa,98°30',41°30',98.5,41.5,yes,6.09.06.03,Adrapsa,100.0
+6,9,6,3,Kasape,99°30',40°20',99.5,40.3333,yes,6.09.06.04,Kasape,100.0
+6,9,6,4,Abarbina,97°30',40°30',97.5,40.5,yes,6.09.06.05,Abarbina,100.0
+6,9,6,5,Sorba,98°,40°30',98.0,40.5,yes,6.09.06.06,Sorba,100.0
+6,9,7,1,Sinaka,100°,40°30',100.0,40.5,yes,6.09.07.01,Sinika,100.0
+6,9,7,2,Amarousa*,95°,40°,95.0,40.0,yes,6.09.07.02,Amarusa* (Amarotha*),100.0
+6,9,7,3,Hyrkania metropolis,98°30',40°,98.5,40.0,yes,6.09.07.03,Hyrkania*,100.0
+6,9,7,4,Sake or Sale,94°15',39°30',94.25,39.5,yes,6.09.07.04,Sake (Sale),100.0
+6,9,7,5,Asmourna,97°30',39°30',97.5,39.5,yes,6.09.07.05,Asmurna,100.0
+6,9,7,6,Maisoka or Mausoka,99°,39°30',99.0,39.5,yes,6.09.07.06,Maisoka (Mesoka),100.0
+6,9,8,1,a sea island off it called Talka,95°,43°05',95.0,43.0833,yes,6.09.08.02,Talka,100.0
+6,10,1,1,"ON the west Margiane is bounded by Hyrkania along the indicated side; on the north, by a part of Skythia by the mouth of the Oxos river until the section by Bactria, at",103°00',44°00',103.0,44.0,yes,6.10.01.05,Oxos (Schnittpunkt mit Grenze Baktrien/Margiane),100.0
+6,10,1,2,"border of Hyrcania and Parthia, through the Saripha mountains to the limit point at",109°00',39°00',109.0,39.0,yes,6.10.01.11,"Grenzpunkt (Areia, Baktrien, Margiane)",100.0
+6,10,1,3,"on the east by Bactriane along the line of mountains linking the indicated points. A notable river flows through this land, the Margos, the sources of which are at",105°00',20°39',105.0,20.65,yes,6.21.02.03,Arbis-Mündung,47.8
+6,10,1,4,its junction with the Oxos at,102°40',43°30',102.6667,43.5,yes,6.10.01.14,Margos (Einmündung in Oxos)/Oxos (Einmündung des Margos),100.0
+6,10,3,1,Its towns are: Ariaka,103°00',43°00',103.0,43.0,yes,6.10.03.02,Ariaka,81.7
+6,10,3,2,Sena,102°30',42°20',102.5,42.3333,yes,6.10.03.03,Sena,100.0
+6,10,3,3,Aratha,103°30',42°30',103.5,42.5,yes,6.10.03.04,Aratha,100.0
+6,10,3,4,Argadina,101°20',41°40',101.3333,41.6667,yes,6.10.03.05,Argadina,100.0
+6,10,3,5,Iasonion,103°30',41°30',103.5,41.5,yes,6.10.03.06,Iasonion,100.0
+6,10,4,1,"Saripha mountains, the sources of which are at",103°00',39°00',103.0,39.0,yes,6.10.04.03,Namenloser Fluss zum Margos (Quellen),100.0
+6,10,4,2,Rea,102°00',40°30',102.0,40.5,yes,6.10.04.05,Rhea,100.0
+6,10,4,3,Antiocheia Margiane,106°00',40°40',106.0,40.6667,yes,6.10.04.06,Antiocheia Margiane*,100.0
+6,10,4,4,Gouriane,104°00',40°10',104.0,40.1667,yes,6.10.04.07,Guriane,100.0
+6,10,4,5,Nisaia or Nigaia,105°15',39°10',105.25,39.1667,yes,6.10.04.08,Nisaia*,100.0
+6,11,1,1,limit point by Margiane at,101°00',39°00',101.0,39.0,yes,6.02.04.06,Koronos-Gebirge (O-Ende),100.0
+6,11,1,2,by the Paropanisadai along the parallel line extended through of return of Paropanisosmountain until the springs of the Oxos at,119°30',39°00',119.5,39.0,yes,6.09.02.06,Oxos-Quellen,100.0
+6,11,2,1,"Rivers flow through Baktriane that empty into the Oxos: the Ochos, the springs of which are at",110°00',39°00',110.0,39.0,yes,6.11.02.03,Ochos-Quellen,100.0
+6,11,2,2,"the Dargamanis, the springs of which are at",116°30',36°40',116.5,36.6667,yes,6.11.02.04,Dargomanes (Dargamanes)-Quellen,100.0
+6,11,2,3,"the Zariaspes, the sources of which are at",113°00',39°00',113.0,39.0,yes,6.11.02.05,Zariaspes-Quellen,100.0
+6,11,2,4,"the Artamis, the sources of which are at",114°00',39°00',114.0,39.0,yes,6.11.02.06,Artames-Quellen,100.0
+6,11,2,5,the Dargoidos the sources of which are at,116°00',39°00',116.0,39.0,yes,6.11.02.07,Dargoidos-Quellen,100.0
+6,11,2,6,this one flows into the Oxos at,116°30',44°00',116.5,44.0,yes,6.11.02.08,Dargoidos (Einmündung in den Oxos)/Oxos (Einmündung des Dargoidos),100.0
+6,11,3,1,"of the rest, the Artamis and the Zariaspes first join their waters at",113°00',40°00',113.0,40.0,yes,6.11.03.01,Artames (Argamis) (Zusammenfluss mit Zariaspes),100.0
+6,11,3,2,they then flow into the Oxos at,112°30',44°00',112.5,44.0,yes,6.11.03.02,Zariaspes (Einmündung in den Oxos)/Oxos (Einmündung des Zariaspes),100.0
+6,11,4,1,The Dargamanis and the Ochos first join at,109°00',40°10',109.0,40.1667,yes,6.11.04.01,Dargomanes (Dorgomanis) (Zusammenfluss mit Ochos)/Ochos (Zusammenfluss mit Dargomanes),100.0
+6,11,4,2,flow into the Oxos at,109°00',44°20',109.0,44.3333,yes,6.11.04.02,Ochos (Einmündung in den Oxos)/Oxos (Einmündung des Ochos),100.0
+6,11,5,1,The western part of Mt. Paropanisosis at,111°30',39°00',111.5,39.0,yes,6.11.05.01,Paropanisos-Gebirge (W-Ende),100.0
+6,11,5,2,the eastern at,119°30',39°00',119.5,39.0,yes,6.09.02.06,Oxos-Quellen,100.0
+6,11,7,1,The cities of Baktriane toward the Oxos are: Characharta,110°00',44°10',110.0,44.1667,yes,6.11.07.03,Charracharta* (Katracharta*),100.0
+6,11,7,2,Zariaspa or Xarispa,115°00',44°00',115.0,44.0,yes,6.11.07.04,Zariaspa*,100.0
+6,11,7,3,Choana,117°00',42°00',117.0,42.0,yes,6.11.07.05,Choana,100.0
+6,11,7,4,Sourogana,117°30',40°30',117.5,40.5,yes,6.11.07.06,Suragana (Zorachana),100.0
+6,11,7,5,Phratou,119°00',39°20',119.0,39.3333,yes,6.11.07.07,Phratrua (Phratru),100.0
+6,11,8,1,near the other rivers: Alichorda,107°30',43°30',107.5,43.5,yes,6.11.08.01,Alikodra,100.0
+6,11,8,2,Chomara,106°30',42°30',106.5,42.5,yes,6.11.08.02,Chomara (Komara),100.0
+6,11,8,3,Kouriandra,109°30',12°10',109.5,12.1667,no,,,
+6,11,8,4,Kauaris,111°20',43°00',111.3333,43.0,yes,6.11.08.04,Kauaris,100.0
+6,11,8,5,Astakana,112°00',43°20',112.0,43.3333,yes,6.11.08.05,Astakana,75.6
+6,11,8,6,Evousmouanassa or Tosmouanassa,108°20',41°10',108.3333,41.1667,yes,6.11.08.06,Ebusmuanassa (Tumuanassa),100.0
+6,11,8,7,Menapia,113°00',41°20',113.0,41.3333,yes,6.11.08.07,Menapia,100.0
+6,11,8,8,Eukratidia,115°00',42°00',115.0,42.0,yes,6.11.08.08,Eukratidia,100.0
+6,11,9,1,Bactra palace,116°00',41°00',116.0,41.0,yes,6.11.09.01,Baktra*,100.0
+6,11,9,2,Estobara,109°30',39°40',109.5,39.6667,yes,6.11.09.02,Estobara (Ostobara),100.0
+6,11,9,3,Marakanda,112°00',39°15',112.0,39.25,yes,6.11.09.03,Marakanda*,100.0
+6,11,9,4,Marakodra,115°40',39°40',115.6667,39.6667,yes,6.11.09.04,Marakodra,100.0
+6,12,2,1,"The mountains called the Sogdian extend between the two rivers, and have their extremities lying in",111°00',47°00',111.0,47.0,yes,6.12.02.01,Sogdisches (Sugdisches) Gebirge (W–Ende),100.0
+6,12,2,2,,122°00',46°30',122.0,46.5,yes,6.12.02.02,Sogdisches (Sugdisches) Gebirge (O–Ende),100.0
+6,12,3,1,"these mountains rivers flow, mostly nameless, to meet these two rivers, and of these nameless rivers one forms the Oxeian Lake, the middle of which lies in 111°00' E. 45°00' N., and other two streams descend from the same hilly regions as the Iaxartes— the regions in question are called the Highlands of the Komedai. Each of these streams falls into the Iaxartes ; one of them is called Demos and its sources lie in",124°00',43°00',124.0,43.0,yes,6.12.03.06,Dymos (Demos)-Quellen,100.0
+6,12,3,2,Its junction with the river Iaxartes occurs in,123°00',47°00',123.0,47.0,yes,6.12.03.07,Dymos (Demos) (Mündung in den Iaxartes)/Iaxartes (Einmündung des Dymos (Demos)),100.0
+6,12,3,3,The other is the Baskatis whose sources lie in,12°00',44°00',12.0,44.0,no,,,
+6,12,3,4,Its junction with the river Iaxartes occurs in,121°00',47°30',121.0,47.5,yes,6.12.03.09,Baskatis (Einmündung in den Iaxartes)/Iaxartes (Einmündung des Baskatis),100.0
+6,12,5,1,Towns of the Sogdianoi in the highlands along the Iaxartes are these: — Kyreschata,124°00',43°40',124.0,43.6667,yes,6.12.05.03,Kyreschata,45.0
+6,12,5,2,Along the Oxus;— Oxeiana,117°30',44°20',117.5,44.3333,yes,6.12.05.05,Oxeiana*,87.8
+6,12,5,3,Marouka,117°15',43°40',117.25,43.6667,yes,6.12.05.06,Maruka*,100.0
+6,12,5,4,Kholbesina,121°00',43°00',121.0,43.0,no,6.12.05.03,Kyreschata,18.0
+6,12,6,1,Between the rivers and higher up— Trybaktra . 112°15' Alexandria Oxeiane,113°00',44°20',113.0,44.3333,yes,6.12.06.02,Alexandreia Oxeiane,86.7
+6,12,6,2,Indikomordana,115°00',44°20',115.0,44.3333,yes,6.12.06.03,Indikomordana,87.8
+6,12,6,3,Drepsa (or Rhepsa) the Metropolis,120°00',45°00',120.0,45.0,yes,6.12.06.04,Drepsa* Metropolis,100.0
+6,12,6,4,Alexandria Eschate,122°00',41°00',122.0,41.0,yes,6.12.06.05,Alexandreia Eschate*,100.0
+6,13,2,1,Sogdianoi lies in,125°00',43°00',125.0,43.0,yes,6.12.01.11,Iaxartes-Quellen,100.0
+6,13,2,2,the parts towards the valley of the Komedai lie in,130°00',39°00',130.0,39.0,yes,6.13.02.05,Schlucht der Komeden = O-Ende des Berglandes der Komeden,100.0
+6,13,2,3,the so-called Stone Tower lies in,135°00',43°00',135.0,43.0,yes,6.13.02.06,Steinerner Turm,100.0
+6,14,1,1,"POSITION OF SKYTHIA WITHIN IMAOS. Scythia within Imaos is bounded on the west by Sarmatia in Asia along the side already traced, on the north by an unknown land, on the east by Mount Imaos ascending to the north pretty nearly along the meridian of the starting-place already mentioned as far as the unknown land",140°00',63°,140.0,63.0,yes,6.14.01.06,"Grenzpunkt (beide Skythien, unbekanntes Land)",100.0
+6,14,2,1,The bend of the River Rha which marks the boundary of Sarmatia and Scythia,85°00',54°00',85.0,54.0,yes,6.14.02.02,"Rha (Biegung)/Grenzpunkt (Asiatisches Sarmatien, Skythien)",100.0
+6,14,2,2,with the mouth of the river Rha which lies in,87°30',48°50',87.5,48.8333,yes,6.14.02.01,Rha-Mündung,100.0
+6,14,2,3,Mouth of the river Rhymmos,91°00',48°45',91.0,48.75,yes,6.14.02.03,Rhymmos (Drymos)-Mündung,86.2
+6,14,2,4,Mouth of the river Daix,94°,48°45',94.0,48.75,yes,6.14.02.04,Daix-Mündung,89.7
+6,14,2,5,Mouth of the river Iaxartes,97°00',48°00',97.0,48.0,yes,6.14.02.05,Iaxartes-Mündung,100.0
+6,14,2,6,Mouth of the river Iastos,100°,47°20',100.0,47.3333,yes,6.14.02.06,Iastos-Mündung,100.0
+6,14,2,7,Mouth of the river Polytimetos,103°00',45°30',103.0,45.5,yes,6.14.02.07,Polytimetos-Mündung,100.0
+6,14,2,8,"Aspabota, a town",102°00',44°00',102.0,44.0,yes,6.14.02.08,Aspabota*,100.0
+6,14,3,1,"The mountains of Scythia within Imaos are the more eastern parts of the Hyperborean hills and the mountains called Alana, whose extremities lie",105°00',59°00',105.0,59.0,yes,6.14.03.03,Alana-Gebirge (W-Ende),71.7
+6,14,3,2,,118°00',59°30',118.0,59.5,yes,6.14.03.04,Alana-Gebirge (O-Ende),100.0
+6,14,4,1,the Rymmika mountains whose extremities lie,90°00',54°00',90.0,54.0,yes,6.14.04.01,Rhymmika-Gebirge (W-Ende),100.0
+6,14,4,2,,99°00',47°30',99.0,47.5,no,6.14.02.06,Iastos-Mündung,12.2
+6,14,5,1,"the Norosson range, of which the extremities lie",97°00',53°30',97.0,53.5,yes,6.14.05.01,Norosson-Gebirge (W-Ende) (Orosson-Gebirge (W-Ende)),47.9
+6,14,5,2,,106°00',52°30',106.0,52.5,yes,6.14.05.02,Norosson-Gebirge (O-Ende) (Orosson-Gebirge (O-Ende)),100.0
+6,14,6,1,the range of mountains called Aspisia whose extremities lie,111°00',55°30',111.0,55.5,yes,6.14.06.01,Aspisia-Gebirge (W-Ende),100.0
+6,14,6,2,,117°00',52°30',117.0,52.5,yes,6.14.06.02,Aspisia-Gebirge (O-Ende),100.0
+6,14,7,1,the mountains called Tapoura whose extremities lie,120°00',56°00',120.0,56.0,yes,6.14.07.01,Tapura (Tapuren)-Gebirge (W-Ende),100.0
+6,14,7,2,,125°00',49°00',125.0,49.0,yes,6.14.07.02,Tapura-Gebirge (O-Ende),100.0
+6,14,8,1,In addition to these in the depth of the region of the streams are the Syeba mountains whose extremities lie,121°00',58°00',121.0,58.0,yes,6.14.08.02,Syeba-Gebirge (W-Ende),100.0
+6,14,8,2,,132°00',62°00',132.0,62.0,yes,6.14.08.03,Syeba-Gebirge (O-Ende),100.0
+6,14,8,3,the mountains called the Anarea whose extremities lie,130°00',56°00',130.0,56.0,yes,6.14.08.04,Anaraia-Gebirge (W-Ende),100.0
+6,14,8,4,,137°00',50°00',137.0,50.0,yes,6.14.08.05,Anaraia-Gebirge (O-Ende),100.0
+6,14,14,1,"But the parts between the Tapoura Mountains and the slope towards the mouth of the Iaxartes and the seacoast between the two rivers are possessed by the Ariakai, along the Iaxartes and below these the Namostai, then the Sagaraukai, and along the river Oxus the Rhibioi, who have a town Dauaba",104°00',45°,104.0,45.0,yes,6.14.14.09,Dauaba*,100.0
+6,15,1,1,"THE POSITION OF SKYTHIA BEYOND IMAOS. Scythia beyond Mount Imaos is bounded on the west by Scythia within Imaos, and the Sakai along the whole curvature of the mountains towards the north, and on the north by the unknown land, and on the east by Serike in a straight line whereof the extremities lie in",150°00',63°00',150.0,63.0,yes,6.15.01.07,"Grenzpunkt (Serike, Skythien jenseits des Imaon, Unbekanntes Land)",100.0
+6,15,1,2,,160°00',35°00',160.0,35.0,yes,6.15.01.08,"Grenzpunkt (Indien jenseits des Ganges, Skythien jenseits des Imaon, Serike)",100.0
+6,15,2,1,"In this division is situated the western part of the Auxakian Mountains, of which the extremities lie",149°00',49°00',149.0,49.0,yes,6.15.02.01,Auzakia–Gebirge (W-Ende),100.0
+6,15,2,2,,165°00',54°00',165.0,54.0,yes,6.15.02.02,Auzakia–Gebirge (O-Ende),100.0
+6,15,2,3,"the western part of the mountains called Kasia, whoso extremities lie in",152°00',41°00',152.0,41.0,yes,6.15.02.03,"Kasia–Gebirge (westl. Teil, W-Ende)",100.0
+6,15,2,4,,162°00',44°00',162.0,44.0,yes,6.15.02.04,"Kasia–Gebirge (westl. Teil, O-Ende)",100.0
+6,15,2,5,"also the western portion of Emodos, whose extremities lie in",153°00',36°00',153.0,36.0,yes,6.15.02.05,Emoda–Gebirge (W-Ende),100.0
+6,15,2,6,,165°00',36°00',165.0,36.0,yes,6.15.02.06,Emoda–Gebirge (O-Ende),100.0
+6,15,2,7,"towards the Auxakians, the source of the River Oichardes lying in",153°00',51°00',153.0,51.0,yes,6.15.02.07,Oichardes-Quelle am Auzakia-Gebirge),100.0
+6,15,4,1,The towns in this division are these:— Auxakia,143°00',49°40',143.0,49.6667,yes,6.15.04.01,Auzakia*,56.9
+6,15,4,2,Issedon Scythike,150°00',49°30',150.0,49.5,yes,6.15.04.02,Skythisches Issedon* (Essedon* ),55.0
+6,15,4,3,Khaurana,150°00',37°15',150.0,37.25,yes,6.15.04.03,Chaurana,100.0
+6,15,4,4,Soita,145°00',35°20',145.0,35.3333,yes,6.15.04.04,Soita,100.0
+6,16,1,1,"POSITION OF SERIKE. Serike is bounded on the west by Scythia, beyond Mount Imaos, along the line already mentioned, on the north by the unknown land along the same parallel as that through Thule and on the east, likewise by the unknown land along the meridian of which the extremities lie",180°00',63°00',180.0,63.0,yes,6.16.01.05,"Grenzpunkt (Serike NO, Unbekanntes Land)",100.0
+6,16,1,2,,180°00',55°00',180.0,55.0,no,,,
+6,16,1,3,on the south by the rest of India beyond the Ganges through the same parallel as far as the extremity lying,173°00',55°00',173.0,55.0,no,6.16.02.03,Anniba (Aniba)-Gebirge (O-Ende),9.0
+6,16,2,1,"Serike is girdled by the mountains called Anniba, whose extremities lie",153°00',60°00',153.0,60.0,yes,6.16.02.02,Anniba (Aniba)-Gebirge (W-Ende),100.0
+6,16,2,2,,171°00',56°00',171.0,56.0,yes,6.16.02.03,Anniba (Aniba)-Gebirge (O-Ende),100.0
+6,16,2,3,"by the eastern part of the Auxakians, of which the extremity lies",165°00',54°00',165.0,54.0,yes,6.15.02.02,Auzakia–Gebirge (O-Ende),100.0
+6,16,2,4,by the mountains called the Asmiraia whose extremities lie,167°00',47°30',167.0,47.5,yes,6.16.02.07,Asmiraia (Asmirea)-Gebirge (W-Ende),100.0
+6,16,2,5,,174°00',47°30',174.0,47.5,yes,6.16.02.08,Asmiraia (Asmirea)-Gebirge (O-Ende),100.0
+6,16,2,6,"by the eastern part of the Kasia range, whose extremities lie",162°00',44°00',162.0,44.0,yes,6.15.02.04,"Kasia–Gebirge (westl. Teil, O-Ende)",100.0
+6,16,2,7,,171°00',40°00',171.0,40.0,yes,6.16.02.06,"Kasia-Gebirge (östl. Teil, O-Ende)",100.0
+6,16,2,8,by Mount Thagouron whose centre lies,170°00',43°00',170.0,43.0,yes,6.16.02.09,Thaguron (Ithagur)-Gebirge (Mittelpunkt),100.0
+6,16,2,9,"also by the eastern portion of the mountains called Emoda and Serika, whose extremity lies",165°00',36°00',165.0,36.0,yes,6.15.02.06,Emoda–Gebirge (O-Ende),100.0
+6,16,2,10,"by the range called Ottorokorrhas, whose extremities lie",169°00',36°00',169.0,36.0,yes,6.16.02.11,Ottorokoras-Gebirge (W-Ende),100.0
+6,16,2,11,,176°00',38°00',176.0,38.0,no,6.16.02.12,Ottorokoras-Gebirge (O-Ende),18.3
+6,16,3,1,"There flow through the far greatest portion of Serike two rivers, the Oichardes, one of whose sources is placed with the Auxakioi, and the other which is placed in the Asmiraian mountains lies in",174°00',47°30',174.0,47.5,yes,6.16.02.08,Asmiraia (Asmirea)-Gebirge (O-Ende),100.0
+6,16,3,2,where it bends towards the Kasia range,160°00',48°30',160.0,48.5,no,6.16.03.05,Oichardes (Einmündung vom Kasia),33.0
+6,16,3,3,but the source of them lies,161°00',44°15',161.0,44.25,yes,6.16.03.07,Oichardes-Quelle am Kasia,100.0
+6,16,3,4,"the other river is called the Bautisos, and this has one of its sources in the Kasia range in",160°00',43°00',160.0,43.0,yes,6.16.03.08,Bautisos (Bautis)-Quelle am Kasia,100.0
+6,16,3,5,another in Ottorokorrha,176°00',39°00',176.0,39.0,yes,6.16.02.12,Ottorokoras-Gebirge (O-Ende),100.0
+6,16,3,6,it bends towards the Emoda in,168°00',39°00',168.0,39.0,yes,6.16.03.11,Bautisos (Bautis) (Einmündung vom Emoda),100.0
+6,16,3,7,its source in these lies,160°,37°,160.0,37.0,yes,6.16.03.13,Bautisos (Bautis)-Quelle am Emoda,100.0
+6,16,6,1,The cities in Serike are thus named :— Damna,156°00',51°20',156.0,51.3333,yes,6.16.06.02,Damna,87.8
+6,16,6,2,Piala (or Piadda),160°,49°40',160.0,49.6667,yes,6.16.06.03,Piada,83.7
+6,16,6,3,Asmiraia,170°00',48°00',170.0,48.0,yes,6.16.06.04,Asmiraia,87.8
+6,16,6,4,Throana,174°40',47°40',174.6667,47.6667,yes,6.16.06.05,Throana,100.0
+6,16,7,1,Issedon Serike,162°00',45°00',162.0,45.0,yes,6.16.07.01,Serisches Issedon*,100.0
+6,16,7,2,Aspakara (or Aspakaia),162°30',41°40',162.5,41.6667,yes,6.16.07.02,Aspakara,100.0
+6,16,7,3,Drosache (or Rhosakla),167°40',42°30',167.6667,42.5,yes,6.16.07.03,Drosache* (Drosake*),100.0
+6,16,7,4,Paliana,162°30',41°00',162.5,41.0,yes,6.16.07.04,Paliana,100.0
+6,16,7,5,Abragana,163°30',39°30',163.5,39.5,yes,6.16.08.02,Abragana,100.0
+6,16,8,1,Thogara,171°20',39°40',171.3333,39.6667,yes,6.16.08.01,Thogara (Thogora),100.0
+6,16,8,2,Daxata,174°00',39°30',174.0,39.5,yes,6.16.08.03,Daxata (Doxata),93.9
+6,16,8,3,Orosana,162°00',37°30',162.0,37.5,yes,6.16.08.04,Orosana,100.0
+6,16,8,4,Ottorokorrha,165°00',37°15',165.0,37.25,yes,6.16.08.05,Ottorokora*,100.0
+6,16,8,5,Solana,169°00',37°30',169.0,37.5,yes,6.16.08.06,Solana,100.0
+6,16,8,6,Sera metropolis,177°00',38°35',177.0,38.5833,yes,6.16.08.07,Sera* Metropolis,90.8
+6,17,1,1,"said extremity towards Karmania, and curving towards the north, turns through Mount Bagoos towards the east on to the extreme point which lies '..1ll° . 34°00' the position where the mountain curves is",105°00',32°00',105.0,32.0,yes,6.17.01.09,Bagoon-Gebirge (Biegung),100.0
+6,17,1,2,"The boundary on the east is formed by the Paropanisadai along the line adjoining the extremities already mentioned through the western parts of Paropanisos; the position may be indicated at three different pointe, the southern",111°00',36°00',111.0,36.0,yes,6.17.01.12,Paropanisos/Paopanisos-Gebirge (südliches Grenzzeichen),100.0
+6,17,1,3,the northern,111°30',39°00',111.5,39.0,yes,6.11.05.01,Paropanisos-Gebirge (W-Ende),100.0
+6,17,1,4,the most eastern,119°30',39°00',119.5,39.0,yes,6.09.02.06,Oxos-Quellen,100.0
+6,17,2,1,"A notable river flows through this country called the Areias, of which the sources that are in Paropanisos lie",111°00',38°15',111.0,38.25,yes,6.17.02.01,Areios (Arias)-Quellen im Paropanisos,100.0
+6,17,2,2,those that are in the Sariphoi,118°00',33°20',118.0,33.3333,no,6.18.05.03,Locharna (Lochorna),30.6
+6,17,2,3,"The part along the lake called Areia, which is below these mountains, lies in",108°40',36°00',108.6667,36.0,yes,6.17.02.04,Areia-See,100.0
+6,17,4,1,The towns and villages in Areia are these :— Data,102°30',38°15',102.5,38.25,yes,6.17.04.02,Dista,100.0
+6,17,4,2,Nabaris,105°40',38°20',105.6667,38.3333,yes,6.17.04.03,Nabaris,100.0
+6,17,4,3,Taua,109°00',38°45',109.0,38.75,yes,6.17.04.04,Taua (Tauta),100.0
+6,17,4,4,Augara,102°00',38°00',102.0,38.0,yes,6.17.04.05,Augara (Autara),100.0
+6,17,4,5,Bitaxa,103°40',38°00',103.6667,38.0,yes,6.17.04.06,Bitaxa*,100.0
+6,17,4,6,Sarmagana,105°20',38°10',105.3333,38.1667,yes,6.17.04.07,Sarmagana (Sarmatana),100.0
+6,17,4,7,Siphare,107°15',38°15',107.25,38.25,yes,6.17.04.08,Siphare,100.0
+6,17,4,8,Rhaugara,109°30',38°10',109.5,38.1667,yes,6.17.04.09,Rhaugara (Rhagura),100.0
+6,17,5,1,Zamouchana,102°00',37°00',102.0,37.0,yes,6.17.05.01,Zamuchana (Mozuchana),100.0
+6,17,5,2,Ambrodax,103°30',37°30',103.5,37.5,yes,6.17.05.02,Ambrodax,90.8
+6,17,5,3,Bogadia,104°15',37°40',104.25,37.6667,yes,6.17.05.03,Bogadia,100.0
+6,17,5,4,Ouarpna (Varpna),105°30',37°00',105.5,37.0,yes,6.17.05.04,Varpna (Barpna),100.0
+6,17,5,5,Godana,110°30',37°30',110.5,37.5,yes,6.17.05.05,Godana,100.0
+6,17,5,6,Phoraua,110°00',37°00',110.0,37.0,yes,6.17.05.06,Phoraua (Pharua),100.0
+6,17,5,7,Khatrische,103°00',36°20',103.0,36.3333,yes,6.17.05.07,Chatrische (Chatrisache),100.0
+6,17,5,8,Khaurina,104°00',36°20',104.0,36.3333,yes,6.17.05.08,Chaurina (Chabrina),82.2
+6,17,6,1,Orthiana,105°15',36°20',105.25,36.3333,yes,6.17.06.01,Orthiana,100.0
+6,17,6,2,Taukiana,106°10',36°00',106.1667,36.0,yes,6.17.06.02,Taukiana,100.0
+6,17,6,3,Astanda,107°40',36°00',107.6667,36.0,yes,6.17.06.03,Astanda,100.0
+6,17,6,4,Artikaudna,109°20',36°10',109.3333,36.1667,yes,6.17.06.04,Artikaudna (Artakauana),100.0
+6,17,6,5,Alexandreia of the Areians,110°00',36°00',110.0,36.0,yes,6.17.06.05,Alexandreia* in Areia,100.0
+6,17,6,6,Babarsana or Kabarsana,103°20',35°20',103.3333,35.3333,yes,6.17.06.06,Babarsana (Bebarsanar),100.0
+6,17,6,7,Kapoutana,104°30',35°30',104.5,35.5,yes,6.17.06.07,Kapotana (Kaputanar),100.0
+6,17,7,1,"Areia, a city",105°00',35°00',105.0,35.0,yes,6.17.07.01,Areia*,100.0
+6,17,7,2,Kaske,107°20',35°20',107.3333,35.3333,yes,6.17.07.02,Kaske (Kasike),100.0
+6,17,7,3,Soteira,108°40',35°30',108.6667,35.5,yes,6.17.07.03,Soteira,87.8
+6,17,7,4,Ortikane,109°20',35°30',109.3333,35.5,yes,6.17.07.04,Orbitane (Orbigane),100.0
+6,17,7,5,Nisibis . 1ll° . 35°20' Parakanake,105°30',34°20',105.5,34.3333,yes,6.17.07.06,Parakanake,100.0
+6,17,7,6,Sariga,106°40',34°40',106.6667,34.6667,yes,6.17.07.07,Sariga,100.0
+6,17,8,1,Darkama,111°3',4°20',111.05,4.3333,no,,,
+6,17,8,2,Kotake,107°30',33°40',107.5,33.6667,yes,6.17.08.02,Kotake,100.0
+6,17,8,3,Tribozina,106°00',33°00',106.0,33.0,yes,6.17.08.03,Tribazina,100.0
+6,17,8,4,Astasana,105°00',33°00',105.0,33.0,yes,6.17.08.04,Astasana (Astakana),100.0
+6,17,8,5,Zimyra,102°30',33°15',102.5,33.25,yes,6.17.08.05,Zimyra,100.0
+6,18,1,1,"sources of the river Oxus, through the Kaukasian mountains as far as a terminating point which lies in",119°00',39°00',119.0,39.0,yes,6.09.02.06,Oxos-Quellen,84.0
+6,18,2,1,"The following rivers enter the country— the Dargamanes, which belongs to Baktriane, the position of the sources of which has been already stated; and the river which falls into the Koa, of which the sources lie",115°00',34°30',115.0,34.5,yes,6.18.02.04,Namenloser Fluss zum Koas (Quellen),100.0
+6,18,4,1,The towns and villages of the Paropanisadai are these :— Parsiana,118°30',38°45',118.5,38.75,yes,6.18.04.01,Parsiana,100.0
+6,18,4,2,Barzaura,114°00',37°30',114.0,37.5,yes,6.18.04.02,Barzaura (Zarzaua),100.0
+6,18,4,3,Artoarta,116°30',37°30',116.5,37.5,yes,6.18.04.03,Artoarta,100.0
+6,18,4,4,Baborana,118°00',37°10',118.0,37.1667,yes,6.18.04.04,Baborana,93.9
+6,18,4,5,Katisa,118°40',37°30',118.6667,37.5,yes,6.18.04.05,Kapisa,100.0
+6,18,4,6,Niphanda,119°00',37°00',119.0,37.0,yes,6.18.04.06,Niphanda,100.0
+6,18,4,7,Drastoka,116°00',36°30',116.0,36.5,yes,6.18.04.07,Drastoka (Drastopa),63.3
+6,18,4,8,Gazaka or Gaudzaka,118°30',36°15',118.5,36.25,yes,6.18.04.08,Gazaka,100.0
+6,18,5,1,Naulibis,117°00',35°30',117.0,35.5,yes,6.18.05.01,Naulibis*,100.0
+6,18,5,2,Parsia,113°30',35°00',113.5,35.0,yes,6.18.05.02,Parsia,100.0
+6,18,5,3,Locharna,118°00',34°00',118.0,34.0,yes,6.18.05.03,Locharna (Lochorna),100.0
+6,18,5,4,Daroakana,118°30',34°20',118.5,34.3333,yes,6.18.05.04,Daroakana (Darsakana),75.6
+6,18,5,5,"Karoura,called also Ortospana",118°,35°00',118.0,35.0,yes,6.18.05.05,Kabura* bzw. Ortospana*,100.0
+6,18,5,6,Tarbakana,114°20',33°40',114.3333,33.6667,yes,6.18.05.06,Tarbakana,100.0
+6,18,5,7,Bagarda,116°40',33°40',116.6667,33.6667,yes,6.18.05.07,Bagarda (Bararda),100.0
+6,18,5,8,Argouda,118°45',33°30',118.75,33.5,yes,6.18.05.08,Arguda,100.0
+6,19,1,1,"an extreme point lying in the country of the Areioi and that of the Paropanisadai to another extreme point, of which the position is in",111°30',28°00',111.5,28.0,yes,6.19.01.06,"Grenzpunkt (Arachosien, Drangiane, Gedrosien)",100.0
+6,19,2,1,Arabis of which the sources lie at,109°00',32°30',109.0,32.5,yes,6.19.02.02,Namenloser Fluss zum Arbis (Quellen),100.0
+6,19,4,1,The towns and villages of Drangianeare said to be these:— Prophthasia,110°00',32°20',110.0,32.3333,yes,6.19.04.02,Prophthasia*,100.0
+6,19,4,2,Rhouda,106°30',31°30',106.5,31.5,yes,6.19.04.03,Rhuda,100.0
+6,19,4,3,Inna,109°00',31°30',109.0,31.5,yes,6.19.04.04,Inna,100.0
+6,19,4,4,Arikada,110°20',31°20',110.3333,31.3333,yes,6.19.04.05,Arikada,100.0
+6,19,5,1,Asta,117°30',30°40',117.5,30.6667,no,6.20.05.01,Arachotos*,38.3
+6,19,5,2,Xarxiare,106°20',29°15',106.3333,29.25,yes,6.19.05.02,Xarxiare,100.0
+6,19,5,3,Nostana,108°,29°40',108.0,29.6667,yes,6.19.05.03,Nostana,100.0
+6,19,5,4,Pharazana,110°00',30°00',110.0,30.0,yes,6.19.05.04,Pharazana,100.0
+6,19,5,5,Bigis,111°00',29°40',111.0,29.6667,yes,6.19.05.05,Bigis,100.0
+6,19,5,6,Ariaspe,108°40',28°40',108.6667,28.6667,yes,6.19.05.06,Ariaspe*,100.0
+6,19,5,7,Arana,111°00',28°15',111.0,28.25,yes,6.19.05.07,Arana,100.0
+6,20,1,1,boundary towards the Paropanisadai as far as an extreme point lying,119°00',28°00',119.0,28.0,yes,6.20.01.06,"Grenzpunkt (Arachosien, Gedrosien, Indien diesseits des Ganges)",100.0
+6,20,2,1,Indus of which the sources lie in,114°00',32°30',114.0,32.5,yes,6.20.02.02,Namenloser Fluss zum Indus (Quellen),100.0
+6,20,2,2,the confluence in,121°30',27°30',121.5,27.5,no,6.20.02.03,Indus (Namenloser Zufluss aus Arachosien),18.3
+6,20,2,3,the part at the lake formed by it which is called Arachotos Krene (fountain)— lies in,115°00',28°40',115.0,28.6667,no,6.20.02.04,Arachotos-Brunnen,40.8
+6,20,4,1,The towns and villages of Arachosia are said to be these :— Ozola (or Axola),114°15',32°15',114.25,32.25,yes,6.20.04.02,Ozola (Azola),100.0
+6,20,4,2,Phoklis,118°15',32°10',118.25,32.1667,yes,6.20.04.03,Phoklis (Phokleis),100.0
+6,20,4,3,Arikaka,113°00',31°20',113.0,31.3333,no,6.19.04.05,Arikada,38.6
+6,20,4,4,Alexandreia,114°00',31°20',114.0,31.3333,yes,6.20.04.04,Alexandreia*,87.8
+6,20,4,5,Rhizana,115°00',31°30',115.0,31.5,yes,6.20.04.05,Rhizana,87.8
+6,20,4,6,Arbaka,118°00',31°20',118.0,31.3333,yes,6.20.04.06,Arbaka (Ardaka),87.8
+6,20,4,7,Sigara,113°15',30°00',113.25,30.0,yes,6.20.04.07,Sigara,100.0
+6,20,4,8,Khoaspa,115°15',30°10',115.25,30.1667,yes,6.20.04.08,Choaspa,100.0
+6,20,5,1,Arachotos,118°00',30°20',118.0,30.3333,yes,6.20.05.01,Arachotos*,100.0
+6,20,5,2,Asiake,112°20',29°20',112.3333,29.3333,yes,6.20.05.02,Asiake,100.0
+6,20,5,3,Gammake,116°20',29°20',116.3333,29.3333,yes,6.20.05.03,Gammake,100.0
+6,20,5,4,Maliane,118°00',29°20',118.0,29.3333,yes,6.20.05.04,Maliana (Maliane),100.0
+6,20,5,5,Dammana,113°00',28°20',113.0,28.3333,yes,6.20.05.05,Dammana,87.8
+6,21,1,1,boundary towards Arachosia to its termination at the sea in,109°00',20°00',109.0,20.0,yes,6.21.01.07,"Grenzpunkt (Arachosien, Gedrosien, Indien)",100.0
+6,21,2,1,extremity towards Karmaniathe mouth of the River Arabis,105°00',20°15',105.0,20.25,yes,6.21.02.03,Arbis-Mündung,100.0
+6,21,2,2,the sources of the river,110°00',27°30',110.0,27.5,yes,6.21.02.04,Arbis-Quellen,100.0
+6,21,2,3,the divarication of the river entering Drangiane,107°30',25°00',107.5,25.0,yes,6.21.02.06,Arbis (Namenloser Zufluss aus Drangiane),57.9
+6,21,2,4,"Rhagiraua, a city",106°00',20°00',106.0,20.0,yes,6.21.02.07,Rhagiraua (Rhagira),100.0
+6,21,2,5,Women's Haven (Gynaikon limen),107°,20°15',107.0,20.25,yes,6.21.02.08,Hafen der Frauen,100.0
+6,21,2,6,Koiamba,108°00',20°00',108.0,20.0,yes,6.21.02.09,Koiamba (Koilamba),100.0
+6,21,2,7,Rhizana,108°20',20°15',108.3333,20.25,yes,6.21.02.10,Rhizana,87.8
+6,21,2,8,which the extreme point at the sea already mentioned,109°00',20°00',109.0,20.0,yes,6.21.01.07,"Grenzpunkt (Arachosien, Gedrosien, Indien)",100.0
+6,21,3,1,"Through Gedrosia run the mountains called the Arbita, whose extreme points lie in",107°00',22°00',107.0,22.0,yes,6.21.03.02,Arbita-Gebirge (W-Ende),100.0
+6,21,3,2,,113°00',26°30',113.0,26.5,yes,6.21.03.03,Arbita-Gebirge (O-Ende),100.0
+6,21,3,3,these mountains some rivers join the Indus and the source of one of these lies,111°00',25°30',111.0,25.5,yes,6.21.03.07,Quelle eines der namenlosen Flüsse,100.0
+6,21,5,1,The towns and villages of Gedrosiaare accounted to be these : — Kouni,110°00',27°00',110.0,27.0,yes,6.21.05.02,Kuni* (Koni*),100.0
+6,21,5,2,Badara,113°00',27°00',113.0,27.0,yes,6.21.05.03,Badara,100.0
+6,21,5,3,Mousarna,115°00',27°30',115.0,27.5,yes,6.21.05.04,Musarna*,100.0
+6,21,5,4,Kottobara,118°00',27°30',118.0,27.5,yes,6.21.05.05,Kottobara (Kotgabara),100.0
+6,21,5,5,Soxestra or Sokstra,118°30',25°45',118.5,25.75,no,6.21.05.06,Soxstra,42.0
+6,21,5,6,Oskana,115°00',26°00',115.0,26.0,yes,6.21.05.07,Oskana,100.0
+6,21,5,7,"Parsis, the Metropolis",106°30',23°30',106.5,23.5,yes,6.21.05.08,Parsis,100.0
+6,21,5,8,Omiza,110°00',23°30',110.0,23.5,yes,6.21.05.09,Omiza,100.0
+6,21,5,9,"Arbis, a city",105°00',22°30',105.0,22.5,yes,6.21.05.10,Arbis*,53.0
+6,21,6,1,The islands adjacent to Gedrosia are— Asthaia,105°00',18°00',105.0,18.0,yes,6.21.06.02,Asthaia (Asthea),100.0
+6,21,6,2,Kodane,107°00',17°00',107.0,17.0,yes,6.21.06.03,Kodane,81.7
+7,1,2,1,"In Syrastrene, on the Gulf called Kanthi, a roadstead and harbour",109°30',20°00',109.5,20.0,yes,7.01.02.03,Naustathmos,53.8
+7,1,2,2,The most western mouth of the River Induscalled Sagapa,110°20',19°50',110.3333,19.8333,yes,7.01.02.04,Indus-Mündung (westlichste) bzw. Sagapa-Mündung,100.0
+7,1,2,3,The next mouth called Sinthon,110°40',19°50',110.6667,19.8333,yes,7.01.02.05,Indus-Mündung bzw. Sinthon-Mündung,100.0
+7,1,2,4,The 3rd mouth called Chrysoun (the Golden),111°20',19°50',111.3333,19.8333,yes,7.01.02.06,Indus-Mündung bzw. Chrysun-Mündung,100.0
+7,1,2,5,The 4th called Kariphron,111°40',19°50',111.6667,19.8333,yes,7.01.02.07,Indus-Mündung bzw. Chariphu-Mündung,100.0
+7,1,2,6,The 5th called Sapara,112°30',19°50',112.5,19.8333,yes,7.01.02.08,Indus-Mündung bzw. Saphara-Mündung,50.1
+7,1,2,7,The 6th called Sabalaessa,113°00',20°15',113.0,20.25,yes,7.01.02.09,Indus-Mündung bzw. Sabalaessa (Sabalassa)-Mündung,100.0
+7,1,2,8,The 7th called Lonibare,113°30',20°15',113.5,20.25,yes,7.01.02.10,Indus-Mündung bzw. Lonibare-Mündung,60.1
+7,1,3,1,"Bardaxema, a town",113°40',19°40',113.6667,19.6667,yes,7.01.03.01,Bardaxema (Bardaxima),68.8
+7,1,3,2,"Syrastra, a village",114°00',19°30',114.0,19.5,yes,7.01.03.02,Syrastra,100.0
+7,1,3,3,"Monoglosson, trading post",114°10',18°40',114.1667,18.6667,yes,7.01.03.03,Monoglosson,100.0
+7,1,4,1,In Larike Mouth of the River Mophis,114°00',18°20',114.0,18.3333,yes,7.01.04.02,Mophis-Mündung,100.0
+7,1,4,2,"Pakidare, a village",113°00',17°50',113.0,17.8333,yes,7.01.04.03,Pakidare,69.4
+7,1,4,3,Cape Maleo,111°00',17°30',111.0,17.5,yes,7.01.04.04,Kap Maleo (Balaio),100.0
+7,1,5,1,"In the Gulf of Barygaza, Kamane",112°00',17°00',112.0,17.0,yes,7.01.05.02,Kamani,100.0
+7,1,5,2,Mouth of the River Namados,112°00',17°45',112.0,17.75,yes,7.01.05.03,Narmades-Mündung,66.8
+7,1,5,3,Nousaripa,112°30',16°30',112.5,16.5,yes,7.01.05.04,Nusaripa,100.0
+7,1,5,4,Poulipoula,112°30',16°00',112.5,16.0,yes,7.01.05.05,Pulipula,100.0
+7,1,6,1,"Ariake Sadinon, Soupara",112°30',15°30',112.5,15.5,yes,7.01.06.02,Suppara,81.3
+7,1,6,2,Mouth of the river Goaris,112°15',15°10',112.25,15.1667,yes,7.01.06.03,Goaris-Mündung,100.0
+7,1,6,3,Dounga,111°30',15°00',111.5,15.0,yes,7.01.06.04,Dunga,100.0
+7,1,6,4,Mouth of the River Benda,110°30',15°00',110.5,15.0,yes,7.01.06.05,Bindas (Bendas)-Mündung,100.0
+7,1,6,5,"Simylla, trading post and a cape",110°00',14°45',110.0,14.75,yes,7.01.06.06,Simylla*,100.0
+7,1,6,6,Hippokoura,111°45',14°10',111.75,14.1667,yes,7.01.06.08,Hippokura,91.5
+7,1,6,7,Baltipatna,110°30',14°20',110.5,14.3333,yes,7.01.06.07,Balepatna,56.2
+7,1,7,1,(Ariake) of the Pirates. Mandagara,113°00',14°00',113.0,14.0,yes,7.01.07.02,Mandagora,88.9
+7,1,7,2,Byzanteion,113°40',14°40',113.6667,14.6667,yes,7.01.07.03,Byzantion,100.0
+7,1,7,3,Chersonesos,114°20',14°30',114.3333,14.5,yes,7.01.07.04,Chersonesos,100.0
+7,1,7,4,Armagara,114°20',14°20',114.3333,14.3333,yes,7.01.07.06,Armagara,75.6
+7,1,7,5,Mouth of the River Nanagouna,114°30',13°50',114.5,13.8333,yes,7.01.07.05,Nanagunas-Mündung,100.0
+7,1,7,6,"Nitra, trading post",115°30',14°40',115.5,14.6667,yes,7.01.07.07,Nitra,100.0
+7,1,8,1,"Limyrike. Tyndis, a city",116°00',14°30',116.0,14.5,yes,7.01.08.02,Tyndis,100.0
+7,1,8,2,Bramagara,116°45',14°20',116.75,14.3333,yes,7.01.08.03,Bramagara,100.0
+7,1,8,3,Kalaikarias,116°40',14°00',116.6667,14.0,yes,7.01.08.04,Kap Kalaikarias (Kalaikaris),100.0
+7,1,8,4,"Mouziris, an trading post",117°00',14°00',117.0,14.0,yes,7.01.08.05,Muziris*,100.0
+7,1,8,5,Mouth of the River Pseudostomos,117°20',14°00',117.3333,14.0,yes,7.01.08.06,Pseudostomos-Mündung,100.0
+7,1,8,6,Podoperoura,117°40',14°15',117.6667,14.25,yes,7.01.08.07,Podoperura,100.0
+7,1,8,7,Semne,118°00',14°20',118.0,14.3333,yes,7.01.08.08,Semne,100.0
+7,1,8,8,Koreoura,118°40',14°20',118.6667,14.3333,yes,7.01.08.09,Kerëura (Korëura),100.0
+7,1,8,9,Bakarei,119°30',14°30',119.5,14.5,yes,7.01.08.10,Bakare,100.0
+7,1,8,10,Mouth of the River Baris,120°00',14°20',120.0,14.3333,yes,7.01.08.11,Baris-Mündung,100.0
+7,1,9,1,Country of the Aioi. Melkynda,120°20',14°20',120.3333,14.3333,yes,7.01.09.02,Nelkynda,100.0
+7,1,9,2,"Elangkon (or Elangkor), trading post",120°40',14°00',120.6667,14.0,yes,7.01.09.03,Elankon (Elankoros),100.0
+7,1,9,3,"Kottiara, the metropolis",121°00',14°00',121.0,14.0,yes,7.01.09.04,Kottiara,81.7
+7,1,9,4,Bammala,121°20',14°15',121.3333,14.25,yes,7.01.09.05,Bammala,90.8
+7,1,9,5,"Komaria, a cape and town",121°45',13°30',121.75,13.5,yes,7.01.09.06,Kap Komaria,100.0
+7,1,10,1,"Country of the Kareoi. In the Kolchic Gulf, where there is the Pearl Fishery:— Sosikourai",122°00',14°30',122.0,14.5,yes,7.01.10.04,Sosikurei (Mosikuri),100.0
+7,1,10,2,"Kolchoi, an trading post",123°00',15°00',123.0,15.0,yes,7.01.10.05,Kolchoi,100.0
+7,1,10,3,Mouth of the river Solen,124°00',14°40',124.0,14.6667,yes,7.01.10.06,Solen-Mündung,100.0
+7,1,11,1,"Land of Pandion. In the Orgalic Gulf, Cape Kory, called also Kalligikon",125°40',12°20',125.6667,12.3333,yes,7.04.02.01,Nördliches Kap,53.7
+7,1,11,2,"Argeirou, a town",125°15',14°30',125.25,14.5,yes,7.01.11.04,Argaru,81.0
+7,1,11,3,"Salour, trading post",125°20',15°30',125.3333,15.5,yes,7.01.11.05,Salur (Selur),79.6
+7,1,12,1,"Country of the Batoi. Nikama, the Metropolis",126°00',16°00',126.0,16.0,yes,7.01.12.02,Nigama (Nisamma),100.0
+7,1,12,2,Thelcheir,127°00',16°10',127.0,16.1667,yes,7.01.12.03,Thelcheir (Thellyr),100.0
+7,1,12,3,"Kouroula, a town",128°00',16°00',128.0,16.0,yes,7.01.12.04,Kurula,100.0
+7,1,13,1,"In Paralia, specially so called: the country of the Toringoi. Mouth of the River Chaberos",129°00',15°15',129.0,15.25,yes,7.01.13.03,Chaberos-Mündung,100.0
+7,1,13,2,"Chaberis, an trading post",128°30',15°40',128.5,15.6667,yes,7.01.13.02,Chaberis*,90.8
+7,1,13,3,"Sabouras, an trading post",130°00',14°30',130.0,14.5,yes,7.01.13.04,Sobura (Subura),100.0
+7,1,14,1,"The Arouarnoi (Arvarnoi). Podouke, an trading post",130°15',14°30',130.25,14.5,yes,7.01.14.02,Poduke,87.4
+7,1,14,2,"Melange, an trading post",131°00',14°20',131.0,14.3333,yes,7.01.14.03,Melange,100.0
+7,1,14,3,Mouth of the River Tyna,131°40',12°45',131.6667,12.75,yes,7.01.14.04,Tynas (Tynnas)-Mündung,100.0
+7,1,14,4,Kottis,132°20',12°10',132.3333,12.1667,yes,7.01.14.05,Kottis,100.0
+7,1,14,5,"Manarpha (or Manaliarpha, trading post)",133°10',12°00',133.1667,12.0,yes,7.01.14.06,Maliarpha,100.0
+7,1,15,1,Maisolia. Mouth of the River Maisolos,134°00',11°40',134.0,11.6667,yes,7.01.15.02,Maisolos-Mündung,100.0
+7,1,15,2,"Kontakossyla, trading post",134°30',11°40',134.5,11.6667,yes,7.01.15.03,Kantakosyla (Kantakossyla),89.1
+7,1,15,3,Koddoura,135°00',11°30',135.0,11.5,yes,7.01.15.04,Koddura,90.9
+7,1,15,4,"Allosygne, trading post",135°40',11°20',135.6667,11.3333,yes,7.01.15.05,Allosigne (Alosygni),87.4
+7,1,15,5,The point of departure (apheterion) for ships bound for Chryse,136°20',11°00',136.3333,11.0,yes,7.01.15.06,Ablegeplatz zur Goldenen Chersones,100.0
+7,1,16,1,"In the Gangetic Gulf. Paloura or Pakoura, a town",136°40',11°20',136.6667,11.3333,yes,7.01.16.02,Palura*,90.4
+7,1,16,2,Nanigaina,136°20',12°00',136.3333,12.0,yes,7.01.16.03,Nanigaina,100.0
+7,1,16,3,Katikardama,136°20',12°40',136.3333,12.6667,yes,7.01.16.04,Katikardamma,100.0
+7,1,16,4,Kannagara,136°30',13°30',136.5,13.5,yes,7.01.16.05,Kannagara,100.0
+7,1,16,5,Mouth of the River Manada,137°00',14°00',137.0,14.0,yes,7.01.16.06,Mandas-Mündung,100.0
+7,1,16,6,Kottobara,137°15',14°40',137.25,14.6667,yes,7.01.16.07,Kottobara,100.0
+7,1,16,7,Sippara,137°40',15°30',137.6667,15.5,yes,7.01.16.08,Sippara,100.0
+7,1,16,8,Month of the River Tyndis,138°30',16°00',138.5,16.0,yes,7.01.16.09,Tyndis-Mündung,100.0
+7,1,17,1,Mapoura,139°00',16°30',139.0,16.5,yes,7.01.17.01,Mapura,100.0
+7,1,17,2,Minagara,140°00',17°15',140.0,17.25,yes,7.01.17.02,Minagara,100.0
+7,1,17,3,Mouth of the Dosaron,141°,17°40',141.0,17.6667,yes,7.01.17.03,Dosaron-Mündung,100.0
+7,1,17,4,Kokala,142°00',18°00',142.0,18.0,yes,7.01.17.04,Kokala,100.0
+7,1,17,5,Mouth of the River Adamas,142°40',18°00',142.6667,18.0,yes,7.01.17.05,Adamas-Mündung,100.0
+7,1,17,6,Kosamba or Kosaba,143°30',18°15',143.5,18.25,yes,7.01.17.06,Kosamba,100.0
+7,1,18,1,"Mouths of the Ganges. The Kambyson mouth, the most western",144°30',18°15',144.5,18.25,yes,7.01.18.01,Ganges-Mündung (westlichste) bzw. Kambyson-Mündung,100.0
+7,1,18,2,"Poloura, a town",145°00',18°30',145.0,18.5,yes,7.01.18.02,Palura,100.0
+7,1,18,3,"The second mouth, called Mega",145°45',18°50',145.75,18.8333,yes,7.01.18.03,Ganges-Mündung bzw. Große Mundung,48.7
+7,1,18,4,The third called Kamberichon,146°30',18°40',146.5,18.6667,yes,7.01.18.04,Ganges-Mündung bzw. Kamberichon-Mündung,100.0
+7,1,18,5,"Tilogrammon, a town",147°20',18°00',147.3333,18.0,yes,7.01.18.05,Tilogrammon,77.4
+7,1,18,6,"The fourth mouth, Pseudostomon",147°40',18°30',147.6667,18.5,yes,7.01.18.06,Ganges-Mündung bzw. Pseudostomon-Mündung (Ganges),100.0
+7,1,18,7,The fifth mouth. Antibole,148°30',18°15',148.5,18.25,yes,7.01.18.07,Ganges-Mündung bzw. Antibole-Mündung,100.0
+7,1,26,1,Mount Imaos into the Indus are arranged as follows:— Sources of the River Koa,120°00',37°00',120.0,37.0,yes,7.01.26.03,Koas-Quellen,100.0
+7,1,26,2,Sources of the River Souastos,122°30',36°00',122.5,36.0,yes,7.01.26.04,Suastos-Quellen,100.0
+7,1,26,3,Sources of the River Indus,125°00',37°00',125.0,37.0,yes,7.01.26.05,Indus-Quelle,100.0
+7,1,26,4,Sources of the River Bidaspes,127°30',36°40',127.5,36.6667,yes,7.01.26.06,Bidaspes-Quellen,53.0
+7,1,26,5,Sources of the River Sandabal,129°00',36°00',129.0,36.0,yes,7.01.26.07,Sandabal-Quellen,100.0
+7,1,26,6,Sources of the River Adris or Rouadis,130°00',37°00',130.0,37.0,yes,7.01.26.08,Rhuadis-Quellen,86.5
+7,1,26,7,Sources of the River Bidasis,131°00',35°30',131.0,35.5,yes,7.01.26.09,Bibasis-Quellen,86.5
+7,1,27,1,Sources of the River Zaradros,132°00',36°00',132.0,36.0,yes,7.01.26.10,Zaradros-Quellen,100.0
+7,1,27,2,Confluence of the Koa and Indus,124°00',31°00',124.0,31.0,yes,7.01.57.01,Embolima,100.0
+7,1,27,3,Confluence of the Koa and Souastos,122°30',31°40',122.5,31.6667,yes,7.01.27.02,Koas (Zusammenfluss mit dem Suastos)/Suastos (Zusammenfluss mit dem Koas),100.0
+7,1,27,4,Confluence of the Zaradros and Indus,124°00',30°00',124.0,30.0,yes,7.01.27.03,Indus (Zusammenfluss mit dem Zaradros)/Zaradros (Zusammenfluss mit dem Indus),100.0
+7,1,27,5,Confluence of the Zaradros and Bidaspes,125°00',30°00',125.0,30.0,yes,7.01.27.04,Bidaspes (Zusammenfluss mit dem Zaradros)/Zaradros (Zusammenfluss mit dem Bidaspes),100.0
+7,1,27,6,Confluence of the Zaradros and Bibasis,131°00',34°00',131.0,34.0,no,7.01.26.09,Bibasis-Quellen,40.8
+7,1,27,7,Confluence of the Bidaspes and Adris,126°30',31°30',126.5,31.5,yes,7.01.27.06,Bidaspes (Zusammenfluss mit dem Rhuadis),100.0
+7,1,27,8,Confluence of the Bidaspes and Sandabal,126°40',32°40',126.6667,32.6667,yes,7.01.27.07,Bidaspes (Zusammenfluss mit dem Sandabal),100.0
+7,1,28,1,Indus running towards Mt. Ouindion,123°00',29°30',123.0,29.5,yes,7.01.57.03,Asigramma,100.0
+7,1,28,2,The source of (tributary joining) the branch,127°00',27°00',127.0,27.0,yes,7.01.21.01,Vindion-Gebirge (W-Ende),100.0
+7,1,28,3,Branch of the Indus towards Arachosia,121°30',27°30',121.5,27.5,no,7.01.28.05,"Namenloser Fluss zum Indus, Einmündung von Arachosien her",37.1
+7,1,28,4,Branch of the Koa towards the Paropanisadai,121°30',33°00',121.5,33.0,yes,7.01.28.10,Namenloser Fluss zum Koas (Einmündung von den Paropanisaden her),100.0
+7,1,28,5,The source of (tributary joining) the branch,115°00',24°30',115.0,24.5,no,7.01.58.03,Pasipeda,18.3
+7,1,28,6,Branch of the Indus towards the Arbita Mountains,117°00',25°10',117.0,25.1667,yes,7.01.28.07,Namenloser Fluss zum Indus (Einmündung von Arbita-Gebirge her),100.0
+7,1,28,7,Branch of the Indus towards the Paropanisadai,124°30',31°20',124.5,31.3333,yes,7.01.27.01,Indus (Zusammenfluss mit dem Koas)/Koas (Zusammenfluss mit dem Indus),49.2
+7,1,28,8,Branch of the Indus into the Sagapa mouth,113°40',23°15',113.6667,23.25,yes,7.01.28.14,Indus (Abzweigung   zur Sagapa-Mündung),100.0
+7,1,28,9,Sagapa into the Indus,111°00',21°30',111.0,21.5,yes,7.01.28.16,Sagapa (Abzweigung  zur Sinthon-Mündung),100.0
+7,1,28,10,Branch of the Indus into the Chrysoun (or Golden) mouth,112°30',22°00',112.5,22.0,yes,7.01.28.18,Indus (Abzweigung   zur Chrysun-Mündung),100.0
+7,1,28,11,Branch of the Indus into the Chariphon mouth,113°30',22°20',113.5,22.3333,yes,7.01.28.20,Indus (Abzweigung   zur Chariphu-Mündung),100.0
+7,1,28,12,Chariphon to the Sapara,112°30',21°45',112.5,21.75,yes,7.01.28.22,Chariphu (Abzweigung zur Sapara-Mündung),48.0
+7,1,28,13,Branch of the same River Chariphon into the Sabalaessa mouth,113°00',21°20',113.0,21.3333,yes,7.01.28.24,Chariphu (Abzweigung zur Sabalaessa (Sabalassa)-Mündung),100.0
+7,1,28,14,River Chariphon into the Lonibare mouth,113°20',21°40',113.3333,21.6667,yes,7.01.28.26,Chariphu (Abzweigung zur Lonibare-Mündung),100.0
+7,1,29,1,Of the streams which join the Gangesthe order is this:— Sources of the River Diamouna,134°50',36°00',134.8333,36.0,yes,7.01.29.02,Diamunas-Quellen,93.0
+7,1,29,2,Sources of the Ganges itself,136°00',37°00',136.0,37.0,yes,7.01.29.03,Ganges-Quellen,100.0
+7,1,29,3,Sources of the River Sarabos,140°00',36°00',140.0,36.0,yes,7.01.29.04,Sarabos-Quellen,100.0
+7,1,29,4,Junction of the Diamouna and Ganges,136°00',34°00',136.0,34.0,yes,7.01.29.05,Diamunas (Zusammenfluss mit dem Ganges)/Ganges (Zusammenfluss mit dem Diamunas),100.0
+7,1,29,5,Junction of the Sarabos and Ganges,136°30',32°30',136.5,32.5,yes,7.01.29.06,Ganges (Zusammenfluss mit dem Sarabos)/Sarabos (Zusammenfluss mit dem Ganges),100.0
+7,1,30,1,Ganges towards the Ouindion range to the mouth of the River Soa,136°10',31°30',136.1667,31.5,yes,7.01.30.01,Soas (Einmündung in den Ganges vom Vindion-Gebirge her),73.9
+7,1,30,2,The sources of the river,131°00',28°00',131.0,28.0,yes,7.01.30.04,Soas-Quellen,100.0
+7,1,30,3,Branch of the Ganges towards the Ouxenton range,142°00',28°00',142.0,28.0,yes,7.01.30.05,"Namenloser Fluss zum Ganges (Einmündung  vom 
+Uxenton-Gebirge her)",100.0
+7,1,30,4,The sources of the branch,137°00',23°00',137.0,23.0,yes,7.01.30.07,Namenloser Fluss (Quellen),100.0
+7,1,30,5,Ganges into the Kambyson Mouth,146°00',22°00',146.0,22.0,yes,7.01.30.08,Ganges (Abzweigung  zur Kambyson-Mündung),100.0
+7,1,30,6,Ganges into the Pseudostomos,146°30',20°00',146.5,20.0,yes,7.01.30.14,Ganges (Abzweigung zur Pseudostomon-Mündung),100.0
+7,1,30,7,Ganges into the Antibole Mouth,146°30',21°00',146.5,21.0,yes,7.01.30.16,"Ganges (Abzweigung  zur
+Antibole-Mündung)",100.0
+7,1,30,8,Kambyson River into the Mega Mouth,145°00',20°00',145.0,20.0,yes,7.01.30.10,"Kambyson (Abzweigung zur
+Grossen Mündung)",100.0
+7,1,30,9,Mega Mouth into the Kamberichon Mouth,145°30',19°30',145.5,19.5,yes,7.01.30.12,Grosse Mündung (Abzweigung zur Kamberichon-Mündung),100.0
+7,1,31,1,of the other rivers the positions are thus: The sources of the River Namados in the Ouindion range,127°00',26°30',127.0,26.5,yes,7.01.31.01,Narmades-Quellen im Vindion-Gebirge,100.0
+7,1,31,2,The bend of the river at Seripala,116°30',22°00',116.5,22.0,yes,7.01.31.03,Narmades (Biegung  bei Siripalla),100.0
+7,1,31,3,Its confluence with the River Moghis,115°00',18°30',115.0,18.5,yes,7.01.31.05,Narmades (Aufteilung zum Fluss Mophis),100.0
+7,1,32,1,Ouindion range,132°00',26°30',132.0,26.5,yes,7.01.32.01,Nanagunas-Quellen im Vindion-Gebirge,100.0
+7,1,32,2,Where it bifurcates into the Goaris and Binda,114°00',16°00',114.0,16.0,yes,7.01.32.03,Nanagunas (Aufteilung zur Bindas -Mündung),100.0
+7,1,33,1,Bettigo range,123°00',21°00',123.0,21.0,yes,7.01.22.01,Bettigo-Gebirge (W-Ende),100.0
+7,1,33,2,The point where it turns,118°30',17°15',118.5,17.25,yes,7.01.33.02,Pseudostomos (Biegung),100.0
+7,1,34,1,Sources of the River Baris in the Bettigo range,127°00',26°30',127.0,26.5,yes,7.01.31.01,Narmades-Quellen im Vindion-Gebirge,100.0
+7,1,34,2,Sources of the River Solen in the Bettigo range,127°00',20°30',127.0,20.5,yes,7.01.34.03,Solen-Quellen im Bettigo-Gebirge,100.0
+7,1,34,3,The point where it turns,124°00',18°00',124.0,18.0,yes,7.01.34.04,Solen (Biegung),100.0
+7,1,35,1,Sources of the River Chaberos in the Adeisathros range,132°00',22°00',132.0,22.0,yes,7.01.35.01,Chaberos-Quelle im Adisathron,100.0
+7,1,36,1,Sources of the River Tyna in the Oroudian (or Arouedan) Mountains,133°00',17°00',133.0,17.0,yes,7.01.36.01,Tynas (Tynnas)-Quellen im Aruraia-Gebirge,100.0
+7,1,37,1,Sources of the River Maisolos in the same mountains,134°30',17°30',134.5,17.5,yes,7.01.37.01,Maisolos-Quellen im Aruraia-Gebirge,100.0
+7,1,38,1,Sources of the River Manda in the same mountains,136°30',16°30',136.5,16.5,yes,7.01.38.01,Mandas-Quellen im Aruraia-Gebirge,100.0
+7,1,39,1,Sources of the River Toundis in the Ouxenton range,137°00',22°30',137.0,22.5,yes,7.01.39.01,Tyndis-Quellen im Uxenton-Gebirge,100.0
+7,1,40,1,Sources of the River Dosaron in the same range,140°00',24°00',140.0,24.0,yes,7.01.40.01,Dosaron-Quellen im Uxenton-Gebirge,100.0
+7,1,41,1,Sources of the River Adamas in the same range,142°00',24°00',142.0,24.0,yes,7.01.41.01,Adamas-Quellen im Uxenton-Gebirge,100.0
+7,1,43,1,the cities are these:— Kaisana,120°00',34°20',120.0,34.3333,yes,7.01.43.01,Karnasa,68.5
+7,1,43,2,Barborana,120°15',33°40',120.25,33.6667,yes,7.01.43.02,Barborana (Baborana),100.0
+7,1,43,3,Gorya,122°00',34°45',122.0,34.75,yes,7.01.43.03,Gorya,81.7
+7,1,43,4,Nagara or Dionysopolis,121°45',33°00',121.75,33.0,yes,7.01.43.04,Nagara bzw. Dionysopolis,57.5
+7,1,43,5,Drastoka,120°30',32°30',120.5,32.5,yes,7.01.43.05,Drastoka,100.0
+7,1,44,1,Between the Souastos and the Industhe Gandarai and these cities:— Proklais,123°00',32°00',123.0,32.0,yes,7.01.44.04,Poklais (Poklaeis),60.3
+7,1,44,2,Naulibi,124°20',33°20',124.3333,33.3333,yes,7.01.44.05,Naulibis,100.0
+7,1,45,1,Between the Indus and the Bidaspes towards the Indus the Arsa territory and these cities:— Ithagouros,125°40',33°20',125.6667,33.3333,yes,7.01.45.04,Ithaguros (Isaguros),100.0
+7,1,45,2,Taxiala,125°00',32°15',125.0,32.25,yes,7.01.45.05,Taxila,100.0
+7,1,46,1,"Around the Bidaspes, the country of the Pandoouoi, in which are these cities:— Labaka",127°30',34°15',127.5,34.25,yes,7.01.46.03,Labaka,100.0
+7,1,46,2,"Sagala, otherwise called Euthymedia",126°20',32°00',126.3333,32.0,yes,7.01.46.04,Sagala bzw. Euthydemia (Euthyde),63.0
+7,1,46,3,Boukephala,125°30',30°20',125.5,30.3333,no,7.01.46.05,Bukephala*,42.6
+7,1,46,4,Iomousa,124°15',30°00',124.25,30.0,yes,7.01.46.06,Iomusa,100.0
+7,1,48,1,Salagissa,129°30',34°30',129.5,34.5,yes,7.01.48.01,Salagissa (Salagisa),45.0
+7,1,48,2,Astrassos,131°15',34°15',131.25,34.25,yes,7.01.48.02,Astrassos,45.0
+7,1,48,3,Labokla,128°00',33°20',128.0,33.3333,yes,7.01.48.03,Labokla,100.0
+7,1,48,4,Batanagra,130°00',33°20',130.0,33.3333,yes,7.01.48.04,Batanagra,100.0
+7,1,48,5,Arispara,130°00',32°50',130.0,32.8333,yes,7.01.48.05,Arispara (Arippara),100.0
+7,1,48,6,Amakatis,128°15',32°20',128.25,32.3333,yes,7.01.48.06,Amakatis,100.0
+7,1,48,7,Ostobalasara,129°00',32°00',129.0,32.0,yes,7.01.48.07,Ostobalasara,100.0
+7,1,49,1,Kaspeira,127°00',31°15',127.0,31.25,yes,7.01.49.01,Kaspeira*,100.0
+7,1,49,2,Pasikana,128°30',31°15',128.5,31.25,yes,7.01.49.02,Pasikana,100.0
+7,1,49,3,Daidala,128°00',30°30',128.0,30.5,yes,7.01.49.03,Daidala,100.0
+7,1,49,4,Ardone,126°15',30°10',126.25,30.1667,yes,7.01.49.04,Ardone,100.0
+7,1,49,5,Indabara,127°15',30°00',127.25,30.0,yes,7.01.49.05,Indabara,100.0
+7,1,49,6,Liganeira,125°30',29°00',125.5,29.0,yes,7.01.49.06,Liganeira,100.0
+7,1,49,7,Chonnamagara,128°00',29°20',128.0,29.3333,yes,7.01.49.07,Chonnamagara,100.0
+7,1,50,1,"Modoura, the city of the gods",125°00',27°30',125.0,27.5,yes,7.01.50.01,Modura bzw. Stadt der Götter,59.1
+7,1,50,2,Gagasmira,126°40',27°30',126.6667,27.5,yes,7.01.50.02,Gagasmira (Gatasmira),100.0
+7,1,50,3,"Erarasa, a Metropolis",123°00',26°00',123.0,26.0,yes,7.01.50.03,Erarassa (Eragassa),100.0
+7,1,50,4,Kognandaua,124°00',26°00',124.0,26.0,yes,7.01.19.03,Apokopa-Gebirge (O-Ende) bzw. Poinai-Theon-Gebirge (O-Ende),100.0
+7,1,51,1,these around the Ganges further north are the Daitichai with these towns:— Konta,133°30',34°40',133.5,34.6667,yes,7.01.51.04,Konta (Konga),87.8
+7,1,51,2,Margara,135°00',34°00',135.0,34.0,yes,7.01.51.05,Margara,100.0
+7,1,51,3,Batangkaissara and east of the river,132°40',33°20',132.6667,33.3333,yes,7.01.51.06,Batankaisara,100.0
+7,1,51,4,Passala,137°00',34°15',137.0,34.25,yes,7.01.51.07,Passala,100.0
+7,1,51,5,Orza,136°00',33°20',136.0,33.3333,yes,7.01.51.08,Orza,100.0
+7,1,52,1,Below these are the Anichai with these towns:— Persakra,134°00',32°40',134.0,32.6667,yes,7.01.52.02,Persakra,100.0
+7,1,52,2,Sannaba,135°00',32°30',135.0,32.5,yes,7.01.52.03,Sannaba,100.0
+7,1,52,3,Toana to the east of the river,136°30',32°00',136.5,32.0,yes,7.01.52.04,Toana,100.0
+7,1,53,1,Below these Prasiake with these towns:— Sambalaka,132°15',31°50',132.25,31.8333,yes,7.01.53.02,Sambalaka,100.0
+7,1,53,2,Adisdara,136°00',31°30',136.0,31.5,yes,7.01.53.03,Adisdara,100.0
+7,1,53,3,Kanagora,135°00',30°40',135.0,30.6667,no,7.01.52.03,Sannaba,24.0
+7,1,53,4,Kindia,137°00',30°20',137.0,30.3333,yes,7.01.53.05,Kindia,93.9
+7,1,53,5,"Sagala, and east of the river",139°00',30°20',139.0,30.3333,yes,7.01.53.06,Sagala,100.0
+7,1,53,6,Aninacha,137°20',31°40',137.3333,31.6667,yes,7.01.53.07,Aninacha,93.9
+7,1,53,7,Koangka,138°20',31°30',138.3333,31.5,yes,7.01.53.08,Koanka,100.0
+7,1,54,1,South of this Saurabatis with these towns:— Empelathra,130°00',30°00',130.0,30.0,yes,7.01.54.02,Empelathra (Enpelathra),100.0
+7,1,54,2,Nadoubandagar,138°40',29°00',138.6667,29.0,no,7.01.73.01,Sambalaka,20.5
+7,1,54,3,Tamasis,133°00',29°00',133.0,29.0,yes,7.01.69.03,Stagabaza,53.5
+7,1,54,4,Kouraporeina,130°00',29°00',130.0,29.0,yes,7.01.54.05,Kuraporina,100.0
+7,1,56,1,Artoarta,121°30',31°15',121.5,31.25,yes,7.01.56.01,Artoarta,100.0
+7,1,56,2,Andrapana,121°15',30°40',121.25,30.6667,yes,7.01.56.06,Kodrana,46.5
+7,1,56,3,Sabana,122°20',32°00',122.3333,32.0,yes,7.01.56.03,Sabana (Nasbana),93.9
+7,1,56,4,Banagara,122°15',30°40',122.25,30.6667,yes,7.01.56.05,Banagara (Kanagara),87.8
+7,1,56,5,Kodrana,121°15',29°20',121.25,29.3333,yes,7.01.56.06,Kodrana,87.8
+7,1,57,1,along the river:— Embolima,124°00',31°00',124.0,31.0,yes,7.01.57.01,Embolima,100.0
+7,1,57,2,Pentagramma,124°00',30°20',124.0,30.3333,yes,7.01.57.02,Pentagramma,100.0
+7,1,57,3,Asigramma,123°00',29°30',123.0,29.5,yes,7.01.57.03,Asigramma,100.0
+7,1,57,4,Tiausa,121°30',28°50',121.5,28.8333,yes,7.01.57.04,Tiausa,93.9
+7,1,57,5,Aristobathra,120°00',27°30',120.0,27.5,yes,7.01.57.05,Aristobathra,100.0
+7,1,57,6,Azika,119°20',27°00',119.3333,27.0,yes,7.01.57.06,Azika (Azeika),96.9
+7,1,58,1,Pardabathra,117°00',23°30',117.0,23.5,yes,7.01.58.01,Pardabathra,45.0
+7,1,58,2,Piska,116°30',25°00',116.5,25.0,yes,7.01.58.02,Piska,100.0
+7,1,58,3,Pasipeda,114°30',24°00',114.5,24.0,yes,7.01.58.03,Pasipeda,100.0
+7,1,58,4,Sousikana,112°00',22°20',112.0,22.3333,yes,7.01.58.04,Susikana,100.0
+7,1,58,5,Bonis,111°00',21°30',111.0,21.5,yes,7.01.28.16,Sagapa (Abzweigung  zur Sinthon-Mündung),100.0
+7,1,58,6,Kolaka,110°30',20°40',110.5,20.6667,yes,7.01.58.06,Kolaka (Kokala),100.0
+7,1,59,1,in the islands formed by the river are these towns:— Patala,112°30',21°00',112.5,21.0,yes,7.01.59.01,Patala*,87.8
+7,1,59,2,Barbarei,113°15',22°30',113.25,22.5,yes,7.01.59.02,Barbarei* (Barbara*),100.0
+7,1,60,1,east of the river at some distance therefrom are these towns:— Xodrake,116°00',24°00',116.0,24.0,yes,7.01.60.01,Xodrake (Zodrake),100.0
+7,1,60,2,Sarbana,116°00',22°50',116.0,22.8333,yes,7.01.60.02,Sarbana (Sarkana),100.0
+7,1,60,3,Auxoamis,115°30',22°20',115.5,22.3333,yes,7.01.60.03,Auxoamis (Oxoamis),100.0
+7,1,60,4,Asinda,114°15',22°00',114.25,22.0,yes,7.01.60.04,Asinda,100.0
+7,1,60,5,Orbadarou or Ordabari,115°00',22°00',115.0,22.0,yes,7.01.60.05,Orbadaru,100.0
+7,1,60,6,Theophila,114°15',21°10',114.25,21.1667,yes,7.01.60.06,Theophila,100.0
+7,1,60,7,Astakapra,114°40',20°15',114.6667,20.25,yes,7.01.60.07,Astakapra,100.0
+7,1,61,1,Along the river are these towns:— Panasa,122°30',29°00',122.5,29.0,yes,7.01.61.01,Panassa (Panasa),100.0
+7,1,61,2,Boudaia,121°15',28°15',121.25,28.25,yes,7.01.61.02,Budaia (Bundaia),100.0
+7,1,61,3,Naagramma,120°00',27°00',120.0,27.0,yes,7.01.61.03,Naagramma,100.0
+7,1,61,4,Kamigara,119°00',26°20',119.0,26.3333,yes,7.01.61.04,Kamigara,100.0
+7,1,61,5,Binagara,118°00',25°20',118.0,25.3333,yes,7.01.61.05,Binagara,100.0
+7,1,61,6,Parabali,116°30',24°30',116.5,24.5,yes,7.01.61.06,Parabalei,100.0
+7,1,61,7,Sydros,114°00',21°20',114.0,21.3333,yes,7.01.60.06,Theophila,45.7
+7,1,61,8,Epitausa,113°45',22°30',113.75,22.5,yes,7.01.61.08,Epitausa (Epipausa),100.0
+7,1,61,9,Xoana,113°30',21°30',113.5,21.5,yes,7.01.61.09,Xoana,100.0
+7,1,62,1,"The parts east of Indo-Scythia along the coast belong to the country of Larike, and here in the interior to the West of the river Namados is Barygaza, an trading post",113°15',17°20',113.25,17.3333,yes,7.01.62.04,Barygaza*,100.0
+7,1,63,1,To the east of the river:— Agrinagara,118°15',22°30',118.25,22.5,yes,7.01.63.01,Agrinagara,100.0
+7,1,63,2,Siripalla,118°30',21°30',118.5,21.5,yes,7.01.31.03,Narmades (Biegung  bei Siripalla),45.0
+7,1,63,3,Bammogoura,116°00',20°45',116.0,20.75,yes,7.01.63.03,Bammogura (Gammogura),100.0
+7,1,63,4,Sazantion,115°30',20°30',115.5,20.5,yes,7.01.63.04,Sazantion (Saganthion),100.0
+7,1,63,5,Zerogerei,116°20',19°50',116.3333,19.8333,yes,7.01.63.05,Xerogerei,100.0
+7,1,63,6,"Ozene, the capital of Tiastanes",117°00',20°00',117.0,20.0,yes,7.01.63.06,Ozene*,100.0
+7,1,63,7,Minagara,115°10',19°30',115.1667,19.5,yes,7.01.63.08,Minagara,96.9
+7,1,63,8,Tiatoura,115°50',18°50',115.8333,18.8333,yes,7.01.63.09,Tiatura (Tiagura),100.0
+7,1,63,9,Nasika,114°00',17°00',114.0,17.0,yes,7.01.63.10,Nasika,100.0
+7,1,64,1,"The parts farther inland are possessed by the Poulindai Agriophagoi, and beyond them are the Chatriaioi, to whom belong these cities, lying some east and some west of the Indus:— Nigranigramma",124°00',28°15',124.0,28.25,yes,7.01.64.04,Nigranigramma,100.0
+7,1,64,2,Antachara,122°00',27°20',122.0,27.3333,yes,7.01.64.05,Antachara,87.8
+7,1,64,3,Soudasanna,123°00',26°50',123.0,26.8333,yes,7.01.64.06,Sudaganna (Sudassana),100.0
+7,1,64,4,Syrnisika,121°00',26°30',121.0,26.5,yes,7.01.64.07,Syrnisika (Syrnis),100.0
+7,1,64,5,Patiatama,121°00',25°00',121.0,25.0,yes,7.01.64.08,Patistama,100.0
+7,1,64,6,Tisapatinga,123°00',24°20',123.0,24.3333,yes,7.01.64.09,Tisapatinga (Sinatatinga),100.0
+7,1,65,1,"But again, the country between Mount Sardonyx and Mount Bettigo belongs to the Tabasoi, a great race, while the country beyond them as far as the Vindhya range, along the eastern bank of the Namados, belongs to the Prapiotai, who include the Rhamnai, and whose towns are these:— Kognabanda",120°15',23°00',120.25,23.0,yes,7.01.65.08,Kognabanda,100.0
+7,1,65,2,Ozoabis,120°30',23°40',120.5,23.6667,yes,7.01.65.09,Ozoabis (Ozoamis),100.0
+7,1,65,3,Ostha,122°30',23°30',122.5,23.5,yes,7.01.65.10,Ostha,100.0
+7,1,65,4,"Kosa, where are diamonds",121°20',22°30',121.3333,22.5,yes,7.01.65.11,Kosa,100.0
+7,1,67,1,Agara,129°20',25°00',129.3333,25.0,yes,7.01.67.01,Agara,100.0
+7,1,67,2,Adeisathra,128°30',24°30',128.5,24.5,yes,7.01.67.02,Adisathra,100.0
+7,1,67,3,Soara,124°20',24°00',124.3333,24.0,yes,7.01.67.03,Soara (Suara),100.0
+7,1,67,4,Nygdosora,125°00',23°00',125.0,23.0,yes,7.01.67.04,Nygdosora,100.0
+7,1,67,5,Anara,122°30',22°20',122.5,22.3333,yes,7.01.67.05,Anara (Anarta),100.0
+7,1,68,1,"Between Mount Belligo and Adeisathroa are the Sorai nomads, with these towns:— Sangamarta",133°00',21°00',133.0,21.0,yes,7.01.68.04,Sangamarta,100.0
+7,1,68,2,"Sora, the capital of Arkatos",130°00',21°00',130.0,21.0,yes,7.01.68.05,Sora,72.5
+7,1,69,1,"Again to the east of the Vindhya range is the territory of the (Biolingai or) Bolingai, with these towns:— Stagabaza or Bastagaza",133°00',28°30',133.0,28.5,yes,7.01.69.03,Stagabaza,100.0
+7,1,69,2,Bardaotis,137°30',28°30',137.5,28.5,yes,7.01.69.04,Bardaotis,100.0
+7,1,70,1,Beyond these is the country of the Porouaroi with these towns:— Bridama,134°30',27°30',134.5,27.5,yes,7.01.70.02,Bridama,100.0
+7,1,70,2,Tholoubana,136°20',27°00',136.3333,27.0,yes,7.01.70.03,Tholobana (Tholobara),100.0
+7,1,70,3,Malaita,136°30',25°50',136.5,25.8333,no,7.01.71.05,Panassa,19.3
+7,1,71,1,Beyond these as far as the Ouxentos range are the Adeisathroi with these towns:— Maleiba,140°00',27°20',140.0,27.3333,yes,7.01.71.03,Maleiba (Maliba),87.8
+7,1,71,2,Aspathis,138°30',25°20',138.5,25.3333,yes,7.01.71.04,Aspathis,87.8
+7,1,71,3,Panassa,137°40',24°30',137.6667,24.5,yes,7.01.71.05,Panassa,100.0
+7,1,71,4,"Sageda, the Metropolis",133°00',23°30',133.0,23.5,yes,7.01.71.06,Sageda,100.0
+7,1,71,5,Balantipyrgon,136°30',23°30',136.5,23.5,yes,7.01.71.07,Balantipyrgon,100.0
+7,1,72,1,Farther east than the Adeisathroi towards the Ganges are the Mandalai with this city:— Asthagoura,142°00',25°00',142.0,25.0,yes,7.01.72.03,Asthagura,100.0
+7,1,73,1,on the river itself these towns:— Sambalaka,141°00',29°30',141.0,29.5,yes,7.01.73.01,Sambalaka,100.0
+7,1,73,2,Sigalla,142°00',28°00',142.0,28.0,yes,7.01.30.05,"Namenloser Fluss zum Ganges (Einmündung  vom 
+Uxenton-Gebirge her)",100.0
+7,1,73,3,"Palimbothra, the Royal residence",143°00',27°00',143.0,27.0,yes,7.01.73.03,Palimbothra*,100.0
+7,1,73,4,Tamalites,144°30',26°30',144.5,26.5,yes,7.01.73.04,Tamalites,100.0
+7,1,73,5,Oreophanta,146°30',24°30',146.5,24.5,yes,7.01.73.05,Oreophanta,81.7
+7,1,74,1,In like manner the parts under Mount Bettigo are occupied by the Brachmanai Magoi as far as the Batai with this city:— Brachme,128°00',19°00',128.0,19.0,yes,7.01.74.04,Bragme (Bramme),100.0
+7,1,75,1,The parts under the range of Adeisathros as far as the Arouraioi are occupied by the Badiamaioi with this city:— Tathilba,134°00',18°50',134.0,18.8333,yes,7.01.75.04,Tathilba,100.0
+7,1,76,1,"The parts under the Ouxentos range are occupied by the Drilophyllitai, with these cities:— Sibrion",139°00',22°20',139.0,22.3333,yes,7.01.76.03,Sibrion,100.0
+7,1,76,2,Opotoura,137°30',21°40',137.5,21.6667,yes,7.01.76.04,Opotura,100.0
+7,1,76,3,Ozoana,138°15',20°30',138.25,20.5,yes,7.01.76.05,Ozoana,100.0
+7,1,77,1,Further east than these towards the Ganges are the Kokkonagai with this city:— Dosara,142°30',22°30',142.5,22.5,yes,7.01.77.03,Dosara,100.0
+7,1,78,1,on the river farther west:— Kartinaga,146°00',23°00',146.0,23.0,yes,7.01.78.01,Kartinaga (Kartinata),100.0
+7,1,78,2,Kartasina,146°00',21°40',146.0,21.6667,yes,7.01.78.02,Kartasina (Kartasyna),81.7
+7,1,79,1,Under the Maisoloi the Salakenoi towards the Oroudian (or Arouraian) Mountains with these cities:— Benagouron,140°00',20°15',140.0,20.25,yes,7.01.79.04,Benaguron,100.0
+7,1,79,2,Kastra,138°00',19°30',138.0,19.5,yes,7.01.79.05,Kastra,100.0
+7,1,79,3,Magaris,137°30',18°20',137.5,18.3333,yes,7.01.79.06,Magaris,100.0
+7,1,80,1,"Towards the Ganges River the Sabarai, in whose country the diamond is found in great abundance, their towns are:— Tasopion",140°30',22°00',140.5,22.0,yes,7.01.80.04,Tasopion (Tasopeion),100.0
+7,1,80,2,Karikardama,141°00',20°15',141.0,20.25,yes,7.01.80.05,Karikardama,100.0
+7,1,81,1,"All the country about the mouths of the Ganges is occupied by the Gangaridai with this city:— Gange, the Royal residence",146°00',19°15',146.0,19.25,yes,7.01.81.03,Gange,100.0
+7,1,82,1,In the parts of Ariake which still remain to be described are the following inland cities and villages: to the west of the Benda these cities:— Malippala,119°30',20°15',119.5,20.25,yes,7.01.82.03,Manipalla (Manippala),76.7
+7,1,82,2,Sarisabis,119°30',20°00',119.5,20.0,yes,7.01.82.04,Sareisabis (Sarisabis),81.7
+7,1,82,3,Tagara,118°00',19°20',118.0,19.3333,yes,7.01.82.05,Tagara,100.0
+7,1,82,4,Baithana (the royal seat of [Siro] Ptolemaios),117°00',18°30',117.0,18.5,yes,7.01.82.06,Baithana*,87.8
+7,1,82,5,Deopali or Deopala,115°40',17°50',115.6667,17.8333,yes,7.01.82.08,Deopalli,100.0
+7,1,82,6,Gamaliba,115°15',17°20',115.25,17.3333,yes,7.01.82.09,Gamaliba,100.0
+7,1,82,7,Omenogara,114°00',16°20',114.0,16.3333,yes,7.01.82.10,Omenogara,100.0
+7,1,83,1,Between the Benda and Pseudostomos: Nagarouris (or Nagaronraris),120°00',20°15',120.0,20.25,yes,7.01.83.03,Nagaruraris (Nagarura),100.0
+7,1,83,2,Tabaso,121°30',20°40',121.5,20.6667,yes,7.01.83.04,Tabaso,100.0
+7,1,83,3,Inde,123°00',20°45',123.0,20.75,yes,7.01.83.05,Inde,96.9
+7,1,83,4,Tiripangalida,121°15',19°40',121.25,19.6667,yes,7.01.83.06,Tiripangalida,100.0
+7,1,83,5,"Hippokoura, the royal seat of Baleokouros",119°45',19°10',119.75,19.1667,yes,7.01.83.07,Hippokura*,100.0
+7,1,83,6,Soubouttou,120°15',19°10',120.25,19.1667,yes,7.01.83.09,Subuttu,100.0
+7,1,83,7,Sirimalaga,119°20',18°30',119.3333,18.5,yes,7.01.83.10,Sirimalaga,100.0
+7,1,83,8,Kalligeris,118°00',18°00',118.0,18.0,yes,7.01.83.11,Kalligeris,100.0
+7,1,83,9,Modogoulla,119°00',18°00',119.0,18.0,yes,7.01.83.12,Modogulla,100.0
+7,1,83,10,Petirgala,117°45',17°15',117.75,17.25,yes,7.01.83.13,Petirgala,100.0
+7,1,83,11,Banaouasei,116°00',16°45',116.0,16.75,yes,7.01.83.14,Banauasei  (Banabasi),100.0
+7,1,84,1,The inland cities of the Pirates are these:— Olochoira,114°00',15°00',114.0,15.0,yes,7.01.84.02,Olochoira,100.0
+7,1,84,2,"Mousopalle, the metropolis",115°30',15°45',115.5,15.75,yes,7.01.84.03,Musopalle (Musopallis),100.0
+7,1,85,1,"Inland cities of Limyrike, to the west of the Pseudostomos are these:— Naroulia",117°45',15°50',117.75,15.8333,yes,7.01.85.03,Narulla (Nallura),100.0
+7,1,85,2,Kouba,117°00',15°00',117.0,15.0,yes,7.01.85.04,Kuba,100.0
+7,1,85,3,Paloura,117°50',14°40',117.8333,14.6667,yes,7.01.85.05,Palura,75.1
+7,1,86,1,"Between the Pseudostomos and the Baris, these cities:— Pasage",124°50',19°50',124.8333,19.8333,yes,7.01.86.03,Pasage,81.7
+7,1,86,2,Mastanaur,121°30',18°40',121.5,18.6667,yes,7.01.86.04,Mastanur (Mentanur),100.0
+7,1,86,3,Kourellour,119°00',17°30',119.0,17.5,yes,7.01.86.05,Kurellur (Kurellura),100.0
+7,1,86,4,"Pounnata, where is beryl",121°20',17°30',121.3333,17.5,yes,7.01.86.06,Punnata,72.6
+7,1,86,5,Aloe,120°20',17°00',120.3333,17.0,yes,7.01.86.08,Aloe,87.8
+7,1,86,6,"Karoura, the royal seat of Kerobothros",119°00',16°20',119.0,16.3333,yes,7.01.86.09,Karura*,100.0
+7,1,86,7,Arembour,121°00',16°20',121.0,16.3333,yes,7.01.86.11,Arembur,100.0
+7,1,86,8,Bideris,119°00',15°50',119.0,15.8333,yes,7.01.86.12,Berderis (Bideris),100.0
+7,1,86,9,Pantipolis,118°00',15°20',118.0,15.3333,yes,7.01.86.13,Pantipolis (Pantipoleis),100.0
+7,1,86,10,Adarima,119°30',15°40',119.5,15.6667,yes,7.01.86.14,Adarima,87.8
+7,1,86,11,Koreour,120°00',15°00',120.0,15.0,yes,7.01.86.15,Koreur (Kureur),100.0
+7,1,87,1,Inland of the Aioi:— Morounda,121°20',14°20',121.3333,14.3333,yes,7.01.87.02,Morunda (Korunda),84.8
+7,1,88,1,Inland cities of the Kareoi:— Mendela,123°00',17°40',123.0,17.6667,yes,7.01.88.02,Mendela,87.8
+7,1,88,2,Selour,121°45',16°30',121.75,16.5,yes,7.01.88.03,Selur (Delur),100.0
+7,1,88,3,Tittoua,122°00',15°20',122.0,15.3333,yes,7.01.88.04,Tittua,84.3
+7,1,88,4,Mantittour,123°00',15°10',123.0,15.1667,yes,7.01.88.05,Mantittur (Mantitur),76.2
+7,1,89,1,Inland cities of the Pandionoi:— Tainour,124°45',18°40',124.75,18.6667,yes,7.01.89.02,Tainur,100.0
+7,1,89,2,Peringkarei,123°20',18°00',123.3333,18.0,yes,7.01.89.03,Perinkari,100.0
+7,1,89,3,Korindiour,125°00',17°40',125.0,17.6667,yes,7.01.89.04,Korindiur,100.0
+7,1,89,4,Tangala or Taga,123°30',16°50',123.5,16.8333,yes,7.01.89.05,Tangala,100.0
+7,1,89,5,"Modoura, the royal city of Pandion",125°00',16°20',125.0,16.3333,yes,7.01.89.06,Modura*,100.0
+7,1,89,6,Akour,124°45',15°20',124.75,15.3333,yes,7.01.89.08,Akur,100.0
+7,1,90,1,Inland cities of the Batoi:— Kalindoia,127°40',17°30',127.6667,17.5,yes,7.01.90.02,Kalindoia,100.0
+7,1,90,2,Bata,126°30',17°00',126.5,17.0,yes,7.01.90.03,Bata,100.0
+7,1,90,3,Talara,128°00',16°45',128.0,16.75,yes,7.01.90.04,Tallara,100.0
+7,1,91,1,Inland cities of the Paralia of the Soretai:— Kaliour,129°00',17°20',129.0,17.3333,yes,7.01.91.02,Kaliur,84.3
+7,1,91,2,Tennagora,132°00',17°00',132.0,17.0,yes,7.01.91.03,Tennagora,100.0
+7,1,91,3,Eikour,129°00',16°40',129.0,16.6667,yes,7.01.91.04,Eikur,100.0
+7,1,91,4,"Orthoura, the royal city of Sornagos",130°00',16°20',130.0,16.3333,yes,7.01.91.05,Orthura*,100.0
+7,1,91,5,Bere,130°20',16°15',130.3333,16.25,yes,7.01.91.07,Bere,100.0
+7,1,91,6,Abour,129°00',16°00',129.0,16.0,yes,7.01.91.08,Abur,100.0
+7,1,91,7,Karmara,130°20',15°40',130.3333,15.6667,yes,7.01.91.09,Karmara,100.0
+7,1,91,8,Magour,130°00',15°15',130.0,15.25,yes,7.01.91.10,Magur,100.0
+7,1,92,1,The inland cities of the Arvarnoi are these:— Kerauge,133°00',16°15',133.0,16.25,yes,7.01.92.02,Kerauge (Kerange),100.0
+7,1,92,2,Phrourion,132°00',15°00',132.0,15.0,yes,7.01.92.03,Phrurion,100.0
+7,1,92,3,Karige,132°40',15°00',132.6667,15.0,yes,7.01.92.04,Karige,100.0
+7,1,92,4,Poleour,131°30',14°40',131.5,14.6667,yes,7.01.92.05,Polëur,100.0
+7,1,92,5,Pikendaka,131°30',14°00',131.5,14.0,yes,7.01.92.06,Pikendaka,100.0
+7,1,92,6,Iatour,132°30',14°00',132.5,14.0,yes,7.01.92.07,Iatur,100.0
+7,1,92,7,Skopoloura,134°15',14°35',134.25,14.5833,yes,7.01.92.08,Skopolura (Skopelura),85.4
+7,1,92,8,Ikarta,133°30',13°40',133.5,13.6667,yes,7.01.92.09,Ikarta,100.0
+7,1,92,9,"Malanga, the royal city of Basaronagos",133°00',13°00',133.0,13.0,yes,7.01.92.10,Malanga,100.0
+7,1,92,10,Kandipatna,133°30',12°20',133.5,12.3333,yes,7.01.92.12,Kandipatna (Pandipatna),100.0
+7,1,93,1,The inland cities of the Maisoloi:— Kalliga,138°00',17°00',138.0,17.0,yes,7.01.93.02,Kalliga,100.0
+7,1,93,2,Bardamana,136°15',15°15',136.25,15.25,yes,7.01.93.03,Bardamana,100.0
+7,1,93,3,Koroungkala,135°00',15°00',135.0,15.0,yes,7.01.93.04,Korunkala,100.0
+7,1,93,4,Pharytra or Pharetra,134°20',13°20',134.3333,13.3333,yes,7.01.93.05,Pharytra,87.8
+7,1,93,5,"Pityndra, the metropolis",135°20',12°30',135.3333,12.5,yes,7.01.93.06,Pityndra* (Piturame*),85.5
+7,1,94,1,Islands lying near the part of India which projects into the ocean in the Gulf of Kanthi:— Barake,111°00',18°00',111.0,18.0,yes,7.01.94.03,Barake,100.0
+7,1,95,1,along the line of coast as far as the Kolchic Gulf:— Milizegyris (or Milizigeris),110°00',12°30',110.0,12.5,yes,7.01.95.02,Milizigeris,100.0
+7,1,95,2,Heptanesia,113°00',13°00',113.0,13.0,yes,7.01.95.03,Heptanesia,100.0
+7,1,95,3,Trikadiba,113°30',11°00',113.5,11.0,yes,7.01.95.04,Trikadiba,100.0
+7,1,95,4,Peperine,115°00',12°40',115.0,12.6667,yes,7.01.95.05,Peperine,100.0
+7,1,95,5,Trinesia,116°20',12°00',116.3333,12.0,yes,7.01.95.06,Trinesia,100.0
+7,1,95,6,Leuke,118°00',12°00',118.0,12.0,yes,7.01.95.07,Leuke,100.0
+7,1,95,7,Nanigeris,122°00',12°00',122.0,12.0,yes,7.01.95.08,Nanigeris,100.0
+7,1,96,1,in the Argaric Gulf:— Kory,126°30',13°00',126.5,13.0,yes,7.01.96.02,Kory,100.0
+7,2,2,1,The seacoast of this division is thus described. In the Gangetic Gulf beyond the Mouth of the Ganges called Antibolei:— The coast of the Airrhadoi:— Pentapolis,150°00',18°00',150.0,18.0,yes,7.02.02.04,Pentapolis,100.0
+7,2,2,2,Mouth of River Katabeda,151°20',17°00',151.3333,17.0,yes,7.02.02.05,Katabedas-Mündung,100.0
+7,2,2,3,"Barakoura, trading post",152°30',16°00',152.5,16.0,yes,7.02.02.06,Barakura,100.0
+7,2,2,4,Mouth of the River Tokosanna,153°00',14°30',153.0,14.5,yes,7.02.02.07,Tokosannas-Mündung (Tokosanas-Mündung),100.0
+7,2,3,1,"That of the Silver country (Argyra) Sambra, a city",153°30',13°45',153.5,13.75,yes,7.02.03.02,Samba (Symba),100.0
+7,2,3,2,"Sada, a city",154°20',11°20',154.3333,11.3333,yes,7.02.03.04,Sada,100.0
+7,2,3,3,Mouth of the River Sados,153°30',12°30',153.5,12.5,yes,7.02.03.03,Sados-Mündung,100.0
+7,2,3,4,"Berabonna, trading post",155°30',10°20',155.5,10.3333,yes,7.02.03.05,Berabonna,87.8
+7,2,3,5,The mouth of the River Temala,157°30',10°00',157.5,10.0,yes,7.02.03.06,Temalas-Mündung,100.0
+7,2,3,6,"Temala, a city",157°30',9°00',157.5,9.0,yes,7.02.03.07,Tamala,100.0
+7,2,3,7,The Cape beyond it,157°20',8°00',157.3333,8.0,yes,7.02.03.08,Darauffolgendes Kap,69.5
+7,2,4,1,"That of the Besyngeitai Cannibals on the Sarabakic Gulf where are— Sabara, a city",159°30',8°30',159.5,8.5,yes,7.02.04.03,Sabara,81.7
+7,2,4,2,Mouth of the River Besynga,162°20',8°25',162.3333,8.4167,yes,7.02.04.05,Besynga,100.0
+7,2,4,3,"Besynga, trading post",162°00',9°00',162.0,9.0,yes,7.02.04.04,Besyngas-Mündung,100.0
+7,2,4,4,"Berabai, a city",162°20',6°00',162.3333,6.0,yes,7.02.04.06,Berobai (Beroba),85.5
+7,2,4,5,The Cape beyond it,159°00',4°40',159.0,4.6667,yes,7.02.04.07,Darauffolgendes Kap,100.0
+7,2,5,1,"That of the Golden Chersonese: Takola, trading post",160°00',4°15',160.0,4.25,yes,7.02.05.02,Takola*,100.0
+7,2,5,2,The cape beyond it,158°40',2°40',158.6667,2.6667,yes,7.02.05.03,Darauffolgendes Kap,100.0
+7,2,5,3,Mouth of the River Chrysoanas,159°00',1°00',159.0,1.0,yes,7.02.05.04,Chrysoanas-Mündung,100.0
+7,2,5,4,"Sabana, trading post",160°00',3°,160.0,3.0,no,7.02.25.03,Kokkonagara (Konkonagara),18.3
+7,2,5,5,S. Mouth of the River Palandos,161°00',2°,161.0,2.0,no,7.02.12.05,Namenloser Fluss (Aufteilung in den Chrysoanas),30.6
+7,2,5,6,S. Cape Maleou Kolon,163°00',2°,163.0,2.0,no,7.02.05.10,Perimula,21.4
+7,2,5,7,S. Mouth of the River Attaba,164°00',1°,164.0,1.0,yes,7.02.05.08,Attabas-Mündung,51.3
+7,2,5,8,"S. Koli, a city . 164°20' . on the equator Perimoula",163°15',2°20',163.25,2.3333,yes,7.02.05.10,Perimula,93.1
+7,2,5,9,Perimoulic Gulf,168°30',4°15',168.5,4.25,yes,7.02.07.02,Grosses Kap am Anfang des Golfes,59.2
+7,2,6,1,Country the Lestai (Robbers). Samarade,163°00',4°50',163.0,4.8333,yes,7.02.06.02,Samarade (Smarade),100.0
+7,2,6,2,Pagrasa,165°00',4°50',165.0,4.8333,yes,7.02.06.03,Pagrasa (Patrasa),100.0
+7,2,6,3,Mouth of the River Sobanos,165°40',4°45',165.6667,4.75,yes,7.02.06.04,Sobanos-Mündung,100.0
+7,2,6,4,"Pithonobaste, trading post",166°20',4°45',166.3333,4.75,yes,7.02.06.05,Thipinobastoi (Thipinobastai),100.0
+7,2,6,5,Akadra,167°00',4°45',167.0,4.75,yes,7.02.06.06,Akadra,96.9
+7,2,6,6,"Zabai, the city",168°40',40°45',168.6667,40.75,no,,,
+7,2,7,1,"Of the Great Gulf, the Great Cape where the Gulf begins",169°30',4°15',169.5,4.25,yes,7.02.07.02,Grosses Kap am Anfang des Golfes,54.7
+7,2,7,2,Thagora,168°00',6°00',168.0,6.0,yes,7.02.07.03,Thagora,100.0
+7,2,7,3,"Balonga, a Metropolis",167°30',7°00',167.5,7.0,yes,7.02.07.04,Balonga,100.0
+7,2,7,4,Throana,167°00',8°30',167.0,8.5,yes,7.02.07.05,Throana,100.0
+7,2,7,5,Mouth of the River Doanas,167°00',10°00',167.0,10.0,yes,7.02.07.06,Daonas-Mündung,100.0
+7,2,7,6,"Kortatha, a metropolis",167°00',12°30',167.0,12.5,yes,7.02.07.07,Kortatha (Kordathra),100.0
+7,2,7,7,"Sinda, a city",167°15',16°40',167.25,16.6667,no,7.02.24.02,Rhingiberi,8.0
+7,2,7,8,Pagrasa,167°30',14°30',167.5,14.5,yes,7.02.07.09,Pagrasa,81.7
+7,2,7,9,Mouth of the River Dorias,168°00',15°30',168.0,15.5,yes,7.02.07.10,Dorias-Mündung,100.0
+7,2,7,10,Aganagara,169°00',16°20',169.0,16.3333,yes,7.02.07.11,Aganagara (Aganagora),87.8
+7,2,7,11,Mouth of the River Seros,171°30',17°20',171.5,17.3333,yes,7.02.07.12,Seros-Mündung,100.0
+7,2,7,12,The end of the Great Gulf towards the Sinai,173°00',17°20',173.0,17.3333,yes,7.02.07.13,"Grenzpunkt (Indien jenseits des Ganges, Land der Sinen)",100.0
+7,2,8,1,"The mountains in this division are thus named:— Bepyrrhos, whose extremities lie in",148°00',34°00',148.0,34.0,yes,7.02.08.01,Bepyrron- (Bepyron)-Gebirge (NW-Ende),100.0
+7,2,8,2,,154°00',26°00',154.0,26.0,yes,7.02.08.02,Bepyrron- (Bepyron)-Gebrige (SO-Ende),100.0
+7,2,8,3,"Maiandros, whose extremities lie in",152°00',24°00',152.0,24.0,yes,7.02.08.03,Maiandros-Gebirge (NW-Ende),100.0
+7,2,8,4,,160°00',16°00',160.0,16.0,yes,7.02.08.04,Maiandros-Gebirge (SO-Ende),100.0
+7,2,8,5,"Damassa (or Dobassa), whose extremities lie in",162°00',23°00',162.0,23.0,yes,7.02.08.05,Damasa-Gebirge (S-Ende),100.0
+7,2,8,6,,166°00',33°00',166.0,33.0,yes,7.02.08.06,Damasa-Gebirge (N-Ende),100.0
+7,2,8,7,"the western part of Senianthinos, whose extremities lie in",170°00',33°00',170.0,33.0,yes,7.02.08.07,Semanthinon-Gebirge (W-Ende),100.0
+7,2,8,8,,180°00',26°00',180.0,26.0,yes,7.02.08.08,Semanthinon-Gebirge (O-Ende),100.0
+7,2,9,1,"Bepyrrhos two rivers discharge into the Ganges, of which the more northern has its sources in",148°00',33°00',148.0,33.0,yes,7.02.09.02,Namenloser Fluss (nördl.) zum Ganges (Quellen im Bepyrron-Gebirge),100.0
+7,2,9,2,its point of junction with the Ganges in,140°15',30°20',140.25,30.3333,yes,7.02.09.03,Namenloser Fluss (nördl.) zum Ganges (Einmündung vom  Bepyrron-Gebirge),100.0
+7,2,9,3,The sources of the other river are in,142°00',27°00',142.0,27.0,no,7.01.30.05,"Namenloser Fluss zum Ganges (Einmündung  vom 
+Uxenton-Gebirge her)",38.1
+7,2,9,4,its point of junction with the Ganges in,144°00',26°00',144.0,26.0,no,7.02.09.05,Namenloser Fluss (südl.) zum Ganges (Einmündung vom Bepyrron-Gebirge),27.5
+7,2,10,1,"Maiandros descend the rivers beyond the Ganges as far as the Besynga River, but the river Seros flows from the range of Semanthinos from two sources, of which the most western lies in",170°30',32°00',170.5,32.0,yes,7.02.10.06,Seros (westliche Quelle im Semanthinon-Gebirge),100.0
+7,2,10,2,the most eastern in,173°30',30°00',173.5,30.0,yes,7.02.10.07,Seros (östliche  Quelle im Semanthinon-Gebirge),100.0
+7,2,10,3,their confluence is in,171°00',27°00',171.0,27.0,yes,7.02.10.08,Seros (Zusammenfluss der Quellflüsse),100.0
+7,2,11,1,Damassa range flow the Daonas and Dorias (the Doanas runs as far as to Bepyrrhos) and the Dorias rises in,164°30',28°00',164.5,28.0,yes,7.02.11.05,Dorias-Quellen,100.0
+7,2,11,2,Damassa range rises in,162°00',27°30',162.0,27.5,no,7.02.11.05,Dorias-Quellen,0.0
+7,2,11,3,Bepyrrhos rises in,153°00',27°30',153.0,27.5,yes,7.02.11.07,Daonas-Quelle im Bepyrron-Gebirge,49.0
+7,2,11,4,The two streams unite in,160°20',19°00',160.3333,19.0,yes,7.02.11.08,Daonas (Zusammenfluss der Quellflüsse),100.0
+7,2,11,5,Maiandros rises in,163°30',13°00',163.5,13.0,no,7.02.24.08,Bareuaora (Bareuathra),30.6
+7,2,12,1,"mountain ridges, without name, which overhang the Chersonese—the one flowing into the Chersonese first detaches from it the Attabas in about",161°00',2°20',161.0,2.3333,no,7.02.12.05,Namenloser Fluss (Aufteilung in den Chrysoanas),34.1
+7,2,12,2,then the Chrysoanas in about,161°00',1°20',161.0,1.3333,yes,7.02.12.05,Namenloser Fluss (Aufteilung in den Chrysoanas),100.0
+7,2,13,1,"The regions of this Division lying along the course of the Ganges on its eastern side and furthest to the north are inhabited by the Ganganoi, through whose dominions flows the river Sarabos, and who have the following towns:— Sapolos",139°20',35°00',139.3333,35.0,yes,7.02.13.04,Sapolos,87.8
+7,2,13,2,Storna,138°40',34°40',138.6667,34.6667,yes,7.02.13.05,Storna,100.0
+7,2,13,3,Heorta,138°30',34°00',138.5,34.0,yes,7.02.13.06,Heorta,100.0
+7,2,13,4,Rhappha,137°40',33°40',137.6667,33.6667,yes,7.02.13.07,Rhappha,100.0
+7,2,14,1,"To the south of these are the Maroundai who reach the Gangaridai, and have the following towns on the east of the Ganges:— Boraita",142°20',29°00',142.3333,29.0,yes,7.02.14.04,Boraita,100.0
+7,2,14,2,Korygaza,143°30',27°15',143.5,27.25,yes,7.02.14.05,Korygaza,100.0
+7,2,14,3,Kondota,145°00',26°00',145.0,26.0,yes,7.02.14.06,Kondota,100.0
+7,2,14,4,Kelydna,146°00',25°30',146.0,25.5,yes,7.02.14.07,Kelydna,81.7
+7,2,14,5,Aganagora,146°30',22°30',146.5,22.5,yes,7.02.14.08,Aganagora,100.0
+7,2,14,6,Talarga,146°40',21°40',146.6667,21.6667,yes,7.02.14.09,Talarga (Salariga),100.0
+7,2,22,1,"The inland towns and villages of this division, in addition to those mentioned along the Ganges are called:— Selampoura",148°30',33°20',148.5,33.3333,yes,7.02.22.02,Selampura,100.0
+7,2,22,2,Kanogiza,143°00',32°00',143.0,32.0,yes,7.02.22.03,Kanogiza,100.0
+7,2,22,3,Kassida,146°00',31°10',146.0,31.1667,yes,7.02.22.04,Kassida,87.8
+7,2,22,4,Eldana,152°00',31°00',152.0,31.0,yes,7.02.22.05,Eldana,100.0
+7,2,22,5,Asanabara,155°00',31°30',155.0,31.5,yes,7.02.22.06,Asanamara,100.0
+7,2,22,6,Archinara,163°00',31°00',163.0,31.0,yes,7.02.22.07,Archinara,100.0
+7,2,22,7,Ourathdnai,170°00',31°20',170.0,31.3333,yes,7.02.22.08,Urathenai,100.0
+7,2,22,8,Souanagoura,145°30',29°30',145.5,29.5,yes,7.02.22.09,Suanagura (Suannagura),100.0
+7,2,22,9,Sagoda or Sadoga,155°20',29°20',155.3333,29.3333,yes,7.02.22.10,Sagoda (Sagonda),100.0
+7,2,22,10,Anina,162°00',29°00',162.0,29.0,yes,7.02.22.11,Anthina,100.0
+7,2,22,11,Salatha,165°40',28°20',165.6667,28.3333,yes,7.02.22.12,Salatha,100.0
+7,2,23,1,"Rhadamarkotta, in which is much nard",172°00',28°00',172.0,28.0,yes,7.02.23.01,Rhandamarkotta* (Rhandamarta*),100.0
+7,2,23,2,Athenagouron,146°20',27°00',146.3333,27.0,yes,7.02.23.03,Athenaguron,100.0
+7,2,23,3,Maniaina (or Maniataia),147°15',24°40',147.25,24.6667,yes,7.02.23.04,Maniaina,100.0
+7,2,23,4,"Tosalei, a metropolis",150°00',23°20',150.0,23.3333,yes,7.02.23.05,Tosalei* (Tosale*),100.0
+7,2,23,5,Alosanga,152°00',24°15',152.0,24.25,yes,7.02.23.06,Alosanga,100.0
+7,2,23,6,Adeisaga,159°30',23°00',159.5,23.0,yes,7.02.23.07,Adeisaga,100.0
+7,2,23,7,Kimara,170°00',23°15',170.0,23.25,yes,7.02.23.08,Kimara,100.0
+7,2,23,8,Parisara,179°00',21°30',179.0,21.5,no,7.03.05.02,Akathra (Akadra),21.4
+7,2,23,9,"Tougma, a metropolis",152°30',22°15',152.5,22.25,yes,7.02.23.10,Tugma*,100.0
+7,2,23,10,Arisabion,158°30',22°30',158.5,22.5,yes,7.02.23.11,Arisabion (Aresabion),100.0
+7,2,23,11,Posinara,162°15',22°50',162.25,22.8333,yes,7.02.23.12,Posinara (Posindara),63.3
+7,2,23,12,Pandasa,165°00',21°20',165.0,21.3333,yes,7.02.23.13,Pandama (Pandasa),100.0
+7,2,23,13,Sipiberis (or Sitteberis),170°00',23°15',170.0,23.25,yes,7.02.23.08,Kimara,100.0
+7,2,23,14,"Triglypton, called also Trilingon, capital of the kingdom",154°00',18°00',154.0,18.0,yes,7.02.23.15,Triglyphon* bzw. Trilingon*,100.0
+7,2,24,1,Lariagara,162°30',18°15',162.5,18.25,yes,7.02.24.01,Lariagara,100.0
+7,2,24,2,Rhingiberi,166°00',18°00',166.0,18.0,yes,7.02.24.02,Rhingiberi,100.0
+7,2,24,3,Agimoitha,170°40',18°40',170.6667,18.6667,yes,7.02.24.03,Agimoitha,100.0
+7,2,24,4,Tomara,172°00',18°00',172.0,18.0,yes,7.02.24.04,Tomara (Tamara),100.0
+7,2,24,5,Dmna or Doana,165°00',15°20',165.0,15.3333,yes,7.02.24.05,Daona,100.0
+7,2,24,6,"Mareoura, a metropolis, called also Malthoura",158°00',12°30',158.0,12.5,yes,7.02.24.06,Marëura*,100.0
+7,2,24,7,Lasippa (or Lasyppa),161°00',12°30',161.0,12.5,yes,7.02.24.07,Lasyppa,100.0
+7,2,24,8,Bareukora (or Bareuathra),164°30',12°50',164.5,12.8333,yes,7.02.24.08,Bareuaora (Bareuathra),79.2
+7,2,25,1,In the Golden Chersonese— Balongka,162°00',4°40',162.0,4.6667,yes,7.02.25.02,Balonka (Kalonka),100.0
+7,2,25,2,Kokkonagara,160°00',2°00',160.0,2.0,yes,7.02.25.03,Kokkonagara (Konkonagara),100.0
+7,2,25,3,Tharrha,162°00',1°20' S,162.0,-1.3333,no,7.02.25.04,Tharra,41.5
+7,2,25,4,Palanda,161°00',1°20' S,161.0,-1.3333,yes,7.02.25.05,Palanda,93.9
+7,2,26,1,The islands of the division of India we have been describing are said to be these: Bazakata,149°30',9°30',149.5,9.5,yes,7.02.26.02,Bazakata,93.9
+7,2,26,2,Chaline,146°00',9°20',146.0,9.3333,yes,7.02.26.03,Chaline (Saline),63.3
+7,2,27,1,"There are three islands called Sindai, inhabited by Cannibals, of which the centre lies in",152°00',8°40' S,152.0,-8.6667,yes,7.02.27.02,Sindai (3),73.3
+7,2,28,1,"A group of five islands, the Barousai, whose inhabitants are said to be cannibals, and the centre of which lies in",152°20',5°20' S,152.3333,-5.3333,yes,7.02.28.01,Barusai (5),71.8
+7,2,28,2,"A group of three islands, the Sabadeibai, inhabited by cannibals, of which the centre lies in",160°00',8°30' S,160.0,-8.5,yes,7.02.28.03,Sabadibai (3),100.0
+7,2,29,1,"The island of Iabadios (or Sabadios) which means the island of Barley. It is said to be of extraordinary fertility, and to produce very much gold, and to have its capital called Argyre (Silver-town) in the extreme west of it. It lies in",167°00',8°30' S,167.0,-8.5,yes,7.02.29.04,"Argyre* (Argyrois*), Iabadiu (W-Ende)",100.0
+7,2,29,2,the eastern limit lies in,169°00',8°10' S,169.0,-8.1667,yes,7.02.29.05,"Iabadiu, SO-Ende",48.9
+7,2,30,1,"The Islands of the Satyrs, three in number, of which the centre is in",171°00',2°30' S,171.0,-2.5,yes,7.02.30.01,Satyrn-Inseln (3),100.0
+7,3,2,1,boundary of the Gulf on the side of India the mouth of the river Aspithra,170°00',16°00',170.0,16.0,no,7.02.07.10,Dorias-Mündung,30.5
+7,3,2,2,Sources of the river on the eastern side of the Semanthinos range,180°00',26°00',180.0,26.0,yes,7.02.08.08,Semanthinon-Gebirge (O-Ende),100.0
+7,3,2,3,"Bramma, a town",177°00',12°30',177.0,12.5,yes,7.03.02.06,Bramma,95.8
+7,3,2,4,The mouth of the river Ambastes,176°00',10°00',176.0,10.0,no,7.03.02.07,Gebirge,32.6
+7,3,2,5,The sources of the river,179°30',15°00',179.5,15.0,yes,7.03.02.08,Ambastes-Quellen,67.2
+7,3,2,6,"Rhabana, a town",177°00',8°30',177.0,8.5,yes,7.03.02.09,Rhabana,100.0
+7,3,2,7,Mouth of the river Sainos,176°20',6°30',176.3333,6.5,yes,7.03.02.10,Sinos-Mündung,100.0
+7,3,2,8,The Southern Cape,175°15',4°00',175.25,4.0,yes,7.03.02.11,Südliches Kap,83.8
+7,3,2,9,The head of Wild Beast Gulf,176°00',2°00',176.0,2.0,yes,7.03.02.12,Winkel des Tierreichen Golfes,100.0
+7,3,2,10,The Cape of Satyrs . 175°00' . on the Equator Gulf of the Sinai,178°00',2°20',178.0,2.3333,no,7.03.02.12,Winkel des Tierreichen Golfes,15.5
+7,3,3,1,Around the Gulf of the Sinai dwell the fish-eating Aithiopians. Mouth of the river Kottiaris,177°20',7°,177.3333,7.0,no,7.03.02.10,Sinos-Mündung,44.0
+7,3,3,2,S. Sources of the river,180°40',2°,180.6667,2.0,no,7.03.05.05,Sarata (Sagara),0.0
+7,3,3,3,"S. Where it falls into the river Sainos . 180°00' . on the Equator. Kattigara, the port of the Sinai",177°00',8°30' S,177.0,-8.5,yes,7.03.03.07,Kattigara*,100.0
+7,3,5,1,The interior towns of the Sinai are named thus:— Akadra,178°20',21°15',178.3333,21.25,yes,7.03.05.02,Akathra (Akadra),100.0
+7,3,5,2,Aspithra,175°00',16°00',175.0,16.0,yes,7.03.02.03,Aspitharas-Mündung (Aspithras-Mündung),100.0
+7,3,5,3,Kokkonagara,179°50',2°,179.8333,2.0,no,7.03.03.05,Kutiaris (Aufteilung zum Fluss Sinos),0.0
+7,3,5,4,S. Sarata,180°30',4°,180.5,4.0,yes,7.03.05.05,Sarata (Sagara),59.2
+7,3,6,1,the Metropolis Sinai or Thinai,180°40',3°,180.6667,3.0,no,7.03.05.05,Sarata (Sagara),0.0
+7,4,2,1,The point already referred to as lying opposite to Kory is called North Cape (Boreion Akron) and lies,126°00',12°30',126.0,12.5,yes,7.04.02.01,Nördliches Kap,100.0
+7,4,3,1,North Cape which is situated in,126°00',12°30',126.0,12.5,yes,7.04.02.01,Nördliches Kap,100.0
+7,4,3,2,comes Cape Galiba,124°00',11°30',124.0,11.5,yes,7.04.03.02,Kap Galiba,86.9
+7,4,3,3,"Margana, a city",123°30',10°20',123.5,10.3333,yes,7.04.03.03,Margana,100.0
+7,4,3,4,"Iogana, a city",123°20',8°50',123.3333,8.8333,yes,7.04.03.04,Iogana,100.0
+7,4,3,5,"Anarismoundon, a cape",122°00',7°45',122.0,7.75,yes,7.04.03.05,Kap Anarismundu (Kap Andrisimundu),100.0
+7,4,3,6,Mouth of the River Soana,122°20',6°15',122.3333,6.25,yes,7.04.03.06,Soanas-Mündung,100.0
+7,4,3,7,Sources of the river,124°30',3°00',124.5,3.0,yes,7.04.03.07,Soanas-Quellen,67.2
+7,4,3,8,"Sindokanda, a city",122°00',5°00',122.0,5.0,yes,7.04.03.08,Sindokanda,100.0
+7,4,3,9,Haven of Priapis,122°00',3°40',122.0,3.6667,yes,7.04.03.09,Priapis-Hafen,100.0
+7,4,4,1,Anoubingara,121°00',2°40',121.0,2.6667,yes,7.04.04.01,Anubingara,100.0
+7,4,4,2,Headland of Zeus,120°30',1°00',120.5,1.0,yes,7.04.04.03,Kap des Zeus,100.0
+7,4,4,3,Prasodes Bay,121°00',2°00',121.0,2.0,yes,7.04.04.02,Prasodes-Golf,100.0
+7,4,4,4,"Noubartha, a city . 121°40' . on the Equator. Mouth of the river Azanos",123°20',1°,123.3333,1.0,yes,7.04.04.05,Azanos-Mündung,53.0
+7,4,4,5,S. The sources of the river,126°00',1°,126.0,1.0,yes,7.04.04.06,Azanos-Quellen,100.0
+7,4,4,6,"N. Odoka, a city",123°00',2°,123.0,2.0,no,7.04.04.01,Anubingara,8.0
+7,4,4,7,"S. Orneon, (Birds' Point) a headland",125°00',2°30' S,125.0,-2.5,yes,7.04.04.08,Kap der Vögel,100.0
+7,4,5,1,"Dagana, a city sacred to the Moon",126°00',2°,126.0,2.0,no,7.04.04.06,Azanos-Quellen,18.3
+7,4,5,2,"S. Korkobara, a city",127°20',2°20' S,127.3333,-2.3333,yes,7.04.05.02,Korkobara (Krokobara),93.3
+7,4,5,3,Cape of Dionysos,130°00',1°30' S,130.0,-1.5,yes,7.04.05.03,Stadt des Dionysos,100.0
+7,4,5,4,Ketaion Cape,132°30',2°20' S,132.5,-2.3333,yes,7.04.05.04,Kap Ketaion,53.0
+7,4,5,5,Mouth of the river Barakes,131°30',1°,131.5,1.0,yes,7.04.05.05,Barakes-Mündung,100.0
+7,4,5,6,N. Sources of the river,128°00',2°,128.0,2.0,yes,7.04.05.06,Barakes-Quellen,100.0
+7,4,5,7,"N. Bokana, a city",131°00',1°20',131.0,1.3333,yes,7.04.05.07,Bokana (Bukana),100.0
+7,4,5,8,N. The haven of Mardos or Mardoulamne,131°00',2°20',131.0,2.3333,yes,7.04.05.08,Mordula,100.0
+7,4,6,1,"Abaratha, a city",131°00',3°15',131.0,3.25,yes,7.04.06.01,Abaraththa (Amaraththa),100.0
+7,4,6,2,N. Haven of the Sun (Heliou limen),130°00',4°00',130.0,4.0,yes,7.04.06.02,Helios-Hafen,100.0
+7,4,6,3,Great Coast (Aigialos Megas),130°00',4°20',130.0,4.3333,no,7.04.06.02,Helios-Hafen,42.8
+7,4,6,4,"Prokouri, a city",131°00',5°20',131.0,5.3333,yes,7.04.06.04,Prokuri,92.8
+7,4,6,5,The haven of Rizala,130°20',6°30',130.3333,6.5,yes,7.04.06.05,Rhizala (Bizala),82.3
+7,4,6,6,"Oxeia, a headland",130°00',7°30',130.0,7.5,yes,7.04.06.06,Kap Oxeia,100.0
+7,4,6,7,Mouth of the river Ganges,129°00',7°20',129.0,7.3333,yes,7.04.06.07,Ganges-Mündung,100.0
+7,4,6,8,The sources of the river,127°00',7°15',127.0,7.25,yes,7.04.06.08,Ganges-Quellen,100.0
+7,4,6,9,Spatana Haven,129°00',8°00',129.0,8.0,yes,7.04.06.09,Spatana,100.0
+7,4,7,1,"Nagadiba or Nagadina, a city",129°00',8°30',129.0,8.5,yes,7.04.07.01,Nagadiba*,100.0
+7,4,7,2,Pati Bay,128°30',9°30',128.5,9.5,yes,7.04.07.02,Pati-Golf (Pausi-Golf),89.7
+7,4,7,3,"Anoubingara, a city",128°20',9°40',128.3333,9.6667,yes,7.04.07.03,Anubingara,93.6
+7,4,7,4,"Modouttou, trading post",128°00',11°20',128.0,11.3333,yes,7.04.07.04,Moduttu (Modunto),79.3
+7,4,7,5,Mouth of the river Phasis,127°00',11°20',127.0,11.3333,yes,7.04.07.05,Phasis-Mündung,100.0
+7,4,7,6,The sources of the river,126°00',8°00',126.0,8.0,yes,7.04.07.06,Phasis-Quellen,100.0
+7,4,7,7,Talakory (or Aakote) trading post,126°20',11°20',126.3333,11.3333,yes,7.04.07.07,Talakori* (Tarakori*),79.3
+7,4,10,1,"The inland towns in the island are these:— Anourogrammon, the royal residence",124°10',8°40',124.1667,8.6667,yes,7.04.10.01,Anurogrammon (Anurigrammon),100.0
+7,4,10,2,"Maagrammon, the metropolis",127°00',7°20',127.0,7.3333,yes,7.04.10.02,Maagrammon*,100.0
+7,4,10,3,Adeisamon,129°00',5°00',129.0,5.0,yes,7.04.10.03,Adeisamon (Adisamon),100.0
+7,4,10,4,Podouke,124°00',3°40',124.0,3.6667,yes,7.04.10.04,Poduke (Peduke),100.0
+7,4,10,5,Oulispada,126°20',0°40',126.3333,0.6667,yes,7.04.10.05,Ulispada,100.0
+7,4,11,1,In front of Taprobane lies a group of islands which they say number 1378. Those whose names are mentioned are the following:— Ouangalia (or Ouangana),120°15',11°20',120.25,11.3333,yes,7.04.11.02,Vangana,100.0
+7,4,11,2,Kanathra,121°40',11°15',121.6667,11.25,yes,7.04.11.03,Kanathra,100.0
+7,4,11,3,Aigidion,118°00',8°30',118.0,8.5,yes,7.04.11.05,Aigidion,100.0
+7,4,11,4,Orneon,119°00',8°30',119.0,8.5,yes,7.04.11.04,Orneon,100.0
+7,4,11,5,Monache,116°00',4°15',116.0,4.25,yes,7.04.11.06,Monache,100.0
+7,4,11,6,Ammine,117°00',4°30',117.0,4.5,yes,7.04.11.07,Ammine,100.0
+7,4,12,1,Karkos,118°00',3°40' S,118.0,-3.6667,no,7.04.12.02,Phelikos (Philekos),0.0
+7,4,12,2,Philekos,116°30',2°40' S,116.5,-2.6667,yes,7.04.12.02,Phelikos (Philekos),100.0
+7,4,12,3,Eirene,120°00',2°30' S,120.0,-2.5,yes,7.04.12.03,Eirene,100.0
+7,4,12,4,Kalandadroua,121°00',5°30' S,121.0,-5.5,yes,7.04.12.04,Kalandadrua,100.0
+7,4,12,5,Abrana,125°00',4°20' S,125.0,-4.3333,yes,7.04.12.05,Arana,100.0
+7,4,12,6,Bassa,126°00',6°30' S,126.0,-6.5,yes,7.04.12.06,Bassa,100.0
+7,4,12,7,Balaka,129°00',5°30' S,129.0,-5.5,yes,7.04.12.07,Balaka,100.0
+7,4,12,8,Alaba,131°00',4°00' S,131.0,-4.0,yes,7.04.12.08,Alaba,100.0
+7,4,12,9,Goumara,133°00',1°40' S,133.0,-1.6667,yes,7.04.12.09,Gumara,100.0
+7,4,13,1,Zaba . 135°00' . on the Equator. Zibala,135°00',4°15',135.0,4.25,yes,7.04.13.02,Zibala (Bitala),100.0
+7,4,13,2,N. Nagadiba,135°00',8°30',135.0,8.5,yes,7.04.13.03,Nagadiba (Nagadeba),100.0
+7,4,13,3,Sousouara,135°00',11°15',135.0,11.25,yes,7.01.15.04,Koddura,74.4
