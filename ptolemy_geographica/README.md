@@ -424,6 +424,59 @@ bugs of the same kind:
   off Narbonensis (Agde island, Île de Brescou, the Îles d'Hyères, Île
   Sainte-Marguerite - "Islands lying off Narbonenses are Agathe...").
 
+Cross-referencing the Iberia/Gaul chunk also fixed a river-line-*connection*
+bug distinct from the classification bugs above: "Druentia (Quellgebiet)"
+and "Druentia (Einmündung in den Rhodanus)" should have formed a two-point
+river line but didn't, because `_river_base_name`'s own suffix-stripping
+regex (`_RIVER_SUFFIX_RE`, separate from the classifier's `_RIVERFEAT_RE`
+and missed by that same-named fix above) also matched "quelle" but not
+"Quellgebiet" - so the two points reduced to different base names
+("Druentia (Quellgebiet)" unstripped vs. "Druentia") and never landed in
+the same group. Broadened it the same way, plus added "oberlauf"/"unterlauf"
+for consistency; Druentia now forms its own line and the other five
+Quellgebiet points correctly rejoined their rivers.
+
+Checking topostext's confluence descriptions against ours (per the request
+to verify branch/fork points, which the source text often states only
+implicitly) surfaced a second, more pervasive river bug, this time entirely
+within our own data: `build_river_lines()` grouped points by name and
+catalogue order but never deduplicated them, so wherever Ptolemy re-cites a
+point already given earlier in a river's course - the same "shared boundary
+citation" pattern already fixed for coastlines (Kap Oiarso, Nordspitze,
+Acheloos-Mündung via `_COASTLINE_SKIP_REF_IDS`/`_BOUNDARY_STITCH_REF_ID_PAIRS`),
+just showing up mid-sequence here instead of at a bookend - the line jumped
+forward to the new point, backtracked to redraw the old one, then jumped
+forward again. About 20 rivers were affected, from a mild "there-and-back"
+on short rivers to a serious zigzag on the 17-point Danube (three separate
+re-citations: "Einmündung des Arabon", "Krümmung bei Curta", and "Biegung
+bei Cirpi" each cited twice, once per book.map continuation) and an almost
+entirely duplicate 5-point Tigris (really only two physical points - its
+eastern and western mouths - cited repeatedly across `§5.20`/`§6.03`).
+
+Fixed generally rather than as one-off exceptions: `build_river_lines()`
+now drops any point that lands within `_SAME_POINT_TOL_DEG` of a point
+already kept earlier in that river's sequence, before segmenting by the
+gap cap. A river's course never legitimately loops back the way a
+coastline can, so any revisit is always safe to collapse. One case needed
+checking before applying this blindly: `Nanagunas (Aufteilung zur
+Bindas-Mündung)` and `Nanagunas (Aufteilung zur Goaris-Mündung)` looked
+like they might be a genuine fork - two different delta branches - rather
+than an erroneous re-citation, since "forgreninger" (branchings) can be
+described implicitly. They turned out to share the *exact same* coordinate
+(114.0 . 16.0): Ptolemy cites the single physical split point twice, once
+under each downstream branch's name, but doesn't give the two branches'
+own separate coordinates in this stretch of the catalogue (those live
+elsewhere, as standalone `Bindas-Mündung`/`Goaris-Mündung` river-mouth
+points that aren't connected to this line at all). Collapsing the pair
+loses no line geometry - both citations already draw through the same
+spot - so the general coordinate-based dedup was safe to apply as-is.
+Rerunning `annotate_dataset.py` afterward: 111 → 103 river lines, 304 → 263
+points-in-a-line (the removed points are exactly the re-citations; a
+handful of rivers that were *entirely* re-citations of the same one or two
+points, per the Tigris case above, dropped from a false 3+-point line to
+the correct 2-point one, and none fell below the 2-point minimum needed to
+draw a line at all).
+
 ## Compiling the catalogue to data: `annotate_dataset.py`
 
 Everything described above - classification, graph reconstruction, distance

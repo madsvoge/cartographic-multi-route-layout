@@ -1016,7 +1016,7 @@ _RIVER_LINE_CATEGORIES = ("river", "river_mouth")
 _RIVER_SUFFIX_RE = re.compile(
     r"-mündung\b.*$|-quellen?\b.*$|"
     r"\s*\([^)]*(?:mitte|biegung|abzweigung|aufteilung|teilung|einmündung|"
-    r"zusammenfluss|ursprung|mündungsarm|mündung|quelle)[^)]*\)\s*$",
+    r"zusammenfluss|ursprung|mündungsarm|mündung|quell|oberlauf|unterlauf)[^)]*\)\s*$",
     re.IGNORECASE,
 )
 # A generic placeholder ("Namenloser Fluss" - "unnamed river") reused for
@@ -1079,6 +1079,28 @@ def build_river_lines(refs: list[Reference]) -> list[list[Reference]]:
     lines: list[list[Reference]] = []
     for items in groups.values():
         items.sort(key=sort_key)
+        # Ptolemy routinely re-cites a point already given earlier in a
+        # river's course - a bend, confluence or mouth carried over as the
+        # opening reference of the next book.map's continuation - the same
+        # "shared boundary citation" pattern already handled for coastlines
+        # (see _COASTLINE_SKIP_REF_IDS / _BOUNDARY_STITCH_REF_ID_PAIRS), just
+        # showing up here as an in-sequence revisit instead of a bookend.
+        # Drop any point that lands within _SAME_POINT_TOL_DEG of a point
+        # already kept earlier in this river's sequence, before segmenting
+        # by gap: a river's course never legitimately loops back on itself
+        # the way a coastline can, so any revisit is safe to collapse. This
+        # also covers genuine delta forks cited under two different
+        # downstream names (e.g. Nanagunas "(Aufteilung zur Bindas-Mündung)"
+        # / "(...Goaris-Mündung)") - both name the same physical split point,
+        # so keeping it once loses no line geometry.
+        deduped: list[Reference] = []
+        for item in items:
+            if any(_ref_dist(item, kept) <= _SAME_POINT_TOL_DEG for kept in deduped):
+                continue
+            deduped.append(item)
+        items = deduped
+        if len(items) < 2:
+            continue
         run = [items[0]]
         for prev, cur in zip(items, items[1:]):
             if _ref_dist(prev, cur) > _RIVER_LINE_MAX_GAP_DEG:
