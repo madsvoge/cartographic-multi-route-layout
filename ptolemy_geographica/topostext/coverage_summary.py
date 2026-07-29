@@ -112,14 +112,24 @@ def main() -> int:
         total, missing = by_book_totals[book]
         print(f"    book {book}: {total} scoped points, {missing} unmatched ({total - missing} matched)")
 
-    out_path = SCRIPT_DIR / "reverse_unmatched.csv"
-    with out_path.open("w", newline="", encoding="utf-8") as fh:
+    rev_path = SCRIPT_DIR / "reverse_unmatched.csv"
+    with rev_path.open("w", newline="", encoding="utf-8") as fh:
         writer = csv.DictWriter(fh, fieldnames=["ref_id", "name", "category", "lon_ptolemy", "lat_ptolemy"])
         writer.writeheader()
         for row in rev_unmatched:
             writer.writerow({k: row.get(k, "") for k in writer.fieldnames})
+
+    fwd_path = SCRIPT_DIR / "forward_unmatched.csv"
+    fwd_fields = ["book", "map", "section", "position", "name_phrase", "lon_dms", "lat_dms", "lon_decimal", "lat_decimal"]
+    with fwd_path.open("w", newline="", encoding="utf-8") as fh:
+        writer = csv.DictWriter(fh, fieldnames=fwd_fields)
+        writer.writeheader()
+        for row in fwd_unmatched:
+            writer.writerow({k: row.get(k, "") for k in fwd_fields})
+
     print()
-    print(f"  (full list of the {len(rev_unmatched)} unmatched catalogue points written to {out_path.name})")
+    print(f"  (full list of the {len(rev_unmatched)} unmatched catalogue points written to {rev_path.name})")
+    print(f"  (full list of the {len(fwd_unmatched)} unmatched topostext citations written to {fwd_path.name})")
     return 0
 
 
