@@ -989,6 +989,19 @@ name, used everywhere "matched" is decided now:
   raised matched coverage substantially: **944 → 85 unmapped catalogue
   points, 921 → 55 unmapped topostext citations**, at the time of writing.
 
+**The point of this whole exercise was never a 100% match rate** - it was
+to validate the catalogue against an independent source, and it did:
+**3881 of 3966 catalogue points (98%) and 4026 of 4081 topostext
+citations (99%)** in the covered range now cross-confirm each other by
+both coordinate and name. The ~2% left in `unmapped_review.xlsx` isn't
+presumed to be errors in the catalogue - topostext is itself a translated,
+independently-edited secondary source and can just as easily be the one
+that's wrong, abbreviated, or citing a genuinely different point. Chasing
+the last few percent with an ever-more-permissive algorithm stops being
+validation at some point and starts being curve-fitting to specific
+examples; `link_matches.py`'s thresholds (match score 45, distance score
+reference 1.5°, candidate window 3.0°) are where that line was drawn.
+
 Three scripts, run in this order:
 
 - `link_matches.py` computes the score both directions and writes it back
