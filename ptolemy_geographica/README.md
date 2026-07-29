@@ -332,6 +332,70 @@ meaning (all of them are drawn the same size) - it's a stylistic
 placeholder for "this is an island we don't have a shape for," not a
 claim about the island's real extent.
 
+## Cross-checking against topostext.org (`topostext/`)
+
+Every classification and stitching decision so far has been verified
+against the `Modern_location` column and outside knowledge of ancient
+geography - useful, but it's still one person reading German place names
+and guessing. `topostext.org/work/209` publishes an *English* translation
+of the Geographica itself, paragraph-numbered `§ book.map.section` - the
+same book.map.section our `ref_id` uses, confirmed by hand against
+Ireland's north coast (`§2.2.1`'s Boreum/Vennicnium/Vidua/Argita/Rhobogdium
+lines up point-for-point with our `2.02.02.01-05`). Crucially, its prose
+states outright what a point *is* ("A description of the north coast...",
+"the following are the inland towns...", "the islands which are near
+Albion island...") instead of us inferring it from a keyword regex - an
+independent check, not just a second opinion from the same method.
+
+The tool can't fetch topostext.org itself (blocked by this environment's
+network policy), so the workflow is: paste a chunk of the site's text into
+the conversation, save it under `topostext/raw_209_<range>.txt`, then:
+
+```bash
+cd topostext
+python3 parse_topostext.py raw_209_<range>.txt -o topostext_209.csv --append
+python3 crossref_topostext.py topostext_209.csv
+```
+
+`parse_topostext.py` splits the pasted text on `§ B.M.S` markers and pulls
+every `(name phrase, longitude, latitude)` triple out of each paragraph in
+catalogue order. It does *not* try to align by position within a
+paragraph - topostext often folds a paragraph's opening point into its
+lead sentence as a restatement of the *previous* paragraph's last point
+("from the Boreum promontory which is in 11°00' . 61°00'..."), the exact
+same "shared boundary citation" pattern already found directly in our own
+data (Kap Oiarso, Nordspitze, Acheloos-Mündung) - so position-in-paragraph
+isn't a reliable join key. `crossref_topostext.py` instead matches by
+*coordinate* (both sources encode the same Ferro-relative degrees-minutes
+values, so a real match is near-exact) and flags cases where our
+`category` looks inconsistent with topostext's own wording.
+
+The first pilot run (Ireland and Britain, `§2.2`-`§2.3`) found two real,
+previously-undetected bugs this way:
+
+- Five whole sections - the Hebrides (`2.02.11`), Isle of Man/Anglesey
+  (`2.02.12`), Skye/Lewis/Orkney (`2.03.31`), Thule's five extremity
+  points (`2.03.32`), and Thanet/Isle of Wight (`2.03.33`) - were sitting
+  in `city` because none of their point names matched an island keyword
+  and their sections weren't sea-headed, even though topostext says
+  outright "the Ebuda islands five in number...", "the islands which are
+  near Albion island...". Added to `_ISLAND_APPENDIX_SECTIONS`.
+- 25 points across the *entire* catalogue, not just Britain, were named
+  "Golf von X"/"X-Bucht"/"X-Meerbusen" (gulf/bay) but had fallen to `city`
+  because their own section's header didn't independently carry a
+  recognized sea word - caught because topostext plainly called two of
+  them ("Dunum bay", "Gabrantuicorum bay") a bay. A point named after a
+  gulf is coastal by definition, the same reasoning already applied to
+  "Kap"/"Hafen"/"Ästuar" - so this became a new keyword rule in
+  `_classify_locality` (`_GULF_RE`) rather than five one-off exceptions.
+
+Not every flagged mismatch is a bug - "Petuaria" (already a manually
+verified inland exception, `_NONCOASTAL_EXCEPTION_SECTIONS`) gets flagged
+too, because topostext mentions a nearby bay in the same sentence without
+the matched point itself being on it. The tool's job is to surface
+candidates for a human to look at, not to auto-correct - review the
+`possible category disagreements` list before changing anything.
+
 ## Compiling the catalogue to data: `annotate_dataset.py`
 
 Everything described above - classification, graph reconstruction, distance

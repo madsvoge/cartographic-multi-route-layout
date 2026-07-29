@@ -1,0 +1,178 @@
+book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal
+2,2,1,1,"Setting of Hivernia British island A description of the north coast, beyond which is located the Hyperborean ocean: Boreum promontory",11°00',61°00',11.0,61.0
+2,2,1,2,Vennicnium promontory,12°50',61°20',12.8333,61.3333
+2,2,1,3,mouth of the Vidua river,13°00',61°00',13.0,61.0
+2,2,1,4,mouth of the Argita river,14°30',61°30',14.5,61.5
+2,2,1,5,Rhobogdium promontory,16°20',61°30',16.3333,61.5
+2,2,3,1,Boreum promontory,11°00',61°00',11.0,61.0
+2,2,3,2,mouth of the Ravius river,11°20',60°40',11.3333,60.6667
+2,2,3,3,Magnata city,11°15',60°15',11.25,60.25
+2,2,3,4,mouth of the Libnius river,10°30',60°00',10.5,60.0
+2,2,3,5,mouth of the Ausoba river,10°30',59°30',10.5,59.5
+2,2,3,6,mouth of the Senus river,9°30',59°30',9.5,59.5
+2,2,3,7,mouth of the Duris river,9°40',58°40',9.6667,58.6667
+2,2,3,8,mouth of the Iernus river,8°00',58°00',8.0,58.0
+2,2,3,9,Southern promontory,7°40',57°45',7.6667,57.75
+2,2,5,1,southern promontory,7°40',57°40',7.6667,57.6667
+2,2,5,2,mouth of the Dabrona river,11°15',57°00',11.25,57.0
+2,2,5,3,mouth of the Birgus river,12°30',57°30',12.5,57.5
+2,2,5,4,Sacred promontory,14°00',57°50',14.0,57.8333
+2,2,7,1,Sacred promontory,14°00',57°50',14.0,57.8333
+2,2,7,2,mouth of the Modonnus river,13°40',58°40',13.6667,58.6667
+2,2,7,3,Manapia town,13°30',58°40',13.5,58.6667
+2,2,7,4,mouth of the Oboca river,13°10',59°00',13.1667,59.0
+2,2,7,5,Eblana city,14°00',59°30',14.0,59.5
+2,2,7,6,mouth of the Bubindas river,14°40',59°40',14.6667,59.6667
+2,2,7,7,Isamnium promontory,15°00',60°00',15.0,60.0
+2,2,7,8,mouth of the Vinderis river,15°00',60°15',15.0,60.25
+2,2,7,9,mouth of the Logia river,15°20',60°40',15.3333,60.6667
+2,2,9,1,The following are the inland towns: Regia,13°00',60°20',13.0,60.3333
+2,2,9,2,Rhaeba,12°00',59°45',12.0,59.75
+2,2,9,3,Laberus,13°00',59°15',13.0,59.25
+2,2,9,4,Macolicum,11°30',58°40',11.5,58.6667
+2,2,9,5,another Regia,11°00',59°15',11.0,59.25
+2,2,9,6,Dunum,12°30',58°45',12.5,58.75
+2,2,9,7,Hibernis,11°00',58°10',11.0,58.1667
+2,2,10,1,"Above Hibernia are the Ebuda islands five in number, the largest of which toward the west is called Ebuda",15°00',62°00',15.0,62.0
+2,2,10,2,to this toward the east likewise is Ebuda island,15°40',62°00',15.6667,62.0
+2,2,10,3,Rhicina,17°00',62°00',17.0,62.0
+2,2,10,4,Malaeus,17°30',62°30',17.5,62.5
+2,2,10,5,Epidium,18°30',62°00',18.5,62.0
+2,2,10,6,Toward the east of Hibernia are these islands: Monaoeda island,17°40',61°30',17.6667,61.5
+2,2,10,7,Mona island,15°00',57°40',15.0,57.6667
+2,2,10,8,Adru which is barren,15°00',59°30',15.0,59.5
+2,2,10,9,Limnu which is barren,15°00',59°00',15.0,59.0
+2,3,1,1,"The position of Albion island of Britannia. A description of the northern coast, above which is the Duecaledonius ocean. Novantarum peninsula, and promontory of the same name",21°00',61°40',21.0,61.6667
+2,3,1,2,Rerigonius bay,20°30',60°50',20.5,60.8333
+2,3,1,3,Vindogara bay,21°20',60°30',21.3333,60.5
+2,3,1,4,Clota estuary,22°15',59°20',22.25,59.3333
+2,3,1,5,Lemannonius bay,24°00',60°00',24.0,60.0
+2,3,1,6,Epidium promontory,23°00',60°40',23.0,60.6667
+2,3,1,7,mouth of the Longus river,24°30',60°40',24.5,60.6667
+2,3,1,8,mouth of the Itis river,27°00',60°40',27.0,60.6667
+2,3,1,9,Volas bay,29°00',60°30',29.0,60.5
+2,3,1,10,mouth of the Navarus river,30°00',60°30',30.0,60.5
+2,3,1,11,Tarvedum or Orcas promontory,31°20',60°15',31.3333,60.25
+2,3,2,1,Novantian promontory,21°00',61°40',21.0,61.6667
+2,3,2,2,mouth of the Abravannus river,19°20',61°00',19.3333,61.0
+2,3,2,3,Iena estuary,19°00',60°30',19.0,60.5
+2,3,2,4,mouth of the Devas river,18°00',60°00',18.0,60.0
+2,3,2,5,mouth of the Novius river,18°20',59°30',18.3333,59.5
+2,3,2,6,Ituna estuary,18°30',58°45',18.5,58.75
+2,3,2,7,Moricambe estuary,17°30',58°20',17.5,58.3333
+2,3,2,8,Setantiorum harbor b,17°20',57°45',17.3333,57.75
+2,3,2,9,Belisama estuary,17°30',57°20',17.5,57.3333
+2,3,2,10,Seteia estuary,17°00',57°00',17.0,57.0
+2,3,2,11,Caeanganorum promontory,15°00',57°00',15.0,57.0
+2,3,2,12,c mouth of the Toesobis river,15°40',56°20',15.6667,56.3333
+2,3,2,13,mouth of the Stuccia river,15°20',55°30',15.3333,55.5
+2,3,2,14,mouth of the Tuerobis river,15°00',55°00',15.0,55.0
+2,3,2,15,Octapitarum promontory,14°20',54°30',14.3333,54.5
+2,3,2,16,mouth of the Tobius river,15°30',54°30',15.5,54.5
+2,3,2,17,mouth of the Ratostabius river,16°30',54°30',16.5,54.5
+2,3,2,18,Sabrina estuary,17°20',54°30',17.3333,54.5
+2,3,2,19,Uxella estuary,16°00',53°30',16.0,53.5
+2,3,2,20,Herculis promontory,14°00',52°45',14.0,52.75
+2,3,2,21,Antivestaeum or Bolerium promontory,11°30',52°30',11.5,52.5
+2,3,2,22,Damnonium or Ocrium promontory,12°00',51°30',12.0,51.5
+2,3,3,1,Ocrium promontory is the mouth of the Cenio river,14°00',51°45',14.0,51.75
+2,3,3,2,mouth of the Tamarus river,15°40',52°10',15.6667,52.1667
+2,3,3,3,mouth of the Iscas river,17°40',52°20',17.6667,52.3333
+2,3,3,4,mouth of the Alaunus river,17°40',52°40',17.6667,52.6667
+2,3,3,5,Magnus Portus,19°00',53°00',19.0,53.0
+2,3,3,6,mouth of the Trisantonis river,20°20',53°00',20.3333,53.0
+2,3,3,7,New harbor,21°00',53°30',21.0,53.5
+2,3,3,8,Cantium promontory,22°00',54°00',22.0,54.0
+2,3,4,1,"Tarvedum promontory, or Orcades, by which it is known, Virvedrum promontory",31°00',60°00',31.0,60.0
+2,3,4,2,Verubium promontory,30°30',59°40',30.5,59.6667
+2,3,4,3,mouth of the Ila river,30°00',59°40',30.0,59.6667
+2,3,4,4,a high shore,29°00',59°40',29.0,59.6667
+2,3,4,5,Varar estuary,28°00',59°40',28.0,59.6667
+2,3,4,6,mouth of the Loxa river,27°30',59°40',27.5,59.6667
+2,3,4,7,Tuesis estuary,27°00',59°00',27.0,59.0
+2,3,4,8,mouth of the Caelis river,27°00',58°45',27.0,58.75
+2,3,4,9,Taezalon promontory,27°30',58°30',27.5,58.5
+2,3,4,10,mouth of the Deva river,26°00',58°30',26.0,58.5
+2,3,4,11,mouth of the Tina river,24°00',58°30',24.0,58.5
+2,3,4,12,Boderia estuary,22°30',59°00',22.5,59.0
+2,3,4,13,mouth of the Alaunus river,21°20',58°30',21.3333,58.5
+2,3,4,14,mouth of the Vedra river,20°10',58°30',20.1667,58.5
+2,3,4,15,Dunum bay,20°15',57°30',20.25,57.5
+2,3,4,16,Gabrantuicorum bay with many harbors,21°00',57°00',21.0,57.0
+2,3,4,17,Ocelus promontory,21°15',56°40',21.25,56.6667
+2,3,4,18,mouth of the Abi river,21°00',56°30',21.0,56.5
+2,3,4,19,Metaris estuary,20°30',55°40',20.5,55.6667
+2,3,4,20,mouth of the Gariennus river,20°50',55°40',20.8333,55.6667
+2,3,4,21,A promontory,21°15',55°05',21.25,55.0833
+2,3,4,22,mouth of the Sidumanis river,20°10',55°00',20.1667,55.0
+2,3,4,23,Tamesa estuary,20°30',54°30',20.5,54.5
+2,3,4,24,to this the Cantium promontory,22°00',54°00',22.0,54.0
+2,3,5,1,"The Novantae dwell on the side toward the north below the peninsula of this name, among whom are the following towns: Locopibia",19°00',60°20',19.0,60.3333
+2,3,5,2,Rerigonium,20°10',60°40',20.1667,60.6667
+2,3,6,1,"Below are the Selgovae, among whom are the following towns: Carbantorigum",19°00',59°30',19.0,59.5
+2,3,6,2,Uxellum,18°30',59°20',18.5,59.3333
+2,3,6,3,Corda,20°00',59°40',20.0,59.6667
+2,3,6,4,Trimontium,19°00',59°00',19.0,59.0
+2,3,7,1,"these toward the east, but more northerly, are the Damnoni, among whom are the following towns: Colanica",20°45',59°10',20.75,59.1667
+2,3,7,2,Vindogara,21°20',60°00',21.3333,60.0
+2,3,7,3,Coria,21°30',59°20',21.5,59.3333
+2,3,7,4,Alauna,22°45',59°50',22.75,59.8333
+2,3,7,5,Lindum,23°00',59°30',23.0,59.5
+2,3,7,6,Victoria,23°30',59°00',23.5,59.0
+2,3,7,7,"Further south are the Otalini, among whom are the following towns: Coria",20°10',59°00',20.1667,59.0
+2,3,7,8,Alauna,23°00',58°40',23.0,58.6667
+2,3,7,9,Bremenium,21°00',58°45',21.0,58.75
+2,3,8,1,"Lemannonis bay as far as the Varar estuary are the Caledoni, and above these is the Caledonian forest, from which toward the east are the Decantae, and next to these the Lugi extending to the Cornavi boundary, and above the Lugi are the Smertae; below Caledonia are the Vacomagi, among whom are the following towns: Bannatia",24°00',59°30',24.0,59.5
+2,3,8,2,Tamia,25°00',59°20',25.0,59.3333
+2,3,8,3,Pinnata camp,27°15',59°20',27.25,59.3333
+2,3,8,4,Tuesis,26°45',59°10',26.75,59.1667
+2,3,9,1,"Below these toward the west are the Venicones, whose town is Orrea",24°00',58°45',24.0,58.75
+2,3,9,2,More toward the east are the Taezali and the town Devana,26°00',59°00',26.0,59.0
+2,3,10,1,"Below the Selgovae and Otalini are the Brigantes extending to both seas, among whom are the following towns: Epiacum",18°30',58°30',18.5,58.5
+2,3,10,2,Vinovium,17°45',58°00',17.75,58.0
+2,3,10,3,Caturactonium,20°00',58°00',20.0,58.0
+2,3,10,4,Calatum,19°00',57°45',19.0,57.75
+2,3,10,5,Isurium,20°00',57°40',20.0,57.6667
+2,3,10,6,Rigodunum,18°00',57°30',18.0,57.5
+2,3,10,7,Olicana,19°00',57°30',19.0,57.5
+2,3,10,8,"Eboracum, Legio VI Victrix",20°00',57°20',20.0,57.3333
+2,3,10,9,Camulodunum,18°00',57°45',18.0,57.75
+2,3,10,10,Near which on the Opportunum bay are the Parisi and the town Petuaria,20°40',56°40',20.6667,56.6667
+2,3,11,1,"Below these are the Brigantes but some distance toward the west are the Ordovices, among whom are the towns: Mediolanum",16°45',56°40',16.75,56.6667
+2,3,11,2,Brannogenium,16°45',56°15',16.75,56.25
+2,3,11,3,"these toward the east are the Cornavi, among whom are the towns: Deva, Legio XX Victrix",17°30',56°45',17.5,56.75
+2,3,11,4,Viroconium,16°45',55°45',16.75,55.75
+2,3,11,5,"to these are the Coritani, among whom are the towns: Lindum",18°40',56°30',18.6667,56.5
+2,3,11,6,Ratae,18°00',55°30',18.0,55.5
+2,3,11,7,"are the Catuvellauni, among whom are the towns: Salinae",20°45',55°50',20.75,55.8333
+2,3,11,8,Urolanium,19°20',55°30',19.3333,55.5
+2,3,11,9,"to these are the Iceni, whose town is called Venta",20°30',55°20',20.5,55.3333
+2,3,11,10,Farther eastward and near the estuary of the Tamesa are the Trinovantes and the town Camulodunum,21°00',55°00',21.0,55.0
+2,3,12,1,"Below the peoples we have mentioned, but more toward the west are the Demetae, whose towns are: Luentinum",15°45',55°10',15.75,55.1667
+2,3,12,2,Maridunum,15°30',54°40',15.5,54.6667
+2,3,12,3,More toward the east are the Silures whose town is Bullaeum,16°50',55°00',16.8333,55.0
+2,3,12,4,"to these are the Dobuni, and their town Corinium",18°00',54°10',18.0,54.1667
+2,3,12,5,the Atrebati and their town Caleva,19°00',54°15',19.0,54.25
+2,3,12,6,"to these, but farther eastward, are the Canti among whom are the towns: Londinium",20°00',54°00',20.0,54.0
+2,3,12,7,Daruernum,21°00',54°00',21.0,54.0
+2,3,12,8,Rutupiae,21°45',54°00',21.75,54.0
+2,3,13,1,Below the Atrebati and the Canti are the Regni and the town Noeomagus,19°45',53°05',19.75,53.0833
+2,3,13,2,Below the Dobuni are the Belgae and the towns: Iscalis,16°00',53°40',16.0,53.6667
+2,3,13,3,Aquae calidae,17°20',53°40',17.3333,53.6667
+2,3,13,4,Venta,18°40',53°00',18.6667,53.0
+2,3,13,5,Toward the west and south of these are the Durotriges whose town is Dunium,18°00',52°40',18.0,52.6667
+2,3,13,6,"to these, but more to the west, are the Dumnoni, whose towns are: Voliba",14°45',52°00',14.75,52.0
+2,3,13,7,Uxella,15°00',52°45',15.0,52.75
+2,3,13,8,Tamara,15°00',52°15',15.0,52.25
+2,3,13,9,"Isca, where is located Legio II Augusta",17°30',52°45',17.5,52.75
+2,3,14,1,The islands which are near Albion island and the Orcades promontory are: Scetis island,32°40',60°45',32.6667,60.75
+2,3,14,2,Dumna island,30°00',61°20',30.0,61.3333
+2,3,14,3,"Above these islands are the Orcades, about thirty in number, midpoint",30°00',61°40',30.0,61.6667
+2,3,14,4,Far above these is the island Thule. The part of this which extends much toward the west,29°00',63°00',29.0,63.0
+2,3,14,5,that which is farthest eastward is,31°40',63°00',31.6667,63.0
+2,3,14,6,that which is farthest northward is,30°20',63°15',30.3333,63.25
+2,3,14,7,that which is farthest southward is,30°20',62°40',30.3333,62.6667
+2,3,14,8,the middle,30°20',63°00',30.3333,63.0
+2,3,14,9,Trinovantes region there are two islands: Toliapis,23°00',54°20',23.0,54.3333
+2,3,14,10,Counus island,24°00',54°30',24.0,54.5
+2,3,14,11,"Below Magnus Portus is the island Vectis, the middle of",19°20',52°20',19.3333,52.3333

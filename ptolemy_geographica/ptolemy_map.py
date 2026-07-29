@@ -195,6 +195,15 @@ _ISLAND_APPENDIX_SECTIONS = {
     ("6.07", "47"),  # Persian Gulf islands incl. Tylos (Bahrain)
     ("7.01", "95"),  # Ganges-delta islands ("Heptanesia" = "seven islands")
     ("4.05", "75"),  # Aedonis/Tyndarische Klippen/Ainesippa/Phokussai/Pedonia - small islands/reefs off the Marmarica coast, Egypt
+    # The following five were confirmed against topostext.org/work/209's
+    # English translation, which states outright "the Ebuda islands...",
+    # "the islands which are near Albion island...", etc. - independent of
+    # our own Modern_location-based guessing.
+    ("2.02", "11"),  # Ebuda (x2)/Ricina/Maleus/Epidium - the Hebrides, off Ireland's Ptolemaic coast
+    ("2.02", "12"),  # Monaoeda/Mona/Edrus/Limnus - Isle of Man, Anglesey, and neighbours
+    ("2.03", "31"),  # Scitis/Dumna/Orkaden - Skye, Lewis, Orkney
+    ("2.03", "32"),  # Thule W/O/N/S/Mitte - the island Thule's five extremity points
+    ("2.03", "33"),  # Tanatis/Counnus/Vectis - Thanet, and the Isle of Wight
 }
 
 # The same problem at single-point granularity: a lone island reference
@@ -296,6 +305,15 @@ def _classify_locality(
         return "harbor", "matches harbor pattern (Hafen/Portus) - coastal, colored separately"
     if _ESTUARY_RE.search(name):
         return "coast", "matches estuary pattern (Ästuar)"
+    if _GULF_RE.search(name):
+        # A point literally named "Golf von X"/"X-Bucht"/"X-Meerbusen" is a
+        # gulf/bay by definition - coastal regardless of whether its own
+        # catalogue section's header happens to carry a recognized sea word
+        # (found via topostext.org's English translation explicitly calling
+        # "Dunum bay"/"Gabrantuicorum bay" a bay while our section-header
+        # fallback missed both and defaulted them to "city" - 25 more points
+        # across the whole catalogue had the same bug once checked).
+        return "coast", "matches gulf/bay pattern (Golf/Bucht/Meerbusen)"
     if _ISLAND_RE.search(name):
         return "island", "matches 'Insel'/'Inseln' (island)"
     if _ISLAND_GROUP_RE.search(name):

@@ -1,0 +1,258 @@
+text: § 2.1.8  Having stated these things, let us begin our particular descriptions with the western part of Europe according to its provinces or prefectures.
+
+Event Date: 150 GR
+§ 2.2.1  Setting of Hivernia British island
+A description of the north coast, beyond which is located the Hyperborean ocean:
+Boreum promontory 11°00' . 61°00'
+Vennicnium promontory 12°50' . 61°20'
+mouth of the Vidua river 13°00' . 61°00'
+mouth of the Argita river 14°30' . 61°30'
+Rhobogdium promontory 16°20' . 61°30'
+
+Event Date: 150 GR
+§ 2.2.2  The Vennicni inhabit the west coast; next to them and toward the east are the Rhobogdi
+
+Event Date: 150 GR
+§ 2.2.3  A description of the west side, which borders on the Western ocean
+from the Boreum promontory which is in 11°00' . 61°00'
+mouth of the Ravius river 11°20' . 60°40'
+Magnata city 11°15' . 60°15'
+mouth of the Libnius river 10°30' . 60°00'
+mouth of the Ausoba river 10°30' . 59°30'
+mouth of the Senus river 9°30' . 59°30'
+mouth of the Duris river 9°40' . 58°40'
+mouth of the Iernus river 8°00' . 58°00'
+Southern promontory 7°40' . 57°45'
+
+Event Date: 150 GR
+§ 2.2.4  The Erdini inhabit the coast next to the Vennicni, and between these are the Magnatae; then the Autini; and the Gangani; below whom are the Vellabori.
+
+Event Date: 150 GR
+§ 2.2.5  Description of the south coast, which adjoins the Vergionius ocean, from the southern promontory which is in 7°40' . 57°40'
+mouth of the Dabrona river 11°15' . 57°00'
+mouth of the Birgus river 12°30' . 57°30'
+Sacred promontory 14°00' . 57°50'
+
+Event Date: 150 GR
+§ 2.2.6  The Hiverni occupy the side after the Velabori; beyond whom are the Usdiae and further to the east the Brigantes.
+
+Event Date: 150 GR
+§ 2.2.7  A description of the east side touching the ocean which is called Hibernian, beginning at the Sacred promontory at 14°00' . 57°50'
+mouth of the Modonnus river 13°40' . 58°40'
+Manapia town 13°30' . 58°40'
+mouth of the Oboca river 13°10' . 59°00'
+Eblana city 14°00' . 59°30'
+mouth of the Bubindas river 14°40' . 59°40'
+Isamnium promontory 15°00' . 60°00'
+mouth of the Vinderis river 15°00' . 60°15'
+mouth of the Logia river 15°20' . 60°40'
+Next to this is the Robogdium promontory.
+
+Event Date: 150 GR
+§ 2.2.8  On the side next to the Robogdi dwell the Darini, below whom are the Volunti; then the Eblani; then the Cauci; below whom are the Manapi; then the Coriondi who dwell above the Brigantes.
+
+Event Date: 150 GR
+§ 2.2.9  The following are the inland towns: Regia 13°00' . 60°20'
+Rhaeba 12°00' . 59°45'
+Laberus 13°00' . 59°15'
+Macolicum 11°30' . 58°40'
+another Regia 11°00' . 59°15'
+Dunum 12°30' . 58°45'
+Hibernis 11°00' . 58°10'
+
+Event Date: 150 GR
+§ 2.2.10  Above Hibernia are the Ebuda islands five in number, the largest of which toward the west is called Ebuda 15°00' . 62°00'
+next to this toward the east likewise is Ebuda island 15°40' . 62°00'
+then Rhicina 17°00' . 62°00'
+then Malaeus 17°30' . 62°30'
+then Epidium 18°30' . 62°00'
+Toward the east of Hibernia are these islands: Monaoeda island 17°40' . 61°30'
+Mona island 15°00' . 57°40'
+Adru which is barren 15°00' . 59°30'
+Limnu which is barren 15°00' . 59°00'
+
+Event Date: 150 GR
+§ 2.3.1  The position of Albion island of Britannia.
+A description of the northern coast, above which is the Duecaledonius ocean.
+Novantarum peninsula, and promontory of the same name 21°00' . 61°40'
+Rerigonius bay 20°30' . 60°50'
+Vindogara bay 21°20' . 60°30'
+Clota estuary 22°15' . 59°20'
+Lemannonius bay 24°00' . 60°00'
+Epidium promontory 23°00' . 60°40'
+mouth of the Longus river 24°30' . 60°40'
+mouth of the Itis river 27°00' . 60°40'
+Volas bay 29°00' . 60°30'
+mouth of the Navarus river 30°00' . 60°30'
+Tarvedum or Orcas promontory 31°20' . 60°15'
+
+Event Date: 150 GR
+§ 2.3.2  Description of the west a side which borders on the Hibernian ocean and the Vergionius ocean.
+From the Novantian promontory 21°00' . 61°40'
+mouth of the Abravannus river 19°20' . 61°00'
+Iena estuary 19°00' . 60°30'
+mouth of the Devas river 18°00' . 60°00'
+mouth of the Novius river 18°20' . 59°30'
+Ituna estuary 18°30' . 58°45'
+Moricambe estuary 17°30' . 58°20'
+Setantiorum harbor b 17°20' . 57°45'
+Belisama estuary 17°30' . 57°20'
+Seteia estuary 17°00' . 57°00'
+Caeanganorum promontory 15°00' . 57°00 c
+mouth of the Toesobis river 15°40' . 56°20'
+mouth of the Stuccia river 15°20' . 55°30'
+mouth of the Tuerobis river 15°00' . 55°00'
+Octapitarum promontory 14°20' . 54°30'
+mouth of the Tobius river 15°30' . 54°30'
+mouth of the Ratostabius river 16°30' . 54°30'
+Sabrina estuary 17°20' . 54°30'
+Uxella estuary 16°00' . 53°30'
+Herculis promontory 14°00' . 52°45'
+Antivestaeum or Bolerium promontory 11°30' . 52°30'
+Damnonium or Ocrium promontory 12°00' . 51°30'
+
+Event Date: 150 GR
+§ 2.3.3  Description of the south side below which is the Britannic ocean. After the Ocrium promontory is the mouth of the Cenio river 14°00 d 51°45'
+mouth of the Tamarus river 15°40' . 52°10'
+mouth of the Iscas river 17°40' . 52°20'
+mouth of the Alaunus river 17°40' . 52°40'
+Magnus Portus 19°00' . 53°00'
+mouth of the Trisantonis river 20°20' . 53°00'
+New harbor 21°00' . 53°30'
+Cantium promontory 22°00' . 54°00'
+
+Event Date: 150 GR
+§ 2.3.4  A description of the eastern and the southern side next to which is the Germanic ocean. After the Tarvedum promontory, or Orcades, by which it is known,
+Virvedrum promontory 31°00' . 60°00'
+Verubium promontory 30°30' . 59°40'
+mouth of the Ila river 30°00' . 59°40'
+a high shore 29°00' . 59°40'
+Varar estuary 28°00 e 59°40'
+mouth of the Loxa river 27°30' . 59°40'
+Tuesis estuary 27°00' . 59°00'
+mouth of the Caelis river 27°00' . 58°45'
+Taezalon promontory 27°30' . 58°30'
+mouth of the Deva river 26°00' . 58°30'
+mouth of the Tina river 24°00' . 58°30'
+Boderia estuary 22°30' . 59°00'
+mouth of the Alaunus river 21°20' . 58°30'
+mouth of the Vedra river 20°10' . 58°30'
+Dunum bay 20°15' . 57°30'
+Gabrantuicorum bay with many harbors 21°00' . 57°00'
+Ocelus promontory 21°15' . 56°40'
+mouth of the Abi river 21°00' . 56°30'
+Metaris estuary 20°30' . 55°40'
+mouth of the Gariennus river 20°50' . 55°40'
+A promontory 21°15' . 55°05'
+mouth of the Sidumanis river 20°10' . 55°00'
+Tamesa estuary 20°30' . 54°30'
+Next to this the Cantium promontory 22°00' . 54°00'
+
+Event Date: 150 GR
+§ 2.3.5  The Novantae dwell on the side toward the north below the peninsula of this name, among whom are the following towns:
+Locopibia 19°00' . 60°20'
+Rerigonium 20°10' . 60°40'
+
+Event Date: 150 GR
+§ 2.3.6  Below are the Selgovae, among whom are the following towns:
+Carbantorigum 19°00' . 59°30'
+Uxellum 18°30' . 59°20'
+Corda 20°00' . 59°40'
+Trimontium 19°00' . 59°00'
+
+Event Date: 150 GR
+§ 2.3.7  From these toward the east, but more northerly, are the Damnoni, among whom are the following towns:
+Colanica 20°45' . 59°10'
+Vindogara 21°20' . 60°00'
+Coria 21°30' . 59°20'
+Alauna 22°45' . 59°50'
+Lindum 23°00' . 59°30'
+Victoria 23°30' . 59°00'
+Further south are the Otalini, among whom are the following towns:
+Coria 20°10' . 59°00'
+Alauna 23°00' . 58°40'
+Bremenium 21°00' . 58°45'
+
+Event Date: 150 GR
+§ 2.3.8  Next to the Damnoni, but more toward the east near the Epidium promontory are the Epidi and next to these the Cerones; then the Carnonacae, and the Caereni but more toward the east; and in the extreme east dwell the Cornavi; from the Lemannonis bay as far as the Varar estuary are the Caledoni, and above these is the Caledonian forest, from which toward the east are the Decantae, and next to these the Lugi extending to the Cornavi boundary, and above the Lugi are the Smertae; below Caledonia are the Vacomagi, among whom are the following towns:
+Bannatia 24°00' . 59°30'
+Tamia 25°00' . 59°20'
+Pinnata camp 27°15' . 59°20'
+Tuesis 26°45' . 59°10'
+
+Event Date: 150 GR
+§ 2.3.9  Below these toward the west are the Venicones, whose town is
+Orrea 24°00' . 58°45'
+More toward the east are the Taezali
+and the town Devana 26°00' . 59°00'
+
+Event Date: 150 GR
+§ 2.3.10  Below the Selgovae and Otalini are the Brigantes extending to both seas, among whom are the following towns:
+Epiacum 18°30' . 58°30'
+Vinovium 17°45' . 58°00'
+Caturactonium 20°00' . 58°00'
+Calatum 19°00' . 57°45'
+Isurium 20°00' . 57°40'
+Rigodunum 18°00' . 57°30'
+Olicana 19°00' . 57°30'
+Eboracum, Legio VI Victrix 20°00' . 57°20'
+Camulodunum 18°00' . 57°45'
+Near which on the Opportunum bay are the Parisi and the town Petuaria 20°40' . 56°40'
+
+Event Date: 150 GR
+§ 2.3.11  Below these are the Brigantes but some distance toward the west are the Ordovices, among whom are the towns:
+Mediolanum 16°45' . 56°40'
+Brannogenium 16°45' . 56°15'
+From these toward the east are the Cornavi, among whom are the towns:
+Deva, Legio XX Victrix 17°30' . 56°45'
+Viroconium 16°45' . 55°45'
+Next to these are the Coritani, among whom are the towns:
+Lindum 18°40' . 56°30'
+Ratae 18°00' . 55°30'
+Next are the Catuvellauni, among whom are the towns:
+Salinae 20°45' . 55°50'
+Urolanium 19°20' . 55°30'
+Next to these are the Iceni,
+whose town is called Venta 20°30' . 55°20'
+Farther eastward and near the estuary of the Tamesa are the Trinovantes
+and the town Camulodunum 21°00' . 55°00'
+
+Event Date: 150 GR
+§ 2.3.12  Below the peoples we have mentioned, but more toward the west are the Demetae, whose towns are:
+Luentinum 15°45' . 55°10'
+Maridunum 15°30' . 54°40'
+More toward the east are the Silures
+whose town is Bullaeum 16°50' . 55°00'
+Next to these are the Dobuni, and their town Corinium 18°00' . 54°10'
+then the Atrebati
+and their town Caleva 19°00' . 54°15'
+Next to these, but farther eastward, are the Canti among whom are the towns:
+Londinium 20°00' . 54°00'
+Daruernum 21°00' . 54°00'
+Rutupiae 21°45' . 54°00'
+
+Event Date: 150 GR
+§ 2.3.13  Below the Atrebati and the Canti are the Regni and the town Noeomagus 19°45' . 53°05'
+Below the Dobuni are the Belgae and the towns: Iscalis 16°00' . 53°40'
+Aquae calidae 17°20' . 53°40'
+Venta 18°40' . 53°00'
+Toward the west and south of these are the Durotriges whose town is Dunium 18°00' . 52°40'
+Next to these, but more to the west, are the Dumnoni, whose towns are: Voliba 14°45' . 52°00'
+Uxella 15°00' . 52°45'
+Tamara 15°00' . 52°15'
+Isca, where is located Legio II Augusta 17°30' . 52°45'
+
+Event Date: 150 GR
+§ 2.3.14  The islands which are near Albion island and the Orcades promontory are: Scetis island 32°40' . 60°45'
+Dumna island 30°00' . 61°20'
+Above these islands are the Orcades, about thirty in number, midpoint at 30°00' . 61°40'
+Far above these is the island Thule. The part of this which extends much toward the west is at 29°00' . 63°00'
+that which is farthest eastward is 31°40' . 63°00'
+that which is farthest northward is 30°20' . 63°15'
+that which is farthest southward is 30°20' . 62°40'
+the middle is at 30°20' . 63°00'
+Eastward from the Trinovantes region there are two islands: Toliapis 23°00' . 54°20'
+Counus island 24°00' . 54°30'
+Below Magnus Portus is the island Vectis, the middle of which is in 19°20' . 52°20'
+
+Event Date: 150 GR
