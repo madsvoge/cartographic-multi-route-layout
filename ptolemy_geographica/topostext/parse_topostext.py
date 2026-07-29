@@ -37,7 +37,15 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 
 # "§ 2.2.3" - book, map, section (topostext's own paragraph numbering).
-_SECTION_RE = re.compile(r"§\s*(\d+)\.(\d+)\.(\d+)\s+")
+# A trailing "." before the whitespace ("§ 2.12.1.  RAETIA...") is rare
+# (one occurrence in the whole corpus so far) but fatal when missed: the
+# marker silently fails to match, so that section's whole body - including
+# any of its own coordinates - gets absorbed into the *previous* section's
+# body by the following section's successful match instead, mislabeling
+# real points under the wrong book.map.section (found while building
+# region labels, when book 2 map 12's opening boundary-description
+# coordinates turned up misattributed to map 11 section 16).
+_SECTION_RE = re.compile(r"§\s*(\d+)\.(\d+)\.(\d+)\.?\s+")
 
 # "11°00' . 61°00'" (also tolerate a missing "'" or a stray footnote
 # letter/space in place of the " . " separator, e.g. "14°00 d 51°45'").
