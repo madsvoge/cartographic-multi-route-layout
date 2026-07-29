@@ -49,10 +49,13 @@ name was even looked at.
   (a plain city entry right next to the river-mouth point a phrase like
   "mouth of the X river" is actually describing).
 
-A candidate below MATCH_THRESHOLD (45) is not recorded as a match - the
-score is still informative below that, but recording it as "matched"
-would imply more confidence than it deserves; see unmapped_review.xlsx
-for what's left, now ranked by how close the best candidate came.
+A candidate below MATCH_THRESHOLD (45) doesn't set *_matched to "yes" -
+that would claim more confidence than it deserves - but the score and the
+best candidate found are still written to *_match_score/*_name/*_ref
+regardless, rather than left blank, so a near-miss is visible instead of
+looking identical to "nothing plausible nearby at all". unmapped_review.xlsx
+carries the same score for exactly that reason, sorted with the closest
+near-misses first.
 
 Usage
 -----
@@ -171,6 +174,11 @@ def main() -> int:
         topo_by_book.setdefault(row["book"], []).append(row)
 
     # --- catalogue -> topostext ---
+    # Columns always carry the *best candidate found*, even below the match
+    # threshold - topostext_matched is the yes/no decision, but a sub-
+    # threshold near-miss and its score are still useful to see (in
+    # unmapped_review.xlsx especially) rather than showing a blank next to
+    # a row that in fact had a plausible, just-not-quite-good-enough lead.
     for row in cat_rows:
         row["topostext_matched"] = "no"
         row["topostext_ref"] = ""
@@ -182,11 +190,12 @@ def main() -> int:
         lon, lat = float(row["lon_ptolemy"]), float(row["lat_ptolemy"])
         candidates = [(c, "lon_decimal", "lat_decimal", "name_phrase") for c in topo_by_book.get(book, [])]
         best, score = _best(lon, lat, row["name"], candidates)
-        if best is not None and score >= MATCH_THRESHOLD:
-            row["topostext_matched"] = "yes"
+        if best is not None:
             row["topostext_ref"] = topo_ref(best)
             row["topostext_name"] = best["name_phrase"]
             row["topostext_match_score"] = score
+            if score >= MATCH_THRESHOLD:
+                row["topostext_matched"] = "yes"
 
     # --- topostext -> catalogue ---
     for row in topo_rows:
@@ -197,11 +206,12 @@ def main() -> int:
         lon, lat = float(row["lon_decimal"]), float(row["lat_decimal"])
         candidates = [(c, "lon_ptolemy", "lat_ptolemy", "name") for c in cat_by_book.get(row["book"], [])]
         best, score = _best(lon, lat, row["name_phrase"], candidates)
-        if best is not None and score >= MATCH_THRESHOLD:
-            row["catalogue_matched"] = "yes"
+        if best is not None:
             row["catalogue_ref_id"] = best["ref_id"]
             row["catalogue_name"] = best["name"]
             row["catalogue_match_score"] = score
+            if score >= MATCH_THRESHOLD:
+                row["catalogue_matched"] = "yes"
 
     new_cat_fields = cat_fields + ["topostext_matched", "topostext_ref", "topostext_name", "topostext_match_score"]
     new_topo_fields = topo_fields + ["catalogue_matched", "catalogue_ref_id", "catalogue_name", "catalogue_match_score"]
@@ -223,10 +233,19 @@ def main() -> int:
     ]
     unmapped_topo = [r for r in topo_rows if r["catalogue_matched"] == "no"]
 
+    # Closest near-misses first - the score column is exactly what makes a
+    # row worth a second look (a 40 just missed the cut; a 3 has nothing
+    # plausible nearby at all), so sort by it rather than catalogue order.
+    unmapped_cat.sort(key=lambda r: float(r["topostext_match_score"] or 0), reverse=True)
+    unmapped_topo.sort(key=lambda r: float(r["catalogue_match_score"] or 0), reverse=True)
+
     wb = openpyxl.Workbook()
     ws1 = wb.active
     ws1.title = "unmapped_catalogue"
-    cat_cols = ["ref_id", "name", "category", "book", "tabula", "modern_location", "lon_ptolemy", "lat_ptolemy"]
+    cat_cols = [
+        "ref_id", "name", "category", "book", "tabula", "modern_location", "lon_ptolemy", "lat_ptolemy",
+        "topostext_match_score", "topostext_name", "topostext_ref",
+    ]
     ws1.append(cat_cols)
     for r in unmapped_cat:
         ws1.append([r.get(c, "") for c in cat_cols])
@@ -234,7 +253,10 @@ def main() -> int:
         ws1.column_dimensions[get_column_letter(i)].width = max(12, len(c) + 2)
 
     ws2 = wb.create_sheet("unmapped_topostext")
-    topo_cols = ["book", "map", "section", "position", "name_phrase", "lon_dms", "lat_dms", "lon_decimal", "lat_decimal"]
+    topo_cols = [
+        "book", "map", "section", "position", "name_phrase", "lon_dms", "lat_dms", "lon_decimal", "lat_decimal",
+        "catalogue_match_score", "catalogue_name", "catalogue_ref_id",
+    ]
     ws2.append(topo_cols)
     for r in unmapped_topo:
         ws2.append([r.get(c, "") for c in topo_cols])
