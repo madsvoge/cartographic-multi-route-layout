@@ -212,7 +212,7 @@ _MOUNTAIN_LOCATION_REF_RE = re.compile(r"\b(?:am|im|vom|von|zum)\s+[\w\-\s]*?(?:
 # more specific coastal pattern (cape/gulf/harbor/estuary - "Akrokeraunische
 # Berge (Spitze)", "Schwarze Berge (Endpunkt am Meer)" on the Red Sea, both
 # genuine coastline points where a range happens to end at the sea, the
-# same reasoning _KAP_PREFIX_RE already uses). And, like the two tiers
+# same reasoning _KAP_WORD_RE already uses). And, like the two tiers
 # above, never overrides a genuine river point merely naming a mountain as
 # its location - the same _MOUNTAIN_LOCATION_REF_RE guard.
 _MOUNTAIN_BAREWORD_BERG_RE = re.compile(r"\bberge?\b", re.IGNORECASE)
@@ -291,6 +291,8 @@ _ISLAND_APPENDIX_SECTIONS = {
     ("4.01", "16"),  # Paina/Erytheia - islands off Mauritania Tingitana in the Outer Ocean
     ("4.03", "44"),  # Hydras/Galata/Drakontios/Aigimoros/Larunesen/Anemussa/Lopadusa/Aithusa - islands along the coast of Africa (topostext: "Islands along the coast of Africa, which are near the coast: Hydras...")
     ("4.03", "46"),  # Misynos/Pontia/Gaia - three more islands off Africa
+    ("4.04", "14"),  # Myrmex + Aphrodite-Insel bzw. Laia - the two islands off Cyrenaica (topostext: "The islands by this country are: Myrmex island...Laia or Aphrodite island")
+    ("4.05", "77"),  # Saspeirene/Aphrodite-Insel/Agathon-Insel - the islands in the Arabian bay (topostext: "In the Arabian bay are these islands: Sappeirene...")
 }
 
 # The same problem at single-point granularity: a lone island reference
@@ -309,6 +311,7 @@ _ISLAND_POINT_OVERRIDES = {
     "4.03.47.02",  # Kossura (Pantelleria) - one of three real islands in a section (4.03.47) that also names Melite's own peninsula/shrines, not islands themselves
     "4.03.47.03",  # Gaulos (Gozo)
     "4.03.47.05",  # Melite (Malta)
+    "4.05.76.02",  # Pharos - the island of the Alexandria lighthouse; its section (4.05.76) also names "Argaiu", an unrelated point not confirmed as an island
 }
 
 # _ISLAND_APPENDIX_SECTIONS covers two structurally different things: a
@@ -381,7 +384,16 @@ _MOUNTAIN_POINT_OVERRIDES = {
 }
 
 
-_KAP_PREFIX_RE = re.compile(r"^kap\b", re.IGNORECASE)
+# "Kap" (cape) as a bare word anywhere in the name, not just as a leading
+# prefix - the catalogue names a cape many ways ("Nördliches Kap", "Heiliges
+# Kap", "Grosses Kap am Anfang des Golfes", "X, ein Kap", "Athos, Kap und
+# Berg"), and only a minority happen to lead with the word. Checked the
+# whole catalogue before broadening past the prefix-only match: every one
+# of the ~30 non-leading "Kap" mentions found this way is the point's own
+# identity, not an incidental aside (unlike "Alpen"/"-Gebirge" mentioned as
+# a river point's mere location) - so no location-reference guard is needed
+# here the way _MOUNTAIN_LOCATION_REF_RE guards the mountain tiers.
+_KAP_WORD_RE = re.compile(r"\bkap\b", re.IGNORECASE)
 
 
 def _classify_locality(
@@ -409,15 +421,15 @@ def _classify_locality(
         return "mountain", "manually verified mountain-appendix section (_MOUNTAIN_APPENDIX_SECTIONS)"
     if force_mountain_point:
         return "mountain", "manually verified individual mountain point amid an otherwise coastal section (_MOUNTAIN_POINT_OVERRIDES)"
-    if _KAP_PREFIX_RE.search(name):
-        # A name that leads with "Kap" is unambiguously a cape - even when
-        # it also carries a mountain-range aside, e.g. "Kap Oiarso,
+    if _KAP_WORD_RE.search(name):
+        # A name containing "Kap" is unambiguously a cape - even when it
+        # also carries a mountain-range aside, e.g. "Kap Oiarso,
         # Pyrene-Gebirge (NW-Ende)" (Cabo Higuer, right at the Spain/France
         # border - also happens to be where the Pyrenees end). Classifying
         # it "mountain" dropped it from the coastline entirely, leaving a
         # gap between Spain's Biscay coast and France's Atlantic coast that
         # this cape would otherwise have bridged.
-        return "coast", "starts with 'Kap' (cape) - coastal regardless of any mountain-range aside"
+        return "coast", "contains 'Kap' (cape) - coastal regardless of any mountain-range aside"
     is_river_like = _RIVERFEAT_RE.search(name) or _RIVER_COURSE_RE.search(name) or _MOUTH_RE.search(name)
     if _MOUNTAIN_NAME_RE.search(name) and not (is_river_like and _MOUNTAIN_LOCATION_REF_RE.search(name)):
         return "mountain", "matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location"

@@ -612,7 +612,7 @@ never learned to recognize":
     pattern. That last pair of guards matters: Mount Athos ("Athos, ein
     Berg") and "Akrokeraunische Berge (Spitze)" are real, working coastline
     points (a range that happens to end at the sea, the same reasoning
-    `_KAP_PREFIX_RE` already uses for "Kap Oiarso, Pyrene-Gebirge") and
+    `_KAP_WORD_RE` already uses for "Kap Oiarso, Pyrene-Gebirge") and
     stayed exactly where they were - confirmed unchanged (61 coastline
     features before and after).
 - "Karpaten" (the Carpathians - topostext: "the beginning of Mt. Karpatos",
@@ -715,6 +715,49 @@ shapes:
   their whole sections, to avoid mis-islanding those city-on-an-island
   siblings the same way `_ISLAND_POINT_OVERRIDES` was designed to avoid in
   the first place.
+
+A seventh pilot run (Cyrenaica and Marmarike/Libya/Egypt including the Nile
+Delta, `§4.4.1`-`§4.5.77`) found the biggest single fix of any pilot so
+far, this time in the *coastline* classifier rather than mountains or
+islands:
+
+- "Kap" (cape) was only ever recognized as a *leading* word
+  (`_KAP_PREFIX_RE`, `^kap\b`), but the catalogue names a cape just as
+  often with "Kap" elsewhere in the name - "Nördliches Kap" ("Northern
+  Cape"), "Heiliges Kap" ("Sacred Cape"), "Grosses Kap am Anfang des
+  Golfes" ("Great cape at the start of the gulf"), "X, ein Kap" ("X, a
+  cape"), "Athos, Kap und Berg". Checked the whole catalogue before
+  broadening past the prefix anchor to a bare `\bkap\b` word match: of the
+  ~30 non-leading "Kap" mentions found this way, every single one is the
+  point's own identity as a cape, not an incidental aside the way
+  "Alpen"/"-Gebirge" can be a river point's mere location - so, unlike the
+  mountain tiers, no location-reference guard was needed. Renamed
+  `_KAP_PREFIX_RE` to `_KAP_WORD_RE` to match. 18 points flipped from
+  `city` to `coast`, and one - "Nördliches Kap" ending the Gulf of Sidra in
+  Cyrenaica (`4.04.03.08`) - had been sitting in an entire coastal-walk
+  section that never got recognized as coastal at all (its own header row
+  is just a place name, "Dorf des Philainos", with no sea/gulf keyword for
+  `_COASTAL_HDR_RE` to match), so fixing just this one cape reconnected it
+  to "Kap Drepanon" into a real 2-point coastline segment that hadn't
+  existed before: coastline count rose from 60 to 61.
+- Three more island-list sections: the two islands off Cyrenaica
+  (`4.04.14`, Myrmex + the already-`island` Aphrodite-Insel/Laia) and the
+  three islands "in the Arabian bay" off the Red Sea coast (`4.05.77`,
+  Saspeirene/Aphrodite-Insel/Agathon-Insel - Saspeirene itself was sitting
+  in `coast` via the section-header fallback, confirmed not part of any
+  existing coastline before reclassifying it, avoiding a repeat of the
+  Paena/Erythia mistake above) - both safe to force whole-section. Plus one
+  more point-level fix: "Pharos" (`4.05.76.02`) - the island of the
+  Alexandria lighthouse - sitting in `city`, in a section that also names
+  an unrelated, unconfirmed point ("Argaiu") not safe to force alongside it.
+- Confirmed, not fixed: the string of Nile-delta points topostext describes
+  as being "on the island" formed where the river forks around the
+  Heracleopolites nome (`Nilupolis`, `Arsinoe`, `Aphroditopolis`,
+  `Ankyronpolis`, `Kynonpolis` - `4.05.56`-`4.05.59`) are cities *on* that
+  river-formed island, not the island itself (which has no coordinate of
+  its own beyond the fork points already correctly categorized `river`) -
+  the same "city on an island stays `city`" pattern as Ebusus/Melite's
+  peninsula, not a bug.
 
 ## Compiling the catalogue to data: `annotate_dataset.py`
 
