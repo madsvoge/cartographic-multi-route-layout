@@ -49,7 +49,7 @@ def _in_bbox(lon: float, lat: float, bbox: tuple[float, float, float, float]) ->
     return lon_min <= lon <= lon_max and lat_min <= lat <= lat_max
 
 
-def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False) -> int:
+def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False, show_feature_labels: bool = True) -> int:
     import geopandas
     import matplotlib.pyplot as plt
     from matplotlib.patches import Circle
@@ -150,22 +150,23 @@ def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False)
     # so the scatter loop below already skips them; draw plain italic text
     # for them instead of a colored dot.
     label_refs_drawn = 0
-    for r in in_view:
-        if r.category != "label":
-            continue
-        ax.annotate(
-            r.name,
-            (r.lon_modern, r.lat_modern),
-            fontsize=12,
-            fontstyle="italic",
-            fontweight="bold",
-            color="#2b2b2b",
-            ha="center",
-            va="center",
-            zorder=6,
-            path_effects=[withStroke(linewidth=3, foreground="white")],
-        )
-        label_refs_drawn += 1
+    if show_feature_labels:
+        for r in in_view:
+            if r.category != "label":
+                continue
+            ax.annotate(
+                r.name,
+                (r.lon_modern, r.lat_modern),
+                fontsize=12,
+                fontstyle="italic",
+                fontweight="bold",
+                color="#2b2b2b",
+                ha="center",
+                va="center",
+                zorder=6,
+                path_effects=[withStroke(linewidth=3, foreground="white")],
+            )
+            label_refs_drawn += 1
 
     present_categories = [cat for cat in CATEGORIES if any(r.category == cat for r in in_view)]
     for cat in present_categories:
@@ -253,6 +254,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="Annotate each coastal point with its ref_id - "
         "for auditing a specific --bbox, not for wide views (gets unreadable fast)",
     )
+    parser.add_argument(
+        "--hide-feature-labels",
+        action="store_true",
+        help="Suppress the italic region/island-group/mountain-range text labels",
+    )
     return parser.parse_args(argv)
 
 
@@ -266,7 +272,14 @@ def main(argv: list[str] | None = None) -> int:
     bbox = tuple(args.bbox) if args.bbox else REGIONS[args.region]
     region_label = "custom region" if args.bbox else args.region.title()
     title = args.title or f"Ptolemy's Geographica - geographical references ({region_label})"
-    render(refs, bbox, args.output, title, label_coastlines=args.label_coastlines)
+    render(
+        refs,
+        bbox,
+        args.output,
+        title,
+        label_coastlines=args.label_coastlines,
+        show_feature_labels=not args.hide_feature_labels,
+    )
     return 0
 
 
