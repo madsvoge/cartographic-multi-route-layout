@@ -130,10 +130,21 @@ def score_match(distance: float, phrase: str, name: str, category: str) -> float
     return round(min(score, 100.0), 1)
 
 
-def load_rows(path: Path) -> tuple[list[str], list[dict]]:
+# Columns this script itself adds - stripped back out of a file's existing
+# fieldnames before re-adding them once, so re-running this script twice in
+# a row (without annotate_dataset.py/parse_topostext.py regenerating the
+# file fresh in between) can't keep appending duplicate columns - a real
+# bug found in topostext_209.csv, which had accumulated nine copies of
+# these from repeated runs during scoring-algorithm tuning.
+_CAT_MATCH_COLS = ["topostext_matched", "topostext_ref", "topostext_name", "topostext_match_score"]
+_TOPO_MATCH_COLS = ["catalogue_matched", "catalogue_ref_id", "catalogue_name", "catalogue_match_score"]
+
+
+def load_rows(path: Path, strip_cols: list[str]) -> tuple[list[str], list[dict]]:
     with path.open(newline="", encoding="utf-8") as fh:
         reader = csv.DictReader(fh)
-        return list(reader.fieldnames or []), list(reader)
+        fieldnames = [f for f in (reader.fieldnames or []) if f not in strip_cols]
+        return fieldnames, list(reader)
 
 
 def write_rows(path: Path, fieldnames: list[str], rows: list[dict]) -> None:
@@ -161,8 +172,8 @@ def _best(lon: float, lat: float, phrase: str, candidates: list[tuple[dict, str,
 
 
 def main() -> int:
-    cat_fields, cat_rows = load_rows(CATALOGUE)
-    topo_fields, topo_rows = load_rows(TOPOSTEXT)
+    cat_fields, cat_rows = load_rows(CATALOGUE, _CAT_MATCH_COLS)
+    topo_fields, topo_rows = load_rows(TOPOSTEXT, _TOPO_MATCH_COLS)
 
     cat_by_book: dict[str, list[dict]] = {}
     for row in cat_rows:
@@ -213,8 +224,8 @@ def main() -> int:
             if score >= MATCH_THRESHOLD:
                 row["catalogue_matched"] = "yes"
 
-    new_cat_fields = cat_fields + ["topostext_matched", "topostext_ref", "topostext_name", "topostext_match_score"]
-    new_topo_fields = topo_fields + ["catalogue_matched", "catalogue_ref_id", "catalogue_name", "catalogue_match_score"]
+    new_cat_fields = cat_fields + _CAT_MATCH_COLS
+    new_topo_fields = topo_fields + _TOPO_MATCH_COLS
     write_rows(CATALOGUE, new_cat_fields, cat_rows)
     write_rows(TOPOSTEXT, new_topo_fields, topo_rows)
 
