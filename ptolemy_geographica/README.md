@@ -396,6 +396,34 @@ the matched point itself being on it. The tool's job is to surface
 candidates for a human to look at, not to auto-correct - review the
 `possible category disagreements` list before changing anything.
 
+A second pilot run (Iberia and Gaul, `§2.4`-`§2.11`) found three more real
+bugs of the same kind:
+
+- "Rhodanus (Biegung südlich von Lugdunum, zu den Alpen hin)" ("...bend
+  south of Lyon, *toward* the Alps") and "Licius (Oberlauf), Alpes
+  Poeninae" ("...upper course, Pennine Alps") were both classified
+  `mountain`, because the bare word "Alpen"/"Alpes" matched the same
+  keyword rule as ~50 genuine "X-Gebirge (Mitte)" mountain-range midpoint
+  citations elsewhere - but in these two, "Alpen"/"Alpes" only names the
+  Rhône/Ticino's *location*, not what the point itself is: both are river
+  points. Fixed by splitting the mountain check into two tiers -
+  `_MOUNTAIN_NAME_RE` ("-Gebirge"/"-berg", always wins) and a weaker bare
+  "Alpes"/"Alpen" tier that only applies when the name isn't *also* a
+  recognized river-course/source/mouth pattern (the same reasoning
+  already used to keep a gulf's own bend out of the river-course rule).
+  "Calpe" (Mons Calpe, the Rock of Gibraltar - "Calpe mountain and pillar
+  of the Inner sea") had the opposite problem, a real mountain with no
+  "-Gebirge"/"-berg"/"Alpen" of its own, sitting in `city` - added to the
+  name-anchored tier as a specific, unambiguous proper name.
+- Six "X (Quellgebiet)" entries (a river's source *region* - the Rhine,
+  Loire, Durance, Vistula ×2, Danube) were in `city`; `_RIVERFEAT_RE`
+  matched "Quelle" but not "Quellgebiet", which doesn't contain that exact
+  substring. Broadened the pattern from "quelle" to "quell".
+- Two more island sections: Londobris (the Berlengas, off Lusitania -
+  "An island lying off Lusitania, Londobris") and a set of four islands
+  off Narbonensis (Agde island, Île de Brescou, the Îles d'Hyères, Île
+  Sainte-Marguerite - "Islands lying off Narbonenses are Agathe...").
+
 ## Compiling the catalogue to data: `annotate_dataset.py`
 
 Everything described above - classification, graph reconstruction, distance

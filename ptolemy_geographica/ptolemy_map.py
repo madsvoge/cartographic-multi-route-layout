@@ -120,18 +120,21 @@ _COASTAL_HDR_RE = re.compile(r"ozean|meer(?!wärts)|golf|meerbusen|kanal|bucht",
 # shore).
 # Note: matched *before* _MOUTH_RE below - "Einmündung" (a tributary joining
 # another river inland) contains the substring "mündung" and would
-# otherwise be caught by the coastal mouth pattern first.
-_RIVERFEAT_RE = re.compile(r"quelle|einmündung|ursprung|zusammenfluss", re.IGNORECASE)
-# Landmarks *along* a river's course - a bend, its midpoint, or a delta
-# fork/split - as opposed to "Mündung" (river mouth, i.e. actually on the
-# coast). These are inland, but nothing in the word itself says so (unlike
-# "Quelle"/"Ursprung" = source), so a river bend sitting in a sea-headed
-# section (e.g. "Garumna (Mitte)", the Garonne's midpoint, in the same
-# section as Aquitania's coastal capes) fell through to "coast" and got
+# otherwise be caught by the coastal mouth pattern first. "quell" (not just
+# "quelle") also catches "Quellgebiet" (source region/catchment) - "Rhenus
+# (Quellgebiet)" and five more river-source entries had no exact "Quelle"
+# substring and fell through to the default "city".
+_RIVERFEAT_RE = re.compile(r"quell|einmündung|ursprung|zusammenfluss", re.IGNORECASE)
+# Landmarks *along* a river's course - a bend, its midpoint, its upper/lower
+# reach, or a delta fork/split - as opposed to "Mündung" (river mouth, i.e.
+# actually on the coast). These are inland, but nothing in the word itself
+# says so (unlike "Quelle"/"Ursprung" = source), so a river bend sitting in a
+# sea-headed section (e.g. "Garumna (Mitte)", the Garonne's midpoint, in the
+# same section as Aquitania's coastal capes) fell through to "coast" and got
 # spliced into the middle of that coastal walk out of geographic order.
 # One legitimate exception: a bend *in a gulf's own coastline* ("Elanitischer
 # Golf (Biegung)") isn't a river feature, hence the golf/bay guard.
-_RIVER_COURSE_RE = re.compile(r"\(mitte\)|biegung|abzweigung|aufteilung", re.IGNORECASE)
+_RIVER_COURSE_RE = re.compile(r"\(mitte\)|biegung|abzweigung|aufteilung|oberlauf|unterlauf", re.IGNORECASE)
 _GULF_RE = re.compile(r"golf|meerbusen|bucht", re.IGNORECASE)
 _MOUTH_RE = re.compile(r"mündung", re.IGNORECASE)
 _CAPE_RE = re.compile(r"^kap\b|spitze|vorgebirge|promont", re.IGNORECASE)
@@ -145,7 +148,24 @@ _ESTUARY_RE = re.compile(r"ästuar", re.IGNORECASE)
 # the same catalogue section ("Abnoba-Gebirge (S-Spitzen)", "Sudeta-Gebirge
 # (...)") already say "Gebirge" and were unaffected - only "Alpes" lacks a
 # mountain-range word of its own.
-_MOUNTAIN_RE = re.compile(r"gebirge|-berg\b|^berg\b|\balpes\b|\balpen\b", re.IGNORECASE)
+#
+# Split into two tiers because "Alpes"/"Alpen" alone is a weaker signal than
+# a name actually suffixed "-Gebirge"/"-berg": ~50 catalogue entries like
+# "Marianum-Gebirge (Mitte)" are genuinely a named mountain range's own
+# midpoint citation and must always win. But "Rhodanus (Biegung südlich von
+# Lugdunum, zu den Alpen hin)" ("...bend south of Lyon, toward the Alps")
+# and "Licius (Oberlauf), Alpes Poeninae" ("...upper course, Pennine Alps")
+# are river-course points that merely mention the Alps as a *location* -
+# "Alpen"/"Alpes" here is incidental, not the entity's own name, and both
+# were wrongly drawn as mountains instead of connected as river points. The
+# bare "Alpes"/"Alpen" tier is therefore only trusted when the name isn't
+# already a recognized river-course/source/mouth pattern. "Calpe" (Mons
+# Calpe, the Rock of Gibraltar - topostext: "Calpe mountain and pillar of
+# the Inner sea") is folded into the name-anchored tier too: a specific,
+# unambiguous proper name for one mountain with no generic "-Gebirge"/
+# "-berg" suffix of its own.
+_MOUNTAIN_NAME_RE = re.compile(r"gebirge|-berg\b|^berg\b|\bcalpe\b", re.IGNORECASE)
+_ALPS_BAREWORD_RE = re.compile(r"\balpes\b|\balpen\b", re.IGNORECASE)
 _ISLAND_RE = re.compile(r"\binsel\b|inseln", re.IGNORECASE)
 # A name ending in "(N)" - "Kassiteriden (10)", "Pityussae (2)" - denotes an
 # island group given as a single count-labelled entry, a standard
@@ -204,6 +224,8 @@ _ISLAND_APPENDIX_SECTIONS = {
     ("2.03", "31"),  # Scitis/Dumna/Orkaden - Skye, Lewis, Orkney
     ("2.03", "32"),  # Thule W/O/N/S/Mitte - the island Thule's five extremity points
     ("2.03", "33"),  # Tanatis/Counnus/Vectis - Thanet, and the Isle of Wight
+    ("2.05", "10"),  # Londobris - the Berlengas, off Lusitania ("An island lying off Lusitania, Londobris")
+    ("2.10", "21"),  # Agatha/Blasco/Stoechades/Lero - islands off Narbonensis (Agde island, Ile de Brescou, Iles d'Hyeres, Ile Ste-Marguerite)
 }
 
 # The same problem at single-point granularity: a lone island reference
@@ -289,14 +311,17 @@ def _classify_locality(
         # gap between Spain's Biscay coast and France's Atlantic coast that
         # this cape would otherwise have bridged.
         return "coast", "starts with 'Kap' (cape) - coastal regardless of any mountain-range aside"
-    if _MOUNTAIN_RE.search(name):
-        return "mountain", "matches mountain-range pattern (Gebirge/-berg/Alpes/Alpen)"
+    if _MOUNTAIN_NAME_RE.search(name):
+        return "mountain", "matches mountain-range name pattern (Gebirge/-berg/Calpe)"
+    is_river_like = _RIVERFEAT_RE.search(name) or _RIVER_COURSE_RE.search(name) or _MOUTH_RE.search(name)
+    if _ALPS_BAREWORD_RE.search(name) and not is_river_like:
+        return "mountain", "matches 'Alpes'/'Alpen' (bare, not also a river-course/source/mouth pattern)"
     if force_noncoastal:
         section_is_coastal = False
     if _RIVERFEAT_RE.search(name):
-        return "river", "matches river-feature pattern (Quelle/Einmündung/Ursprung/Zusammenfluss)"
+        return "river", "matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss)"
     if _RIVER_COURSE_RE.search(name) and not _GULF_RE.search(name):
-        return "river", "matches river-course pattern (Mitte/Biegung/Abzweigung/Aufteilung), not a gulf bend"
+        return "river", "matches river-course pattern (Mitte/Biegung/Abzweigung/Aufteilung/Oberlauf/Unterlauf), not a gulf bend"
     if _MOUTH_RE.search(name):
         return "river_mouth", "matches 'Mündung' (river mouth) - coastal, colored separately"
     if _CAPE_RE.search(name):
