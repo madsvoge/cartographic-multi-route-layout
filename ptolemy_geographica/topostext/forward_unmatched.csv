@@ -1,0 +1,123 @@
+book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal
+2,3,11,7,"are the Catuvellauni, among whom are the towns: Salinae",20°45',55°50',20.75,55.8333
+2,6,61,3,Saitabis,13°10',37°00',13.1667,37.0
+2,6,62,11,Edeta and/or Leiria,14°20',38°25',14.3333,38.4167
+2,7,3,1,The eastern side adjoins the part of Lugdunensis by the Liger River until its head,20°00',44°30',20.0,44.5
+2,7,6,6,to these the Cadurci and their city Dueona,19°00',46°15',19.0,46.25
+2,8,4,1,"The southern side is bounded by the part on this side of Narbonensis as far as the mentioned end point by Aquitania, the Cemmena mountains, mid-point",20°20',44°30',20.3333,44.5
+2,8,11,3,Forum Segusianorum,20°30',45°30',20.5,45.5
+2,9,5,2,Mosa River the Menapii and their city Castellum,25°00',22°15',25.0,22.25
+2,9,8,5,Legion I Athena (Minerva) and then Traiane Legion,28°30',50°35',28.5,50.5833
+2,11,1,1,mouths of the river Rhenus: Mouths of the river Vidrus,27°20',54°45',27.3333,54.75
+2,11,2,4,turn,39°10',59°10',39.1667,59.1667
+2,11,14,11,Bergium,33°00',49°20',33.0,49.3333
+2,11,16,6,the northernmost point,44°20',58°20',44.3333,58.3333
+3,8,4,24,Piroum,51°15',6°00',51.25,6.0
+3,8,4,29,Argidaua,46°30',45°15',46.5,45.25
+3,8,4,32,Hydata,49°30',5°00',49.5,5.0
+3,9,3,3,"where the Moschios river branches. Viminacium, legion",46°30',4°00',46.5,4.0
+3,10,2,9,"the more northerly of this division flows into Pontos by the mouth called Boreios, located",56°20',6°50',56.3333,6.8333
+3,10,2,11,the mor southerly of this division flows into Pontos by the mouth called Narakion,56°10',6°20',56.1667,6.3333
+3,10,3,2,"Sacred mouth of the Istros river, Pteron promontory",56°20',6°00',56.3333,6.0
+3,10,3,3,Istros city,55°40',6°00',55.6667,6.0
+3,12,30,2,Of the Pelagonians: Audaristos,48°40',50°05',48.6667,50.0833
+3,14,31,14,Pherai,49°30',30°15',49.5,30.25
+4,1,2,5,Emporikos kolpos,6°30',34°20',6.5,34.3333
+4,2,16,2,,21°00',26°00',21.0,26.0
+4,2,30,1,"a different starting point, the towns are Thudaca",19°10',32°20',19.1667,32.3333
+4,3,18,4,"Mt. Ousalaiton or Ousaleton, the end points of which are at",37°00',38°00',37.0,38.0
+4,3,19,1,"which the Triton river flows, and in it these lakes: Tritonitis",38°40',39°40',38.6667,39.6667
+4,3,36,7,Bunthum,36°15',27°20',36.25,27.3333
+4,3,44,4,Aigimoros island,34°15',33°30',34.25,33.5
+4,3,46,2,Pontia island,45°20',20°15',45.3333,20.25
+4,5,12,5,Anthedon,64°50',51°40',64.8333,51.6667
+4,5,25,1,"The Nitriotai, and the Oasita dwell in the parts still further to the south, at",59°30',29°30',59.5,29.5
+4,6,2,1,"same meridian until the limit, at",51°15',3°10',51.25,3.1667
+4,6,8,2,"which the Subos river flows, midpoint",20°20',22°,20.3333,22.0
+4,6,9,2,"which the Darados river flows, midpoint",27°,10°,27.0,10.0
+4,6,27,5,Uellegeia,28°30',16°40',28.5,16.6667
+4,6,28,1,south of the river Thupai,16°30',16°40',16.5,16.6667
+4,7,7,4,Altar of Eros promontory,66°30',16°00',66.5,16.0
+4,7,11,5,Apokopa,70°00',3°00',70.0,3.0
+4,7,11,7,Small shore,78°00',1°00' S,78.0,-1.0
+4,7,11,8,Great shore,76°00',2°00' S,76.0,-2.0
+4,7,11,9,Essina trading post,73°30',3°30' S,73.5,-3.5
+4,7,25,2,Koloe city,69°00',4°15',69.0,4.25
+4,7,25,3,Maste city,65°00',4°15',65.0,4.25
+4,7,26,2,,55°00',8°30',55.0,8.5
+4,7,26,5,beside the lakes the so-called Pylaian mountains . 65°00' . equator and Maste mountain,68°00',5°00',68.0,5.0
+4,9,3,2,,68°,12°20' S,68.0,-12.3333
+4,9,6,1,"Those that have come to our knowledge are as follows: Mount Dauchis, the centre of which is",15°,8°25' S,15.0,-8.4167
+5,1,9,1,"mentioned point, i.e",61°00',31°15',61.0,31.25
+5,1,9,2,at the city Kytoron of the Pontos,61°00',33°45',61.0,33.75
+5,2,13,10,Kadmos mountain,59°40',37°40',59.6667,37.6667
+5,4,10,8,Laodikeia katakekaumene,63°40',39°40',63.6667,39.6667
+5,4,11,4,Neapolis,62°40',48°45',62.6667,48.75
+5,6,1,5,along the line of the Moschikos mountains and to the terminal,73°00',44°30',73.0,44.5
+5,13,3,4,,80°00',30°40',80.0,30.6667
+5,15,9,6,mountain of Pieria flows north and then turns east at this position,71°37',30°00',71.6167,30.0
+5,15,13,6,Hierapolis,71°15',30°15',71.25,30.25
+5,16,2,1,mouth of the Chorseas river: Kaisareia Stratonos,60°15',32°30',60.25,32.5
+5,19,6,10,Arrade,71°30',30°15',71.5,30.25
+6,2,3,2,,101°00',33°00',101.0,33.0
+6,2,8,7,Sozoa,80°50',41°10',80.8333,41.1667
+6,2,12,6,Nigouza,90°15',38°00',90.25,38.0
+6,3,2,3,Charax Pasinou,80°00',31°00',80.0,31.0
+6,5,3,4,Aspa,95°20',33°20',95.3333,33.3333
+6,6,1,2,on the north by Parthia on the indicated line through Parchoathra mountain; on the east by a part of Areia along the extention of the line indicated until the limit point at,104°00',28°50',104.0,28.8333
+6,7,12,2,[Coastal mountains of Eudaimon Arabia: Hippos Mountain,76°50',27°30',76.8333,27.5
+6,7,19,1,of the Aboukaians: Hieros gulf,78°15',28°15',78.25,28.25
+6,7,33,6,Chabouata,89°15',22°00',89.25,22.0
+6,7,33,7,Thoumata,74°20',21°20',74.3333,21.3333
+6,7,36,1,Hierakon kome,84°30',20°30',84.5,20.5
+6,7,36,5,Omanon trading post,87°40',19°45',87.6667,19.75
+6,7,37,2,Nagara metropolis,84°45',18°30',84.75,18.5
+6,7,42,1,Saoue palace,76°00',12°00',76.0,12.0
+6,7,45,4,western limit point of the island,85°00',10°30',85.0,10.5
+6,7,46,3,"Sarapias, on which a sanctuary",94°00',10°30',94.0,10.5
+6,8,2,1,limit by the Desert until the Indian sea at a place extending,94°,20°,94.0,20.0
+6,11,8,3,Kouriandra,109°30',12°10',109.5,12.1667
+6,12,3,3,The other is the Baskatis whose sources lie in,12°00',44°00',12.0,44.0
+6,12,5,4,Kholbesina,121°00',43°00',121.0,43.0
+6,14,4,2,,99°00',47°30',99.0,47.5
+6,16,1,2,,180°00',55°00',180.0,55.0
+6,16,1,3,on the south by the rest of India beyond the Ganges through the same parallel as far as the extremity lying,173°00',55°00',173.0,55.0
+6,16,2,11,,176°00',38°00',176.0,38.0
+6,16,3,2,where it bends towards the Kasia range,160°00',48°30',160.0,48.5
+6,17,2,2,those that are in the Sariphoi,118°00',33°20',118.0,33.3333
+6,17,8,1,Darkama,111°3',4°20',111.05,4.3333
+6,19,5,1,Asta,117°30',30°40',117.5,30.6667
+6,20,2,2,the confluence in,121°30',27°30',121.5,27.5
+6,20,2,3,the part at the lake formed by it which is called Arachotos Krene (fountain)— lies in,115°00',28°40',115.0,28.6667
+6,20,4,3,Arikaka,113°00',31°20',113.0,31.3333
+6,21,5,5,Soxestra or Sokstra,118°30',25°45',118.5,25.75
+7,1,27,6,Confluence of the Zaradros and Bibasis,131°00',34°00',131.0,34.0
+7,1,28,3,Branch of the Indus towards Arachosia,121°30',27°30',121.5,27.5
+7,1,28,5,The source of (tributary joining) the branch,115°00',24°30',115.0,24.5
+7,1,46,3,Boukephala,125°30',30°20',125.5,30.3333
+7,1,53,3,Kanagora,135°00',30°40',135.0,30.6667
+7,1,54,2,Nadoubandagar,138°40',29°00',138.6667,29.0
+7,1,70,3,Malaita,136°30',25°50',136.5,25.8333
+7,2,5,4,"Sabana, trading post",160°00',3°,160.0,3.0
+7,2,5,5,S. Mouth of the River Palandos,161°00',2°,161.0,2.0
+7,2,5,6,S. Cape Maleou Kolon,163°00',2°,163.0,2.0
+7,2,6,6,"Zabai, the city",168°40',40°45',168.6667,40.75
+7,2,7,7,"Sinda, a city",167°15',16°40',167.25,16.6667
+7,2,9,3,The sources of the other river are in,142°00',27°00',142.0,27.0
+7,2,9,4,its point of junction with the Ganges in,144°00',26°00',144.0,26.0
+7,2,11,2,Damassa range rises in,162°00',27°30',162.0,27.5
+7,2,11,5,Maiandros rises in,163°30',13°00',163.5,13.0
+7,2,12,1,"mountain ridges, without name, which overhang the Chersonese—the one flowing into the Chersonese first detaches from it the Attabas in about",161°00',2°20',161.0,2.3333
+7,2,23,8,Parisara,179°00',21°30',179.0,21.5
+7,2,25,3,Tharrha,162°00',1°20' S,162.0,-1.3333
+7,3,2,1,boundary of the Gulf on the side of India the mouth of the river Aspithra,170°00',16°00',170.0,16.0
+7,3,2,4,The mouth of the river Ambastes,176°00',10°00',176.0,10.0
+7,3,2,10,The Cape of Satyrs . 175°00' . on the Equator Gulf of the Sinai,178°00',2°20',178.0,2.3333
+7,3,3,1,Around the Gulf of the Sinai dwell the fish-eating Aithiopians. Mouth of the river Kottiaris,177°20',7°,177.3333,7.0
+7,3,3,2,S. Sources of the river,180°40',2°,180.6667,2.0
+7,3,5,3,Kokkonagara,179°50',2°,179.8333,2.0
+7,3,6,1,the Metropolis Sinai or Thinai,180°40',3°,180.6667,3.0
+7,4,4,6,"N. Odoka, a city",123°00',2°,123.0,2.0
+7,4,5,1,"Dagana, a city sacred to the Moon",126°00',2°,126.0,2.0
+7,4,6,3,Great Coast (Aigialos Megas),130°00',4°20',130.0,4.3333
+7,4,12,1,Karkos,118°00',3°40' S,118.0,-3.6667
