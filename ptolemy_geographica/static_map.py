@@ -53,6 +53,7 @@ def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False)
     import geopandas
     import matplotlib.pyplot as plt
     from matplotlib.patches import Circle
+    from matplotlib.patheffects import withStroke
 
     lon_min, lat_min, lon_max, lat_max = bbox
     in_view = [r for r in refs if r.is_plausible() and _in_bbox(r.lon_modern, r.lat_modern, bbox)]
@@ -144,6 +145,28 @@ def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False)
                 )
             )
 
+    # Synthetic region/island-group/mountain-range labels (build_labels.py,
+    # category "label") aren't real catalogue points - not in CATEGORIES,
+    # so the scatter loop below already skips them; draw plain italic text
+    # for them instead of a colored dot.
+    label_refs_drawn = 0
+    for r in in_view:
+        if r.category != "label":
+            continue
+        ax.annotate(
+            r.name,
+            (r.lon_modern, r.lat_modern),
+            fontsize=12,
+            fontstyle="italic",
+            fontweight="bold",
+            color="#2b2b2b",
+            ha="center",
+            va="center",
+            zorder=6,
+            path_effects=[withStroke(linewidth=3, foreground="white")],
+        )
+        label_refs_drawn += 1
+
     present_categories = [cat for cat in CATEGORIES if any(r.category == cat for r in in_view)]
     for cat in present_categories:
         pts = [(r.lon_modern, r.lat_modern) for r in in_view if r.category == cat]
@@ -183,7 +206,8 @@ def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False)
         0.925,
         f"{len(in_view)} of {len(refs)} catalogue references shown "
         f"({coastline_segments_drawn} coastline segments, {river_lines_drawn} river lines, "
-        f"{island_lines_drawn} island outlines, {mountain_lines_drawn} mountain-range lines) "
+        f"{island_lines_drawn} island outlines, {mountain_lines_drawn} mountain-range lines, "
+        f"{label_refs_drawn} feature labels) "
         "at modernized (Ferro-offset) coordinates",
         fontsize=11.5,
         color=TEXT_SECONDARY,
@@ -204,7 +228,7 @@ def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False)
     print(
         f"plotted {len(in_view)} reference(s), {coastline_segments_drawn} coastline segments, "
         f"{river_lines_drawn} river lines, {island_lines_drawn} island outlines, "
-        f"{mountain_lines_drawn} mountain-range lines -> {output}"
+        f"{mountain_lines_drawn} mountain-range lines, {label_refs_drawn} feature labels -> {output}"
     )
     return len(in_view)
 

@@ -391,6 +391,64 @@ single-citation range - most of the catalogue's ~150 named peaks/ranges
 only ever appear once, with no second point to connect to - still plots as
 an individual point, no line).
 
+## Feature labels
+
+Beyond individual points, the map carries **text labels** for three kinds
+of named feature - a province ("Thrace", "Britannia"), a named island
+group ("Corfu", "Rhodes"), a named mountain range ("Pyrene-Gebirge") -
+each drawn as plain italic text rather than a colored marker (a dedicated
+"Region/feature labels" layer in `ptolemy_map.py`'s folium output;
+`ax.annotate` with a white outline in `static_map.py`). These are
+synthetic rows, `category == "label"`, added on top of the regular
+xlsx-derived dataset by `topostext/build_labels.py` - they carry no
+`ref_id` from the catalogue and don't participate in coastline/river/
+island/mountain-line reconstruction.
+
+- **Province labels** are positioned at the centroid of every catalogue
+  point in that book.map, and named from topostext's own opening sentence
+  for the province's first section ("Setting of Hivernia British island",
+  "Position of Macedonia", "Sarmatia is bounded on the north..." - see
+  `_PROVINCE_LABELS` in `build_labels.py`). This pattern is near-universal
+  across the whole range topostext has covered so far, but isn't a safe
+  find-and-extract job: topostext's own book.map numbering runs one map
+  ahead of ours for a stretch of book 3 (their §3.12 "Position of
+  Macedonia" is actually our catalogue's book.map 3.13 - our catalogue
+  gives the Thracian Chersonese its own separate map 3.12, headed
+  "Thrakische Chersones" directly in the xlsx, that topostext doesn't
+  number separately), so every entry was verified against a sample of its
+  book.map's own `Modern_location` values, not assumed from the section
+  number alone. 46 provinces are labelled this way so far, matching
+  topostext's current coverage (book 2 maps 02-16, book 3 maps 01-17,
+  book 4 maps 01-08, book 5 maps 01-06).
+- **Island-group labels** reuse the five confirmed one-island coastal
+  walks already in `_ISLAND_LINE_GROUPS` (Corfu, Euboea, Lesbos, Karpathos,
+  Rhodes) - no new lookup needed, just the centroid of that built island
+  line's own points under its already-verified name.
+- **Mountain-range labels** likewise reuse every `build_mountain_lines()`
+  feature (63 of them) - the shared base name is already encoded in its
+  `mountain_feature_id`.
+
+A supplementary note - a people/tribe name, an alternate name, a caveat
+about how the label was derived - goes in the `label_note` column, shown
+in the popup/tooltip alongside the name; most labels have none.
+
+Run order matters: `build_labels.py` reads the already-annotated,
+already-linked catalogue and appends label rows on top, so it must run
+*after* `annotate_dataset.py` and `link_matches.py`, not before - and
+since `annotate_dataset.py`'s `write_annotated_csv()` only knows the
+regular schema, re-running it wipes the label rows out entirely (not just
+the two match-status columns, as with `link_matches.py`), so the full
+refresh order is:
+
+```bash
+python3 annotate_dataset.py
+python3 topostext/link_matches.py
+python3 topostext/build_labels.py
+```
+
+`build_labels.py` strips any label rows already present before adding
+fresh ones, so it's safe to re-run any number of times.
+
 ## Cross-checking against topostext.org (`topostext/`)
 
 Every classification and stitching decision so far has been verified

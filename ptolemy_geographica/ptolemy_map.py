@@ -525,6 +525,7 @@ class Reference:
     island_feature_closes_loop: bool = False  # if true, after the last point re-connect to the first
     mountain_feature_id: str = ""  # which drawn mountain-range line this point belongs to, once resolved (see build_mountain_lines)
     mountain_sequence_in_feature: int = -1  # draw order within mountain_feature_id, once resolved
+    label_note: str = ""  # supplementary text for category=="label" rows (e.g. a people/tribe name) - see topostext/build_labels.py
 
     @property
     def lon_modern(self) -> float:
@@ -601,6 +602,7 @@ _ANNOTATED_CSV_FIELDS = [
     "island_feature_closes_loop",
     "mountain_feature_id",
     "mountain_sequence_in_feature",
+    "label_note",
 ]
 
 
@@ -636,6 +638,7 @@ def write_annotated_csv(refs: list[Reference], path: Path) -> None:
                     "island_feature_closes_loop": "1" if ref.island_feature_closes_loop else "",
                     "mountain_feature_id": ref.mountain_feature_id,
                     "mountain_sequence_in_feature": ref.mountain_sequence_in_feature if ref.mountain_feature_id else "",
+                    "label_note": ref.label_note,
                 }
             )
 
@@ -677,6 +680,7 @@ def load_annotated_csv(path: Path) -> list[Reference]:
                     mountain_sequence_in_feature=int(row["mountain_sequence_in_feature"])
                     if row.get("mountain_sequence_in_feature")
                     else -1,
+                    label_note=row.get("label_note", ""),
                 )
             )
     return refs
@@ -1642,6 +1646,13 @@ def build_map(
     if not plausible:
         raise SystemExit("no plottable geographical references found")
 
+    # Synthetic region/island-group/mountain-range labels (build_labels.py)
+    # aren't real catalogue points - keep them out of the marker-cluster
+    # loop, the coastline/river/island/mountain line builders, and the
+    # center-of-mass calculation, and draw them separately as plain text.
+    label_refs = [r for r in plausible if r.category == "label"]
+    plausible = [r for r in plausible if r.category != "label"]
+
     if center is None:
         center_lat = sum(r.lat_modern for r in plausible) / len(plausible)
         center_lon = sum(r.lon_modern for r in plausible) / len(plausible)
@@ -1787,6 +1798,23 @@ def build_map(
                 fill_opacity=0.25,
             ).add_to(clusters[ref.category])
 
+    if label_refs:
+        label_layer = folium.FeatureGroup(name=f"Region/feature labels ({len(label_refs)})").add_to(fmap)
+        for ref in label_refs:
+            note_line = f"<br>{html.escape(ref.label_note)}" if ref.label_note else ""
+            popup_html = f"<b>{html.escape(ref.name)}</b>{note_line}<br><i>{html.escape(ref.ref_id)}</i>"
+            folium.Marker(
+                location=[ref.lat_modern, ref.lon_modern],
+                icon=folium.DivIcon(
+                    html=(
+                        f'<div style="font-size:15px;font-style:italic;font-weight:600;color:#2b2b2b;'
+                        f'text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff,0 0 3px #fff;'
+                        f'white-space:nowrap;transform:translate(-50%,-50%);pointer-events:none;">{html.escape(ref.name)}</div>'
+                    )
+                ),
+                popup=folium.Popup(popup_html, max_width=280),
+            ).add_to(label_layer)
+
     _add_legend(fmap, plausible)
     folium.LayerControl(collapsed=False).add_to(fmap)
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -1794,7 +1822,8 @@ def build_map(
     print(
         f"plotted {len(plausible)} geographical reference(s) "
         f"({len(coastlines)} coastline segments, {len(river_lines)} river lines, "
-        f"{len(island_lines)} island outlines, {len(mountain_lines)} mountain-range lines) -> {output}"
+        f"{len(island_lines)} island outlines, {len(mountain_lines)} mountain-range lines, "
+        f"{len(label_refs)} region/feature labels) -> {output}"
     )
 
 
