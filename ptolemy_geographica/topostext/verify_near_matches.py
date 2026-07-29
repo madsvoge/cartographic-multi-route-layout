@@ -82,24 +82,47 @@ def _strip_leadin(text: str) -> str:
 
 def _normalize(text: str) -> str:
     text = _strip_leadin(text)
-    text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
     text = text.lower()
+    # Translate BEFORE folding umlauts away - the dict's keys ("mündung",
+    # "ästuar", "südlich", ...) are themselves umlauted, so translating
+    # after an ASCII fold (the original bug here) silently never matched
+    # any of them, which is most of the catalogue's descriptor vocabulary.
     for de, en in _TRANSLATIONS:
         text = text.replace(de, f" {en} ")
+    text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
     text = _STRIP_RE.sub(" ", text)
     return _WS_RE.sub(" ", text).strip()
+
+
+def _tokens_match(t1: str, t2: str) -> bool:
+    """Looser-than-equality token match, so plural/inflection/transliteration
+    drift ("isca"/"iscas", "boderia"/"boderias") still counts: exact match,
+    or one is a >=4-letter prefix of the other, or they're a near-identical
+    short edit away (SequenceMatcher ratio >=0.82)."""
+    if t1 == t2:
+        return True
+    if len(t1) >= 4 and len(t2) >= 4 and (t1.startswith(t2) or t2.startswith(t1)):
+        return True
+    return len(t1) >= 4 and len(t2) >= 4 and SequenceMatcher(None, t1, t2).ratio() >= 0.82
 
 
 def _name_similarity(a: str, b: str) -> float:
     na, nb = _normalize(a), _normalize(b)
     if not na or not nb:
         return 0.0
-    # token-overlap (order-independent, handles "with city" / lead-in noise)
-    ta, tb = set(na.split()), set(nb.split())
-    token_score = len(ta & tb) / max(1, min(len(ta), len(tb)))
-    # sequence-ratio as a fallback for single-token proper nouns that
-    # differ only in transliteration ("Ebusus" vs "Ebussos")
-    seq_score = SequenceMatcher(None, na, nb).ratio()
+    # token-overlap (order-independent, handles "with city" / lead-in noise),
+    # counting a *soft* match (see _tokens_match) rather than requiring
+    # exact token equality.
+    ta, tb = na.split(), nb.split()
+    matched = sum(1 for t1 in ta if any(_tokens_match(t1, t2) for t2 in tb))
+    token_score = matched / max(1, min(len(ta), len(tb)))
+    # sequence-ratio as a fallback, but *only* for single-token proper
+    # nouns that differ purely by transliteration ("Ebusus" vs "Ebussos")
+    # - applied to longer phrases it stops being a name check at all and
+    # starts rewarding coincidental character overlap between otherwise
+    # unrelated text (e.g. "Kydnos sources" vs "Tyana" scored 0.21 this
+    # way despite sharing no real word, just scattered letters).
+    seq_score = SequenceMatcher(None, na, nb).ratio() if len(ta) == 1 and len(tb) == 1 else 0.0
     return max(token_score, seq_score)
 
 

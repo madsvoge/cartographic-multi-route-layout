@@ -929,39 +929,75 @@ showing as plain city dots with no island shape at all.
   own stay `city`" pattern (see the Nile-delta note above), not the
   single-merged-citation shape that Dalmatia turned out to be. Left as is.
 
-### Coverage: how much of each catalogue is mapped to the other
+### Coverage: how much of each catalogue is mapped to the other, and a fuzzy match score
 
 `crossref_topostext.py` flags category disagreements on individual
-matches, but doesn't say how complete the coverage is in either direction.
-Three more scripts in `topostext/` answer that, all working off the same
-strict 0.02°-tolerance coordinate match:
+matches, but doesn't say how complete the coverage is in either direction,
+and a strict 0.02°-tolerance coordinate match (what "matched" meant
+everywhere in this project until now) turned out to leave most real
+matches on the table: two independently-edited sources round DMS
+coordinates slightly differently often enough that requiring near-exact
+agreement was the wrong bar. `link_matches.py` replaces that with a single
+fuzzy **match score** (0-100, written to both CSVs) blending distance and
+name, used everywhere "matched" is decided now:
 
-- `coverage_summary.py` prints, and dumps to `forward_unmatched.csv`/
-  `reverse_unmatched.csv`, the two-way gap: topostext citations with no
-  nearby catalogue point, and - scoped to the book.map range topostext has
-  actually covered so far (book 2 maps 02-16, book 3 maps 01-15, book 4
-  maps 01-08, book 5 maps 01-06) - catalogue points with no nearby
-  topostext citation.
-- `verify_near_matches.py` checks whether those "unmatched" topostext
-  citations are really missing data or just edition/rounding drift against
-  a point we already have: for each one, it searches catalogue candidates
-  within a wider 0.6° window (not just the single nearest, which can pick
-  a *different* real point that happens to sit closer) and scores name
-  similarity after translating the catalogue's German descriptor
-  vocabulary to English and stripping topostext's own multi-city-run
-  lead-in prose ("...among whom are the towns: X"). Of the 921 currently
-  unmatched, 611 are confirmed same-point-with-drift this way; the rest
-  need eyes, not automation - see the module docstring for why nearest-by-
-  distance alone isn't reliable.
-- `link_matches.py` writes the match status back into *both* source files
-  (`topostext_matched`/`topostext_ref` columns on the annotated catalogue,
-  `catalogue_matched`/`catalogue_ref_id` columns on `topostext_209.csv`)
-  and builds `unmapped_review.xlsx`, a two-sheet workbook (`unmapped_catalogue`,
-  `unmapped_topostext`) for manually reviewing what's left. Re-run it after
-  any `annotate_dataset.py` run or newly-appended topostext chunk -
-  `write_annotated_csv()` only knows its own fixed column list and
-  overwrites these two extra columns' values (not the columns themselves)
-  on every regeneration.
+- **distance <= 0.02°: score 100**, no question - this is the old strict
+  tolerance, still exactly right when it's met.
+- **0.02° < distance <= 1.2°**: a blended score, 55% from how close the
+  distance is within that window (linear falloff) and 45% from **name
+  similarity** (`_name_similarity` in `verify_near_matches.py`) - which
+  translates the catalogue's German descriptor vocabulary to English
+  *before* folding away umlauts (translating after, the original bug here,
+  silently skipped every umlauted word - "mündung", "ästuar", "südlich" -
+  which is most of the vocabulary), strips topostext's own multi-city-run
+  lead-in prose ("...among whom are the towns: X"), and matches tokens
+  loosely (a >=4-letter prefix or a >=0.82 edit-distance ratio counts, so
+  "isca"/"iscas" or "boderia"/"boderias" still match) rather than requiring
+  exact token equality. A small bonus is added when the phrase's implied
+  type (`crossref_topostext.py`'s `_TYPE_HINTS` - "mouth of"/"estuary"
+  implies `river_mouth`/`coast`/`harbor`, etc.) agrees with the candidate's
+  actual category, to break ties between two real, differently-named
+  points sitting close together (a plain city right next to the river-mouth
+  point a "mouth of the X river" phrase is actually describing).
+- **distance > 1.2°: not a candidate at all**, regardless of name.
+- A single-token sequence-ratio fallback (for pure transliteration drift
+  like "Ebusus"/"Ebussos") only applies when *both* names are a single
+  token - applied to longer phrases it stops being a name check and starts
+  rewarding coincidental character overlap between unrelated text ("Kydnos
+  sources" vs "Tyana" scored 0.21 this way before the fix, entirely from
+  scattered shared letters).
+- A candidate scoring below 45 isn't recorded as a match - see
+  `link_matches.py`'s docstring for the full formula and reasoning. This
+  raised matched coverage from roughly a third to roughly a fifth left
+  over: **944 → 149 unmapped catalogue points, 921 → 102 unmapped
+  topostext citations**, at the time of writing.
+
+Three scripts, run in this order:
+
+- `link_matches.py` computes the score both directions and writes it back
+  into *both* source files: `topostext_matched`/`topostext_ref`/
+  `topostext_name`/`topostext_match_score` on the annotated catalogue,
+  `catalogue_matched`/`catalogue_ref_id`/`catalogue_name`/
+  `catalogue_match_score` on `topostext_209.csv` - and builds
+  `unmapped_review.xlsx`, a two-sheet workbook (`unmapped_catalogue`,
+  `unmapped_topostext`) of what's still below the threshold, for manual
+  review. Re-run it after any `annotate_dataset.py` run or newly-appended
+  topostext chunk - `write_annotated_csv()` only knows its own fixed
+  column list and overwrites these four extra columns' values (not the
+  columns themselves) on every regeneration.
+- `coverage_summary.py` prints the same two-way gap as a summary and
+  dumps the full unmatched lists to `forward_unmatched.csv`/
+  `reverse_unmatched.csv` (the catalogue side scoped to the book.map range
+  topostext has actually covered so far: book 2 maps 02-16, book 3 maps
+  01-15, book 4 maps 01-08, book 5 maps 01-06) - it now just reads the
+  columns `link_matches.py` already wrote rather than recomputing its own
+  match, so run `link_matches.py` first.
+- `verify_near_matches.py` is the diagnostic this scoring grew out of -
+  originally built to sanity-check whether topostext's "unmatched"
+  citations were really missing data or just edition/rounding drift
+  against a point already in the catalogue. Its name-similarity function
+  is now `link_matches.py`'s own name component, imported directly rather
+  than duplicated.
 
 ## Compiling the catalogue to data: `annotate_dataset.py`
 

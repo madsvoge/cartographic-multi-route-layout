@@ -1,20 +1,41 @@
 #!/usr/bin/env python3
 """
-Cross-reference topostext_209.csv and the annotated catalogue by
-coordinate (same strict tolerance as crossref_topostext.py), then write
-the match status back into *both* source files, and produce a two-sheet
-workbook of everything left unmapped for manual review.
+Cross-reference topostext_209.csv and the annotated catalogue with a
+single fuzzy coordinate+name score, and write the result back into both
+CSVs. Supersedes the old strict-only (0.02deg) matching: that's still
+exactly how an exact match scores (100%), but a citation with no exact
+coordinate match now gets a real chance too, scored rather than just
+binary yes/no.
 
-Unlike coverage_summary.py (which only prints/dumps a snapshot), this
-script mutates the two CSVs in place - re-run it any time either file
-changes (a fresh annotate_dataset.py run, or a newly-pasted topostext
-chunk) to refresh the match columns.
+Scoring (see score_match())
+----------------------------
+Distance is Manhattan degrees (lon diff + lat diff), the same metric used
+throughout this project (crossref_topostext.py's _MATCH_TOL_DEG, etc).
 
-NOTE: annotate_dataset.py's write_annotated_csv() only knows its own fixed
-column list and will overwrite these two extra columns' *values* (not
-remove the columns, since DictReader/DictWriter elsewhere just ignore
-unknown columns) whenever it regenerates the catalogue - re-run this
-script afterwards to refresh them.
+- distance <= EXACT_TOL_DEG (0.02): score = 100 outright. Both sources
+  round DMS the same way, so anything this close is the same point,
+  full stop - no need for the name to agree (topostext's phrase is often
+  noisy lead-in prose, not a clean name, on a section's first citation).
+- EXACT_TOL_DEG < distance <= MAX_WINDOW_DEG (1.2): score blends a
+  distance component (linear falloff from just-under-1 to 0 across the
+  window) and a name-similarity component (see _name_similarity in
+  verify_near_matches.py - token overlap after translating the
+  catalogue's German descriptor vocabulary to English and stripping
+  topostext's own multi-city-run lead-in prose, tolerant of prefix/
+  plural/transliteration drift like "isca"/"iscas"), 55/45 weighted
+  toward distance since coordinates are the primary evidence. A small
+  bonus is added when the phrase's implied type (crossref_topostext.py's
+  _TYPE_HINTS - "mouth of"/"estuary" implies river_mouth/coast/harbor,
+  etc.) matches the candidate's actual category, to break ties between
+  two real, differently-named points that happen to sit close together
+  (a plain city entry right next to the river-mouth point a phrase like
+  "mouth of the X river" is actually describing).
+- distance > MAX_WINDOW_DEG: not considered a candidate at all.
+
+A candidate below MATCH_THRESHOLD (45) is not recorded as a match - the
+score is still informative below that, but recording it as "matched"
+would imply more confidence than it deserves; see unmapped_review.xlsx
+for what's left, now ranked by how close the best candidate came.
 
 Usage
 -----
@@ -24,28 +45,68 @@ Usage
 from __future__ import annotations
 
 import csv
+import re
 from pathlib import Path
 
 import openpyxl
 from openpyxl.utils import get_column_letter
+
+from verify_near_matches import _name_similarity
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 CATALOGUE = SCRIPT_DIR.parent / "data" / "ptolemy_catalogue_annotated.csv"
 TOPOSTEXT = SCRIPT_DIR / "topostext_209.csv"
 REVIEW_XLSX = SCRIPT_DIR / "unmapped_review.xlsx"
 
-_MATCH_TOL_DEG = 0.02  # same strict tolerance as crossref_topostext.py/coverage_summary.py
+EXACT_TOL_DEG = 0.02
+MAX_WINDOW_DEG = 1.2
+MATCH_THRESHOLD = 45.0
+_TYPE_BONUS = 8.0
 
-# Which book.map pairs topostext has actually covered so far (see
-# coverage_summary.py's docstring re: book 4's "map 9" source quirk being
-# the tail of map 8, not a real map 9) - scopes the catalogue side of the
-# unmapped review to the range topostext could plausibly have cited.
+# Same as crossref_topostext.py's _TYPE_HINTS - reused here as a tie-
+# breaker between two real, differently-named points sitting close
+# together, not as a hard filter.
+_TYPE_HINTS: list[tuple[re.Pattern, set[str]]] = [
+    (re.compile(r"\bmouth of\b|\bestuary\b", re.IGNORECASE), {"river_mouth", "coast", "harbor"}),
+    (re.compile(r"\bisland[s]?\b", re.IGNORECASE), {"island"}),
+    (re.compile(r"\bpromontory\b|\bcape\b", re.IGNORECASE), {"coast", "mountain"}),
+    (re.compile(r"\bharbor\b|\bharbour\b|\bport\b", re.IGNORECASE), {"harbor", "coast"}),
+    (re.compile(r"\bbay\b", re.IGNORECASE), {"coast"}),
+    (re.compile(r"\bcity\b|\btown\b", re.IGNORECASE), {"city"}),
+    (re.compile(r"\bsource[s]?\b|\bquelle\b", re.IGNORECASE), {"river"}),
+    (re.compile(r"\blake\b", re.IGNORECASE), {"lake"}),
+    (re.compile(r"\bmountain[s]?\b|\bmount\b", re.IGNORECASE), {"mountain"}),
+]
+
+# book -> covered map numbers (see build_labels.py/coverage_summary.py's
+# docstrings re: book 4's "map 9" source quirk).
 _COVERED_MAPS = {
     "2": set(range(2, 17)),
     "3": set(range(1, 16)),
     "4": set(range(1, 9)),
     "5": set(range(1, 7)),
 }
+
+
+def _expected_categories(phrase: str) -> set[str] | None:
+    for pattern, expected in _TYPE_HINTS:
+        if pattern.search(phrase):
+            return expected
+    return None
+
+
+def score_match(distance: float, phrase: str, name: str, category: str) -> float:
+    if distance > MAX_WINDOW_DEG:
+        return 0.0
+    if distance <= EXACT_TOL_DEG:
+        return 100.0
+    dist_component = max(0.0, 1.0 - distance / MAX_WINDOW_DEG)
+    name_component = _name_similarity(phrase, name)
+    score = 100.0 * (0.55 * dist_component + 0.45 * name_component)
+    expected = _expected_categories(phrase)
+    if expected is not None and category in expected:
+        score += _TYPE_BONUS
+    return round(min(score, 100.0), 1)
 
 
 def load_rows(path: Path) -> tuple[list[str], list[dict]]:
@@ -65,6 +126,19 @@ def topo_ref(row: dict) -> str:
     return f"{row['book']}.{row['map']}.{row['section']}.{row['position']}"
 
 
+def _best(lon: float, lat: float, phrase: str, candidates: list[tuple[dict, str, str, str]]) -> tuple[dict, float] | tuple[None, None]:
+    """candidates: list of (row, lon_key, lat_key, name_key)."""
+    best, best_score = None, -1.0
+    for cand, lon_key, lat_key, name_key in candidates:
+        d = abs(float(cand[lon_key]) - lon) + abs(float(cand[lat_key]) - lat)
+        if d > MAX_WINDOW_DEG:
+            continue
+        s = score_match(d, phrase, cand[name_key], cand.get("category", ""))
+        if s > best_score:
+            best, best_score = cand, s
+    return (best, best_score) if best is not None else (None, None)
+
+
 def main() -> int:
     cat_fields, cat_rows = load_rows(CATALOGUE)
     topo_fields, topo_rows = load_rows(TOPOSTEXT)
@@ -78,52 +152,55 @@ def main() -> int:
     for row in topo_rows:
         topo_by_book.setdefault(row["book"], []).append(row)
 
-    # --- catalogue -> topostext (nearest topostext row within tolerance) ---
+    # --- catalogue -> topostext ---
     for row in cat_rows:
         row["topostext_matched"] = "no"
         row["topostext_ref"] = ""
+        row["topostext_name"] = ""
+        row["topostext_match_score"] = ""
         if not (row.get("ref_id") and row.get("lon_ptolemy")):
             continue
         book = row["ref_id"].split(".")[0]
         lon, lat = float(row["lon_ptolemy"]), float(row["lat_ptolemy"])
-        best, best_d = None, None
-        for cand in topo_by_book.get(book, []):
-            d = abs(float(cand["lon_decimal"]) - lon) + abs(float(cand["lat_decimal"]) - lat)
-            if d <= _MATCH_TOL_DEG and (best_d is None or d < best_d):
-                best, best_d = cand, d
-        if best is not None:
+        candidates = [(c, "lon_decimal", "lat_decimal", "name_phrase") for c in topo_by_book.get(book, [])]
+        best, score = _best(lon, lat, row["name"], candidates)
+        if best is not None and score >= MATCH_THRESHOLD:
             row["topostext_matched"] = "yes"
             row["topostext_ref"] = topo_ref(best)
+            row["topostext_name"] = best["name_phrase"]
+            row["topostext_match_score"] = score
 
-    # --- topostext -> catalogue (nearest catalogue row within tolerance) ---
+    # --- topostext -> catalogue ---
     for row in topo_rows:
         row["catalogue_matched"] = "no"
         row["catalogue_ref_id"] = ""
+        row["catalogue_name"] = ""
+        row["catalogue_match_score"] = ""
         lon, lat = float(row["lon_decimal"]), float(row["lat_decimal"])
-        best, best_d = None, None
-        for cand in cat_by_book.get(row["book"], []):
-            d = abs(float(cand["lon_ptolemy"]) - lon) + abs(float(cand["lat_ptolemy"]) - lat)
-            if d <= _MATCH_TOL_DEG and (best_d is None or d < best_d):
-                best, best_d = cand, d
-        if best is not None:
+        candidates = [(c, "lon_ptolemy", "lat_ptolemy", "name") for c in cat_by_book.get(row["book"], [])]
+        best, score = _best(lon, lat, row["name_phrase"], candidates)
+        if best is not None and score >= MATCH_THRESHOLD:
             row["catalogue_matched"] = "yes"
             row["catalogue_ref_id"] = best["ref_id"]
+            row["catalogue_name"] = best["name"]
+            row["catalogue_match_score"] = score
 
-    new_cat_fields = cat_fields + ["topostext_matched", "topostext_ref"]
-    new_topo_fields = topo_fields + ["catalogue_matched", "catalogue_ref_id"]
+    new_cat_fields = cat_fields + ["topostext_matched", "topostext_ref", "topostext_name", "topostext_match_score"]
+    new_topo_fields = topo_fields + ["catalogue_matched", "catalogue_ref_id", "catalogue_name", "catalogue_match_score"]
     write_rows(CATALOGUE, new_cat_fields, cat_rows)
     write_rows(TOPOSTEXT, new_topo_fields, topo_rows)
 
     cat_matched = sum(1 for r in cat_rows if r["topostext_matched"] == "yes")
     topo_matched = sum(1 for r in topo_rows if r["catalogue_matched"] == "yes")
-    print(f"catalogue: {len(cat_rows)} rows, {cat_matched} marked topostext_matched=yes -> {CATALOGUE.name}")
-    print(f"topostext: {len(topo_rows)} rows, {topo_matched} marked catalogue_matched=yes -> {TOPOSTEXT.name}")
+    print(f"catalogue: {len(cat_rows)} rows, {cat_matched} marked topostext_matched=yes (score >= {MATCH_THRESHOLD}) -> {CATALOGUE.name}")
+    print(f"topostext: {len(topo_rows)} rows, {topo_matched} marked catalogue_matched=yes (score >= {MATCH_THRESHOLD}) -> {TOPOSTEXT.name}")
 
     unmapped_cat = [
         r
         for r in cat_rows
         if r["topostext_matched"] == "no"
         and r.get("ref_id")
+        and r["ref_id"].split(".")[0].isdigit()
         and int(r["ref_id"].split(".")[1]) in _COVERED_MAPS.get(r["ref_id"].split(".")[0], set())
     ]
     unmapped_topo = [r for r in topo_rows if r["catalogue_matched"] == "no"]
