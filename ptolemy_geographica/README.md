@@ -871,6 +871,40 @@ showing as plain city dots with no island shape at all.
   own stay `city`" pattern (see the Nile-delta note above), not the
   single-merged-citation shape that Dalmatia turned out to be. Left as is.
 
+### Coverage: how much of each catalogue is mapped to the other
+
+`crossref_topostext.py` flags category disagreements on individual
+matches, but doesn't say how complete the coverage is in either direction.
+Three more scripts in `topostext/` answer that, all working off the same
+strict 0.02°-tolerance coordinate match:
+
+- `coverage_summary.py` prints, and dumps to `forward_unmatched.csv`/
+  `reverse_unmatched.csv`, the two-way gap: topostext citations with no
+  nearby catalogue point, and - scoped to the book.map range topostext has
+  actually covered so far (book 2 maps 02-16, book 3 maps 01-15, book 4
+  maps 01-08, book 5 maps 01-06) - catalogue points with no nearby
+  topostext citation.
+- `verify_near_matches.py` checks whether those "unmatched" topostext
+  citations are really missing data or just edition/rounding drift against
+  a point we already have: for each one, it searches catalogue candidates
+  within a wider 0.6° window (not just the single nearest, which can pick
+  a *different* real point that happens to sit closer) and scores name
+  similarity after translating the catalogue's German descriptor
+  vocabulary to English and stripping topostext's own multi-city-run
+  lead-in prose ("...among whom are the towns: X"). Of the 921 currently
+  unmatched, 611 are confirmed same-point-with-drift this way; the rest
+  need eyes, not automation - see the module docstring for why nearest-by-
+  distance alone isn't reliable.
+- `link_matches.py` writes the match status back into *both* source files
+  (`topostext_matched`/`topostext_ref` columns on the annotated catalogue,
+  `catalogue_matched`/`catalogue_ref_id` columns on `topostext_209.csv`)
+  and builds `unmapped_review.xlsx`, a two-sheet workbook (`unmapped_catalogue`,
+  `unmapped_topostext`) for manually reviewing what's left. Re-run it after
+  any `annotate_dataset.py` run or newly-appended topostext chunk -
+  `write_annotated_csv()` only knows its own fixed column list and
+  overwrites these two extra columns' values (not the columns themselves)
+  on every regeneration.
+
 ## Compiling the catalogue to data: `annotate_dataset.py`
 
 Everything described above - classification, graph reconstruction, distance
