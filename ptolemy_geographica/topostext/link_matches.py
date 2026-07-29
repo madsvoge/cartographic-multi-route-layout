@@ -105,7 +105,7 @@ _COVERED_MAPS = {
     "2": set(range(2, 17)),
     "3": set(range(1, 16)),
     "4": set(range(1, 9)),
-    "5": set(range(1, 7)),
+    "5": set(range(1, 20)),
 }
 
 

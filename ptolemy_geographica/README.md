@@ -417,9 +417,9 @@ island/mountain-line reconstruction.
   "Thrakische Chersones" directly in the xlsx, that topostext doesn't
   number separately), so every entry was verified against a sample of its
   book.map's own `Modern_location` values, not assumed from the section
-  number alone. 46 provinces are labelled this way so far, matching
+  number alone. 59 provinces are labelled this way so far, matching
   topostext's current coverage (book 2 maps 02-16, book 3 maps 01-17,
-  book 4 maps 01-08, book 5 maps 01-06).
+  book 4 maps 01-08, all of book 5's maps 01-19).
 - **Island-group labels** reuse the five confirmed one-island coastal
   walks already in `_ISLAND_LINE_GROUPS` (Corfu, Euboea, Lesbos, Karpathos,
   Rhodes) - no new lookup needed, just the centroid of that built island
@@ -964,6 +964,69 @@ showing as plain city dots with no island shape at all.
   own stay `city`" pattern (see the Nile-delta note above), not the
   single-merged-citation shape that Dalmatia turned out to be. Left as is.
 
+An eleventh pilot run - the rest of Book 5 (Lesser Armenia, Kilikia,
+Sarmatia in Asia, Kolchis, Iberia, Albania, Greater Armenia, Cyprus,
+Syria, Ioudaia, Arabia Petraia, Mesopotamia, Eremos Arabia -
+`§5.7.1`-`§5.19.7`, completing Book 5) found three more named-mountains
+lists in the by-now-familiar shape, one more island-list section, and a
+genuinely new bug class: a lake sharing the mountain-name lists'
+`"(Mitte)"` river-course collision.
+
+- Three more named-mountains sections safe to force whole: Greater
+  Armenia's (`5.13.05` - Paryardes' two ends, Udakespes, Antitauros'
+  Armenian segment, Abos, and the already-`-Gebirge` Gordyaia), Syria's
+  (`5.15.08` - Pieria, Kassios, Libanos' two ends, Antilibanos' two ends,
+  Alsadamos, Hippos - topostext: "The noteworthy mountains in Syria are
+  Pieria mountain, midpoint...and Kassios..."), and Mesopotamia's
+  (`5.18.02` - Masion and Singaras, topostext: "The named mountains in
+  Mesopotamia are Masion mountain, midpoint...and Singaras"). Two of
+  these ranges each got their own two-point line for the first time
+  (Paryardes' NW/SO ends, Libanos' and Antilibanos' W/O ends) - 63 → 66
+  mountain lines, 129 → 135 points.
+- One more island-list section: `5.15.27`, "Islands off Syria: Arados...
+  and Tyros just offshore" - Arados (Arwad) and a second, *offshore*
+  "Tyros" citation distinct from the mainland coastal city of the same
+  name already catalogued a few sections earlier at `5.15.5` (ancient
+  Tyre's small islet, before Alexander's siege mound joined it to the
+  coast - ordinary re-use of a name for two genuinely different points,
+  the same shape as the Kap Leukas/Alopekia pattern, not a duplicate).
+- The new bug: a lake's own citation carrying a `"(Mitte)"` position
+  marker ("Asphaltites-See (Mitte)" - the Dead Sea, topostext: "Part of
+  the Jordan river toward the Asphaltitis lake divides Ioudaia, the
+  midpoint of which is...") matches `_RIVER_COURSE_RE` before the lake
+  check further down the function ever gets a turn - the exact same
+  collision the mountain `"(Mitte)"` fix solved for `mountain`, one
+  category over. Three more catalogue-wide: "Lychnitis-See (Mitte)",
+  "Arsessa-See (Mitte)" (both Greater Armenia's lakes, `5.13.08`) and
+  "Chelonidai-Seen (Mitte)" (Book 4's Libyan lakes) - the last needing
+  `_LAKE_RE` broadened to accept the German plural "Seen", not just "See",
+  which in turn newly caught "Nil (Vereinigung der Flüsse aus Nil-Seen)" -
+  the Nile's own confluence point, merely *naming* the lakes its
+  tributaries come from - needing the same location-reference guard
+  (`_LAKE_LOCATION_REF_RE`, mirroring `_MOUNTAIN_LOCATION_REF_RE`) so a
+  river point mentioning a lake as its location doesn't get swept up
+  alongside the lake's own citations. `lake`: 30 → 34.
+- Confirmed, not fixed: a short run of Sarmatia-in-Asia's Pontos/Maiotis
+  lake-shore coastal points (`5.09.02`'s Paniardis/Patarue, `5.09.08`'s
+  Sindikos/Bata, topostext explicitly calling the latter two "harbor")
+  sitting in `city` because their sections' own headers name the sea by
+  Greek proper noun ("Pontos Euxeinos", "Maiotis-See") rather than a
+  generic German sea word `_COASTAL_HDR_RE` recognizes. Checked whether
+  broadening the header regex to catch a bare "Mündung" header would fix
+  it generally first - it would not: a scan of every such header across
+  the whole catalogue found the pattern is mostly *inland* river-boundary
+  recaps (Rhône/Rhine/Danube tributary sections listing ordinary interior
+  cities), so a blanket fix would have wrongly coastal-ized dozens of
+  unrelated points. This handful needs individual treatment (a `coast`/
+  `harbor` point-override mechanism, which doesn't exist yet) rather than
+  a quick regex change, and was left for a future pass rather than rushed.
+
+With Book 5 complete, topostext's covered range is now book 2 maps
+02-16, book 3 maps 01-17, book 4 maps 01-08, and *all* of book 5 (maps
+01-19 of the catalogue's 20) - `link_matches.py`'s `_COVERED_MAPS` and
+`build_labels.py`'s `_PROVINCE_LABELS` updated to match, adding 13 more
+province labels (Lesser Armenia through Eremos Arabia).
+
 ### Coverage: how much of each catalogue is mapped to the other, and a fuzzy match score
 
 `crossref_topostext.py` flags category disagreements on individual
@@ -1021,12 +1084,12 @@ name, used everywhere "matched" is decided now:
   above guards against.
 - A candidate scoring below 45 isn't recorded as a match - see
   `link_matches.py`'s docstring for the full formula and reasoning. This
-  raised matched coverage substantially: **944 → 85 unmapped catalogue
-  points, 921 → 55 unmapped topostext citations**, at the time of writing.
+  raised matched coverage substantially: **944 → 84 unmapped catalogue
+  points, 921 → 60 unmapped topostext citations**, at the time of writing.
 
 **The point of this whole exercise was never a 100% match rate** - it was
 to validate the catalogue against an independent source, and it did:
-**3881 of 3966 catalogue points (98%) and 4026 of 4081 topostext
+**4648 of 4732 catalogue points (98%) and 4785 of 4845 topostext
 citations (99%)** in the covered range now cross-confirm each other by
 both coordinate and name. The ~2% left in `unmapped_review.xlsx` isn't
 presumed to be errors in the catalogue - topostext is itself a translated,
@@ -1054,7 +1117,7 @@ Three scripts, run in this order:
   dumps the full unmatched lists to `forward_unmatched.csv`/
   `reverse_unmatched.csv` (the catalogue side scoped to the book.map range
   topostext has actually covered so far: book 2 maps 02-16, book 3 maps
-  01-15, book 4 maps 01-08, book 5 maps 01-06) - it now just reads the
+  01-17, book 4 maps 01-08, all of book 5's maps 01-19) - it now just reads the
   columns `link_matches.py` already wrote rather than recomputing its own
   match, so run `link_matches.py` first.
 - `verify_near_matches.py` is the diagnostic this scoring grew out of -

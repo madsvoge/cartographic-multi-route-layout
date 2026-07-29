@@ -231,7 +231,16 @@ _ISLAND_GROUP_RE = re.compile(r"\(\d+\)\s*$")
 # river system (Lacus Larius/Como, Lacus Poeninus, Lacus Benacus/Garda) -
 # bare "Lacus Benacus" had no keyword to match at all and fell through to
 # the default "city".
-_LAKE_RE = re.compile(r"\bsee\b|\bpalus\b|\blacus\b", re.IGNORECASE)
+_LAKE_RE = re.compile(r"\bsee[n]?\b|\bpalus\b|\blacus\b", re.IGNORECASE)
+# The lake-side counterpart of _MOUNTAIN_LOCATION_REF_RE - distinguishes a
+# river point merely naming a lake as its *location* from a genuine lake
+# citation. Load-bearing for "Nil (Vereinigung der Flüsse aus Nil-Seen)" -
+# the Nile's own confluence point, naming the lakes its tributaries come
+# from, not a lake itself - which the plural "Seen" broadening above would
+# otherwise catch (the three Cisalpine Gaul river/lake pairs, e.g. "Padus
+# (Ausfluss aus Lacus Larius...)", don't need the guard here: "Ausfluss"/
+# "Einmündung" already send them to "river" via _RIVERFEAT_RE earlier).
+_LAKE_LOCATION_REF_RE = re.compile(r"\b(?:am|im|vom|von|zum|aus|des)\s+[\w\-\s]*?(?:see|seen|palus|lacus)\b", re.IGNORECASE)
 
 # Sections manually verified (via the Modern_location column and known
 # ancient geography) to be island enumerations rather than coastal walks,
@@ -301,6 +310,7 @@ _ISLAND_APPENDIX_SECTIONS = {
     ("4.07", "40"),  # Amiku/Myrsiake (+ already-island Menan) - the islands next to Aromata
     ("5.01", "15"),  # Thynias bzw. Daphnusa/Klippen Erythinoi (+ already-island Kyaneen) - islands off Bithynia
     ("5.05", "10"),  # Krambusa/Attelebusa - the two islands lying off Pamphylia
+    ("5.15", "27"),  # Arados/Tyros - the islands off Syria (topostext: "Islands off Syria: Arados...and Tyros just offshore") - this "Tyros" is the offshore islet citation, distinct from the mainland coastal city of the same name already catalogued at 5.15.05
 }
 
 # The same problem at single-point granularity: a lone island reference
@@ -381,6 +391,9 @@ _MOUNTAIN_APPENDIX_SECTIONS = {
     ("5.02", "13"),  # Ida/Killaion/Temnon/Dindymos(W-Ende)/Sipylos/Tmolos/Mesogis/Mykale/Kadmos/Mimas/Phoinix - "the named mountains in Asia" (topostext: "These are the named mountains in Asia, of which the central points are: Mt. Ida...")
     ("5.03", "04"),  # Kragos - Lykia's named mountain
     ("5.04", "04"),  # Oligas(Gigas)/Dindymos(O-Ende)/Huegel von Kelainai - Galatia's named mountains, including Dindymos' other end (see 5.02.13 above - same range, re-cited across the book.map boundary)
+    ("5.13", "05"),  # Paryardes(NW/SO-Ende)/Udakespes(Mitte)/Anti-Tauros in Gross-Armenien(Mitte)/Abos(Mitte)/Gordyaische Berge(Mitte) - Greater Armenia's named mountains (topostext: "The named mountains of Armenia are the Moschika...and Paryardes...and the Oudakespes mountain...and the part of Antitauros...and the so-called Abos mountain...and the Gordyaia mountains...")
+    ("5.15", "08"),  # Pieria(Mitte)/Kassios(Mitte)/Libanos(W/O-Ende)/Antilibanos(W/O-Ende)/Alsadamos(Mitte)/Hippos(Mitte) - Syria's named mountains (topostext: "The noteworthy mountains in Syria are Pieria mountain, midpoint...and Kassios mountain...and Libanos...and Antilibanos...and beside Arabia Deserta Mt. Alsadamos...Near Judaia Mt. Hippos...")
+    ("5.18", "02"),  # Masion(Mitte)/Singaras - Mesopotamia's named mountains (topostext: "The named mountains in Mesopotamia are Masion mountain, midpoint...and Singaras")
 }
 
 # The mountain-side counterpart of _ISLAND_POINT_OVERRIDES: a lone mountain
@@ -466,6 +479,16 @@ def _classify_locality(
         return "mountain", "matches 'Berg'/'Berge' as its own word (bare, not a coastal landmark or river location)"
     if force_noncoastal:
         section_is_coastal = False
+    if _LAKE_RE.search(name) and _RIVER_COURSE_RE.search(name) and not _LAKE_LOCATION_REF_RE.search(name):
+        # Same collision as the mountain "(Mitte)" fix above, one category
+        # over: a lake's own midpoint/end citation ("Asphaltites-See
+        # (Mitte)", "Lychnitis-See (Mitte)", "Chelonidai-Seen (Mitte)")
+        # matches _RIVER_COURSE_RE's "(mitte)" before the lake check further
+        # below ever gets a turn. Guarded the same way, against a river
+        # point that merely names a lake as its *location* rather than its
+        # own identity ("Padus (Einmündung des aus Lacus Benacus
+        # entspringenden Flusses)" - the Po's confluence, not the lake).
+        return "lake", "matches 'See'/'Seen'/'Palus'/'Lacus' with a river-course position marker (Mitte/Ende), not a river point naming a lake as a location"
     if _RIVERFEAT_RE.search(name):
         return "river", "matches river-feature pattern (Quelle/Quellgebiet/Einmündung/Ursprung/Zusammenfluss)"
     if _RIVER_COURSE_RE.search(name) and not _GULF_RE.search(name):
@@ -491,8 +514,8 @@ def _classify_locality(
         return "island", "matches 'Insel'/'Inseln' (island)"
     if _ISLAND_GROUP_RE.search(name):
         return "island", "name ends in '(N)' - a count-labelled island group"
-    if _LAKE_RE.search(name):
-        return "lake", "matches 'See'/'Palus' (lake/marsh)"
+    if _LAKE_RE.search(name) and not _LAKE_LOCATION_REF_RE.search(name):
+        return "lake", "matches 'See'/'Seen'/'Palus'/'Lacus' (lake/marsh), not a river point naming a lake as a location"
     if force_noncoastal:
         return "city", "manually verified non-coastal exception despite sea-headed section (_NONCOASTAL_EXCEPTION_SECTIONS)"
     if section_is_coastal:

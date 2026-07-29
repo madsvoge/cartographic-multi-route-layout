@@ -100,6 +100,19 @@ _PROVINCE_LABELS = [
     ("5.04", "Galatia", ""),
     ("5.05", "Pamphylia", ""),
     ("5.06", "Kappadokia", ""),
+    ("5.07", "Lesser Armenia", "Armenia Minor"),
+    ("5.08", "Kilikia", "Cilicia"),
+    ("5.09", "Sarmatia in Asia", "Asiatic Sarmatia, north of the Kaukasos"),
+    ("5.10", "Kolchis", "Colchis"),
+    ("5.11", "Iberia", "Caucasian Iberia, modern-day Georgia - not the Hispanic Iberia of books 2/4"),
+    ("5.12", "Albania", "Caucasian Albania, modern-day Azerbaijan/Dagestan"),
+    ("5.13", "Greater Armenia", "Armenia Major"),
+    ("5.14", "Cyprus", ""),
+    ("5.15", "Syria", ""),
+    ("5.16", "Ioudaia", "Palestine/Judaea"),
+    ("5.17", "Arabia Petraia", ""),
+    ("5.18", "Mesopotamia", ""),
+    ("5.19", "Eremos Arabia", "Arabia Deserta"),
 ]
 
 
