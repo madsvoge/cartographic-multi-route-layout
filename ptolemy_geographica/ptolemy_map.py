@@ -285,6 +285,9 @@ _ISLAND_APPENDIX_SECTIONS = {
     ("3.03", "08"),  # Ilva/Nymphaea/Diabate/Ficaria/Hermaea + the already-"-Insel" points - the islands around Sardinia (topostext: "The islands around Sardinia are: Phintonos island...")
     ("3.04", "16"),  # Didyme/Hikesia/Erikodes/Phoinikodes/Euonymos/Lipara/Strongyle + Hephaistos-Insel - the islands around Sicily (topostext: "the islands located around Sicily...are: Didyme island...")
     ("3.04", "17"),  # Ustika/Osteodes/Phorbantia/Aigusa/Hiera/Pakonia + Aiolos-Insel - more islands around Sicily, continuing 3.04.16
+    ("3.10", "17"),  # Borysthenis + Achilles-Insel - the two islands off Lower Moesia (topostext: "the so-called Borysthenes island...and Achilleos or Leuke island")
+    ("3.16", "23"),  # Strophaden/Prote/Sphagia/Theganusa/Kythera/Aigila/Salamis/Aigine - the islands adjoining the Peloponnese (topostext: "Islands adjoining the Peloponnese: the Strophades...")
+    ("3.17", "11"),  # Kaudos/Letoa/Dia/Kimolos/Melos - the islands adjacent to Crete (topostext: "Islands adjacent to Crete Klaudos island...")
 }
 
 # The same problem at single-point granularity: a lone island reference
@@ -297,6 +300,7 @@ _ISLAND_APPENDIX_SECTIONS = {
 # Epirus/Akarnania coastline out onto the island and back. Keyed by ref_id.
 _ISLAND_POINT_OVERRIDES = {
     "3.14.06.05",  # Kap Leukas - Cape Doukato, island of Lefkada
+    "3.05.31.02",  # Alopekia bzw. Tanais - the island off the Tanais' mouth (topostext: "An island lies off the mouth of the Tanais river, Alopekia or Tanais island")
 }
 
 # _ISLAND_APPENDIX_SECTIONS covers two structurally different things: a
@@ -338,6 +342,34 @@ _NONCOASTAL_EXCEPTION_SECTIONS = {
     ("2.03", "17"),  # Eboracum/Camulodunum/Petuaria - York/Colchester/Brough
 }
 
+# The mountain-side counterpart of _ISLAND_APPENDIX_SECTIONS: a section
+# that's purely a *list* of named mountains/peaks, each cited by its own
+# proper name with no "-Gebirge"/"-berg" suffix of its own to catch by
+# keyword ("Of the named mountains the center of Bertiskos lies at...Mt.
+# Bermion...Mt. Olympos...", "Mountains in the Peloponnese Pholoe...and
+# Stymphalos...") - the same "no shared pattern to regex on, so it has to
+# be an explicit allow-list" reasoning as the island appendix. Confirmed by
+# topostext's own section headers; more such sections likely exist
+# elsewhere in the catalogue, not yet found because their books haven't
+# been cross-referenced yet.
+_MOUNTAIN_APPENDIX_SECTIONS = {
+    ("3.13", "19"),  # Bertiskos/Bermion/Berketesios/Kitarion/Olympos/Ossa/Pelion/Othrys - Macedonia's named mountains, including Mt. Olympus itself
+    ("3.16", "14"),  # Pholoe/Stymphalos/Minthe/Taygetos/Kronion/Zarex - the Peloponnese's named mountains
+}
+
+# The mountain-side counterpart of _ISLAND_POINT_OVERRIDES: a lone mountain
+# reference embedded in an otherwise-coastal section, where force-mountaining
+# the whole section (as above) would wrongly pull its genuine coastal points
+# out of their coastline. Book.map "3.13" section "11" is Chalkidike's coast
+# (Panormos harbor, "Athos, ein Berg"/"Athos, Kap und Berg" ending the
+# Athos peninsula, Nymphaion promontory...) except for one entry - "Athos
+# (Mitte)", the *midpoint* of the mountain rather than a coastal point on
+# it - that the "(Mitte)" river-course pattern was catching first, with
+# nothing in the bare name "Athos" itself to redirect it. Keyed by ref_id.
+_MOUNTAIN_POINT_OVERRIDES = {
+    "3.13.11.05",  # Athos (Mitte) - the mountain's own midpoint, not a coastal point
+}
+
 
 _KAP_PREFIX_RE = re.compile(r"^kap\b", re.IGNORECASE)
 
@@ -348,6 +380,8 @@ def _classify_locality(
     force_island: bool = False,
     force_island_point: bool = False,
     force_noncoastal: bool = False,
+    force_mountain: bool = False,
+    force_mountain_point: bool = False,
 ) -> tuple[str, str]:
     """Return (category, naming_observation) - the observation is the audit
     trail for *why* this category was picked, for the "naming_observation"
@@ -361,6 +395,10 @@ def _classify_locality(
         return "island", "manually verified island-appendix section (_ISLAND_APPENDIX_SECTIONS)"
     if force_island_point:
         return "island", "manually verified individual island point amid an otherwise mainland section (_ISLAND_POINT_OVERRIDES)"
+    if force_mountain:
+        return "mountain", "manually verified mountain-appendix section (_MOUNTAIN_APPENDIX_SECTIONS)"
+    if force_mountain_point:
+        return "mountain", "manually verified individual mountain point amid an otherwise coastal section (_MOUNTAIN_POINT_OVERRIDES)"
     if _KAP_PREFIX_RE.search(name):
         # A name that leads with "Kap" is unambiguously a cape - even when
         # it also carries a mountain-range aside, e.g. "Kap Oiarso,
@@ -657,6 +695,7 @@ def load_xlsx(path: Path) -> list[Reference]:
         book_map_section = (".".join(id_parts[:2]), id_parts[2] if len(id_parts) > 2 else "")
         force_island = book_map_section in _ISLAND_APPENDIX_SECTIONS
         force_noncoastal = book_map_section in _NONCOASTAL_EXCEPTION_SECTIONS
+        force_mountain = book_map_section in _MOUNTAIN_APPENDIX_SECTIONS
 
         for row in section_rows:
             _id, id_map, locality, modern_location, lon_o, lat_o, lon_x, lat_x = row
@@ -676,6 +715,8 @@ def load_xlsx(path: Path) -> list[Reference]:
                 force_island=force_island,
                 force_island_point=str(_id) in _ISLAND_POINT_OVERRIDES,
                 force_noncoastal=force_noncoastal,
+                force_mountain=force_mountain,
+                force_mountain_point=str(_id) in _MOUNTAIN_POINT_OVERRIDES,
             )
             refs.append(
                 Reference(

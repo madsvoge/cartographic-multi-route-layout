@@ -386,7 +386,7 @@ have belonged to (Narmades, Nanagunas, Pseudostomos, Baris, Solen, Tynas,
 and others' source points) but couldn't reach while miscategorized as
 mountains: 103 → 111 river lines, 263 → 281 points-in-a-line.
 
-This covers 121 of 234 `mountain` points, grouped into 59 lines (a
+This covers 121 of 249 `mountain` points, grouped into 59 lines (a
 single-citation range - most of the catalogue's ~150 named peaks/ranges
 only ever appear once, with no second point to connect to - still plots as
 an individual point, no line).
@@ -637,6 +637,43 @@ independent "Rhoetius-Gebirge" entry anywhere in the source catalogue to
 back up a separate mountain citation - most likely a quirk of the English
 translation itself rather than something to "fix" by inventing a mountain
 our primary source doesn't have.
+
+A fifth pilot run (the rest of Sarmatia, the Tauric Chersonese, the
+Migratory Iazyges, Dacia, both Moesias, Thrace, the Thracian Chersonesos,
+Macedonia, Epiros, Achaia/the Peloponnese, and Crete, `§3.5.7`-`§3.15.11`)
+found a new *shape* of missing-keyword bug and four more island-list
+sections:
+
+- Whole sections that are purely a *list of named mountains*, each its own
+  classical proper name with no "-Gebirge"/"-berg" suffix at all to catch
+  by any keyword - "Of the named mountains the center of Bertiskos lies
+  at...Mt. Bermion...Mt. Olympos..." (Macedonia, including Mount Olympus
+  itself) and "Mountains in the Peloponnese Pholoe...and Stymphalos..."
+  were both sitting entirely in `city`, 14 points between them. The
+  mountain-side counterpart of the island-list sections: no shared pattern
+  to regex on, so it needs an explicit allow-list the same way. Added
+  `_MOUNTAIN_APPENDIX_SECTIONS` (`(3.13, 19)`, `(3.16, 14)`) and the
+  matching `force_mountain`/`force_mountain_point` parameters to
+  `_classify_locality`, mirroring `_ISLAND_APPENDIX_SECTIONS`'s own
+  two-tier design exactly (whole-section allow-list plus a single-point
+  override, `_MOUNTAIN_POINT_OVERRIDES`, for "Athos (Mitte)" - the
+  mountain's own midpoint sitting inside Chalkidike's *coastal* section
+  alongside the two genuine coastline points "Athos, ein Berg"/"Athos,
+  Kap und Berg", which forcing the whole section would have wrongly pulled
+  out of their coastline). More such mountain-list sections likely exist
+  elsewhere in the catalogue, not yet found because their books haven't
+  been cross-referenced yet.
+- Four more island-list sections, the same shape as Sardinia/Sicily's
+  above: a single island reference off the Tanais' mouth ("Alopekia bzw.
+  Tanaïs", confirmed by topostext: "An island lies off the mouth of the
+  Tanais river, Alopekia or Tanais island" - added to
+  `_ISLAND_POINT_OVERRIDES`), the two islands off Lower Moesia
+  (`3.10.17` - Borysthenis sat in `city` right next to its already-`island`
+  neighbour Achilles-Insel), the islands adjoining the Peloponnese
+  (`3.16.23` - Strophaden, Prote, Sphagia, Theganusa, Kythera, Aigila,
+  Salamis, Aigine, all in `city`, no "-Insel" keyword present anywhere in
+  the list), and the islands adjacent to Crete (`3.17.11` - Kaudos, Letoa,
+  Dia, Kimolos, Melos, same pattern).
 
 ## Compiling the catalogue to data: `annotate_dataset.py`
 
