@@ -386,7 +386,7 @@ have belonged to (Narmades, Nanagunas, Pseudostomos, Baris, Solen, Tynas,
 and others' source points) but couldn't reach while miscategorized as
 mountains: 103 → 111 river lines, 263 → 281 points-in-a-line.
 
-This covers 56 of 209 `mountain` points (a single-citation range - most of
+This covers 56 of 215 `mountain` points (a single-citation range - most of
 the catalogue's ~150 named peaks/ranges only ever appear once, with no
 second point to connect to - still plots as an individual point, no line).
 
@@ -534,6 +534,43 @@ handful of rivers that were *entirely* re-citations of the same one or two
 points, per the Tigris case above, dropped from a false 3+-point line to
 the correct 2-point one, and none fell below the 2-point minimum needed to
 draw a line at all).
+
+A third pilot run (Germania's mountains/Raetia/Noricum/both Pannonias/
+Illyria and Dalmatia, `§2.11.4`-`§2.16`, plus the start of Italy, `§3.1`)
+found three more real bugs, this time mostly surfaced by the mountain-line
+work above rather than a fresh keyword sweep:
+
+- Scandia - the large island opposite the Vistula's mouth, Ptolemy's
+  Scandinavia - has four extremity points (`Scandia W/O/N/S`) the same
+  shape as Thule's five, but was sitting in `city`: topostext states
+  outright "This island is itself properly called Scandia, and its
+  western parts are inhabited by..." Added `(2.11, 34)` to
+  `_ISLAND_APPENDIX_SECTIONS`, the same fix as Thule got.
+- "Skardon" (a boundary marker on Illyria's eastern border, "the point at
+  Skardon mountain" per topostext, cited again in the very next section as
+  the source of the river Drilon, "Mt. Skardon") was in `coast`, picked up
+  by the section-header sea-fallback since it sits amid Illyria's overall
+  bounded-by-the-Adriatic description. A specific, unambiguous proper name
+  with no generic "-Gebirge"/"-berg" suffix of its own - the same shape as
+  "Calpe" - so added to that same name-anchored tier as a bare word
+  (`skardon` doesn't collide with "Skardona", an unrelated city/island
+  cited in the same chunk, since the word boundary after "n" excludes it).
+- "Namenlose(r) Berg(e)" ("unnamed mountain(s)") - the mountain-side
+  counterpart of "Namenloser Fluss" - names a peak with no proper name of
+  its own, and wasn't recognized by `_MOUNTAIN_NAME_RE` at all (its
+  "-berg"/"^berg" checks require a hyphen or match at the very start,
+  neither of which "Namenloser Berg" satisfies). Five citations across the
+  whole catalogue - one in Illyria (topostext: "Mt. Skardon and from *that
+  other mountain*..."), four scattered from Arabia to Persia - were sitting
+  in `city`. Matched as a phrase rather than folded into a bare `\bberg\b`
+  rule, to avoid the same "location, not identity" trap `_MOUNTAIN_LOCATION_REF_RE`
+  already guards against for `-Gebirge`. Since all five reduce to the exact
+  same base name with nothing else to distinguish them, `build_mountain_lines`
+  needed the same "generic placeholder name" guard `build_river_lines`
+  already has for "Namenloser Fluss" (`_GENERIC_RIVER_NAME_RE`, reused here
+  rather than duplicated) - without it, fixing the classification would have
+  drawn a nonsense line connecting five unrelated peaks from the Balkans to
+  the Persian Gulf.
 
 ## Compiling the catalogue to data: `annotate_dataset.py`
 

@@ -163,8 +163,20 @@ _ESTUARY_RE = re.compile(r"ästuar", re.IGNORECASE)
 # Calpe, the Rock of Gibraltar - topostext: "Calpe mountain and pillar of
 # the Inner sea") is folded into the name-anchored tier too: a specific,
 # unambiguous proper name for one mountain with no generic "-Gebirge"/
-# "-berg" suffix of its own.
-_MOUNTAIN_NAME_RE = re.compile(r"gebirge|-berg\b|^berg\b|\bcalpe\b", re.IGNORECASE)
+# "-berg" suffix of its own. "Skardon" (confirmed by topostext: "the point
+# at Skardon mountain", "Mt. Skardon") is the same case - a specific proper
+# name with no generic suffix - and safe to match as a bare word since
+# "Skardona" (a different, unrelated city and island in the same section)
+# doesn't satisfy the trailing \b. "Namenlose(r) Berg(e)" ("unnamed
+# mountain(s)") is the mountain-side counterpart of "Namenloser Fluss" -
+# five citations across Illyria and Arabia of a peak with no proper name of
+# its own - matched as a phrase rather than added to the bare-word tier,
+# since a bare "\bberg\b" would also catch a river point that merely
+# mentions a mountain as its location (the same problem _MOUNTAIN_LOCATION_REF_RE
+# guards against below).
+_MOUNTAIN_NAME_RE = re.compile(
+    r"gebirge|-berg\b|^berg\b|\bcalpe\b|\bskardon\b|namenlose[rs]?\s+berge?\b", re.IGNORECASE
+)
 _ALPS_BAREWORD_RE = re.compile(r"\balpes\b|\balpen\b", re.IGNORECASE)
 # A third, more specific case of the same problem the two tiers above guard
 # against: a river's source/mouth/confluence point routinely names the
@@ -240,6 +252,7 @@ _ISLAND_APPENDIX_SECTIONS = {
     ("2.03", "33"),  # Tanatis/Counnus/Vectis - Thanet, and the Isle of Wight
     ("2.05", "10"),  # Londobris - the Berlengas, off Lusitania ("An island lying off Lusitania, Londobris")
     ("2.10", "21"),  # Agatha/Blasco/Stoechades/Lero - islands off Narbonensis (Agde island, Ile de Brescou, Iles d'Hyeres, Ile Ste-Marguerite)
+    ("2.11", "34"),  # Scandia W/O/N/S - the island Scandia's four extremity points (topostext: "This island is itself properly called Scandia"), the same shape as Thule's five points above
 }
 
 # The same problem at single-point granularity: a lone island reference
@@ -1245,7 +1258,12 @@ def build_mountain_lines(refs: list[Reference]) -> list[list[Reference]]:
         if ref.category not in _MOUNTAIN_LINE_CATEGORIES or not ref.ref_id or not ref.is_plausible():
             continue
         base = _mountain_base_name(ref.name)
-        if not base:
+        # Same guard as build_river_lines: "Namenlose(r) Berg(e)" ("unnamed
+        # mountain(s)") is a placeholder, not a shared identity - five
+        # separate, unrelated peaks scattered from Illyria to Arabia all
+        # reduce to this same base name, and connecting them would draw a
+        # nonsense line across two continents.
+        if not base or _GENERIC_RIVER_NAME_RE.search(base):
             continue
         groups.setdefault((ref.source, ref.book, base), []).append(ref)
 

@@ -900,3 +900,362 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal
 2,11,3,7,"The point at the bend of the river flowing southward, which is called the Arabon",41°00',47°40',41.0,47.6667
 2,11,3,8,The bend at Curta,42°00',47°00',42.0,47.0
 2,11,3,9,"The next turn at Carpis, which is the most northerly of all",42°20',48°00',42.3333,48.0
+2,11,4,1,"said turn to the Sarmatian mountains lying above, of which the southern end occupies the position",42°20',48°20',42.3333,48.3333
+2,11,4,2,the northern end,43°20',50°20',43.3333,50.3333
+2,11,5,1,"Of the mountains that girdle Germania, the most notable are the aforementioned mountains properly called the Sarmatica, and those that share their name with the Alps and lie above the source of the river Danube, whose extremities occupy the positions",29°00',47°00',29.0,47.0
+2,11,5,2,,33°00',48°20',33.0,48.3333
+2,11,5,3,"those called the Abnoba, whose extremities occupy the positions",31°00',49°00',31.0,49.0
+2,11,5,4,,31°00',52°00',31.0,52.0
+2,11,5,5,"the Melibocus, whose extremities occupy the positions",33°00',52°20',33.0,52.3333
+2,11,5,6,,37°00',52°20',37.0,52.3333
+2,11,5,7,"below which lies the Semanus Silva; and the Asciburgium, whose extremities occupy the positions",39°00',54°00',39.0,54.0
+2,11,5,8,,44°00',52°20',44.0,52.3333
+2,11,5,9,"further the mountains called the Sudeta, whose extremities occupy the positions",34°00',50°00',34.0,50.0
+2,11,5,10,,40°00',50°00',40.0,50.0
+2,11,12,1,The cities recorded in Germania in the northern zone are as follows: Flevum,28°45',54°45',28.75,54.75
+2,11,12,2,Siatutanda,29°10',54°10',29.1667,54.1667
+2,11,12,3,Tecelia,31°00',55°00',31.0,55.0
+2,11,12,4,Fabiranum,31°20',55°10',31.3333,55.1667
+2,11,12,5,Treua,33°00',55°40',33.0,55.6667
+2,11,12,6,Leufana,34°15',54°40',34.25,54.6667
+2,11,12,7,Liriminris,34°20',55°20',34.3333,55.3333
+2,11,12,8,Marionis,34°20',54°50',34.3333,54.8333
+2,11,12,9,Marionis Altera,36°00',55°50',36.0,55.8333
+2,11,12,10,Coinoenon,36°10',55°20',36.1667,55.3333
+2,11,12,11,Cistuia,37°10',54°20',37.1667,54.3333
+2,11,12,12,Aleisos,38°00',55°00',38.0,55.0
+2,11,12,13,Laciburgium,39°00',56°00',39.0,56.0
+2,11,12,14,Bunitium,39°20',55°20',39.3333,55.3333
+2,11,12,15,Virunon,40°20',55°00',40.3333,55.0
+2,11,12,16,Viritium,41°00',54°20',41.0,54.3333
+2,11,12,17,Rugium,42°20',55°40',42.3333,55.6667
+2,11,12,18,Scurgum,43°00',55°00',43.0,55.0
+2,11,12,19,Ascaucalis,44°00',54°15',44.0,54.25
+2,11,13,1,"In the zone below this, the cities are as follows: Asciburgium",27°20',52°20',27.3333,52.3333
+2,11,13,2,Navalia,27°10',54°00',27.1667,54.0
+2,11,13,3,Mediolanium,28°45',53°50',28.75,53.8333
+2,11,13,4,Teuderium,29°10',53°10',29.1667,53.1667
+2,11,13,5,Bogadium,30°15',52°00',30.25,52.0
+2,11,13,6,Stereontium,31°00',52°10',31.0,52.1667
+2,11,13,7,Amisia,31°20',51°20',31.3333,51.3333
+2,11,13,8,Munitium,31°40',52°20',31.6667,52.3333
+2,11,13,9,Tulifurdon,32°00',54°00',32.0,54.0
+2,11,13,10,Ascalingium,32°45',53°45',32.75,53.75
+2,11,13,11,Tulisurgium,32°40',53°10',32.6667,53.1667
+2,11,13,12,Feugaron,32°40',52°15',32.6667,52.25
+2,11,13,13,Canduum,33°00',51°50',33.0,51.8333
+2,11,13,14,Tropaea Drusi,33°45',52°45',33.75,52.75
+2,11,13,15,Luppia,34°20',52°45',34.3333,52.75
+2,11,13,16,Mersuvium,35°20',53°50',35.3333,53.8333
+2,11,13,17,Aregelia,36°20',52°10',36.3333,52.1667
+2,11,13,18,Galaigia,37°20',52°10',37.3333,52.1667
+2,11,13,19,Lupfurdon,38°10',51°40',38.1667,51.6667
+2,11,13,20,Susudata,38°20',53°50',38.3333,53.8333
+2,11,13,21,Colangorum,39°00',53°20',39.0,53.3333
+2,11,13,22,Lugidunum,39°20',52°20',39.3333,52.3333
+2,11,13,23,Stragona,39°40',52°10',39.6667,52.1667
+2,11,13,24,Lucus Limius,41°00',53°20',41.0,53.3333
+2,11,13,25,Budorigum,41°00',52°40',41.0,52.6667
+2,11,13,26,Leucaristus,41°45',52°40',41.75,52.6667
+2,11,13,27,Arsonium,43°20',52°10',43.3333,52.1667
+2,11,13,28,Calisia,43°45',52°50',43.75,52.8333
+2,11,13,29,Setidava,44°00',53°20',44.0,53.3333
+2,11,14,1,"In the zone below this, the cities are as follows: Aleison",28°00',51°20',28.0,51.3333
+2,11,14,2,Budoris,28°00',51°00',28.0,51.0
+2,11,14,3,Mattiacum,30°00',50°50',30.0,50.8333
+2,11,14,4,Arctaunon,30°10',50°00',30.1667,50.0
+2,11,14,5,Nuaesium,31°20',51°10',31.3333,51.1667
+2,11,14,6,Melocabus,31°20',50°40',31.3333,50.6667
+2,11,14,7,Grauionarium,31°20',50°10',31.3333,50.1667
+2,11,14,8,Locoritum,31°20',49°10',31.3333,49.1667
+2,11,14,9,Segodunum,31°20',49°00',31.3333,49.0
+2,11,14,10,Deuona,32°20',48°45',32.3333,48.75
+2,11,14,11,Bergium,33°00',49°20',33.0,49.3333
+2,11,14,12,Menosgada,34°00',49°20',34.0,49.3333
+2,11,14,13,Vicurgium,34°20',51°15',34.3333,51.25
+2,11,14,14,Marobudum,35°00',49°00',35.0,49.0
+2,11,14,15,Redintuvinum,38°20',50°20',38.3333,50.3333
+2,11,14,16,Nomisterium,39°00',51°00',39.0,51.0
+2,11,14,17,Meliodunon,39°00',49°00',39.0,49.0
+2,11,14,18,Casurgis,39°15',50°10',39.25,50.1667
+2,11,14,19,Streuvinta,39°15',49°20',39.25,49.3333
+2,11,14,20,Hegetmatia,39°40',51°00',39.6667,51.0
+2,11,14,21,Budorgis,40°00',50°20',40.0,50.3333
+2,11,14,22,Eburum,41°00',49°20',41.0,49.3333
+2,11,14,23,Arsicua,41°40',49°00',41.6667,49.0
+2,11,14,24,Parienna,42°00',49°10',42.0,49.1667
+2,11,14,25,Setuia,42°20',50°00',42.3333,50.0
+2,11,14,26,Carrodonum,42°40',51°20',42.6667,51.3333
+2,11,14,27,Asanca,43°10',50°10',43.1667,50.1667
+2,11,15,1,"In the remaining part along the river Danube, the cities are as follows: Tarodonum",28°00',47°20',28.0,47.3333
+2,11,15,2,Arae Flaviae,30°40',48°00',30.6667,48.0
+2,11,15,3,Riusiava,31°00',47°20',31.0,47.3333
+2,11,15,4,Alcimoennis,32°20',47°20',32.3333,47.3333
+2,11,15,5,Cantioibis,32°40',48°10',32.6667,48.1667
+2,11,15,6,Bibacum,33°00',48°00',33.0,48.0
+2,11,15,7,Brondentia,33°15',48°00',33.25,48.0
+2,11,15,8,Setuacoton,34°00',48°20',34.0,48.3333
+2,11,15,9,Usbium,35°00',47°00',35.0,47.0
+2,11,15,10,Abilunum,35°10',47°10',35.1667,47.1667
+2,11,15,11,Furgisatis,36°00',48°00',36.0,48.0
+2,11,15,12,Coridorgis,37°15',48°20',37.25,48.3333
+2,11,15,13,Mediolanium,38°00',47°10',38.0,47.1667
+2,11,15,14,Felicia,39°00',48°20',39.0,48.3333
+2,11,15,15,Eburodуnum,39°00',48°00',39.0,48.0
+2,11,15,16,Andouaetium,40°20',47°40',40.3333,47.6667
+2,11,15,17,Celamantia,41°00',47°40',41.0,47.6667
+2,11,15,18,Singone,41°20',48°15',41.3333,48.25
+2,11,15,19,Anavum,41°10',47°20',41.1667,47.3333
+2,11,16,1,"Islands lie above Germania: near the mouth of the Albis are three islands called the islands of the Saxones, the midpoint of which occupies the position",31°00',57°10',31.0,57.1667
+2,11,16,2,"Above the Cimbric Chersonesus are three other islands called the Alociae, the middle point of which occupies the position",37°00',59°10',37.0,59.1667
+2,11,16,3,"To the east of the Cimbric Chersonesus are four islands called the Scandiae: three small ones, the middle of which occupies the position",41°20',58°00',41.3333,58.0
+2,11,16,4,"one very large and most easterly island, lying opposite the mouth of the river Vistula, of which the westernmost point occupies the position",43°00',58°00',43.0,58.0
+2,11,16,5,the easternmost point,46°00',58°00',46.0,58.0
+2,11,16,6,the northernmost point,44°20',58°20',44.3333,58.3333
+2,11,16,7,the southernmost point,45°00',57°40',45.0,57.6667
+2,11,16,8,"This island is itself properly called Scandia, and its western parts are inhabited by the Chaedeini, its eastern parts by the Fauonae and the Firaisii, its northern parts by the Finni, its southern parts by the Gutae and the Dauciones, and its middle parts by the Leuoni. Event Date: 150 GR § 2.12.1. RAETIA AND VINDELICIA Raetia and Vindelicia is bounded on the west side by Adulas mountain and by the area between the headwaters of the Rhine and the Danube rivers; on the north by the part of the Danube between its sources and the junction with the Aenus river",34°00',47°20',34.0,47.3333
+2,11,16,9,"The eastern boundary is the river Aenus itself, with a southernmost limit",34°00',45°15',34.0,45.25
+2,11,16,10,"On the south by this part of the Alps beyond Italy, whose position toward the Graian Alps is",30°00',45°20',30.0,45.3333
+2,11,16,11,Vindelicia,31°30',45°30',31.5,45.5
+2,11,16,12,Towards Ocra mountain,33°30',45°30',33.5,45.5
+2,12,3,1,Below the Danube are the following cities: Bragodurum,30°00',46°40',30.0,46.6667
+2,12,3,2,Dracuina,30°20',46°40',30.3333,46.6667
+2,12,3,3,Viana,31°00',46°40',31.0,46.6667
+2,12,3,4,Faeniana,31°45',46°50',31.75,46.8333
+2,12,3,5,Towards the headwaters of the Rhine river: Taxgaetium,29°50',46°10',29.8333,46.1667
+2,12,3,6,Brigantium,30°00',46°00',30.0,46.0
+2,12,3,7,these Vicus,30°15',45°20',30.25,45.3333
+2,12,3,8,Ebodurum,30°40',45°20',30.6667,45.3333
+2,12,3,9,Octodurum,31°20',45°20',31.3333,45.3333
+2,12,3,10,Drusomagus,31°30',46°05',31.5,46.0833
+2,12,4,1,The towns in Vindelicia along the Danube are: Artobriga,32°15',47°10',32.25,47.1667
+2,12,4,2,Boiodurum,33°50',47°15',33.8333,47.25
+2,12,4,3,"Below these, Augusta Vindelica",32°30',46°20',32.5,46.3333
+2,12,4,4,Carrodunum,33°50',46°45',33.8333,46.75
+2,12,4,5,Abudiacum,33°30',46°15',33.5,46.25
+2,12,4,6,Cambodunum,32°50',46°00',32.8333,46.0
+2,12,4,7,Medullum,33°50',44°40',33.8333,44.6667
+2,12,4,8,Inutrium,32°50',44°30',32.8333,44.5
+2,13,1,1,"NORICUM Noricum is bordered on the west by the Aenus river, on the north by the part of the Danubebetween the junction of the Aenus river and Cetium mountain",37°30',46°50',37.5,46.8333
+2,13,1,2,"Towards the east by Cetium mountain itself; on the south by the part of Upper Pannonia under that mountain, with a western limit",36°00',45°20',36.0,45.3333
+2,13,1,3,and,37°00',45°40',37.0,45.6667
+2,13,1,4,"and by this side of the mountain above Istria, which is called Caruagas, with midpoint",35°00',45°20',35.0,45.3333
+2,13,3,1,The cities in it below the Danube river are: Arelape,35°00',47°00',35.0,47.0
+2,13,3,2,Claudivium,36°00',46°40',36.0,46.6667
+2,13,3,3,"Below these, Gamavodurum",36°40',46°40',36.6667,46.6667
+2,13,3,4,Gesodunum,36°40',46°30',36.6667,46.5
+2,13,3,5,Bedacum,34°15',46°15',34.25,46.25
+2,13,3,6,Aguntum,36°30',46°20',36.5,46.3333
+2,13,3,7,Vacorium,36°00',45°45',36.0,45.75
+2,13,3,8,Poedicum,37°00',46°00',37.0,46.0
+2,13,3,9,Virunum,36°40',45°45',36.6667,45.75
+2,13,3,10,Teurnia,34°40',45°40',34.6667,45.6667
+2,13,3,11,Idunum,35°10',44°30',35.1667,44.5
+2,13,3,12,Sianticum,36°00',45°30',36.0,45.5
+2,13,3,13,Celia,37°00',45°30',37.0,45.5
+2,13,3,14,Between Italy and Noricum: Iulium Carnicum,34°30',45°15',34.5,45.25
+2,14,1,1,above-mentioned western limit point through Mt. Albanus as far as the Bebia mountains and the border of Lower Pannoniaat,41°30',45°20',41.5,45.3333
+2,14,1,2,"On the north, by the above-mentioned border of Noricum and by the part of the Danubebetween Cetium mountain and the junction with the Arabon river",41°00',47°40',41.0,47.6667
+2,14,3,1,Below the Danube are these towns: Vindobona,37°45',46°50',37.75,46.8333
+2,14,3,2,Legion X Germanicus Carnuntum (Carnus),39°00',47°00',39.0,47.0
+2,14,3,3,Flexon,40°00',47°15',40.0,47.25
+2,14,3,4,Legion XIV Germanicus Chertobalos,40°30',47°30',40.5,47.5
+2,14,3,5,Brigetium,41°00',47°40',41.0,47.6667
+2,14,4,1,river: Sala,38°20',46°15',38.3333,46.25
+2,14,4,2,Poetobium,37°40',45°30',37.6667,45.5
+2,14,4,3,Savaria,38°20',46°40',38.3333,46.6667
+2,14,4,4,Rispia,38°40',46°30',38.6667,46.5
+2,14,4,5,Vinundria,38°30',45°30',38.5,45.5
+2,14,4,6,Bononia,38°40',45°40',38.6667,45.6667
+2,14,4,7,Andautonium,38°10',45°30',38.1667,45.5
+2,14,4,8,Noviodunum,37°50',45°50',37.8333,45.8333
+2,14,4,9,Scarbantia,39°30',47°00',39.5,47.0
+2,14,4,10,Mursella,39°15',46°10',39.25,46.1667
+2,14,4,11,Lentulum,39°10',45°45',39.1667,45.75
+2,14,4,12,Carrodunum,39°40',46°00',39.6667,46.0
+2,14,4,13,Siscia,39°00',45°20',39.0,45.3333
+2,14,4,14,Olimacum,39°20',45°30',39.3333,45.5
+2,14,4,15,Valina,40°00',46°45',40.0,46.75
+2,14,4,16,Bolentium,40°10',46°00',40.1667,46.0
+2,14,4,17,Sirota,40°10',45°20',40.1667,45.3333
+2,14,4,18,Sisopa,40°00',45°15',40.0,45.25
+2,14,4,19,Visontium,40°35',45°45',40.5833,45.75
+2,14,4,20,Praetorium,40°45',46°15',40.75,46.25
+2,14,4,21,Magniana,41°00',46°00',41.0,46.0
+2,14,5,1,"Between Italy below Noricum and Pannonia, Emona",36°00',45°20',36.0,45.3333
+2,15,1,1,"that point where the Arabus river flows into the Danube, forming those borders to which we have referred; on the south by Illyria which extends from the indicated terminus as far as the bend in the Danube near which the Savos river empties into it",45°00',44°30',45.0,44.5
+2,16,1,1,"ILLYRIA Illyria is bounded on the north by the two Pannonias along the indicated borders; on the west by Istria along that line, whose midpoint toward the limit point of Upper Pannonia at",36°30',45°10',36.5,45.1667
+2,16,1,2,the other on the Adriatic at,36°30',44°50',36.5,44.8333
+2,16,1,3,"indicated diversion of the Savos river to the point at Skardon mountain, at",47°00',41°40',47.0,41.6667
+2,16,1,4,"indicated point, reaching the Adriatic at",45°00',41°00',45.0,41.0
+2,16,2,1,"Istria in Italia, then in Libournia, on the coast of Illyria: Alouona",36°50',45°00',36.8333,45.0
+2,16,2,2,Phlanona,37°00',44°50',37.0,44.8333
+2,16,2,3,Tarsatika,37°40',44°45',37.6667,44.75
+2,16,2,4,mouth of the Oineus river,38°00',44°45',38.0,44.75
+2,16,2,5,Ouolkera,38°30',44°45',38.5,44.75
+2,16,2,6,Senia,39°00',44°40',39.0,44.6667
+2,16,2,7,Lopsika,39°15',44°40',39.25,44.6667
+2,16,2,8,mouth of the Tedanios river,39°20',44°30',39.3333,44.5
+2,16,3,1,Ortopla,40°00',44°30',40.0,44.5
+2,16,3,2,Ouetia or Ouegia,40°20',44°30',40.3333,44.5
+2,16,3,3,Argyrouton,40°45',44°10',40.75,44.1667
+2,16,3,4,Korinion,41°10',44°00',41.1667,44.0
+2,16,3,5,Ainona,41°30',44°00',41.5,44.0
+2,16,3,6,Iadera colonia,42°00',43°45',42.0,43.75
+2,16,3,7,mouth of the Titos river,42°20',43°10',42.3333,43.1667
+2,16,3,8,Skardona,42°40',43°30',42.6667,43.5
+2,16,4,1,(in Dalmatia) Sikoun,43°00',43°20',43.0,43.3333
+2,16,4,2,Salonai colonia,43°20',43°10',43.3333,43.1667
+2,16,4,3,Epetion,43°40',43°00',43.6667,43.0
+2,16,4,4,Pigountion,44°00',42°45',44.0,42.75
+2,16,4,5,Onaion,44°00',42°30',44.0,42.5
+2,16,5,1,mouth of the Naron (or Nardon) river,44°30',42°20',44.5,42.3333
+2,16,5,2,Risinon,44°40',42°15',44.6667,42.25
+2,16,5,3,Epidauros,44°40',42°20',44.6667,42.3333
+2,16,5,4,Askrouion,44°45',42°00',44.75,42.0
+2,16,5,5,Rizonikos bay,45°00',42°00',45.0,42.0
+2,16,5,6,Bouloua (or Boutoua),45°00',41°45',45.0,41.75
+2,16,5,7,Oulkinion,45°00',41°30',45.0,41.5
+2,16,5,8,mouth of the Drilon river,45°00',41°20',45.0,41.3333
+2,16,5,9,Lissos,45°00',41°10',45.0,41.1667
+2,16,6,1,Mt. Skardon and from that other mountain near the middle of Upper Moesia at,45°40',42°40',45.6667,42.6667
+2,16,9,1,The inland towns of Liburnia: Tediaston,39°00',44°50',39.0,44.8333
+2,16,9,2,Aroukkia,39°30',44°45',39.5,44.75
+2,16,9,3,Ardotion,40°00',44°50',40.0,44.8333
+2,16,9,4,Stoulpi,39°30',44°40',39.5,44.6667
+2,16,9,5,Kouroum or Kourkoum,40°30',44°30',40.5,44.5
+2,16,9,6,Ausankale,41°30',44°45',41.5,44.75
+2,16,9,7,Ouarouaria,41°10',44°10',41.1667,44.1667
+2,16,9,8,Salvia,41°20',44°40',41.3333,44.6667
+2,16,10,1,Adra,42°30',44°40',42.5,44.6667
+2,16,10,2,Arauzona,42°30',44°20',42.5,44.3333
+2,16,10,3,Assesia,42°15',44°20',42.25,44.3333
+2,16,10,4,Bournon,42°45',44°20',42.75,44.3333
+2,16,10,5,Sidrona,43°30',44°30',43.5,44.5
+2,16,10,6,Blanona,42°10',44°00',42.1667,44.0
+2,16,10,7,Ouoporoum (or Oouporoum),43°00',44°00',43.0,44.0
+2,16,10,8,Nedinon,44°30',44°15',44.5,44.25
+2,16,11,1,The inland cities of Dalmatia: Andekrion,43°30',43°30',43.5,43.5
+2,16,11,2,Aleta,44°00',43°10',44.0,43.1667
+2,16,11,3,Herona,44°20',43°45',44.3333,43.75
+2,16,11,4,Delminion,44°40',43°20',44.6667,43.3333
+2,16,11,5,Aequum colonia,44°30',43°20',44.5,43.3333
+2,16,12,1,Saloniana,45°00',43°20',45.0,43.3333
+2,16,12,2,Narbona colonia,44°20',42°45',44.3333,42.75
+2,16,12,3,Enderon,45°30',42°50',45.5,42.8333
+2,16,12,4,Chinna,45°40',42°30',45.6667,42.5
+2,16,12,5,Doklea,45°20',42°15',45.3333,42.25
+2,16,12,6,Rizana,45°15',42°00',45.25,42.0
+2,16,12,7,Skodra,45°30',41°30',45.5,41.5
+2,16,12,8,Thermidava,46°00',41°45',46.0,41.75
+2,16,12,9,Siparuntum,46°30',42°10',46.5,42.1667
+2,16,12,10,Epikaria,45°30',41°15',45.5,41.25
+2,16,12,11,Iminacium (or Keimination),46°00',41°20',46.0,41.3333
+2,16,13,1,"The islands lying off Liburnia are Apsorros, with two cities: Krepsa",36°40',44°30',36.6667,44.5
+2,16,13,2,Apsorros,36°50',44°30',36.8333,44.5
+2,16,13,3,"Kourikta, with two cities, Phoulphinion",38°10',44°20',38.1667,44.3333
+2,16,13,4,Kourikon,38°20',44°15',38.3333,44.25
+2,16,13,5,"Skardona island, with two cities: Arba",40°40',43°40',40.6667,43.6667
+2,16,13,6,Collentum,41°40',43°30',41.6667,43.5
+2,16,14,1,Off Dalmatia are the islands Issa with city,42°20',43°00',42.3333,43.0
+2,16,14,2,Tragourion with city,43°00',42°15',43.0,42.25
+2,16,14,3,Pharia with city,42°00',42°20',42.0,42.3333
+2,16,14,4,Korkyra Melaina,44°00',41°45',44.0,41.75
+2,16,14,5,Melite island,44°10',41°20',44.1667,41.3333
+3,1,1,1,"Adulas mountains as far as the mouth of the Varus river, at",27°30',43°00',27.5,43.0
+3,1,2,1,mouth of the Varus river on the Ligurian sea: On the coast of the Massilienses Nicaea,28°00',43°05',28.0,43.0833
+3,1,2,2,Herculis harbor,28°15',42°45',28.25,42.75
+3,1,2,3,Tropaea Augusti,28°30',42°30',28.5,42.5
+3,1,2,4,Monoeci harbor,28°40',42°40',28.6667,42.6667
+3,1,3,1,"Of Liguria, which in Greek is called Ligustice, near the Ligurian sea Albintimilium",29°10',42°45',29.1667,42.75
+3,1,3,2,Albingaunum,29°30',42°45',29.5,42.75
+3,1,3,3,Genua,30°00',42°50',30.0,42.8333
+3,1,3,4,mouth of the Entella river,30°30',42°50',30.5,42.8333
+3,1,3,5,Tigullia,30°35',42°55',30.5833,42.9167
+3,1,3,6,mouth of the Macralla,31°50',42°45',31.8333,42.75
+3,1,3,7,where the Boacias flows into it,31°30',43°00',31.5,43.0
+3,1,4,1,"Of the Tusci who in Greek are called Tyrrheni, near the Tyrrhenian sea, are Luna",32°00',42°45',32.0,42.75
+3,1,4,2,Luna promontory,32°00',42°40',32.0,42.6667
+3,1,4,3,Sanctuary of Hercules,32°40',42°45',32.6667,42.75
+3,1,4,4,mouth of the Arnus river,33°20',42°40',33.3333,42.6667
+3,1,4,5,Populonium city,33°30',42°00',33.5,42.0
+3,1,4,6,Populonium promontory,33°30',42°00',33.5,42.0
+3,1,4,7,Portus Trojanus,34°00',42°10',34.0,42.1667
+3,1,4,8,Telamon promontory,34°15',42°00',34.25,42.0
+3,1,4,9,mouth of the Osa river,34°30',42°00',34.5,42.0
+3,1,4,10,Cossae,35°00',41°55',35.0,41.9167
+3,1,4,11,Graviscae,35°20',41°45',35.3333,41.75
+3,1,4,12,Castrum Novum,35°40',41°40',35.6667,41.6667
+3,1,4,13,Pyrgi,36°00',41°40',36.0,41.6667
+3,1,4,14,Alsium,36°15',41°40',36.25,41.6667
+3,1,5,1,of the Latini on the Tyrrhenian sea mouth of the Tiber river,36°30',41°30',36.5,41.5
+3,1,5,2,where the river turns toward the west,36°30',42°00',36.5,42.0
+3,1,5,3,Ostia,33°30',41°30',33.5,41.5
+3,1,5,4,Antium,36°50',41°20',36.8333,41.3333
+3,1,5,5,Clostra,37°10',41°20',37.1667,41.3333
+3,1,5,6,Circaeum promontory,37°30',41°10',37.5,41.1667
+3,1,5,7,Tarracinae,37°45',41°15',37.75,41.25
+3,1,5,8,Formiae,38°10',41°15',38.1667,41.25
+3,1,6,1,"of the Campani, on the Tyrrhenian sea mouth of the Liris river",38°20',41°15',38.3333,41.25
+3,1,6,2,Sinuessa,38°30',41°20',38.5,41.3333
+3,1,6,3,Volturnum,38°45',41°05',38.75,41.0833
+3,1,6,4,Liternum,39°10',41°10',39.1667,41.1667
+3,1,6,5,Cumae,39°20',41°10',39.3333,41.1667
+3,1,6,6,Misenum,39°30',41°00',39.5,41.0
+3,1,6,7,Puteoli,39°50',41°00',39.8333,41.0
+3,1,6,8,Neapolis,40°00',40°55',40.0,40.9167
+3,1,7,1,"of the Picentini, on the Tyrrhenian sea mouth of the Sarnus river",40°05',40°55',40.0833,40.9167
+3,1,7,2,Surentum,40°00',40°40',40.0,40.6667
+3,1,7,3,Salernum,40°00',40°30',40.0,40.5
+3,1,8,1,"of the Lucani, on the Tyrrhenian sea mouth of the Silarus river",40°05',40°15',40.0833,40.25
+3,1,8,2,Paestum,40°10',40°00',40.1667,40.0
+3,1,8,3,Buxentum,40°00',39°30',40.0,39.5
+3,1,9,1,"of the Bruttii, on the Tyrrhenian sea mouth of the Laus river",40°00',39°15',40.0,39.25
+3,1,9,2,Tempsa city,40°00',39°00',40.0,39.0
+3,1,9,3,Taurianus cliff,40°10',38°15',40.1667,38.25
+3,1,9,4,Hipponiates gulf,40°20',39°45',40.3333,39.75
+3,1,9,5,Scyllaeum promontory,39°50',38°15',39.8333,38.25
+3,1,9,6,Rhegium Julium,39°50',39°15',39.8333,39.25
+3,1,9,7,Leucopetra promontory,39°50',38°00',39.8333,38.0
+3,1,10,1,"of Magna Graecia, on the Adriaticsea Zephyrium promontory",40°45',39°05',40.75,39.0833
+3,1,10,2,Locri city,40°50',38°25',40.8333,38.4167
+3,1,10,3,mouth of the Locani river,40°55',38°35',40.9167,38.5833
+3,1,11,1,"in Scylacius gulf, Scylacium city",40°45',39°40',40.75,39.6667
+3,1,11,2,Innermost part of Scylacium gulf,40°45',39°45',40.75,39.75
+3,1,11,3,Lacinium promontory,41°30',38°45',41.5,38.75
+3,1,12,1,"in the Tarentine gulf, Kroton city",41°30',39°10',41.5,39.1667
+3,1,12,2,Thurium,40°55',39°30',40.9167,39.5
+3,1,12,3,Metapontium,40°55',39°55',40.9167,39.9167
+3,1,12,4,Tarentum,41°30',40°00',41.5,40.0
+3,1,13,1,"of the Salentini, Iapygium or Sallentinepromontory",42°20',38°45',42.3333,38.75
+3,1,14,1,"of Kalabria, on the Ionian sea Hydruntum",43°00',39°05',43.0,39.0833
+3,1,14,2,Luspiae,42°40',39°15',42.6667,39.25
+3,1,14,3,Brundisium,42°30',39°40',42.5,39.6667
+3,1,15,1,"of the Apuli Peucenti, on the Ionian sea Egnatia",42°30',39°50',42.5,39.8333
+3,1,15,2,Barium,42°30',40°05',42.5,40.0833
+3,1,15,3,mouth of the Aufidus river,42°30',40°15',42.5,40.25
+3,1,16,1,"of the Apuli Dauni, on the Ionian sea, Salapiae",42°20',40°20',42.3333,40.3333
+3,1,16,2,Sipus or Sipa,42°20',40°30',42.3333,40.5
+3,1,16,3,Apenestae,42°20',40°45',42.3333,40.75
+3,1,16,4,Garganum mountain,42°40',41°00',42.6667,41.0
+3,1,17,1,"by the Adriatic gulf, Hyrium",42°30',41°15',42.5,41.25
+3,1,18,1,of the Frentani on this gulf mouth of the Tifernus river,42°00',41°30',42.0,41.5
+3,1,18,2,Buca,41°40',41°40',41.6667,41.6667
+3,1,18,3,Istonium,41°30',41°45',41.5,41.75
+3,1,19,1,of the Paeligni on the same mouth of the Sarus river,41°20',42°00',41.3333,42.0
+3,1,19,2,Ortona,40°45',42°15',40.75,42.25
+3,1,20,1,of the Maurrucini on the same gulf mouth of the Aternus river,40°30',42°30',40.5,42.5
+3,1,20,2,mouth of the Matrinus river,39°20',42°45',39.3333,42.75
+3,1,21,1,of the Piceni on the same gulf Castrum,38°30',43°00',38.5,43.0
+3,1,21,2,Cupra Maritima,38°00',43°10',38.0,43.1667
+3,1,21,3,mouth of the Truentini river,37°40',43°20',37.6667,43.3333
+3,1,21,4,Potentia,37°15',43°30',37.25,43.5
+3,1,21,5,Numana,36°50',43°40',36.8333,43.6667
+3,1,21,6,Ancona,36°30',43°40',36.5,43.6667
+3,1,22,1,"of the Semnones on the same gulf, mouth of the Aesis river",36°20',43°40',36.3333,43.6667
+3,1,22,2,Sena Gallica,36°00',43°40',36.0,43.6667
+3,1,22,3,Fanum Fortunae,35°40',43°45',35.6667,43.75
+3,1,22,4,Pisaurum,35°20',43°45',35.3333,43.75
+3,1,22,5,Ariminum,35°00',43°50',35.0,43.8333
+3,1,23,1,of the Boii Galli on the same gulf mouth of the Rubicon river,34°55',43°55',34.9167,43.9167
+3,1,23,2,Ravenna,34°40',44°00',34.6667,44.0
