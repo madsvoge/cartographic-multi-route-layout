@@ -123,8 +123,12 @@ _COASTAL_HDR_RE = re.compile(r"ozean|meer(?!wärts)|golf|meerbusen|kanal|bucht",
 # otherwise be caught by the coastal mouth pattern first. "quell" (not just
 # "quelle") also catches "Quellgebiet" (source region/catchment) - "Rhenus
 # (Quellgebiet)" and five more river-source entries had no exact "Quelle"
-# substring and fell through to the default "city".
-_RIVERFEAT_RE = re.compile(r"quell|einmündung|ursprung|zusammenfluss", re.IGNORECASE)
+# substring and fell through to the default "city". "ausfluss" (outflow)
+# is the same kind of river-origin point, just phrased for a river that
+# starts by draining a lake rather than rising from a spring - "Padus
+# (Ausfluss aus Lacus Larius)" (topostext: "the head of the river at
+# Lario lake").
+_RIVERFEAT_RE = re.compile(r"quell|einmündung|ursprung|zusammenfluss|ausfluss", re.IGNORECASE)
 # Landmarks *along* a river's course - a bend, its midpoint, its upper/lower
 # reach, or a delta fork/split - as opposed to "Mündung" (river mouth, i.e.
 # actually on the coast). These are inland, but nothing in the word itself
@@ -173,9 +177,12 @@ _ESTUARY_RE = re.compile(r"ästuar", re.IGNORECASE)
 # its own - matched as a phrase rather than added to the bare-word tier,
 # since a bare "\bberg\b" would also catch a river point that merely
 # mentions a mountain as its location (the same problem _MOUNTAIN_LOCATION_REF_RE
-# guards against below).
+# guards against below). "Karpaten" (the Carpathians, topostext: "the
+# beginning of Mt. Karpatos", "Mt. Karpata") is the same specific-proper-
+# name case again - three re-citations of the same boundary point (all at
+# the identical coordinate, so no line to draw regardless of category).
 _MOUNTAIN_NAME_RE = re.compile(
-    r"gebirge|-berg\b|^berg\b|\bcalpe\b|\bskardon\b|namenlose[rs]?\s+berge?\b", re.IGNORECASE
+    r"gebirge|-berg\b|^berg\b|\bcalpe\b|\bskardon\b|\bkarpaten\b|namenlose[rs]?\s+berge?\b", re.IGNORECASE
 )
 _ALPS_BAREWORD_RE = re.compile(r"\balpes\b|\balpen\b", re.IGNORECASE)
 # A third, more specific case of the same problem the two tiers above guard
@@ -192,6 +199,23 @@ _ALPS_BAREWORD_RE = re.compile(r"\balpes\b|\balpen\b", re.IGNORECASE)
 # range name sits: as the object of "am"/"im"/"vom"/"von"/"zum" ("at/in/
 # from/to the ... mountains") rather than as the point's own leading name.
 _MOUNTAIN_LOCATION_REF_RE = re.compile(r"\b(?:am|im|vom|von|zum)\s+[\w\-\s]*?(?:gebirge|berg)\b", re.IGNORECASE)
+# A fourth tier, weaker still: "Berg"/"Berge" as its own separate word
+# ("Goldener Berg", "Sarmatische Berge (S-Ende)", "Rasende Berge") rather
+# than hyphenated onto a proper name ("-Gebirge"/"-berg\b" above) or at the
+# very start ("^berg\b"). Found via topostext explicitly calling these
+# "Golden mountain"/"the Mainomena mountains" while the catalogue's own
+# `city` fallback had them uncategorized. Guarded twice, both times to
+# avoid disturbing a point that's *already* doing real work as a coastal
+# landmark: never overrides a point whose section is itself sea-headed
+# (Athos, cited only as "Athos, ein Berg" with no "-Gebirge"/"-berg" of its
+# own, ends a real stretch of Aegean coastline) or that also matches a
+# more specific coastal pattern (cape/gulf/harbor/estuary - "Akrokeraunische
+# Berge (Spitze)", "Schwarze Berge (Endpunkt am Meer)" on the Red Sea, both
+# genuine coastline points where a range happens to end at the sea, the
+# same reasoning _KAP_PREFIX_RE already uses). And, like the two tiers
+# above, never overrides a genuine river point merely naming a mountain as
+# its location - the same _MOUNTAIN_LOCATION_REF_RE guard.
+_MOUNTAIN_BAREWORD_BERG_RE = re.compile(r"\bberge?\b", re.IGNORECASE)
 _ISLAND_RE = re.compile(r"\binsel\b|inseln", re.IGNORECASE)
 # A name ending in "(N)" - "Kassiteriden (10)", "Pityussae (2)" - denotes an
 # island group given as a single count-labelled entry, a standard
@@ -202,7 +226,12 @@ _ISLAND_RE = re.compile(r"\binsel\b|inseln", re.IGNORECASE)
 # while sitting on opposite sides of it, and connecting them as if adjacent
 # drew a line straight across open water between unrelated islands.
 _ISLAND_GROUP_RE = re.compile(r"\(\d+\)\s*$")
-_LAKE_RE = re.compile(r"\bsee\b|\bpalus\b", re.IGNORECASE)
+# "Lacus" (Latin for lake) is a separate naming convention from "See"/
+# "Palus" used only for the four Cisalpine Gaul lakes along the Padus/Doria
+# river system (Lacus Larius/Como, Lacus Poeninus, Lacus Benacus/Garda) -
+# bare "Lacus Benacus" had no keyword to match at all and fell through to
+# the default "city".
+_LAKE_RE = re.compile(r"\bsee\b|\bpalus\b|\blacus\b", re.IGNORECASE)
 
 # Sections manually verified (via the Modern_location column and known
 # ancient geography) to be island enumerations rather than coastal walks,
@@ -253,6 +282,9 @@ _ISLAND_APPENDIX_SECTIONS = {
     ("2.05", "10"),  # Londobris - the Berlengas, off Lusitania ("An island lying off Lusitania, Londobris")
     ("2.10", "21"),  # Agatha/Blasco/Stoechades/Lero - islands off Narbonensis (Agde island, Ile de Brescou, Iles d'Hyeres, Ile Ste-Marguerite)
     ("2.11", "34"),  # Scandia W/O/N/S - the island Scandia's four extremity points (topostext: "This island is itself properly called Scandia"), the same shape as Thule's five points above
+    ("3.03", "08"),  # Ilva/Nymphaea/Diabate/Ficaria/Hermaea + the already-"-Insel" points - the islands around Sardinia (topostext: "The islands around Sardinia are: Phintonos island...")
+    ("3.04", "16"),  # Didyme/Hikesia/Erikodes/Phoinikodes/Euonymos/Lipara/Strongyle + Hephaistos-Insel - the islands around Sicily (topostext: "the islands located around Sicily...are: Didyme island...")
+    ("3.04", "17"),  # Ustika/Osteodes/Phorbantia/Aigusa/Hiera/Pakonia + Aiolos-Insel - more islands around Sicily, continuing 3.04.16
 }
 
 # The same problem at single-point granularity: a lone island reference
@@ -343,6 +375,16 @@ def _classify_locality(
         return "mountain", "matches mountain-range name pattern (Gebirge/-berg/Calpe), not a river point naming it as a location"
     if _ALPS_BAREWORD_RE.search(name) and not is_river_like:
         return "mountain", "matches 'Alpes'/'Alpen' (bare, not also a river-course/source/mouth pattern)"
+    if (
+        _MOUNTAIN_BAREWORD_BERG_RE.search(name)
+        and not (is_river_like and _MOUNTAIN_LOCATION_REF_RE.search(name))
+        and not section_is_coastal
+        and not _CAPE_RE.search(name)
+        and not _GULF_RE.search(name)
+        and not _HARBOR_RE.search(name)
+        and not _ESTUARY_RE.search(name)
+    ):
+        return "mountain", "matches 'Berg'/'Berge' as its own word (bare, not a coastal landmark or river location)"
     if force_noncoastal:
         section_is_coastal = False
     if _RIVERFEAT_RE.search(name):

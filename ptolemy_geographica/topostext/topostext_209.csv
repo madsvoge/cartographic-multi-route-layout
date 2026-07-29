@@ -1259,3 +1259,520 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal
 3,1,22,5,Ariminum,35°00',43°50',35.0,43.8333
 3,1,23,1,of the Boii Galli on the same gulf mouth of the Rubicon river,34°55',43°55',34.9167,43.9167
 3,1,23,2,Ravenna,34°40',44°00',34.6667,44.0
+3,1,24,1,mouth of the Padus river,34°45',44°00',34.75,44.0
+3,1,24,2,the head of the river at Lario lake,29°20',44°45',29.3333,44.75
+3,1,24,3,where it joins with the Dorias river,30°40',43°45',30.6667,43.75
+3,1,24,4,head of the Dorias river at Poenina lake,28°45',43°45',28.75,43.75
+3,1,24,5,where it is diverted toward Baenacus lake,31°45',43°30',31.75,43.5
+3,1,24,6,position of this lake,30°30',45°00',30.5,45.0
+3,1,25,1,"mouth of the Padus river, Venepias likewise Atrianos river mouth",34°00',44°10',34.0,44.1667
+3,1,26,1,of the Karni on the Adriatic at the innermost bend of the sea mouth of the Tilaventus river,33°00',44°50',33.0,44.8333
+3,1,26,2,mouth of the Natisonis river,34°00',44°50',34.0,44.8333
+3,1,27,1,of Istria where next to the innermost bend of the sea are Tergestum colonia,34°30',44°55',34.5,44.9167
+3,1,27,2,mouth of the Formionis river,35°00',44°55',35.0,44.9167
+3,1,27,3,Parentium,35°20',44°55',35.3333,44.9167
+3,1,27,4,Pola,36°00',44°40',36.0,44.6667
+3,1,27,5,"Nesactum, last of Italy",36°15',44°55',36.25,44.9167
+3,1,28,1,The interior cities of Istria Pacinum,34°45',45°00',34.75,45.0
+3,1,28,2,Piquentum,35°30',45°05',35.5,45.0833
+3,1,28,3,Alvum,36°00',45°00',36.0,45.0
+3,1,29,1,Interior cities of the Karni Forum Julium colonia,32°50',44°55',32.8333,44.9167
+3,1,29,2,Concordia colonia,33°15',44°55',33.25,44.9167
+3,1,29,3,Aquileia colonia,34°00',45°00',34.0,45.0
+3,1,30,1,Interior cities of Venetia Vicentia,32°10',44°30',32.1667,44.5
+3,1,30,2,Belunum,32°30',44°40',32.5,44.6667
+3,1,30,3,Acelum,32°30',44°30',32.5,44.5
+3,1,30,4,Opitergium,32°40',44°45',32.6667,44.75
+3,1,30,5,Ateste,32°40',44°15',32.6667,44.25
+3,1,30,6,Patavium,32°50',44°30',32.8333,44.5
+3,1,30,7,Altinum,33°15',44°25',33.25,44.4167
+3,1,30,8,Atria,34°10',44°05',34.1667,44.0833
+3,1,31,1,Of the Cenomani which are below Venetia Bergomum,32°00',44°20',32.0,44.3333
+3,1,31,2,Forum Diutuntorum or Iuguntorum,31°45',44°00',31.75,44.0
+3,1,31,3,Brixia,32°30',44°10',32.5,44.1667
+3,1,31,4,Cremona colonia,32°00',43°40',32.0,43.6667
+3,1,31,5,Verona,33°00',44°00',33.0,44.0
+3,1,31,6,Mantua,32°45',43°40',32.75,43.6667
+3,1,31,7,Tridente,33°40',43°45',33.6667,43.75
+3,1,31,8,Butrium,34°00',43°50',34.0,43.8333
+3,1,32,1,"Of the Bechuni, who are toward the west of Venetia Vaunia",31°00',44°40',31.0,44.6667
+3,1,32,2,Carraca,31°20',44°40',31.3333,44.6667
+3,1,32,3,Bretina,31°40',44°45',31.6667,44.75
+3,1,32,4,Anaunium,31°30',44°30',31.5,44.5
+3,1,33,1,Cenomani Nobaria,30°30',44°30',30.5,44.5
+3,1,33,2,Mediolanium,30°40',44°15',30.6667,44.25
+3,1,33,3,Comum,31°00',44°20',31.0,44.3333
+3,1,33,4,Ticinum,31°00',44°00',31.0,44.0
+3,1,34,1,"Of the Salassi, who are below the Insubres Augusta Praetoria colonia",30°00',44°00',30.0,44.0
+3,1,34,2,Eporedia,33°15',43°50',33.25,43.8333
+3,1,35,1,Of the Taurini who are below the Salassi Augusta Taurinorum,30°30',43°40',30.5,43.6667
+3,1,35,2,Augusta Bagiennorum,29°30',43°20',29.5,43.3333
+3,1,35,3,Iria,30°00',43°20',30.0,43.3333
+3,1,35,4,Dertona,30°30',43°20',30.5,43.3333
+3,1,36,1,"Of the Libici, who are below the Insubres Vercellae",30°45',43°50',30.75,43.8333
+3,1,36,2,Laumellum,31°30',43°40',31.5,43.6667
+3,1,37,1,Of the Ceutrones in the Graian Alps Forum Claudii,29°00',44°55',29.0,44.9167
+3,1,37,2,Axima,29°45',44°55',29.75,44.9167
+3,1,38,1,"Of the Leponti, who are in the Cottian Alps Oscela",29°00',44°40',29.0,44.6667
+3,1,39,1,Of the Caturiges in the Graian Alps Eburodunum,29°40',44°30',29.6667,44.5
+3,1,40,1,Of the Segusani in the Graian Alps Segusium,28°30',43°55',28.5,43.9167
+3,1,40,2,Brigantium,29°00',44°05',29.0,44.0833
+3,1,41,1,Of the Nerusi in the Maritime Alps Vintium,28°30',43°40',28.5,43.6667
+3,1,42,1,Of the Suetri in the Maritime Alps Salinae,28°30',43°20',28.5,43.3333
+3,1,43,1,Of the Vedianti in the Maritime Alps Cemenelum,28°30',43°05',28.5,43.0833
+3,1,43,2,Sanitium,28°30',42°50',28.5,42.8333
+3,1,45,1,"Liguria, which is located below the Appennine mountains, has the following interior cities: Sabata",29°20',43°00',29.3333,43.0
+3,1,45,2,Pollentia,29°40',43°00',29.6667,43.0
+3,1,45,3,Asta colonia,30°20',43°05',30.3333,43.0833
+3,1,45,4,Alba Pompeia,30°40',43°10',30.6667,43.1667
+3,1,45,5,Libarna,31°00',43°10',31.0,43.1667
+3,1,46,1,"Gallia Togata is located above those mountains, extending as far as Ravenna, and it has these cities: Placentia",31°20',43°30',31.3333,43.5
+3,1,46,2,Fidentia,31°40',43°30',31.6667,43.5
+3,1,46,3,Brixellum,32°00',43°20',32.0,43.3333
+3,1,46,4,Parma (colonia),32°00',43°30',32.0,43.5
+3,1,46,5,Rhegium Lepidum (colonia),32°30',43°30',32.5,43.5
+3,1,46,6,Nuceria,32°30',43°20',32.5,43.3333
+3,1,46,7,Tanetum,33°20',43°40',33.3333,43.6667
+3,1,46,8,Mutina,33°00',43°40',33.0,43.6667
+3,1,46,9,Bononia,33°30',43°30',33.5,43.5
+3,1,46,10,Claterna,33°50',43°30',33.8333,43.5
+3,1,46,11,Forum Cornelii,34°15',43°30',34.25,43.5
+3,1,46,12,Caesena,34°40',43°40',34.6667,43.6667
+3,1,46,13,Faventia,34°20',43°45',34.3333,43.75
+3,1,47,1,Towns of the Tusci in the interior Biracellum,31°45',43°10',31.75,43.1667
+3,1,47,2,Fossae Papirianae,32°00',42°50',32.0,42.8333
+3,1,47,3,Bondelia,32°30',42°50',32.5,42.8333
+3,1,47,4,Luca,33°00',43°10',33.0,43.1667
+3,1,47,5,Lucus Feronia colonia,32°25',42°55',32.4167,42.9167
+3,1,48,1,Pistoria,33°20',43°00',33.3333,43.0
+3,1,48,2,Florentia,33°50',43°00',33.8333,43.0
+3,1,48,3,Pisae colonia,33°30',42°45',33.5,42.75
+3,1,48,4,Volaterrae,33°45',42°40',33.75,42.6667
+3,1,48,5,Rusellae,33°30',42°20',33.5,42.3333
+3,1,48,6,Faesulae,34°00',43°00',34.0,43.0
+3,1,48,7,Perusia,35°20',43°30',35.3333,43.5
+3,1,48,8,Arretium,34°40',42°45',34.6667,42.75
+3,1,48,9,Cortona,35°00',42°40',35.0,42.6667
+3,1,48,10,Aculea,34°40',43°00',34.6667,43.0
+3,1,48,11,Biturgia,35°00',42°55',35.0,42.9167
+3,1,49,1,Manliana,34°30',42°40',34.5,42.6667
+3,1,49,2,Vetulonium,34°00',42°30',34.0,42.5
+3,1,49,3,Sena,34°20',42°30',34.3333,42.5
+3,1,49,4,Suana,34°50',42°25',34.8333,42.4167
+3,1,49,5,Saturniana colonia,34°00',42°20',34.0,42.3333
+3,1,49,6,Eba,34°30',42°15',34.5,42.25
+3,1,49,7,Volci,34°40',42°10',34.6667,42.1667
+3,1,49,8,Clusium,34°40',42°20',34.6667,42.3333
+3,1,50,1,Volsinium,35°00',42°20',35.0,42.3333
+3,1,50,2,Sudernum,35°30',42°05',35.5,42.0833
+3,1,50,3,Ferentia,35°30',42°20',35.5,42.3333
+3,1,50,4,Sutrium,36°00',42°10',36.0,42.1667
+3,1,50,5,Tarquinia,35°15',42°00',35.25,42.0
+3,1,50,6,Blera,35°40',41°55',35.6667,41.9167
+3,1,50,7,Forum Clodii,35°55',41°55',35.9167,41.9167
+3,1,50,8,Nepeta,36°00',41°50',36.0,41.8333
+3,1,50,9,Falerium,36°30',41°55',36.5,41.9167
+3,1,50,10,Caere,36°20',41°50',36.3333,41.8333
+3,1,51,1,Of the Semnones in the interior Suasa,35°30',43°40',35.5,43.6667
+3,1,51,2,Ostra,36°00',43°30',36.0,43.5
+3,1,52,1,"Of the Piceni, in the interior Treja",36°30',42°25',36.5,42.4167
+3,1,52,2,Urbs Salvia,36°55',43°20',36.9167,43.3333
+3,1,52,3,Septempeda,36°50',43°30',36.8333,43.5
+3,1,52,4,Cupra Montana,37°30',43°10',37.5,43.1667
+3,1,52,5,Firmium,37°30',42°55',37.5,42.9167
+3,1,52,6,Asculum,38°20',42°50',38.3333,42.8333
+3,1,52,7,Adria,38°45',42°50',38.75,42.8333
+3,1,53,1,"Of the Umbri, who are above the Tusci Pitinum",34°40',43°15',34.6667,43.25
+3,1,53,2,Tifernum,34°40',43°25',34.6667,43.4167
+3,1,53,3,Forum Semproni,34°50',43°30',34.8333,43.5
+3,1,53,4,Iguvium,35°00',43°05',35.0,43.0833
+3,1,53,5,Aesis,35°20',43°20',35.3333,43.3333
+3,1,53,6,Tuficum,35°30',43°05',35.5,43.0833
+3,1,53,7,Sentinum,36°30',42°50',36.5,42.8333
+3,1,53,8,Aesisium,35°20',42°45',35.3333,42.75
+3,1,53,9,Camerinum,36°00',43°00',36.0,43.0
+3,1,53,10,Nuceria colonia,35°50',42°40',35.8333,42.6667
+3,1,54,1,Of the Umbri who are toward the east of the Tusci Arna,35°30',42°40',35.5,42.6667
+3,1,54,2,Hispellum,35°40',42°30',35.6667,42.5
+3,1,54,3,Tuder,35°50',42°20',35.8333,42.3333
+3,1,54,4,Forum Flaminii,36°00',42°40',36.0,42.6667
+3,1,54,5,Spoletium,36°20',42°45',36.3333,42.75
+3,1,54,6,Mevania,36°15',42°30',36.25,42.5
+3,1,54,7,Ameria,36°30',42°15',36.5,42.25
+3,1,54,8,Narnia,36°30',42°30',36.5,42.5
+3,1,54,9,Ocricolum,36°45',42°10',36.75,42.1667
+3,1,55,1,"Of the Sabini, who are toward the east of the Umbri, Nursia",36°45',42°50',36.75,42.8333
+3,1,56,1,"Of the Aequiculi, who are east of the Sabini Cliternum",37°30',42°40',37.5,42.6667
+3,1,56,2,Carsioli,37°20',42°20',37.3333,42.3333
+3,1,57,1,Aequiculi Aex,37°40',42°30',37.6667,42.5
+3,1,57,2,Alba Fucinis,38°00',42°20',38.0,42.3333
+3,1,58,1,Marsi Beregra,38°30',42°30',38.5,42.5
+3,1,58,2,Interamnia,38°20',42°20',38.3333,42.3333
+3,1,59,1,Praetuti Pinna,39°00',42°40',39.0,42.6667
+3,1,59,2,Avia,39°00',42°25',39.0,42.4167
+3,1,59,3,Amiternum,39°00',42°15',39.0,42.25
+3,1,59,4,Angulus,39°30',42°30',39.5,42.5
+3,1,60,1,Of the Marucini in the interior Teatea,39°45',42°30',39.75,42.5
+3,1,61,1,Of the Latini in the interior City of Rome,36°40',41°40',36.6667,41.6667
+3,1,61,2,Tibur,36°50',42°00',36.8333,42.0
+3,1,61,3,Praeneste,37°30',41°55',37.5,41.9167
+3,1,61,4,Tusculum,36°50',41°45',36.8333,41.75
+3,1,61,5,Aricia,37°00',41°40',37.0,41.6667
+3,1,61,6,Ardea,36°45',41°30',36.75,41.5
+3,1,62,1,Nomentum,37°30',42°05',37.5,42.0833
+3,1,62,2,Treba,37°30',41°45',37.5,41.75
+3,1,62,3,Anagnia,37°20',41°40',37.3333,41.6667
+3,1,62,4,Velitra,37°30',41°30',37.5,41.5
+3,1,62,5,Lanuvium,37°15',41°25',37.25,41.4167
+3,1,62,6,Atina,38°15',42°00',38.25,42.0
+3,1,62,7,Fidenae,38°00',41°55',38.0,41.9167
+3,1,62,8,Frusino,37°50',41°45',37.8333,41.75
+3,1,63,1,Ferentinum,38°00',41°40',38.0,41.6667
+3,1,63,2,Privernum,37°45',41°35',37.75,41.5833
+3,1,63,3,Setia,38°00',41°30',38.0,41.5
+3,1,63,4,Aquinum,38°50',41°55',38.8333,41.9167
+3,1,63,5,Sora,38°20',41°40',38.3333,41.6667
+3,1,63,6,Minturna colonia,38°20',41°25',38.3333,41.4167
+3,1,63,7,Fundi,38°10',41°20',38.1667,41.3333
+3,1,64,1,Of the Peligni in the interior Corfinium,40°00',42°20',40.0,42.3333
+3,1,64,2,Sulmo,40°30',42°00',40.5,42.0
+3,1,65,1,Of the Frentani in the interior Anxanum,41°10',41°55',41.1667,41.9167
+3,1,65,2,Larinum,41°30',41°30',41.5,41.5
+3,1,66,1,"Of the Caraceni, who are below the Frentani Aufidena",40°40',41°45',40.6667,41.75
+3,1,67,1,"Cities of the Samnites, who are below the Peligni and the Caraceni Bovianum",39°05',42°00',39.0833,42.0
+3,1,67,2,Aesernia,39°00',41°40',39.0,41.6667
+3,1,67,3,Saepinum,39°40',41°50',39.6667,41.8333
+3,1,67,4,Allifa,40°00',41°45',40.0,41.75
+3,1,67,5,Tuticum,40°10',41°40',40.1667,41.6667
+3,1,67,6,Telesia,40°30',41°20',40.5,41.3333
+3,1,67,7,Beneventum,41°00',41°20',41.0,41.3333
+3,1,67,8,Caudium,41°20',41°05',41.3333,41.0833
+3,1,68,1,Of the Campani in the interior Venafrum,38°40',41°40',38.6667,41.6667
+3,1,68,2,Teanum,39°00',41°30',39.0,41.5
+3,1,68,3,Suessa,38°40',41°25',38.6667,41.4167
+3,1,68,4,Cales,39°20',41°30',39.3333,41.5
+3,1,68,5,Casilinum,39°15',41°20',39.25,41.3333
+3,1,68,6,Trebula,39°35',41°30',39.5833,41.5
+3,1,68,7,Forum Pompilii,39°45',41°15',39.75,41.25
+3,1,68,8,Capua,40°00',41°10',40.0,41.1667
+3,1,68,9,Abella,40°20',41°10',40.3333,41.1667
+3,1,68,10,Atella,40°10',41°05',40.1667,41.0833
+3,1,69,1,Of the Picentini in the interior Nola,40°15',40°45',40.25,40.75
+3,1,69,2,Nuceria colonia,40°30',40°40',40.5,40.6667
+3,1,70,1,Of the Lucani in the interior Ulci,40°40',40°30',40.6667,40.5
+3,1,70,2,Compsa,40°30',40°20',40.5,40.3333
+3,1,70,3,Potentia,40°40',40°15',40.6667,40.25
+3,1,70,4,Blanda,40°20',40°10',40.3333,40.1667
+3,1,70,5,Grumentum,40°35',39°45',40.5833,39.75
+3,1,71,1,"Cities of the Irpini, who are more to the east than the Picentini and the Lucani Aquilonia",41°00',41°05',41.0,41.0833
+3,1,71,2,Abellinum,40°50',40°45',40.8333,40.75
+3,1,71,3,Aeculanum,41°20',40°45',41.3333,40.75
+3,1,71,4,Fratuolum,41°00',40°20',41.0,40.3333
+3,1,72,1,Of the Apuli Dauni in the interior Teanum,40°41',41°25',40.6833,41.4167
+3,1,72,2,Nuceria Apulorum,41°30',41°00',41.5,41.0
+3,1,72,3,Vibarna,42°00',41°00',42.0,41.0
+3,1,72,4,Arpi,41°40',41°15',41.6667,41.25
+3,1,72,5,Erdonia,41°40',40°40',41.6667,40.6667
+3,1,72,6,Canusium,42°05',40°30',42.0833,40.5
+3,1,73,1,Of the Apuli Peuciti in the interior Venusia,41°40',40°25',41.6667,40.4167
+3,1,73,2,Celia,42°10',40°00',42.1667,40.0
+3,1,74,1,Of the Bruttii in the interior Numistro,40°20',39°10',40.3333,39.1667
+3,1,74,2,Consentia,40°40',38°10',40.6667,38.1667
+3,1,74,3,Vibo Valentia,40°15',38°55',40.25,38.9167
+3,1,75,1,Of Magna Graecia in the interior Petelia,40°45',39°00',40.75,39.0
+3,1,75,2,Abrystum,40°45',39°25',40.75,39.4167
+3,1,76,1,Cities of the Salentini in the interior Rudia,41°50',39°45',41.8333,39.75
+3,1,76,2,Neretum,42°00',39°35',42.0,39.5833
+3,1,76,3,Aletium,42°00',39°20',42.0,39.3333
+3,1,76,4,Bausta,42°15',39°15',42.25,39.25
+3,1,76,5,Exentum,42°00',39°10',42.0,39.1667
+3,1,76,6,Veretum,42°20',39°00',42.3333,39.0
+3,1,77,1,Of Calabria in the interior Sturni,42°30',39°20',42.5,39.3333
+3,1,77,2,Uretum,42°30',39°10',42.5,39.1667
+3,1,78,1,Islands lying near Italy in the Ligurian sea Aithale island or Manora,31°40',42°00',31.6667,42.0
+3,1,78,2,Gorgone,33°00',42°00',33.0,42.0
+3,1,78,3,Capraria island,32°00',42°00',32.0,42.0
+3,1,78,4,Ilua island,33°00',42°00',33.0,42.0
+3,1,79,1,These are the islands in the Tyrrhenian sea Planasia island,34°00',41°00',34.0,41.0
+3,1,79,2,Pontia island,37°20',40°45',37.3333,40.75
+3,1,79,3,Pandataria island,37°50',40°45',37.8333,40.75
+3,1,79,4,Partenope island,38°20',40°45',38.3333,40.75
+3,1,79,5,Prochyte island,38°45',40°40',38.75,40.6667
+3,1,79,6,Pithecussa island,39°20',40°30',39.3333,40.5
+3,1,79,7,Caprea island,39°20',40°10',39.3333,40.1667
+3,1,79,8,Sirenussae islands,39°30',39°55',39.5,39.9167
+3,2,2,1,middle of the north side: mouth of the Volerius river,30°40',41°00',30.6667,41.0
+3,2,2,2,Caesia coast,30°30',41°10',30.5,41.1667
+3,2,2,3,Tilox promontory,30°00',41°30',30.0,41.5
+3,2,3,1,Description of the west coast: Attii promontory,30°00',41°10',30.0,41.1667
+3,2,3,2,Casalus bay,30°15',40°45',30.25,40.75
+3,2,3,3,Viriballum promontory,30°10',40°30',30.1667,40.5
+3,2,3,4,mouth of the Circidius river,30°10',40°25',30.1667,40.4167
+3,2,3,5,Rhoetius mountains,30°00',40°20',30.0,40.3333
+3,2,3,6,Rhium promontory,30°00',40°15',30.0,40.25
+3,2,3,7,Urcinium city,30°10',40°10',30.1667,40.1667
+3,2,3,8,Arenosum coast,30°15',40°00',30.25,40.0
+3,2,3,9,mouth of the Locra river,30°10',39°55',30.1667,39.9167
+3,2,3,10,Pauca city,30°15',39°45',30.25,39.75
+3,2,3,11,mouth of the Ticarius river,30°15',39°40',30.25,39.6667
+3,2,3,12,Titianus harbor,30°10',39°35',30.1667,39.5833
+3,2,4,1,Description of the south coast: Ficaria city,30°30',39°30',30.5,39.5
+3,2,4,2,mouth of the Pitanus river,30°45',39°20',30.75,39.3333
+3,2,4,3,Marianum promontory and city,31°00',39°10',31.0,39.1667
+3,2,5,1,Description of the east coast: Palla city,31°20',39°20',31.3333,39.3333
+3,2,5,2,Syracusan harbor,31°20',39°25',31.3333,39.4167
+3,2,5,3,Rubra city,31°20',39°30',31.3333,39.5
+3,2,5,4,Granianum promontory,31°30',39°40',31.5,39.6667
+3,2,5,5,Alista city,31°20',39°45',31.3333,39.75
+3,2,5,6,Philonii harbor,31°30',39°55',31.5,39.9167
+3,2,5,7,mouth of the Sacred river,31°30',40°00',31.5,40.0
+3,2,5,8,Aleria colonia,31°30',40°05',31.5,40.0833
+3,2,5,9,mouth of the Rotanus river,31°30',40°10',31.5,40.1667
+3,2,5,10,Diana harbor,31°20',40°20',31.3333,40.3333
+3,2,5,11,Tutela altar,31°30',40°30',31.5,40.5
+3,2,5,12,mouth of the Guola river,31°30',40°35',31.5,40.5833
+3,2,5,13,Mariane city,31°40',40°40',31.6667,40.6667
+3,2,5,14,Vagum promontory,31°30',40°45',31.5,40.75
+3,2,5,15,Mantinon city,31°20',41°00',31.3333,41.0
+3,2,5,16,Clunium city,31°20',41°10',31.3333,41.1667
+3,2,6,1,Description of the north side: Sacred promontory,31°30',41°35',31.5,41.5833
+3,2,6,2,Centurinum city,31°15',41°30',31.25,41.5
+3,2,6,3,Canelata city,31°00',41°20',31.0,41.3333
+3,2,7,1,"The following peoples, settled in villages, possess the island: the Cervini, occupying the western side beneath Golden mountain, located",30°45',40°45',30.75,40.75
+3,2,8,1,The towns in the interior are Ropicum,30°15',41°00',30.25,41.0
+3,2,8,2,Cersunum,30°30',41°00',30.5,41.0
+3,2,8,3,Palania,30°20',40°45',30.3333,40.75
+3,2,8,4,Lurinum,31°00',40°45',31.0,40.75
+3,2,8,5,Alouca,30°20',40°30',30.3333,40.5
+3,2,8,6,Asingon,30°30',40°30',30.5,40.5
+3,2,8,7,Sermigium,30°20',40°20',30.3333,40.3333
+3,2,8,8,Talcinum,30°45',40°30',30.75,40.5
+3,2,8,9,Venicium,30°50',40°20',30.8333,40.3333
+3,2,8,10,Cenestum,31°00',40°15',31.0,40.25
+3,2,8,11,Opinum,31°20',40°25',31.3333,40.4167
+3,2,8,12,Mora,30°30',40°00',30.5,40.0
+3,2,8,13,Matisa,30°45',39°35',30.75,39.5833
+3,2,8,14,Albiana,31°00',39°30',31.0,39.5
+3,3,2,1,Description of the coast Description of the west side: Gorditanon promontory,29°50',38°45',29.8333,38.75
+3,3,2,2,Tilion city,30°00',38°40',30.0,38.6667
+3,3,2,3,Nymphaion harbor,30°10',38°30',30.1667,38.5
+3,3,2,4,Hermaion promontory,30°00',38°15',30.0,38.25
+3,3,2,5,mouth of the Temos river,30°15',38°00',30.25,38.0
+3,3,2,6,Korakodes harbor,30°20',37°35',30.3333,37.5833
+3,3,2,7,Tarrai city,30°20',37°20',30.3333,37.3333
+3,3,2,8,mouth of the Thyrsos river,30°30',37°10',30.5,37.1667
+3,3,2,9,"Usellis city, colonia",30°30',36°55',30.5,36.9167
+3,3,2,10,mouth of the Sacred river,30°30',36°40',30.5,36.6667
+3,3,2,11,Othaia city,30°30',36°30',30.5,36.5
+3,3,2,12,Sardopator sanctuary,30°30',36°20',30.5,36.3333
+3,3,2,13,Neapolis,30°40',36°30',30.6667,36.5
+3,3,2,14,Pacheia promontory,30°40',36°00',30.6667,36.0
+3,3,3,1,Description of the southern side: Pupulum city,30°50',35°40',30.8333,35.6667
+3,3,3,2,Solci city,31°10',35°50',31.1667,35.8333
+3,3,3,3,Solci harbor,31°15',35°50',31.25,35.8333
+3,3,3,4,Chersonesos,31°30',35°45',31.5,35.75
+3,3,3,5,Bithia harbor,31°40',35°50',31.6667,35.8333
+3,3,3,6,Bithia city,31°45',35°50',31.75,35.8333
+3,3,3,7,Harbor of Herakles,32°00',35°50',32.0,35.8333
+3,3,3,8,Nora city,32°00',35°55',32.0,35.9167
+3,3,3,9,Sounding Shore,32°05',35°55',32.0833,35.9167
+3,3,3,10,Kounioucharion promontory,32°15',35°55',32.25,35.9167
+3,3,4,1,Description of the eastern side: Karalis city and headland,32°30',36°00',32.5,36.0
+3,3,4,2,Karalitanos bay,32°10',36°20',32.1667,36.3333
+3,3,4,3,Sousaleos village,31°55',36°40',31.9167,36.6667
+3,3,4,4,mouth of the Saipros river,32°00',37°00',32.0,37.0
+3,3,4,5,Sulpicius harbor,31°50',37°30',31.8333,37.5
+3,3,4,6,mouth of the Kaidris river,32°00',38°00',32.0,38.0
+3,3,4,7,Feronia city,31°45',38°10',31.75,38.1667
+3,3,4,8,Olbia city,31°40',38°30',31.6667,38.5
+3,3,4,9,Olbian harbor,31°40',38°45',31.6667,38.75
+3,3,4,10,Columbarium promontory,31°45',39°00',31.75,39.0
+3,3,4,11,Arktos promontory,31°45',39°10',31.75,39.1667
+3,3,5,1,Description of the northeast coast: Errebantium promontory,31°30',39°20',31.5,39.3333
+3,3,5,2,Pluvium city,31°30',39°05',31.5,39.0833
+3,3,5,3,Iuliola city,31°10',39°00',31.1667,39.0
+3,3,5,4,Tibula city,30°40',38°50',30.6667,38.8333
+3,3,5,5,"Libison's Tower, city",30°15',38°50',30.25,38.8333
+3,3,7,1,The cities in the interior are: Erykinon,31°00',38°40',31.0,38.6667
+3,3,7,2,Heraion,31°30',38°40',31.5,38.6667
+3,3,7,3,Old Gouroulis,30°30',38°30',30.5,38.5
+3,3,7,4,Bosa,30°30',38°15',30.5,38.25
+3,3,7,5,Makouisa,31°15',38°15',31.25,38.25
+3,3,7,6,Below these cities are the Mainomena mountains,31°00',38°00',31.0,38.0
+3,3,7,7,New Gouroulis,30°30',37°50',30.5,37.8333
+3,3,7,8,Saralapis,31°15',37°45',31.25,37.75
+3,3,7,9,Cornus,30°30',37°45',30.5,37.75
+3,3,7,10,Aquae Hypsitanae,30°40',37°15',30.6667,37.25
+3,3,7,11,Aquae Lesitanae,31°30',36°45',31.5,36.75
+3,3,7,12,Lesa,31°30',36°35',31.5,36.5833
+3,3,7,13,Aquae Neapolitanae,31°45',36°10',31.75,36.1667
+3,3,7,14,Valentia city,31°55',36°30',31.9167,36.5
+3,3,8,1,The islands around Sardinia are: Phintonos island,30°40',39°15',30.6667,39.25
+3,3,8,2,Ilva island,30°30',39°20',30.5,39.3333
+3,3,8,3,Nymphaia island,29°45',38°30',29.75,38.5
+3,3,8,4,Herakles island,29°20',39°00',29.3333,39.0
+3,3,8,5,Diabate island,29°30',38°45',29.5,38.75
+3,3,8,6,Hierakon (hawks) island,30°00',35°45',30.0,35.75
+3,3,8,7,Molybodes island,30°30',35°30',30.5,35.5
+3,3,8,8,Fikaria island,33°00',39°00',33.0,39.0
+3,3,8,9,Hermaia island,33°00',37°20',33.0,37.3333
+3,4,2,1,"The seacoast of this island has the following description: The central part of the north side, which, terminating in a point, and more toward the north, is called Peloruspromontory",39°40',38°35',39.6667,38.5833
+3,4,2,2,A description of the west side on the Tyrrhenian sea: Phalakron promontory,39°10',38°30',39.1667,38.5
+3,4,2,3,Mylai,39°00',38°30',39.0,38.5
+3,4,2,4,Helikon river mouth,38°50',38°25',38.8333,38.4167
+3,4,2,5,Tyndarion,38°30',38°20',38.5,38.3333
+3,4,2,6,Tmethos or Timethos river mouth,39°20',38°20',39.3333,38.3333
+3,4,2,7,Agathyrion or Agathyrnon,38°00',38°15',38.0,38.25
+3,4,2,8,Alontion,37°50',38°10',37.8333,38.1667
+3,4,2,9,mouth of the Chyda river,37°45',38°05',37.75,38.0833
+3,4,3,1,Kalakta,37°40',37°55',37.6667,37.9167
+3,4,3,2,Alaisa,37°40',37°45',37.6667,37.75
+3,4,3,3,mouth of the Monalos,37°30',37°45',37.5,37.75
+3,4,3,4,Kephaloidis,37°20',37°40',37.3333,37.6667
+3,4,3,5,mouth of the Himera river,37°15',37°20',37.25,37.3333
+3,4,3,6,Thermai Himeraicity,37°05',37°15',37.0833,37.25
+3,4,3,7,Solous or Oloulis,37°00',37°20',37.0,37.3333
+3,4,3,8,Eleutheros river mouth,37°00',37°05',37.0,37.0833
+3,4,3,9,Panormos,37°00',37°00',37.0,37.0
+3,4,4,1,Ketaria,37°00',36°45',37.0,36.75
+3,4,4,2,Bathys river mouth,37°00',36°40',37.0,36.6667
+3,4,4,3,Emporion Segestanon,37°00',36°30',37.0,36.5
+3,4,4,4,Drepanon,36°55',36°30',36.9167,36.5
+3,4,4,5,Aegitharsus promontory,36°50',36°15',36.8333,36.25
+3,4,5,1,Description of the southern side toward the African sea: Lilybaion city and promontory,37°00',36°00',37.0,36.0
+3,4,5,2,mouth of the Akithios river,37°10',36°05',37.1667,36.0833
+3,4,5,3,Mazaras,37°20',36°15',37.3333,36.25
+3,4,5,4,Selinous river mouth,37°30',36°15',37.5,36.25
+3,4,5,5,Pintia,37°40',36°20',37.6667,36.3333
+3,4,5,6,Sossios river mouth,37°50',36°20',37.8333,36.3333
+3,4,6,1,Isbouros river mouth,38°05',36°25',38.0833,36.4167
+3,4,6,2,Herakleia,38°20',36°25',38.3333,36.4167
+3,4,6,3,Hypsa river mouth,38°30',36°25',38.5,36.4167
+3,4,6,4,Emporion of the Akragantines,38°50',36°25',38.8333,36.4167
+3,4,7,1,Himera river mouth,39°00',36°20',39.0,36.3333
+3,4,7,2,Hipporos river mouth,39°15',36°20',39.25,36.3333
+3,4,7,3,Brouka promontory,39°20',36°20',39.3333,36.3333
+3,4,7,4,Kaukana harbor,39°30',36°15',39.5,36.25
+3,4,7,5,Motykanos river mouth,39°40',36°20',39.6667,36.3333
+3,4,7,6,Odysseia promontory,39°50',36°15',39.8333,36.25
+3,4,8,1,Description of the eastern side on the Adriatic sea Pachynos promontory,40°00',36°20',40.0,36.3333
+3,4,8,2,Phoenikous harbor,39°45',36°30',39.75,36.5
+3,4,8,3,Erinous river mouth,39°45',36°40',39.75,36.6667
+3,4,8,4,Makron promontory,39°50',36°45',39.8333,36.75
+3,4,8,5,Chersonesos,39°40',36°55',39.6667,36.9167
+3,4,9,1,Syrakousai colonia,39°30',37°30',39.5,37.5
+3,4,9,2,Tauros promontory,39°30',37°30',39.5,37.5
+3,4,9,3,Alabos river mouth,39°25',37°20',39.4167,37.3333
+3,4,9,4,Pantachos river mouth,39°25',37°35',39.4167,37.5833
+3,4,9,5,Katane colonia,39°30',37°45',39.5,37.75
+3,4,9,6,Symaithos river mouth,39°35',37°40',39.5833,37.6667
+3,4,9,7,Tauromenion colonia,39°30',38°10',39.5,38.1667
+3,4,9,8,Argennon promontory,39°30',37°50',39.5,37.8333
+3,4,9,9,Messene in the strait,39°30',38°30',39.5,38.5
+3,4,10,1,The celebrated mountains in the island are: Aetne,39°00',38°00',39.0,38.0
+3,4,10,2,Kratas,37°40',36°40',37.6667,36.6667
+3,4,12,1,The inland cities of Sicily are: Kapition,38°20',38°15',38.3333,38.25
+3,4,12,2,Abakaina,39°00',38°15',39.0,38.25
+3,4,12,3,Hemichara (or Imichara),38°30',38°00',38.5,38.0
+3,4,12,4,Tissa,38°50',38°00',38.8333,38.0
+3,4,12,5,Aleta,37°50',37°50',37.8333,37.8333
+3,4,13,1,Kentouripai,38°30',37°50',38.5,37.8333
+3,4,13,2,Dymethos,38°50',37°50',38.8333,37.8333
+3,4,13,3,Aetnai,39°25',37°45',39.4167,37.75
+3,4,13,4,Agyrion,38°15',37°40',38.25,37.6667
+3,4,13,5,Herbita,37°40',37°30',37.6667,37.5
+3,4,13,6,Sergention (or Sergenteion),38°30',37°30',38.5,37.5
+3,4,13,7,Hydia,38°45',37°30',38.75,37.5
+3,4,13,8,Leontion,39°00',37°30',39.0,37.5
+3,4,13,9,Erbessos,37°50',37°20',37.8333,37.3333
+3,4,13,10,Neeton,38°20',37°25',38.3333,37.4167
+3,4,13,11,Menai,38°50',37°25',38.8333,37.4167
+3,4,13,12,Patiorus,37°20',37°10',37.3333,37.1667
+3,4,13,13,Asseros,37°40',37°20',37.6667,37.3333
+3,4,14,1,Enna,38°05',37°15',38.0833,37.25
+3,4,14,2,Megara,39°15',37°15',39.25,37.25
+3,4,14,3,Petra,38°40',37°05',38.6667,37.0833
+3,4,14,4,Hybla,38°20',37°00',38.3333,37.0
+3,4,14,5,Engyon,39°00',37°00',39.0,37.0
+3,4,14,6,Kotyrga,38°20',36°50',38.3333,36.8333
+3,4,14,7,Makyron,38°40',36°50',38.6667,36.8333
+3,4,14,8,Akrai,39°15',36°40',39.25,36.6667
+3,4,14,9,Makella,37°15',36°40',37.25,36.6667
+3,4,14,10,Schera,37°30',36°50',37.5,36.8333
+3,4,14,11,Triokla,38°00',36°45',38.0,36.75
+3,4,14,12,Akragas,38°30',36°40',38.5,36.6667
+3,4,14,13,Motouka,39°25',36°40',39.4167,36.6667
+3,4,15,1,Segesta,37°05',36°30',37.0833,36.5
+3,4,15,2,Leton,37°30',36°30',37.5,36.5
+3,4,15,3,Entella,37°45',36°30',37.75,36.5
+3,4,15,4,Ankrina,38°10',36°35',38.1667,36.5833
+3,4,15,5,Phthinthia,38°40',36°30',38.6667,36.5
+3,4,15,6,Gela,39°00',36°30',39.0,36.5
+3,4,15,7,Kamarina,39°20',36°25',39.3333,36.4167
+3,4,15,8,Eloros,39°40',36°30',39.6667,36.5
+3,4,15,9,Ina,39°30',36°25',39.5,36.4167
+3,4,15,10,Helkethion,37°15',36°15',37.25,36.25
+3,4,16,1,the islands located around Sicilyand near it are: Didyme island,39°00',39°00',39.0,39.0
+3,4,16,2,Hikesia island,39°30',39°00',39.5,39.0
+3,4,16,3,Erikodes island,38°20',38°45',38.3333,38.75
+3,4,16,4,Phoenikodes island,38°30',38°50',38.5,38.8333
+3,4,16,5,[Hiera] Hephaistou island or Boulka,38°50',38°35',38.8333,38.5833
+3,4,16,6,Lipara island and city,39°00',38°45',39.0,38.75
+3,4,16,7,Euonymos island,39°10',38°45',39.1667,38.75
+3,4,16,8,Strongyle island,39°30',38°45',39.5,38.75
+3,4,17,1,Ustica island and city,37°30',38°45',37.5,38.75
+3,4,17,2,Osteodes island,36°15',37°00',36.25,37.0
+3,4,17,3,Phorbantia island,36°00',36°20',36.0,36.3333
+3,4,17,4,Aigousa island,36°15',36°05',36.25,36.0833
+3,4,17,5,Hiera island,36°00',36°00',36.0,36.0
+3,4,17,6,Pakonia island,36°30',35°50',36.5,35.8333
+3,4,17,7,island of Aeolos,37°00',39°00',37.0,39.0
+3,5,1,1,Vistula river mouth the Chronos river mouth,50°00',56°00',50.0,56.0
+3,5,1,2,Rhoudon river mouth,53°00',57°00',53.0,57.0
+3,5,1,3,Tourous river mouth,56°00',58°30',56.0,58.5
+3,5,1,4,Chesinos river mouth,58°30',59°30',58.5,59.5
+3,5,1,5,"The position of the shore at the latitude of Thule, i.e., the end of the known sea",62°00',63°00',62.0,63.0
+3,5,1,6,The southern limit of Sarmatia at the sources of the Tanais river,64°00',63°00',64.0,63.0
+3,5,1,7,southern limit of the Sarmatian mountains to the beginning of Mt. Karpatos,46°00',48°30',46.0,48.5
+3,5,2,1,Borysthenes river mouth,57°30',48°30',57.5,48.5
+3,5,2,2,Hypanios river mouth,58°00',48°30',58.0,48.5
+3,5,2,3,"Grove of Hekate, promontory",58°30',47°45',58.5,47.75
+3,5,2,4,Isthmus of the Racecourse of Achilles(Achilleos Dromos),59°00',47°40',59.0,47.6667
+3,5,2,5,"The western promontory of Achilleos dromos, which is called Sacred promontory",57°50',47°30',57.8333,47.5
+3,5,2,6,"The eastern, which is called Mysaris headland",59°45',47°30',59.75,47.5
+3,5,2,7,Kephalonesos,59°45',47°50',59.75,47.8333
+3,5,2,8,Kalos Limen,59°30',47°45',59.5,47.75
+3,5,2,9,Tamyrake,59°20',48°30',59.3333,48.5
+3,5,2,10,Karkinites river mouth,59°40',48°30',59.6667,48.5
+3,5,2,11,which is the isthmus that separates the Tauric Chersonese; the limit toward the Karkinites gulf being,60°20',48°20',60.3333,48.3333
+3,5,2,12,that toward Lake Byke,60°30',48°30',60.5,48.5
+3,5,4,1,"isthmus of the Maiotic Lake toward the Karkinites river, Neon Teichos",60°30',48°40',60.5,48.6667
+3,5,4,2,Pasiakos river mouth,60°20',48°50',60.3333,48.8333
+3,5,4,3,Leianon city,60°00',49°15',60.0,49.25
+3,5,4,4,Bykos river mouth,60°20',49°30',60.3333,49.5
+3,5,4,5,Akra city,60°30',49°40',60.5,49.6667
+3,5,4,6,Gerros river mouth,61°00',49°50',61.0,49.8333
+3,5,4,7,Kremnoi city,62°30',49°45',62.5,49.75
+3,5,4,8,Agaron promontory,63°00',49°40',63.0,49.6667
+3,5,4,9,Agaros river mouth,62°30',50°30',62.5,50.5
+3,5,4,10,"a grove, the Fishery of God",62°40',51°15',62.6667,51.25
+3,5,4,11,Lykos river mouth,63°00',51°30',63.0,51.5
+3,5,4,12,Hygreis city,63°30',52°30',63.5,52.5
+3,5,4,13,Poritos river mouth,64°30',53°00',64.5,53.0
+3,5,4,14,Karoia kome,65°00',53°30',65.0,53.5
+3,5,4,15,western mouth of the Tanais river,66°20',54°20',66.3333,54.3333
+3,5,4,16,eastern mouth,67°00',54°30',67.0,54.5
+3,5,4,17,turn of the river,72°30',56°00',72.5,56.0
+3,5,4,18,source of the river,64°00',58°00',64.0,58.0
+3,5,4,19,which the limit by the Unknown Land,64°00',63°00',64.0,63.0
+3,5,5,1,"Sarmatia is divided by other mountains, called: Mt. Peuke",51°00',51°00',51.0,51.0
+3,5,5,2,the Amadoka mountains,55°00',51°00',55.0,51.0
+3,5,5,3,Mt. Bodinon,58°00',55°00',58.0,55.0
+3,5,5,4,Mt. Alanon,62°30',55°00',62.5,55.0
+3,5,5,5,Mt. Karpata as mentioned,46°00',48°30',46.0,48.5
+3,5,5,6,the Venedic mountains,47°30',55°00',47.5,55.0
+3,5,5,7,"the Rhipaian mountains, midpoint",63°00',57°30',63.0,57.5
+3,5,6,1,Amadoka lake,53°30',50°20',53.5,50.3333
+3,5,6,2,The northernmost source of the Borysthenesriver,52°00',53°00',52.0,53.0
+3,5,6,3,bend,53°00',48°30',53.0,48.5
+3,5,6,4,until the limit,49°30',48°30',49.5,48.5

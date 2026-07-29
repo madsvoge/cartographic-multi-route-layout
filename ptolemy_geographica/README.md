@@ -386,9 +386,10 @@ have belonged to (Narmades, Nanagunas, Pseudostomos, Baris, Solen, Tynas,
 and others' source points) but couldn't reach while miscategorized as
 mountains: 103 → 111 river lines, 263 → 281 points-in-a-line.
 
-This covers 56 of 215 `mountain` points (a single-citation range - most of
-the catalogue's ~150 named peaks/ranges only ever appear once, with no
-second point to connect to - still plots as an individual point, no line).
+This covers 121 of 234 `mountain` points, grouped into 59 lines (a
+single-citation range - most of the catalogue's ~150 named peaks/ranges
+only ever appear once, with no second point to connect to - still plots as
+an individual point, no line).
 
 ## Cross-checking against topostext.org (`topostext/`)
 
@@ -571,6 +572,71 @@ work above rather than a fresh keyword sweep:
   rather than duplicated) - without it, fixing the classification would have
   drawn a nonsense line connecting five unrelated peaks from the Balkans to
   the Persian Gulf.
+
+A fourth pilot run (Cisalpine Gaul's rivers and lakes, the Alpine peoples,
+Corsica, Sardinia, Sicily, and the start of Sarmatia, `§3.1.24`-`§3.5.6`)
+found the largest batch yet, all variations on "a word our keyword rules
+never learned to recognize":
+
+- Four points along the Padus/Doria (Po) river system named after a lake
+  they source from or drain into - "Padus (Ausfluss aus Lacus Larius)"
+  ("Po, outflow from Lake Como"), "Doria (Ausfluss aus Lacus Poeninus)",
+  bare "Lacus Benacus" (Lake Garda) - were in `city`. "Ausfluss" (outflow)
+  is the same kind of river-origin point as "Quelle"/"Ursprung", just for a
+  river starting at a lake instead of a spring, so added to
+  `_RIVERFEAT_RE`; "Lacus" (Latin for lake, used only for these four points
+  - everywhere else in the catalogue uses German "See"/"Palus") added to
+  `_LAKE_RE`. Checked before adding either: the river check runs first in
+  `_classify_locality`, so the two dual-named "Ausfluss...Lacus..." points
+  correctly land on `river` (their primary identity) while bare "Lacus
+  Benacus", with no river keyword of its own, correctly falls through to
+  `lake`.
+- The biggest gap: "Berg"/"Berge" ("mountain(s)") as its own separate word
+  - "Goldener Berg" ("Golden mountain"), "Rasende Berge" ("the Mainomena
+    mountains", literally "raging mountains"), "Sarmatische Berge
+    (S-Ende)/(N-Ende)", "Heiliger Berg", "Weisse Berge", "Libysche Berge",
+    "Äthiopische Berge", "Mareitha-Berge" - wasn't recognized by
+    `_MOUNTAIN_NAME_RE` at all: its "-berg\b"/"^berg\b" checks require a
+    hyphen immediately before the word or a match at the very start, and
+    none of these satisfy either (an adjective, not a hyphen, precedes
+    "Berg"/"Berge"). 13 points across the whole catalogue were sitting in
+    `city`, and three more - "Gordyaische Berge (Mitte)", "Berge aus denen
+    die Flüsse...fliessen (Mitte)", "Strongylon (Mitte) bzw. Berg der
+    Semiramis" - were in `river`, caught by the river-course pattern's
+    "(Mitte)" before ever reaching a mountain check that didn't fire.
+    Fixed with a fourth, weaker classification tier: a bare `\bberge?\b`
+    match, guarded three ways so it never overrides a point already doing
+    real work elsewhere - not river-like via a location reference (the
+    same `_MOUNTAIN_LOCATION_REF_RE` check as the `-Gebirge` tier), not in
+    a sea-headed section, and not also matching a cape/gulf/harbor/estuary
+    pattern. That last pair of guards matters: Mount Athos ("Athos, ein
+    Berg") and "Akrokeraunische Berge (Spitze)" are real, working coastline
+    points (a range that happens to end at the sea, the same reasoning
+    `_KAP_PREFIX_RE` already uses for "Kap Oiarso, Pyrene-Gebirge") and
+    stayed exactly where they were - confirmed unchanged (61 coastline
+    features before and after).
+- "Karpaten" (the Carpathians - topostext: "the beginning of Mt. Karpatos",
+  "Mt. Karpata") was in `city`, three re-citations of the same boundary
+  point (all at the identical coordinate, so no line either way regardless
+  of category) - added to the specific-proper-name tier alongside "Calpe"/
+  "Skardon".
+- Three more island-list sections, the same shape as the Cyclades/Dodecanese
+  (several different islands enumerated together, only some of which happen
+  to carry an explicit "-Insel" suffix of their own): the islands around
+  Sardinia (`3.03.08` - Ilva, Nymphaea, Diabate, Ficaria, Hermaea sat in
+  `city` alongside their already-`island` neighbours) and two sections of
+  islands around Sicily (`3.04.16`/`3.04.17` - Didyme, Hikesia, Erikodes,
+  Phoinikodes, Euonymos, Lipara, Strongyle, Ustica, Osteodes, Phorbantia,
+  Aigusa, Hiera, Pakonia), confirmed by topostext's own headers ("The
+  islands around Sardinia are...", "the islands located around Sicily...").
+
+Not every flagged mismatch was a bug even this time round - "Rhoetius
+mountains" at topostext's `30°00' . 40°20'` lands exactly on our own
+"Rhoetium (Rhytium)" city point in Corsica's coastal-city list, with no
+independent "Rhoetius-Gebirge" entry anywhere in the source catalogue to
+back up a separate mountain citation - most likely a quirk of the English
+translation itself rather than something to "fix" by inventing a mountain
+our primary source doesn't have.
 
 ## Compiling the catalogue to data: `annotate_dataset.py`
 
