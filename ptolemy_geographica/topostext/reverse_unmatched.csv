@@ -1,35 +1,22 @@
 ref_id,name,category,lon_ptolemy,lat_ptolemy
-2.03.10.04,Alauna,city,20.3333333333333,58.6666666666667
-2.03.19.02,Deva und Legio XX Valeria Victrix,city,18.5,55.0
 2.03.21.02,Salinae,city,26.0,55.6666666666667
-2.04.07.12,Kap des Charidemus,coast,11.5,36.3333333333333
-2.04.13.15,Ilipa Magna,city,7.66666666666667,37.5
 2.05.04.05,"Tagus (Grenzpunkt Lusitania, Tarraconensis)",city,9.0,40.1666666666667
-2.06.04.05,Mearus-Mündung,river_mouth,9.0,45.75
 2.06.70.02,Aquae Calidae,city,16.6666666666667,42.1666666666667
 2.06.70.04,Baecula (Becula),city,17.0,42.25
 2.06.70.05,Gerunda,city,16.6666666666667,42.6666666666667
 2.06.76.03,Inseln der Götter (2),island,4.66666666666667,43.3333333333333
-2.07.04.02,Liger (Quellgebiet),river,20.0,45.5
 2.07.04.04,"Pyrene-Gebirge (Grenzpunkt Aquitania, Narbonensis)",mountain,19.0,43.1666666666667
 2.07.11.02,Divona,city,18.0,47.25
 2.08.03.02,Sequana (Mitte),river,22.0,49.3333333333333
-2.08.03.04,"Grenzpunkt (Belgica, Lugdunensis, Narbonensis)",city,25.25,45.3333333333333
 2.08.04.03,Cebenna-Gebirge (Mitte),mountain,23.0,46.5
 2.08.14.08,Forum Segusiavorum,city,23.5,45.5
-2.09.08.06,Tarvenna,city,23.3333333333333,52.8333333333333
 2.09.10.03,Castellum,city,25.0,52.25
 2.09.16.02,"Traiana, Legio XXII Primigenia",city,27.5,50.5833333333333
 2.09.18.03,Elcebus,city,28.5,47.0
 2.10.13.02,Noviomagus,city,23.5,45.0
-2.11.01.05,Vidrus-Mündung,river_mouth,28.5,54.3333333333333
-2.11.01.08,Amisia-Quellen,river,32.0,52.0
 2.11.03.01,Nächste und nördlichste Landspitze,coast,38.6666666666667,58.1666666666667
-2.11.03.02,Östlichste Landspitze der Halbinsel,coast,40.25,59.5
 2.11.03.04,Erste Landspitze nach der Landspitze,coast,39.3333333333333,58.25
-2.11.28.02,Nabalia,city,27.6666666666667,53.25
 2.11.29.11,Bergium,city,36.0,49.5
-2.11.31.03,Inseln der Sachsen (3),island,31.0,57.6666666666667
 2.11.34.04,Scandia N,island,44.5,58.5
 2.15.02.05,Danuvius (Einmündung des Dravus),river,44.3333333333333,45.6666666666667
 2.15.02.12,Danuvius (Biegung bei Cornacum),river,44.4166666666667,45.25
@@ -50,61 +37,39 @@ ref_id,name,category,lon_ptolemy,lat_ptolemy
 2.15.06.04,Cirtisa,city,42.3333333333333,45.3333333333333
 2.15.07.01,Mursella,city,43.0,46.0
 2.15.07.02,Cibalae,city,43.0,45.5
-2.15.07.03,Marsonia,city,43.0,45.0
 2.15.07.04,Vacontium (Vocantium),city,43.5,46.5
 2.15.08.01,Mursa (Mursa*),city,43.5,45.75
 2.15.08.02,Sallis (Saldis),city,44.0,44.6666666666667
 2.15.08.05,Sirmium*,city,44.8333333333333,45.0
-3.01.11.03,Golf von Scolacium (innerster Punkt),coast,40.75,38.75
-3.01.34.04,Eporedia,city,30.25,43.8333333333333
-3.01.78.03,Aethalia,island,30.6666666666667,42.0
 3.01.80.02,Diomedische Inseln (5),island,40.6666666666667,43.0
 3.05.02.01,Vistula-Mündung,river_mouth,45.0,56.0
 3.05.06.02,Sarmatische Berge (S-Ende),mountain,42.5,48.5
-3.05.08.04,Schöner Hafen,harbor,59.5,48.0
 3.05.15.04,Amadoka-Gebirge,mountain,59.0,51.0
 3.08.08.07,Pirum,city,51.25,46.0
-3.08.09.03,Argidava,city,49.5,45.25
 3.08.09.06,Hydata,city,49.5,45.6666666666667
-3.09.03.07,Viminacium,city,46.5,44.3333333333333
-3.09.05.04,Vindenae,city,48.0,42.5
 3.10.08.04,Histria,city,55.6666666666667,46.0
 3.13.42.03,Azoros,city,46.25,39.5
-3.13.47.11,Skyros,island,52.0,40.0
-3.14.10.02,Astakos,city,47.25,38.25
 4.01.02.05,Handelsbucht,coast,6.16666666666667,34.3333333333333
-4.01.07.01,Taenia Longa,city,9.5,34.5
 4.02.12.03,"Grenzpunkt (Africa, Inneres Libyen, Mauretania Caesariensis)",city,27.8333333333333,26.0
 4.02.16.02,Phruraison-Gebirge (O-Ende),mountain,21.0,26.5
-4.02.16.05,Buzara-Gebirge (W-Ende),mountain,25.0,25.5
-4.02.24.06,Apphar,city,14.6666666666667,33.25
-4.02.25.04,Garra,city,15.1666666666667,32.8333333333333
 4.02.30.01,Thudaka (Thukada),city,20.8333333333333,31.3333333333333
 4.03.01.05,"Grenzpunkt (Africa, Inneres Libyen, Mauretania Caesariensis)",city,27.8333333333333,26.0
 4.03.18.05,Uasalaiton-Gebirge (W-Ende),mountain,37.0,28.0
-4.03.19.02,Triton-See,lake,38.6666666666667,29.6666666666667
 4.03.20.03,Thizibi-Berg,mountain,41.25,28.0
 4.03.28.05,Mileum,city,26.6666666666667,30.3333333333333
 4.03.30.12,Thamugadi,city,32.0,29.75
-4.03.31.09,Avitta,city,33.5,30.25
 4.03.37.02,Almaina (Almina),city,35.25,30.67777777
-4.03.40.01,Karaga,city,38.1666666666667,29.6666666666667
 4.03.43.02,Sikapha (Sykapha),city,43.1666666666667,30.0
-4.03.43.05,Thagulis,city,44.5,28.0
 4.03.44.05,Aigimoros,island,31.25,33.25
 4.03.46.02,Pontia,island,45.3333333333333,30.25
-4.03.47.03,Gaulos,island,37.33333333,34.6666666666667
 4.04.08.01,Dünen des Herakles (Mitte),river,48.6666666666667,29.0
-4.05.12.06,Anthedon,city,64.8333333333333,31.6666666666667
 4.05.25.02,Oasiten (Thasioten),city,59.5,27.8333333333333
-4.05.52.08,Pharbaithos,city,62.75,30.5
 4.05.76.03,Argaiu,city,61.4166666666667,31.6666666666667
 4.06.08.05,Sagapola-Gebirge (Mitte),mountain,13.0,22.0
 4.06.09.03,Kapha-Gebirge (Mitte),mountain,17.0,10.0
 4.06.27.05,Uellegeia (Uelegeia),city,28.5,11.6666666666667
 4.06.28.01,Thupai (Thuppai),city,26.5,16.6666666666667
 4.07.07.02,Sabastrikon-Mündung,river_mouth,65.5,16.0
-4.07.10.03,Malao,coast,78.0,6.5
 4.07.11.06,Apokopon (Apokopa),coast,79.0,3.0
 4.07.11.08,Kleiner Strand,coast,78.0,1.0
 4.07.11.09,Grosser Strand,coast,76.0,2.0
@@ -116,8 +81,6 @@ ref_id,name,category,lon_ptolemy,lat_ptolemy
 4.07.26.07,Pylaia-Gebirge,mountain,65.0,0.0
 4.07.26.08,Maste-Berg,mountain,68.0,-5.0
 4.08.06.01,Dauchis-Gebirge (Mitte),mountain,15.0,-13.0
-5.01.06.02,Sangarios (erste Krümmung),city,58.5,42.0
-5.02.08.04,Lykos (Zusammenfluss mit dem Maiander),river,60.0,38.6666666666667
 5.04.06.07,Eusene,city,64.6666666666667,42.6666666666667
 5.06.01.13,Euphrat (Biegung nach Osten),river,72.0,42.5
 5.06.09.06,Sebastopolis 2,city,66.0,42.3333333333333

@@ -1,75 +1,43 @@
 book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal
-2,3,11,3,"these toward the east are the Cornavi, among whom are the towns: Deva, Legio XX Victrix",17°30',56°45',17.5,56.75
 2,3,11,7,"are the Catuvellauni, among whom are the towns: Salinae",20°45',55°50',20.75,55.8333
-2,4,10,29,Laipa (or Illipa) greater,7°40',38°10',7.6667,38.1667
-2,5,3,4,Point at which it crosses over to Tarraconensis,10°00',40°10',10.0,40.1667
-2,6,4,3,Mearus river mouth,7°00',45°45',7.0,45.75
-2,6,6,2,(Noigaucesios river mouth,13°00',45°25',13.0,45.4167
-2,6,30,4,"Of the Saelini, Nardinium",10°20',43°45',10.3333,43.75
-2,6,60,8,Belgoula or Bergoulda,11°20',39°45',11.3333,39.75
-2,6,61,1,"these, on the sea, with these inland cities: Menlaria",13°45',37°15',13.75,37.25
-2,6,61,2,Valentia,14°00',37°05',14.0,37.0833
 2,6,61,3,Saitabis,13°10',37°00',13.1667,37.0
 2,6,62,11,Edeta and/or Leiria,14°20',38°25',14.3333,38.4167
-2,6,64,1,"In the area between the Iber and the Pyrenees, lying next to the Autrigones, through whose territory the river flows, to the east are the Caristi with these inland cities: Suestasium",13°40',40°15',13.6667,40.25
 2,7,3,1,The eastern side adjoins the part of Lugdunensis by the Liger River until its head,20°00',44°30',20.0,44.5
 2,7,6,6,to these the Cadurci and their city Dueona,19°00',46°15',19.0,46.25
-2,8,3,2,by a straight line to the end point,25°00',45°30',25.0,45.5
 2,8,4,1,"The southern side is bounded by the part on this side of Narbonensis as far as the mentioned end point by Aquitania, the Cemmena mountains, mid-point",20°20',44°30',20.3333,44.5
 2,8,11,3,Forum Segusianorum,20°30',45°30',20.5,45.5
 2,9,5,2,Mosa River the Menapii and their city Castellum,25°00',22°15',25.0,22.25
 2,9,8,5,Legion I Athena (Minerva) and then Traiane Legion,28°30',50°35',28.5,50.5833
-2,10,7,3,"Further east are the Tricastini, whose city is Noeomagus",26°30',45°00',26.5,45.0
 2,11,1,1,mouths of the river Rhenus: Mouths of the river Vidrus,27°20',54°45',27.3333,54.75
-2,11,1,4,Sources of the river,32°00',53°00',32.0,53.0
-2,11,2,3,The next and northernmost promontory,38°40',59°20',38.6667,59.3333
 2,11,2,4,turn,39°10',59°10',39.1667,59.1667
-2,11,2,5,Its easternmost point,40°15',58°20',40.25,58.3333
-2,11,13,2,Navalia,27°10',54°00',27.1667,54.0
 2,11,14,11,Bergium,33°00',49°20',33.0,49.3333
 2,11,16,6,the northernmost point,44°20',58°20',44.3333,58.3333
-3,1,5,3,Ostia,33°30',41°30',33.5,41.5
-3,5,2,8,Kalos Limen,59°30',47°45',59.5,47.75
-3,5,5,2,the Amadoka mountains,55°00',51°00',55.0,51.0
-3,8,4,18,Ziridaua,45°30',46°20',45.5,46.3333
 3,8,4,24,Piroum,51°15',6°00',51.25,6.0
 3,8,4,29,Argidaua,46°30',45°15',46.5,45.25
 3,8,4,32,Hydata,49°30',5°00',49.5,5.0
 3,9,3,3,"where the Moschios river branches. Viminacium, legion",46°30',4°00',46.5,4.0
-3,9,4,3,Ouendenis,48°00',42°50',48.0,42.8333
 3,10,2,9,"the more northerly of this division flows into Pontos by the mouth called Boreios, located",56°20',6°50',56.3333,6.8333
 3,10,2,11,the mor southerly of this division flows into Pontos by the mouth called Narakion,56°10',6°20',56.1667,6.3333
 3,10,3,2,"Sacred mouth of the Istros river, Pteron promontory",56°20',6°00',56.3333,6.0
 3,10,3,3,Istros city,55°40',6°00',55.6667,6.0
 3,12,30,2,Of the Pelagonians: Audaristos,48°40',50°05',48.6667,50.0833
-3,12,44,6,Skyros island and city,54°00',39°00',54.0,39.0
 3,14,31,14,Pherai,49°30',30°15',49.5,30.25
-3,14,44,6,Aigila island,51°45',34°40',51.75,34.6667
-3,15,11,1,"Islands adjacent to Crete Klaudos island, in which a city",53°30',34°00',53.5,34.0
 4,1,2,5,Emporikos kolpos,6°30',34°20',6.5,34.3333
-4,1,7,1,Taeniolonga (Tainia Longa),9°30',35°45',9.5,35.75
 4,2,16,2,,21°00',26°00',21.0,26.0
-4,2,16,5,the western part of Buzara at,25°00',25°00',25.0,25.0
-4,2,24,6,Apphar,16°20',33°15',16.3333,33.25
-4,2,25,4,Garra,16°30',32°50',16.5,32.8333
 4,2,30,1,"a different starting point, the towns are Thudaca",19°10',32°20',19.1667,32.3333
 4,3,18,4,"Mt. Ousalaiton or Ousaleton, the end points of which are at",37°00',38°00',37.0,38.0
 4,3,19,1,"which the Triton river flows, and in it these lakes: Tritonitis",38°40',39°40',38.6667,39.6667
-4,3,20,2,Mt. Thizibi,44°15',28°00',44.25,28.0
 4,3,36,7,Bunthum,36°15',27°20',36.25,27.3333
 4,3,44,4,Aigimoros island,34°15',33°30',34.25,33.5
 4,3,46,2,Pontia island,45°20',20°15',45.3333,20.25
 4,5,12,5,Anthedon,64°50',51°40',64.8333,51.6667
 4,5,25,1,"The Nitriotai, and the Oasita dwell in the parts still further to the south, at",59°30',29°30',59.5,29.5
-4,5,52,2,"Tanites nome, and metropolis Tanis",62°45',32°50',62.75,32.8333
-4,5,52,3,"Pharbaithites nome, and metropolis Pharbaithos",62°45',32°30',62.75,32.5
 4,6,2,1,"same meridian until the limit, at",51°15',3°10',51.25,3.1667
 4,6,8,2,"which the Subos river flows, midpoint",20°20',22°,20.3333,22.0
 4,6,9,2,"which the Darados river flows, midpoint",27°,10°,27.0,10.0
 4,6,27,5,Uellegeia,28°30',16°40',28.5,16.6667
 4,6,28,1,south of the river Thupai,16°30',16°40',16.5,16.6667
 4,7,7,4,Altar of Eros promontory,66°30',16°00',66.5,16.0
-4,7,10,2,Malao trading post,75°00',6°30',75.0,6.5
 4,7,11,5,Apokopa,70°00',3°00',70.0,3.0
 4,7,11,7,Small shore,78°00',1°00' S,78.0,-1.0
 4,7,11,8,Great shore,76°00',2°00' S,76.0,-2.0
@@ -80,12 +48,9 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal
 4,7,26,5,beside the lakes the so-called Pylaian mountains . 65°00' . equator and Maste mountain,68°00',5°00',68.0,5.0
 4,9,3,2,,68°,12°20' S,68.0,-12.3333
 4,9,6,1,"Those that have come to our knowledge are as follows: Mount Dauchis, the centre of which is",15°,8°25' S,15.0,-8.4167
-5,1,6,2,first turn of the river,57°30',42°00',57.5,42.0
 5,1,9,1,"mentioned point, i.e",61°00',31°15',61.0,31.25
 5,1,9,2,at the city Kytoron of the Pontos,61°00',33°45',61.0,33.75
 5,2,13,10,Kadmos mountain,59°40',37°40',59.6667,37.6667
-5,4,6,7,Eusene,60°40',42°40',60.6667,42.6667
-5,4,7,6,Oueteston,62°20',40°40',62.3333,40.6667
 5,4,10,8,Laodikeia katakekaumene,63°40',39°40',63.6667,39.6667
 5,4,11,4,Neapolis,62°40',48°45',62.6667,48.75
 5,6,1,5,along the line of the Moschikos mountains and to the terminal,73°00',44°30',73.0,44.5

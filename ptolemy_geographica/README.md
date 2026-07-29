@@ -943,30 +943,41 @@ name, used everywhere "matched" is decided now:
 
 - **distance <= 0.02°: score 100**, no question - this is the old strict
   tolerance, still exactly right when it's met.
-- **0.02° < distance <= 1.2°**: a blended score, 55% from how close the
-  distance is within that window (linear falloff) and 45% from **name
-  similarity** (`_name_similarity` in `verify_near_matches.py`) - which
-  translates the catalogue's German descriptor vocabulary to English
-  *before* folding away umlauts (translating after, the original bug here,
-  silently skipped every umlauted word - "mündung", "ästuar", "südlich" -
-  which is most of the vocabulary), strips topostext's own multi-city-run
-  lead-in prose ("...among whom are the towns: X"), and matches tokens
-  loosely (a >=4-letter prefix or a >=0.82 edit-distance ratio counts, so
-  "isca"/"iscas" or "boderia"/"boderias" still match) rather than requiring
-  exact token equality. Per-token similarity is itself graduated, not a
-  yes/no (`_token_sim`): a shared *leading* stem, scaled by the longer
-  token's length ("taurische"/"taurianus" -> 0.56, "sipontum"/"sipus" ->
-  0.38), or - for drift not at the very start of the word - a whole-token
-  edit-distance ratio, but gated at 0.6 ("ilipa"/"illipa" -> 0.91,
-  "orospeda"/"ortospeda" -> 0.94 pass; "tyana"/"kydnos" -> 0.36, two words
-  with nothing in common beyond scattered shared letters, doesn't). A
-  small bonus is added when the phrase's implied type
-  (`crossref_topostext.py`'s `_TYPE_HINTS` - "mouth of"/"estuary" implies
-  `river_mouth`/`coast`/`harbor`, etc.) agrees with the candidate's actual
-  category, to break ties between two real, differently-named points
-  sitting close together (a plain city right next to the river-mouth point
-  a "mouth of the X river" phrase is actually describing).
-- **distance > 1.2°: not a candidate at all**, regardless of name.
+- **distance > 3.0° (`CANDIDATE_WINDOW_DEG`): not a candidate at all**,
+  regardless of name - a coincidentally-identical short name somewhere
+  unrelated across a whole book shouldn't out-vote real geography.
+- Between those two, a blended score: a distance component - linear
+  falloff from just-under-1 to 0, but across the *tighter* 1.5°
+  `DIST_SCORE_REF_DEG`, so it bottoms out at 0 well before the wider 3.0°
+  candidate window does rather than staying generous all the way out -
+  and a name-similarity component (`_name_similarity` in
+  `verify_near_matches.py`), 55/45 weighted toward distance. Two distance
+  numbers instead of one was itself a fix: catalogue "Garra" (4.02.25.04)
+  and topostext's own "Garra" - the exact same name - sit 1.33° apart
+  (one source's transcription drifted), rejected outright by an earlier
+  single 1.2° cutoff before the name was even looked at; now a near-
+  identical name can still carry a match past the threshold on its own
+  once the distance component has floored to 0 (Garra scores 51).
+  `_name_similarity` translates the catalogue's German descriptor
+  vocabulary to English *before* folding away umlauts (translating after,
+  the original bug here, silently skipped every umlauted word -
+  "mündung", "ästuar", "südlich" - which is most of the vocabulary),
+  strips topostext's own multi-city-run lead-in prose ("...among whom are
+  the towns: X"), and compares every token of a longer descriptive phrase
+  against the catalogue name (not just a whole-phrase check) with a
+  *graduated*, not yes/no, per-token similarity (`_token_sim`): a shared
+  *leading* stem, scaled by the longer token's length ("taurische"/
+  "taurianus" -> 0.56, "sipontum"/"sipus" -> 0.38), or - for drift not at
+  the very start of the word - a whole-token edit-distance ratio, but
+  gated at 0.6 ("ilipa"/"illipa" -> 0.91, "orospeda"/"ortospeda" -> 0.94
+  pass; "tyana"/"kydnos" -> 0.36, two words with nothing in common beyond
+  scattered shared letters, doesn't). A small bonus is added when the
+  phrase's implied type (`crossref_topostext.py`'s `_TYPE_HINTS` -
+  "mouth of"/"estuary" implies `river_mouth`/`coast`/`harbor`, etc.)
+  agrees with the candidate's actual category, to break ties between two
+  real, differently-named points sitting close together (a plain city
+  right next to the river-mouth point a "mouth of the X river" phrase is
+  actually describing).
 - A whole-*phrase* sequence-ratio fallback (for a short name that's pure
   transliteration drift, "Ebusus"/"Ebussos") only applies when both names
   are themselves a single token - applied to longer phrases it stops being
@@ -975,8 +986,8 @@ name, used everywhere "matched" is decided now:
   above guards against.
 - A candidate scoring below 45 isn't recorded as a match - see
   `link_matches.py`'s docstring for the full formula and reasoning. This
-  raised matched coverage substantially: **944 → 122 unmapped catalogue
-  points, 921 → 90 unmapped topostext citations**, at the time of writing.
+  raised matched coverage substantially: **944 → 85 unmapped catalogue
+  points, 921 → 55 unmapped topostext citations**, at the time of writing.
 
 Three scripts, run in this order:
 

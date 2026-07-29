@@ -12,25 +12,42 @@ Scoring (see score_match())
 Distance is Manhattan degrees (lon diff + lat diff), the same metric used
 throughout this project (crossref_topostext.py's _MATCH_TOL_DEG, etc).
 
+Two distance thresholds, not one - a single cutoff used for both "is this
+even a candidate" and "how much does distance count" was too blunt: it
+missed real matches like catalogue "Garra" (4.02.25.04, 15°10'/32°50')
+against topostext's own "Garra" (4.2.25.4, 16°30'/32°50') - the *exact
+same name*, 1.33deg apart (one source's transcription drifted a degree
+and a bit), rejected outright by an old 1.2deg hard cutoff before the
+name was even looked at.
+
 - distance <= EXACT_TOL_DEG (0.02): score = 100 outright. Both sources
   round DMS the same way, so anything this close is the same point,
   full stop - no need for the name to agree (topostext's phrase is often
   noisy lead-in prose, not a clean name, on a section's first citation).
-- EXACT_TOL_DEG < distance <= MAX_WINDOW_DEG (1.2): score blends a
-  distance component (linear falloff from just-under-1 to 0 across the
-  window) and a name-similarity component (see _name_similarity in
-  verify_near_matches.py - token overlap after translating the
-  catalogue's German descriptor vocabulary to English and stripping
-  topostext's own multi-city-run lead-in prose, tolerant of prefix/
-  plural/transliteration drift like "isca"/"iscas"), 55/45 weighted
-  toward distance since coordinates are the primary evidence. A small
-  bonus is added when the phrase's implied type (crossref_topostext.py's
+- distance > CANDIDATE_WINDOW_DEG (3.0): not considered a candidate at
+  all, regardless of name - a coincidentally-identical short name
+  somewhere unrelated across a whole book shouldn't out-vote real
+  geography entirely.
+- EXACT_TOL_DEG < distance <= CANDIDATE_WINDOW_DEG: score blends a
+  distance component - linear falloff from just-under-1 to 0 across the
+  *tighter* DIST_SCORE_REF_DEG (1.5), so it can bottom out at 0 well
+  before the wider candidate window does, rather than being generous all
+  the way out to 3deg - and a name-similarity component (see
+  _name_similarity in verify_near_matches.py - graduated token
+  similarity after translating the catalogue's German descriptor
+  vocabulary to English and stripping topostext's own multi-city-run
+  lead-in prose, tolerant of a shared stem, plural, or transliteration
+  drift like "isca"/"iscas" or "taurische"/"taurianus"), 55/45 weighted
+  toward distance since coordinates are the primary evidence. A near-
+  identical name can still carry a candidate over the match threshold on
+  its own even once the distance component has floored to 0 (Garra: dist
+  component ~0.11, name component 1.0 -> score 51). A small bonus is
+  added when the phrase's implied type (crossref_topostext.py's
   _TYPE_HINTS - "mouth of"/"estuary" implies river_mouth/coast/harbor,
   etc.) matches the candidate's actual category, to break ties between
   two real, differently-named points that happen to sit close together
   (a plain city entry right next to the river-mouth point a phrase like
   "mouth of the X river" is actually describing).
-- distance > MAX_WINDOW_DEG: not considered a candidate at all.
 
 A candidate below MATCH_THRESHOLD (45) is not recorded as a match - the
 score is still informative below that, but recording it as "matched"
@@ -59,7 +76,8 @@ TOPOSTEXT = SCRIPT_DIR / "topostext_209.csv"
 REVIEW_XLSX = SCRIPT_DIR / "unmapped_review.xlsx"
 
 EXACT_TOL_DEG = 0.02
-MAX_WINDOW_DEG = 1.2
+CANDIDATE_WINDOW_DEG = 3.0  # how far a candidate can be considered at all
+DIST_SCORE_REF_DEG = 1.5  # where the distance component of the score bottoms out (tighter than the window above)
 MATCH_THRESHOLD = 45.0
 _TYPE_BONUS = 8.0
 
@@ -96,11 +114,11 @@ def _expected_categories(phrase: str) -> set[str] | None:
 
 
 def score_match(distance: float, phrase: str, name: str, category: str) -> float:
-    if distance > MAX_WINDOW_DEG:
+    if distance > CANDIDATE_WINDOW_DEG:
         return 0.0
     if distance <= EXACT_TOL_DEG:
         return 100.0
-    dist_component = max(0.0, 1.0 - distance / MAX_WINDOW_DEG)
+    dist_component = max(0.0, 1.0 - distance / DIST_SCORE_REF_DEG)
     name_component = _name_similarity(phrase, name)
     score = 100.0 * (0.55 * dist_component + 0.45 * name_component)
     expected = _expected_categories(phrase)
@@ -131,7 +149,7 @@ def _best(lon: float, lat: float, phrase: str, candidates: list[tuple[dict, str,
     best, best_score = None, -1.0
     for cand, lon_key, lat_key, name_key in candidates:
         d = abs(float(cand[lon_key]) - lon) + abs(float(cand[lat_key]) - lat)
-        if d > MAX_WINDOW_DEG:
+        if d > CANDIDATE_WINDOW_DEG:
             continue
         s = score_match(d, phrase, cand[name_key], cand.get("category", ""))
         if s > best_score:
