@@ -464,6 +464,41 @@ states outright what a point *is* ("A description of the north coast...",
 Albion island...") instead of us inferring it from a keyword regex - an
 independent check, not just a second opinion from the same method.
 
+That prose has ended up doing more than confirming individual coordinate
+matches - it's been the actual *source of understanding* behind most of
+the structural features on the map, not just an afterthought check on
+them:
+
+- **Island lists** (`_ISLAND_APPENDIX_SECTIONS`/`_ISLAND_POINT_OVERRIDES`
+  in `ptolemy_map.py`) exist almost entirely because topostext says so in
+  plain English - "the islands which are near Albion island...", "The
+  islands around Sardinia are...", "An island lies off Iulia Caesarea,
+  with the same name" - sentences a German place name alone never states
+  outright. Same for the mountain-name lists in `_MOUNTAIN_APPENDIX_SECTIONS`
+  ("These are the named mountains in Asia, of which the central points
+  are...").
+- **Coastline bugs** - a spurious phantom coastline, a spurious tail
+  stitched onto a real one - were caught by first confirming, from
+  topostext's own wording, that a point was genuinely an island or an
+  inland plain rather than a coastal point, *then* seeing the coastline
+  graph's point count move in a way a pure category swap couldn't explain
+  (see the pilot-run notes below for the specific cases).
+- **River-mouth phrasing** ("mouth of the X river", "X river outlet")
+  and **category words generally** ("promontory", "estuary", "harbor")
+  are what `crossref_topostext.py`'s `_TYPE_HINTS` reads to flag when our
+  own category disagrees with what the English text plainly says a point
+  is - the audit signal that found the Corfu/Euboea/Egypt bugs.
+- **Feature labels'** names (see above) are lifted directly from
+  topostext's own opening sentence for a province, not invented or
+  translated from the German locality name.
+- Two real **parser bugs** in `parse_topostext.py` itself (a required-
+  minutes coordinate regex silently dropping Book 4's bare-degree
+  southern-hemisphere points; a section marker regex missing one book.map
+  because of a stray trailing period) were only found because reading the
+  actual pasted text made a suspiciously low point count, or a
+  suspiciously merged section, visible - errors that stayed invisible
+  from the catalogue side alone.
+
 The tool can't fetch topostext.org itself (blocked by this environment's
 network policy), so the workflow is: paste a chunk of the site's text into
 the conversation, save it under `topostext/raw_209_<range>.txt`, then:
