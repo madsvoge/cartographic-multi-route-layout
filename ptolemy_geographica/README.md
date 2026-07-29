@@ -759,6 +759,54 @@ islands:
   the same "city on an island stays `city`" pattern as Ebusus/Melite's
   peninsula, not a bug.
 
+An eighth pilot run (Interior Libya, Ethiopia below Egypt, and Interior
+Aethiopia/Agisymba - the far southern edge of Ptolemy's known world,
+`§4.6.1`-`§4.9.7`) found a bug in `parse_topostext.py` itself, silently
+dropping real data, plus another spurious coastline tail of the
+Paena/Erythia kind:
+
+- `_COORD_RE` required a minutes group on *both* the longitude and
+  latitude of every coordinate pair. Every other chunk so far had minutes
+  given throughout ("11°00' . 61°00'"), but this one - the catalogue's
+  southernmost reach, several degrees below the equator - gives a number
+  of points in bare whole degrees ("80° . 15°20' S.", "45° . 6° S."), and
+  the required-minutes match simply skipped every one of them without
+  error: book 4 map 9 (Interior Aethiopia) parsed to a single point
+  instead of the dozen-plus its raw text actually has - the tell that
+  something was silently wrong, not a crossref disagreement (nothing to
+  disagree with if the point was never extracted at all). Made minutes
+  optional on both components, and added recognition of a trailing "S."/"S"
+  hemisphere marker (this chunk's only use of one - the catalogue is
+  otherwise all-northern) that negates the latitude. Broadening the match
+  is exactly the kind of change that risks new false positives, so it was
+  checked directly: added a word-boundary negative lookahead
+  (`S(?![a-z])`) after the "S" so it can't swallow the leading letter of an
+  unrelated word directly after a coordinate ("...58°20' **S**etantiorum
+  harbor..." was initially mismatched into "58°20' S" before this guard,
+  corrupting both the latitude *and* the next point's name) - confirmed by
+  re-parsing an earlier, already-verified chunk (`§2.2`-`§2.3`) byte-for-
+  byte identical before and after the regex change. Rather than risk drift
+  from patching just the one chunk, every one of the eight raw chunks
+  pasted so far was re-run through the fixed parser and concatenated fresh
+  into `topostext_209.csv` (3525 rows total), the simplest way to guarantee
+  the whole file reflects one consistent parser version.
+- A second spurious coastline tail, the same shape as Paena/Erythia in the
+  sixth pilot run: four islands "near Ethiopia below Egypt in the Arabian
+  Gulf" (`4.07.36`: Astarte, Altar der Athene, Gypsites, Myron) had been
+  strung onto the end of a long Red Sea coastal-walk segment
+  (`coastline_025_AF04`, otherwise a real ~30-point trace of the Horn of
+  Africa coast) purely because their coordinates landed within stitching
+  distance of its last mainland point, "Kap Bazion" - exactly where
+  topostext's own text pivots from coastal description to an island list
+  ("After the Bazion promontory referred to above:... [coast]... The
+  following islands are near Ethiopia below Egypt in the Arabian Gulf:...
+  Astarta island..."). Reclassifying them correctly truncates the
+  coastline back to Kap Bazion rather than breaking it. Five more
+  island-list sections in the same stretch, all safe to force whole-
+  section: Libya's Western Ocean islands (`4.06.33`), the rest of the
+  Arabian Gulf island list (`4.07.37`), the lone island in the Bay of
+  Avalites (`4.07.39`), and the islands next to Aromata (`4.07.40`).
+
 ## Compiling the catalogue to data: `annotate_dataset.py`
 
 Everything described above - classification, graph reconstruction, distance

@@ -41,8 +41,18 @@ _SECTION_RE = re.compile(r"§\s*(\d+)\.(\d+)\.(\d+)\s+")
 
 # "11°00' . 61°00'" (also tolerate a missing "'" or a stray footnote
 # letter/space in place of the " . " separator, e.g. "14°00 d 51°45'").
+# Minutes are optional on both components - book 4's Ethiopia/Agisymba
+# chunk (below the equator, at the edge of Ptolemy's known world) gives
+# several points in bare whole degrees ("80° . 15°20' S.", "45° . 6° S."),
+# and a required-minutes group silently dropped every one of them instead
+# of erroring, the kind of quiet data loss that's easy to miss unless a
+# section's parsed-point count looks suspiciously low against how many
+# coordinates its raw text actually has. A trailing "S" (or "S.") marks a
+# southern-hemisphere latitude - this catalogue's only use of a hemisphere
+# letter, since longitude is always east-of-Ferro and latitude north
+# in every other book.
 _COORD_RE = re.compile(
-    r"(\d{1,3})°(\d{1,2})'?\s*[.,]?\s*[a-z]?\s*(\d{1,3})°(\d{1,2})'?",
+    r"(\d{1,3})°(\d{1,2})?'?\s*[.,]?\s*[a-z]?\s*(\d{1,3})°(\d{1,2})?'?(?:\s+(S)\.?(?![a-z]))?",
     re.IGNORECASE,
 )
 
@@ -62,8 +72,8 @@ _TRAILING_CONNECTOR_RE = re.compile(
 _LEADING_JUNK_RE = re.compile(r"^(?:and|then|next|,|;)\s+", re.IGNORECASE)
 
 
-def _dms_to_decimal(deg: str, minutes: str) -> float:
-    return float(deg) + float(minutes) / 60.0
+def _dms_to_decimal(deg: str, minutes: str | None) -> float:
+    return float(deg) + (float(minutes) if minutes else 0.0) / 60.0
 
 
 def _clean_name_phrase(raw: str) -> str:
@@ -96,6 +106,12 @@ def parse_text(text: str) -> list[dict]:
             prev_end = cm.end()
             lon = _dms_to_decimal(cm.group(1), cm.group(2))
             lat = _dms_to_decimal(cm.group(3), cm.group(4))
+            if cm.group(5):  # trailing "S"/"S." - southern hemisphere
+                lat = -lat
+            lon_dms = f"{cm.group(1)}°{cm.group(2)}'" if cm.group(2) else f"{cm.group(1)}°"
+            lat_dms = f"{cm.group(3)}°{cm.group(4)}'" if cm.group(4) else f"{cm.group(3)}°"
+            if cm.group(5):
+                lat_dms += " S"
             rows.append(
                 {
                     "book": book,
@@ -103,8 +119,8 @@ def parse_text(text: str) -> list[dict]:
                     "section": section,
                     "position": position,
                     "name_phrase": name_phrase,
-                    "lon_dms": f"{cm.group(1)}°{cm.group(2)}'",
-                    "lat_dms": f"{cm.group(3)}°{cm.group(4)}'",
+                    "lon_dms": lon_dms,
+                    "lat_dms": lat_dms,
                     "lon_decimal": round(lon, 4),
                     "lat_decimal": round(lat, 4),
                 }

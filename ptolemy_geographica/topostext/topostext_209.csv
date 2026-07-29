@@ -3296,3 +3296,231 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal
 4,5,77,1,In the Arabian bay are these islands: Sappeirene or Saspaeirene island,64°50',28°00',64.8333,28.0
 4,5,77,2,Aphrodites island,65°15',25°00',65.25,25.0
 4,5,77,3,Agathonos island,65°15',23°40',65.25,23.6667
+4,6,2,1,"same meridian until the limit, at",51°15',3°10',51.25,3.1667
+4,6,3,1,"above mentioned limit until the Outer Sea at the Hesperion and so-called Great Bay, at",14°,4°,14.0,4.0
+4,6,5,1,"boundary with Mauretania Tingitana, Subos river mouth",9°,25°,9.0,25.0
+4,6,5,2,Salathos river mouth,9°20',22°,9.3333,22.0
+4,6,5,3,Salathos city,9°40',22°,9.6667,22.0
+4,6,5,4,Chusarios river mouth,10°,21°40',10.0,21.6667
+4,6,5,5,Gannaria promontory,9°30',20°30',9.5,20.5
+4,6,5,6,Ophiodes river mouth,10°,20°,10.0,20.0
+4,6,6,1,Bagaza or Begazei city,11°,19°,11.0,19.0
+4,6,6,2,Nuios river mouth,10°,18°20',10.0,18.3333
+4,6,6,3,Salventia or Saluentia promontory,9°30',17°30',9.5,17.5
+4,6,6,4,Massa river mouth,10°30',16°30',10.5,16.5
+4,6,6,5,Iarzeitha city,10°,15°30',10.0,15.5
+4,6,6,6,Daras or Darados river mouth,10°,15°,10.0,15.0
+4,6,6,7,Magnus Portus (Megas Limen),10°,14°,10.0,14.0
+4,6,6,8,Babiba or Babiga city,10°30',13°,10.5,13.0
+4,6,6,9,Arsinarion promontory,8°,12°,8.0,12.0
+4,6,6,10,Rusaddion promontory,8°30',11°30',8.5,11.5
+4,6,7,1,"in the Hesperian Gulf, Stacheiros or Trachiros river mouth",9°30',11°,9.5,11.0
+4,6,7,2,Perphosius or Periphosius harbor,11°,10°30',11.0,10.5
+4,6,7,3,Katharon promontory,12°30',9°30',12.5,9.5
+4,6,7,4,Nias river mouth,13°30',9°,13.5,9.0
+4,6,7,5,Hesperou Keras promontory,13°,8°,13.0,8.0
+4,6,7,6,Masitholos river mouth,14°,6°40',14.0,6.6667
+4,6,7,7,Hypodromos Aithiopians,14°,5°15',14.0,5.25
+4,6,8,1,"which flow the Salathus river, the Massa river and those between, midpoint",14°,19°,14.0,19.0
+4,6,8,2,"which the Subos river flows, midpoint",20°20',22°,20.3333,22.0
+4,6,8,3,"which the Stacheir river flows, forming lake Klonia beside it, midpoint",17°,11°,17.0,11.0
+4,6,9,1,which the Massitholus river flows,19°,5°,19.0,5.0
+4,6,9,2,"which the Darados river flows, midpoint",27°,10°,27.0,10.0
+4,6,10,1,"which the Bagradas river flows, midpoint",33°,20°30',33.0,20.5
+4,6,10,2,"This river, well-known in Africa, flows into the sea at",34°,32°40',34.0,32.6667
+4,6,11,1,"which the Kinyps or Kiniphos river flows, with its source at two points",40°,21°,40.0,21.0
+4,6,11,2,,45°,21°,45.0,21.0
+4,6,11,3,The union of the two branches at,42°,25°,42.0,25.0
+4,6,12,1,"Thala mountain, with its midpoint at",38°,10°,38.0,10.0
+4,6,12,2,the Garamantic Gorge,50°,10°,50.0,10.0
+4,6,12,3,Arualtes mountain,33°,3°,33.0,3.0
+4,6,12,4,Arangas mountain,47°30',1°35',47.5,1.5833
+4,6,13,1,where the branch river extends to,42°,16°,42.0,16.0
+4,6,13,2,"which makes the Chelonidai lakes, with midpoint",49°,20°,49.0,20.0
+4,6,13,3,"this river disappears and, as they say, is conducted underground and gives rise to another river, the western end of",46°,16°,46.0,16.0
+4,6,13,4,and the eastern end creates the Nuba or Nutha lake,50°,15°,50.0,15.0
+4,6,14,1,the Nigeir river itself links Mandron mountain and Thala mountain. It forms Nigritis lake,15°,18°,15.0,18.0
+4,6,14,2,"To the north it has two branches, toward Sagapola mountain and toward Usargala mountain; eastward it has one branch, toward Libya lake at",35°,16°30',35.0,16.5
+4,6,14,3,"Toward the south one branch toward the Darada river, at two places",21°,17°,21.0,17.0
+4,6,14,4,,21°,13°30',21.0,13.5
+4,6,24,1,"Named cities in the country, in the coastal section, as follows: Autolala or Autolatai",10°,23°50',10.0,23.8333
+4,6,24,2,Thuelath or Thuoilath,11°30',21°40',11.5,21.6667
+4,6,24,3,Tagana,12°30',20°15',12.5,20.25
+4,6,24,4,Magura,12°30',15°,12.5,15.0
+4,6,24,5,Ubrix,14°20',13°20',14.3333,13.3333
+4,6,24,6,Arzitha or Iarzeitha,16°20',12°15',16.3333,12.25
+4,6,25,1,Beyond the Nigeira river on the far side these cities: Talubath,18°40',22°40',18.6667,22.6667
+4,6,25,2,Malachath,20°20',20°15',20.3333,20.25
+4,6,25,3,Tukaba,18°,19°30',18.0,19.5
+4,6,25,4,Byntha or Bintha,20°15',21°,20.25,21.0
+4,6,26,1,"below the river this city, Anygath",20°30',14°,20.5,14.0
+4,6,27,1,"By this river but to the north of the river, Pesside",19°,18°,19.0,18.0
+4,6,27,2,Thige,21°,17°30',21.0,17.5
+4,6,27,3,Kuphe,23°15',18°,23.25,18.0
+4,6,27,4,Nigeira metropolis,25°40',17°40',25.6667,17.6667
+4,6,27,5,Uellegeia,28°30',16°40',28.5,16.6667
+4,6,27,6,Tagama,30°,17°,30.0,17.0
+4,6,27,7,Panagra,31°,16°40',31.0,16.6667
+4,6,28,1,south of the river Thupai,16°30',16°40',16.5,16.6667
+4,6,28,2,Punse or Pounsa,18°,17°,18.0,17.0
+4,6,28,3,Saluke or Saluca,19°30',17°,19.5,17.0
+4,6,28,4,Thamondakana or Thamondokana,23°,17°,23.0,17.0
+4,6,28,5,Dudum or Duthum,31°,15°,31.0,15.0
+4,6,29,1,Again near the beginnings of the Bagradas river: Silike,29°,24°30',29.0,24.5
+4,6,29,2,Buthuris,31°,24°,31.0,24.0
+4,6,29,3,Anoigath or Anygath,33°,24°,33.0,24.0
+4,6,29,4,Thabudis,34°,22°,34.0,22.0
+4,6,29,5,Sikkathorion,34°,23°,34.0,23.0
+4,6,29,6,Kapson or Kapsa,34°,21°,34.0,21.0
+4,6,30,1,Near the beginning of the Kinypsriver: Gedanos or Gelanos,40°,24°30',40.0,24.5
+4,6,30,2,Uanios or Vanias,41°,22°40',41.0,22.6667
+4,6,30,3,Sabai,43°,23°,43.0,23.0
+4,6,30,4,Bouta,39°,21°30',39.0,21.5
+4,6,30,5,Bedeiron,41°,21°40',41.0,21.6667
+4,6,30,6,Garame metropolis,43°,21°30',43.0,21.5
+4,6,30,7,Thumelitha,41°,19°,41.0,19.0
+4,6,31,1,Below the Geira river Geira metropolis,36°,18°,36.0,18.0
+4,6,32,1,against it on the north Thucimath or Ukimath,38°,19°40',38.0,19.6667
+4,6,32,2,Geva,39°,19°,39.0,19.0
+4,6,32,3,Badiath,40°,17°,40.0,17.0
+4,6,32,4,Ischerei,41°30',16°30',41.5,16.5
+4,6,32,5,Tukrumuda,41°30',15°,41.5,15.0
+4,6,32,6,Thuppa or Thuspa,43°,17°40',43.0,17.6667
+4,6,32,7,Artageira,44°,18°,44.0,18.0
+4,6,32,8,Rubune,46°,15°,46.0,15.0
+4,6,32,9,Lynxama,48°30',20°40',48.5,20.6667
+4,6,33,1,Islands lying off Libya in the Western Ocean: Kerne,5°,25°40',5.0,25.6667
+4,6,33,2,Autolala,8°,23°50',8.0,23.8333
+4,6,33,3,Hera or Helios or Autolala island,8°,23°50',8.0,23.8333
+4,6,34,1,"The Fortunate Islands, six in number, as follows: Aprositos island",1°,16°,1.0,16.0
+4,6,34,2,Hera island,1°,15°15',1.0,15.25
+4,6,34,3,Pluvialia (Pluitala),1°,14°15',1.0,14.25
+4,6,34,4,Kaspeira (Capraria?) island,1°,12°30',1.0,12.5
+4,6,34,5,Canaria island,1°,11°,1.0,11.0
+4,6,34,6,Centuria or Pintuaria island,1°,10°30',1.0,10.5
+4,7,2,1,"Darnis to the southern limit of Libya, which is located at",51°15',3°10' S,51.25,-3.1667
+4,7,3,1,"this limit point along the remaining part of the Ethiopian interior to the Rhaptum promontory, which is located at",73°50',8°25' S,73.8333,-8.4167
+4,7,5,1,Bazion promontory referred to above: Prionoton mountain,65°00',22°30',65.0,22.5
+4,7,5,2,Chersonesos,65°00',22°00',65.0,22.0
+4,7,5,3,Mnemeion promontory,65°30',21°30',65.5,21.5
+4,7,5,4,Ision mountain,65°30',21°20',65.5,21.3333
+4,7,5,5,Deep harbor,65°00',21°10',65.0,21.1667
+4,7,5,6,Dioskoroi harbor,65°00',21°00',65.0,21.0
+4,7,5,7,Lookout of Demeter promontory,65°20',20°15',65.3333,20.25
+4,7,6,1,Aspis promontory,65°30',19°45',65.5,19.75
+4,7,6,2,Diogenes promontory,65°40',19°40',65.6667,19.6667
+4,7,6,3,Satyron mountains,65°40',19°00',65.6667,19.0
+4,7,6,4,Monodaktylos mountains,65°30',18°30',65.5,18.5
+4,7,6,5,Gauron mountain,65°40',18°00',65.6667,18.0
+4,7,6,6,Harbor of the Saviour Gods,65°30',17°30',65.5,17.5
+4,7,6,7,Evangelon harbor,65°45',17°00',65.75,17.0
+4,7,7,1,Ptolemais Therai (hunts),66°00',16°25',66.0,16.4167
+4,7,7,2,Sabastikon mouth,67°00',15°00',67.0,15.0
+4,7,7,3,Great coast,66°00',14°15',66.0,14.25
+4,7,7,4,Altar of Eros promontory,66°30',16°00',66.5,16.0
+4,7,7,5,"Colobon mountain, promontory",68°00',13°40',68.0,13.6667
+4,7,8,1,"in the Adulitic Bay, Sabat city",68°00',12°30',68.0,12.5
+4,7,8,2,Mountainous peninsula,68°00',12°10',68.0,12.1667
+4,7,8,3,Adulis or Adule,67°00',11°40',67.0,11.6667
+4,7,8,4,Krouos or Kronos promontory,68°00',11°40',68.0,11.6667
+4,7,8,5,Antiphili harbor,72°00',10°15',72.0,10.25
+4,7,8,6,Mandaith kome,73°15',10°20',73.25,10.3333
+4,7,8,7,Arsinoe,73°45',10°40',73.75,10.6667
+4,7,9,1,"strait in the Red Sea, Dere (or Deire) city in the promontory",74°30',11°00',74.5,11.0
+4,7,10,1,"in Avalite Bay, Avalites trading post",74°00',8°25',74.0,8.4167
+4,7,10,2,Malao trading post,75°00',6°30',75.0,6.5
+4,7,10,3,Mondou trading post,78°00',7°00',78.0,7.0
+4,7,10,4,Mosylon promontory and trading post,79°00',9°00',79.0,9.0
+4,7,10,5,Kobe trading post,80°00',8°00',80.0,8.0
+4,7,10,6,Elephas mountain,81°00',7°30',81.0,7.5
+4,7,10,7,Akkannai trading post,82°00',7°00',82.0,7.0
+4,7,10,8,Aromata promontory and trading post,83°00',6°00',83.0,6.0
+4,7,11,1,"In the Barbarian Bay, Pano village",82°00',5°00',82.0,5.0
+4,7,11,2,Opone trading post,81°00',4°15',81.0,4.25
+4,7,11,3,Zingis promontory,81°00',3°30',81.0,3.5
+4,7,11,4,Phalangis mountain,80°00',3°30',80.0,3.5
+4,7,11,5,Apokopa,70°00',3°00',70.0,3.0
+4,7,11,6,South horn promontory,79°00',1°00',79.0,1.0
+4,7,11,7,Small shore,78°00',1°00' S,78.0,-1.0
+4,7,11,8,Great shore,76°00',2°00' S,76.0,-2.0
+4,7,11,9,Essina trading post,73°30',3°30' S,73.5,-3.5
+4,7,11,10,Sarapionis harbor and promontory,74°00',3°00' S,74.0,-3.0
+4,7,11,11,Tonike trading post,73°00',4°15' S,73.0,-4.25
+4,7,12,1,mouth of the Rhaptus river,72°30',7°00' S,72.5,-7.0
+4,7,12,2,sea,71°00',7°00' S,71.0,-7.0
+4,7,12,3,Rhapton promontory,73°50',8°25' S,73.8333,-8.4167
+4,7,14,1,"Pselkis and the Lesser Cataract, the location of which is",60°30',22°30',60.5,22.5
+4,7,15,1,on the west bank of the river are the komai Tasitia,60°30',22°00',60.5,22.0
+4,7,15,2,Boon,62°00',21°40',62.0,21.6667
+4,7,15,3,Autoba,61°30',21°30',61.5,21.5
+4,7,15,4,Phthouri,61°15',21°20',61.25,21.3333
+4,7,15,5,Pistre,61°00',20°40',61.0,20.6667
+4,7,15,6,Ptemythis,61°00',20°15',61.0,20.25
+4,7,16,1,Abounkis,59°30',20°00',59.5,20.0
+4,7,16,2,Kambyses' counting house,59°00',18°00',59.0,18.0
+4,7,16,3,Erchoas,59°30',18°00',59.5,18.0
+4,7,17,1,Satachthai,60°30',18°00',60.5,18.0
+4,7,17,2,Morou,61°30',18°40',61.5,18.6667
+4,7,17,3,Nakis,62°00',19°30',62.0,19.5
+4,7,17,4,Tathis,61°00',17°00',61.0,17.0
+4,7,18,1,On the east bank of the river are the komai Pnoups,62°00',22°00',62.0,22.0
+4,7,18,2,Berethis,62°00',21°30',62.0,21.5
+4,7,18,3,Gerbo,62°00',21°00',62.0,21.0
+4,7,18,4,Pataita,61°40',20°30',61.6667,20.5
+4,7,18,5,Pontyris,61°00',20°00',61.0,20.0
+4,7,19,1,Primis Minor,60°00',19°30',60.0,19.5
+4,7,19,2,Arbis,60°30',18°30',60.5,18.5
+4,7,19,3,Napata (or Naggata),63°00',20°15',63.0,20.25
+4,7,19,4,Sakole,63°00',19°30',63.0,19.5
+4,7,19,5,Sandake,63°00',18°30',63.0,18.5
+4,7,19,6,Orbadarou,62°40',18°00',62.6667,18.0
+4,7,19,7,Primis the larger,62°00',17°00',62.0,17.0
+4,7,21,1,Meroe,61°30',16°25',61.5,16.4167
+4,7,21,2,Sakolche,61°40',15°15',61.6667,15.25
+4,7,21,3,Eser,61°40',13°30',61.6667,13.5
+4,7,21,4,Daron kome,62°00',12°30',62.0,12.5
+4,7,22,1,The junction of the river Nile and the river Astapos,61°00',12°00',61.0,12.0
+4,7,22,2,the junction of the river Astaboras and the Astapos,62°30',11°30',62.5,11.5
+4,7,23,1,following two lakes,60°00',2°00',60.0,2.0
+4,7,24,1,The more western of the lakes,57°00',6°00' S,57.0,-6.0
+4,7,24,2,the more eastern lake,65°00',7°00' S,65.0,-7.0
+4,7,25,1,"river in the interior are: Auxoume, with a royal palace",65°00',11°00',65.0,11.0
+4,7,25,2,Koloe city,69°00',4°15',69.0,4.25
+4,7,25,3,Maste city,65°00',4°15',65.0,4.25
+4,7,26,1,"The notable mountains in this region west of the Nile river, extending along the entire Nile, which are commonly called the Ethiopian mountains, the position of which is",55°00',23°00',55.0,23.0
+4,7,26,2,,55°00',8°30',55.0,8.5
+4,7,26,3,"The mountain to the east of the Nile is called Garbaton, the midpoint of which is in",69°00',6°00',69.0,6.0
+4,7,26,4,Elephas mountain,78°00',5°30',78.0,5.5
+4,7,26,5,beside the lakes the so-called Pylaian mountains . 65°00' . equator and Maste mountain,68°00',5°00',68.0,5.0
+4,7,27,1,"river which is near the Bazium promontory; next to these toward the south are the Tabieni; then the Sirtibes; next to these are the Attiri; then the Babylleni and the Rhizophagi; then the Axoumitai and the Sobridai; next the Molibae, the Megabardi, and the Nubai toward the west from the Avalitai; then below the Molibai are the Blemyes; below whom are the Dedakai, and the Pechini between the river Astapos and the Garbaton mountain; from whom toward the west are the Strouthophagi Ethiopians; toward the south from the mountain are the Katadrai and the Myrrhifera land stretching up to Lake Koloe, after which are the Mastitai to the lake of the Nile. To the west, from this part of the Nile river, those occupy the land after the Greater Cataract, who pasture the Triacontaschoenus region between the Ethiopian mountains and the Nile river, after these toward the south are the Euonymitai; then Middle Ethiopia and the Sebridai; these races also inhabit the island of Meroe, and below them are the Gapachi; below these the Ptoemphanai, and below these the Kadoupi; next to these are the Elephantophagi Ethiopians; below these the Pesendarai, and beyond the lake the Cinnamon-bearing land; moreover between the Nile and the Astapos river, toward the island of Meroe, are the Memnones and more to the south are the Sapaei. In the remaining parts of the land toward the west from the Ethiopianmountains next to the sandy and dry region dwell the Phazaniai and the Bakalitides races; then the Skenitai and the Tralletai, after these the race of the Daradi; then the OrypaiiHunters next to these the NygbenitaiEthiopians. The following islands are near Ethiopia below Egypt in the Arabian Gulf: Astarta island",66°00',22°30',66.0,22.5
+4,7,27,2,Altar of Athena island,66°10',21°30',66.1667,21.5
+4,7,27,3,Gypsitis island,67°00',19°40',67.0,19.6667
+4,7,27,4,two islands of Gomadean,67°30',19°00',67.5,19.0
+4,7,27,5,Myronis island,67°00',18°00',67.0,18.0
+4,7,27,6,"Catathra or Chelonitides islands, two in number",68°00',17°30',68.0,17.5
+4,7,27,7,"Orisitides, two islands",67°30',17°00',67.5,17.0
+4,7,27,8,Magorum island,68°00',16°00',68.0,16.0
+4,7,27,9,Daphnine island,68°30',15°20',68.5,15.3333
+4,7,27,10,Acanthine island,68°30',15°00',68.5,15.0
+4,7,27,11,Macaria island,68°30',14°00',68.5,14.0
+4,7,27,12,Avium island,69°00',14°00',69.0,14.0
+4,7,27,13,the Bacchi and Antibacchi,69°30',13°15',69.5,13.25
+4,7,27,14,Panis island,68°40',12°00',68.6667,12.0
+4,7,27,15,Diodori island,70°00',12°30',70.0,12.5
+4,7,27,16,Isidis island,70°00',11°30',70.0,11.5
+4,7,27,17,In the Bay of Avalites is Mondi island,77°00',8°30',77.0,8.5
+4,7,27,18,to Aromata are these islands: Amici island,85°00',4°00',85.0,4.0
+4,7,27,19,the two Menae islands,84°00',2°30',84.0,2.5
+4,7,27,20,Myrike island,83°30',1°00',83.5,1.0
+4,9,1,1,"Magnus Sinus of the outer sea as far as the aforementioned Raptum Promontory, which occupies the position",73°50',8°25' S,73.8333,-8.4167
+4,9,2,1,Cape Prasum occupies the position,80°,15°20' S,80.0,-15.3333
+4,9,2,2,"Near it, towards the summer sunrise, lies an island called Menuthias, whose position is",85°,12°20' S,85.0,-12.3333
+4,9,3,1,"which the snows are received by the lakes of the Nile, and the extremities of Mount Selene occupy the positions",57°,12°20' S,57.0,-12.3333
+4,9,3,2,,68°,12°20' S,68.0,-12.3333
+4,9,6,1,"Those that have come to our knowledge are as follows: Mount Dauchis, the centre of which is",15°,8°25' S,15.0,-8.4167
+4,9,6,2,"Mount Ion, the centre of which is",10°,8°25' S,10.0,-8.4167
+4,9,6,3,"Mount Zypha or Ziphar, the centre of which is",25°,8°25' S,25.0,-8.4167
+4,9,6,4,"Mount Ineschi or Meskhe, the centre of which is",25°,13°05' S,25.0,-13.0833
+4,9,6,5,"Mount Barditon, the centre of which is",45°,6° S,45.0,-6.0
+4,9,6,6,Mount Selene,57°,12°20' S,57.0,-12.3333
+4,9,6,7,,67°,12°20' S,67.0,-12.3333

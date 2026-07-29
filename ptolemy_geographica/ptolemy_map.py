@@ -293,6 +293,11 @@ _ISLAND_APPENDIX_SECTIONS = {
     ("4.03", "46"),  # Misynos/Pontia/Gaia - three more islands off Africa
     ("4.04", "14"),  # Myrmex + Aphrodite-Insel bzw. Laia - the two islands off Cyrenaica (topostext: "The islands by this country are: Myrmex island...Laia or Aphrodite island")
     ("4.05", "77"),  # Saspeirene/Aphrodite-Insel/Agathon-Insel - the islands in the Arabian bay (topostext: "In the Arabian bay are these islands: Sappeirene...")
+    ("4.06", "33"),  # Kerne + Hera-/Autolala-Insel - islands off Libya in the Western Ocean
+    ("4.07", "36"),  # Astarte/Altar der Athene/Gypsites/Myron (+ already-island Gomadeon) - islands "near Ethiopia below Egypt in the Arabian Gulf". Four of these (33-36) had been wrongly strung onto the end of coastline_025_AF04 by the coastline graph, the same spurious-tail pattern as Paena/Erythia earlier - reclassifying correctly truncates that coastline back to its real endpoint, Kap Bazion (4.07.28.06)
+    ("4.07", "37"),  # Thrisitides/Magon/Daphnine/Akanthine/Makaria/Orneon (+ already-island Kathathrai/Chelonitides) - more of the same Arabian Gulf island list, continuing 4.07.36
+    ("4.07", "39"),  # Mondu - the island in the Bay of Avalites
+    ("4.07", "40"),  # Amiku/Myrsiake (+ already-island Menan) - the islands next to Aromata
 }
 
 # The same problem at single-point granularity: a lone island reference
