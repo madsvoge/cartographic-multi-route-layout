@@ -32,13 +32,13 @@ this structure well enough to classify every plotted point into one of:
 | Category | Color | How it's detected |
 |---|---|---|
 | Coastal point | dark blue | the point's catalogue section is headed by a sea/ocean/gulf name, or its own name matches a cape/estuary pattern |
-| Harbor town | light blue | name matches "Hafen"/"Portus" - a distinct color from "Coastal point" so a harbor's own commercial/settlement role stands out, but otherwise treated identically: still sized like a coastal point and still a full participant in coastline reconstruction (see below) |
-| River mouth | green | name matches "Mündung" - a distinct color from "Coastal point" for visual identification, but otherwise treated identically: still sized like a coastal point and still a full participant in coastline reconstruction (see below) |
+| Harbor town | green | name matches "Hafen"/"Portus" - a distinct color from "Coastal point" so a harbor's own commercial/settlement role stands out, but otherwise treated identically: still sized like a coastal point and still a full participant in coastline reconstruction (see below) |
+| River mouth | light blue | name matches "Mündung" - a distinct color from "Coastal point" for visual identification, but otherwise treated identically: still sized like a coastal point and still a full participant in coastline reconstruction (see below) |
 | City / inland settlement | orange | default, for points not in a coastal section and not matching another pattern |
-| River source / confluence / bend | green | name matches "Quelle" (source), "Einmündung" (confluence), "Zusammenfluss" (two rivers joining), "(Mitte)"/"Biegung" (a river's midpoint/bend), "Abzweigung"/"Aufteilung" (a delta fork) - checked *before* the coastal mouth pattern, since e.g. "Einmündung" contains the substring "mündung" and would otherwise be misread as a coastal river mouth |
+| River source / confluence / bend | light blue | name matches "Quelle" (source), "Einmündung" (confluence), "Zusammenfluss" (two rivers joining), "(Mitte)"/"Biegung" (a river's midpoint/bend), "Abzweigung"/"Aufteilung" (a delta fork) - checked *before* the coastal mouth pattern, since e.g. "Einmündung" contains the substring "mündung" and would otherwise be misread as a coastal river mouth |
 | Mountain | amber | name matches "Gebirge" (mountain range) |
 | Island | pink | name matches "Insel" (island), or the name ends in "(N)" - e.g. "Kassiteriden (10)" - the catalogue's convention for a scattered island group given as one count-labelled entry |
-| Lake / inland water | green | name matches "See" (lake) or "Palus" (marsh/lake) |
+| Lake / inland water | light blue (larger marker) | name matches "See" (lake) or "Palus" (marsh/lake) - same color as river points (both read as "inland water" at a glance), sized up instead so a lake still stands out rather than blending in |
 
 Harbors ("Hafen"/"Portus") and estuaries ("Ästuar") are always coastal
 regardless of their section, the same as capes and river mouths - they used
@@ -302,6 +302,22 @@ Osten", relying on context from a neighbouring row that this heuristic
 doesn't reconstruct). Those points still plot individually; they just
 don't get a connecting line.
 
+The "Deva" case named above turned out to need more than the book-level
+grouping and 10° gap cap once actually checked (river review round,
+below): both Britain-internal "Deva"s (not the Iberian one, which is
+already a different book) and four more same-name-different-river pairs
+elsewhere sat close enough under that cap to still merge wrongly.
+`_RIVER_LINE_NO_MERGE_REF_ID_PAIRS` forces a split for those specific,
+individually-confirmed pairs; `_RIVER_LINE_SKIP_REF_IDS` drops a specific
+duplicate re-citation from consideration entirely (the Danube's own
+Savus-confluence case). Separately, `topostext/river_mentions.py` scans
+every point's topostext citation for a *different* river's name and
+records it in a `river_mentions` column - not a connecting line, just a
+read-only note ("this city's citation also names this river") for
+relationships (a tributary confluence, a settlement's own text placing
+it beside a river) the same-name line-building above has no way to draw.
+See the river review round further down for the full evidence.
+
 ## Island outlines
 
 **Islands** are drawn as their own pink lines (`build_island_lines` in
@@ -442,11 +458,16 @@ refresh order is:
 ```bash
 python3 annotate_dataset.py
 python3 topostext/link_matches.py
+python3 topostext/river_mentions.py
 python3 topostext/build_labels.py
 ```
 
 `build_labels.py` strips any label rows already present before adding
-fresh ones, so it's safe to re-run any number of times.
+fresh ones, so it's safe to re-run any number of times. `river_mentions.py`
+(see the "River review" section below) needs `link_matches.py`'s
+`topostext_name` column and must run *before* `build_labels.py`, so its
+synthetic label rows pick up a (blank) `river_mentions` column instead of
+the CSV ending up with mismatched columns across row types.
 
 ## Cross-checking against topostext.org (`topostext/`)
 
@@ -1639,6 +1660,163 @@ Bubastikos, Busiritikos, Phermuthiakos, Taly, and the mouths each ends
 at) as their own lines and bridging the fork points between trunk and
 branch - a larger, separate piece of work, flagged here rather than
 attempted inline.
+
+**An eleventh round, a river review**: prompted by a specific request -
+find a river crossing Britain's own coastline north-to-south, look at
+what topostext says about isolated river points near the Alps, and check
+whether cities along the Rhine are tied to the river's own narrative in
+topostext - plus "find other kinds of information yourself".
+
+The Britain question found a real bug of a kind nothing so far had
+caught: Ptolemy reuses common river names for *different* rivers within
+the same book, not just across books (already known - see
+`_RIVER_LINE_MAX_GAP_DEG`'s own reasoning - but only handled at the
+*cross-book* scale so far). Britain alone has two rivers each called
+"Deva" (topostext: `2.03.02.06` on the west coast between Iena and Novius
+estuaries; `2.03.05.12` on the opposite northeast coast between Taezalon
+promontory and Tina estuary - modern Dee-side Chester vs. Dee-side
+Aberdeen) and two each called "Alaunus" (`2.03.04.06` on the south coast
+near Magnus Portus vs. `2.03.06.01` far north near the Firth of Forth -
+the Hampshire Aln vs. the Northumberland Aln). Both pairs sit close
+enough (6-8 degrees) to fall under `_RIVER_LINE_MAX_GAP_DEG` and get
+merged into a single two-point "river" cutting straight across the
+island - short enough (one segment) to never trip
+`check_self_intersections.py`'s own `len(trail) >= 4` floor, and a
+*coastline* crossing rather than a self-crossing, a check that didn't
+exist before this round at all. Generalizing the search (a new river-vs-
+coastline crossing check, run once as a diagnostic rather than added to
+`check_self_intersections.py` permanently) found five more of the same
+shape catalogue-wide, each confirmed via a different `Modern_location`
+and/or non-adjacent book.map rather than assumed from the gap alone:
+Sala (Morocco's Bou Regreg vs. Oued Tamrakt, ~7 degrees apart), "Heiliger
+Fluss"/"Sacred river" (a descriptive name, not a proper one, independently
+reused on Corsica and Sardinia), Peneios (Thessaly's Pineios vs. the
+Peloponnese's, both still called Pineios today), Asopos (Boiotia's, of
+the Battle of Plataia, vs. the Peloponnese's near Sikyon), and Lykos
+(Pontus's Kelkit Çayı vs. one much further south near Cyprus/Syria).
+A new `_RIVER_LINE_NO_MERGE_REF_ID_PAIRS` mechanism forces a split
+between each pair regardless of the gap check, the narrowest fix
+available - lowering `_RIVER_LINE_MAX_GAP_DEG` itself would risk
+splitting genuinely long, distorted rivers elsewhere (the Nile, Ganges
+and Indus already have confirmed-genuine internal jumps closer to 20
+degrees). Four more candidates the same crossing-check flagged
+(Kaystros, Thermodon, Tyras, Inachos) turned out to be a single real
+river's own mouth-and-source pair, cited together in one section,
+sitting close enough to a coastline to just barely brush it - left alone,
+the same "genuine geometry, not a bug" call as Campania's Volturnum/
+Liternum/Cumae/Misenum wobble earlier in this review.
+
+The Alps and Rhine questions turned up something more structural than a
+bug: a whole category of narrative information the point-category model
+has no place for. `2.10.04.07` ("Dubis-Quellen", the source of the
+Doubs) sits alone - not part of any drawn river line - not because
+anything is wrong with it, but because topostext's own text ties it to a
+*differently-named* river's course instead: "part north of Lugdunum both
+the Arar and the Dubis flow into it, having mixed with each other; the
+sources of the Arar, which flow from the Alps" - a real tributary
+confluence (and a real "north of [city]" relational fact) that
+`build_river_lines`'s same-base-name grouping structurally cannot
+represent, since "Dubis" and "Arar" never share a name to group by. The
+Po's own headwater section (`3.01.24`) is even richer: "mouth of the
+Padus river" / "the head of the river at Lario lake [Como]" / "where it
+joins with the Dorias river" / "head of the Dorias river at Poenina lake"
+/ "where it is diverted toward Baenacus lake [Garda]" - a small river-and-
+lake network (Po/Ticino-area system, the Dora Baltea, and three named
+lakes), again invisible to a same-name grouper. And the Rhine question
+had a direct answer: yes - `Ganodurum` (`2.09.20.04`, plain `city`)
+matches topostext's "are the Helveti along the River Rhine, with cities
+Ganodurum", and `Tasgaetium` (`2.12.05.02`) matches "Towards the
+headwaters of the Rhine river: Taxgaetium" - two settlements the
+catalogue's category system has no way to mark as "on this river",
+because only river/river_mouth/coast points carry any river information
+at all.
+
+Generalizing that finding catalogue-wide (rather than by hand for just
+the Rhine) is the "find other kinds of information" part of the request,
+and became a new pipeline step, `topostext/river_mentions.py`: for every
+point regardless of category, scan its own `topostext_name` text for any
+of the catalogue's own river base names, skip a self-mention (a river
+citing itself), and skip a bare-name match with no surrounding prose (a
+handful of catalogue river names coincidentally collide with unrelated
+place names - "Arbis" the river vs. a plain city citation that happens to
+also read "Arbis" - filtered out by requiring at least two words of
+context beyond the match, which a real relational mention always has and
+a homonym coincidence never does). Written to a new `river_mentions`
+column, read-only and additive - no point's coordinates or category
+changes. 130 of 6372 rows got a match: Gaulish cities along the Liger/
+Sequana/Rhodanus (topostext's own tribal-list phrasing, "whose city is
+Avaricum" beside "Liger river"), North African cities on the Bagradas,
+Anatolian and Persian cities "between the Indus and the Bidaspes" or "on
+the Tigris river", and real tributary/delta-fork relationships between
+differently-named rivers themselves (Arar/Dubis and Padus/Dorias above;
+also Kiabros/Cebrus/Danuvius in Moesia, Oxos/Ochos and Iaxartes/Demos/
+Baskatis in Central Asia, Indus/Koas and Ganges/Pseudostomos/Seros in
+India, Nanagunas forking into the Goaris and the Binda - the same India
+river-fork family already confirmed for the `teilung`/`aufteilung`
+regex fix earlier this session).
+
+`coast`/river-line counts unaffected by this round except the two crossing
+fixes (`river`: 109 -> 104, the four wrongly-merged pairs now six
+separate, correctly-unconnected single points plus the fixed Britain
+pair - no points lost, only wrong edges removed);
+`check_self_intersections.py` stays at 1.
+
+**A twelfth round, a coast/lake review and a color pass**: the user spotted
+two odd, unconnected dark-blue "coast" dots sitting inland in Spain on a
+rendered map and asked whether they should have been rivers or lakes,
+plus a general review of the `lake` category and a color change (rivers
+and river points to light blue instead of green, lakes to a larger
+light-blue marker, harbor towns to green in the color light blue frees up).
+
+The two Spain dots turned out to need two *different* answers, not one.
+`2.04.03.04` ("Anas (Grenzpunkt Baetica, Lusitania, Tarraconensis)") is
+genuinely river-related - topostext: "Where the river touches the border
+of Lusitania", `Modern_location` "Guadiana" - a boundary marker sitting
+*up the river Anas/Guadiana itself*, correctly excluded from the
+coastline's own edges earlier this session (`_COASTLINE_SKIP_REF_IDS`)
+but still carrying the wrong point category/color, since that exclusion
+only touches which edges get drawn, not what a point *is*. Its own bare
+name has no river keyword ("Anas" is just the river's proper name, no
+"Mündung"/"Quelle"/course-marker), so nothing in `_classify_locality`
+could catch it automatically - needed a new point-level override,
+`_RIVER_POINT_OVERRIDES`, the river-category counterpart of the existing
+`_ISLAND_POINT_OVERRIDES`/`_MOUNTAIN_POINT_OVERRIDES`. The second dot,
+`2.04.03.07` ("Baetica (Ostende am Baliarischen Meer)", re-cited verbatim
+at `2.06.12.05`), is neither a river nor a lake - topostext: "there along
+the border of Tarraconensis to where the Balearic sea ends" - a plain
+province-to-sea boundary *endpoint*, the same "Grenzpunkt" shape as the
+many already-non-coastal boundary markers found earlier this session
+(`5.03.01.06` etc., all `city`), just sitting in a section whose header
+happens to be coastal ("Baliarisches Meer") with nothing in its own name
+to redirect it. `_NONCOASTAL_POINT_OVERRIDES`, the point-level
+counterpart of the existing section-level `_NONCOASTAL_EXCEPTION_SECTIONS`,
+covers this shape (a single point, not a whole section, needing the
+non-coastal fallback).
+
+The general lake review found nothing wrong: every one of the 34 existing
+`lake` points resolves to a real, correctly-identified lake (`Modern_location`
+confirms Lake Garda, the Sivash, the Dead Sea, Lake Van's neighbors, the
+Aral Sea, and so on), and the 7 catalogue names elsewhere that also
+contain "See"/"Lacus"/"Palus" but *aren't* categorized `lake` are all
+correctly excluded already - a river point merely naming a lake as its
+own *location* ("Padus (Ausfluss aus Lacus Larius)", the Po's own point
+describing where it exits Lake Como, correctly `river` not `lake`), the
+same distinction `_LAKE_LOCATION_REF_RE` already exists to draw.
+
+The color change itself (`CATEGORIES` in `ptolemy_map.py`, used by both
+renderers): `river`/`river_mouth` change from green/light-green to a
+shared light blue (`#6ec6ff`) - "Flodpunkter lyseblå" - so a river reads
+as a lighter-weight cousin of the coastline's dark blue rather than a
+distinct green family; `lake` moves to the *same* light blue rather than
+its own color, on the reasoning that a lake is inland water too and
+should read that way at a glance - distinguished from an ordinary river
+point by marker *size* instead of color (`radius=11` vs. `8`/`5` in the
+Leaflet map, `s=70` vs. `42`/`16` in the static map), so it doesn't just
+blend into the river points around it. `harbor` takes the green
+`river`/`lake` gave up (`#2ca02c`) - a harbor town is still coastal
+(unchanged in `_COASTLINE_CATEGORIES`, still traced into the coastline
+same as before), just recolored. `coast` itself (dark blue) and every
+non-water category (`city`, `mountain`, `island`) are unchanged.
 
 ### Coverage: how much of each catalogue is mapped to the other, and a fuzzy match score
 

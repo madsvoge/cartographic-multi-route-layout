@@ -94,13 +94,13 @@ _CONTINENT_NAMES = {"EU": "Europe", "AS": "Asia", "AF": "Africa"}
 # color each gets on the map (dataviz reference palette, fixed hue order).
 CATEGORIES = {
     "coast": {"label": "Coastal point / coastline", "color": "#123f7a"},
-    "harbor": {"label": "Harbor town", "color": "#86b6ef"},
-    "river_mouth": {"label": "River mouth", "color": "#98df8a"},
+    "harbor": {"label": "Harbor town", "color": "#2ca02c"},
+    "river_mouth": {"label": "River mouth", "color": "#6ec6ff"},
     "city": {"label": "City / inland settlement", "color": "#eb6834"},
-    "river": {"label": "River source / confluence / bend", "color": "#2ca02c"},
+    "river": {"label": "River source / confluence / bend", "color": "#6ec6ff"},
     "mountain": {"label": "Mountain", "color": "#eda100"},
     "island": {"label": "Island", "color": "#e87ba4"},
-    "lake": {"label": "Lake / inland water", "color": "#008300"},
+    "lake": {"label": "Lake / inland water", "color": "#6ec6ff"},
     "": {"label": "Unclassified", "color": "#898781"},
 }
 
@@ -632,6 +632,33 @@ _MOUNTAIN_POINT_OVERRIDES = {
     "6.07.20.03",  # Klimax - a bare-name mountain in the same list, confirmed repeatedly elsewhere in the same chunk ("beyond Klimax mountain", "extending as far as Klimax mountain") rather than by a marker on this citation itself
 }
 
+# The river-side counterpart of _ISLAND_POINT_OVERRIDES/_MOUNTAIN_POINT_OVERRIDES:
+# a lone river-boundary reference embedded in an otherwise-coastal section
+# (book.map "2.04" section "03" is headed "Baliarisches Meer"), where
+# nothing in the bare name itself ("Anas", the river's own proper name -
+# no "Mündung"/"Quelle"/course-keyword) tells the classifier it's a river
+# point rather than a plain coastal one. Found by the user spotting it as
+# one of two odd-looking dots sitting inland in Spain on a rendered map.
+_RIVER_POINT_OVERRIDES = {
+    "2.04.03.04",  # Anas (Grenzpunkt Baetica, Lusitania, Tarraconensis) - a boundary marker up the river Anas/Guadiana itself (topostext: "Where the river touches the border of Lusitania", Modern_location "Guadiana"), not a coastal point - already excluded from the coastline's own edges (_COASTLINE_SKIP_REF_IDS) but still carried the wrong point category/color
+}
+
+# The second of the two odd-looking Spain dots the user flagged is not
+# river- or lake-related at all: "Baetica (Ostende am Baliarischen Meer)"
+# ("Baetica's own eastern end at the Balearic sea", topostext: "there
+# along the border of Tarraconensis to where the Balearic sea ends") is a
+# province-to-sea boundary *endpoint*, the same "Grenzpunkt" shape as the
+# many already-non-coastal boundary markers elsewhere (5.03.01.06 etc.,
+# all `city`) - just sitting in a section whose header happens to be
+# coastal, with nothing in its own name to redirect it. Cited twice,
+# verbatim (2.04.03.07, then again as 2.06.12.05 orienting the next
+# province's own section) - both listed. The point-level counterpart of
+# `_NONCOASTAL_EXCEPTION_SECTIONS` (which operates on a whole section).
+_NONCOASTAL_POINT_OVERRIDES = {
+    "2.04.03.07",
+    "2.06.12.05",
+}
+
 
 # "Kap" (cape) as a bare word anywhere in the name, not just as a leading
 # prefix - the catalogue names a cape many ways ("Nördliches Kap", "Heiliges
@@ -654,6 +681,7 @@ def _classify_locality(
     force_mountain: bool = False,
     force_mountain_point: bool = False,
     force_coastal: bool = False,
+    force_river_point: bool = False,
 ) -> tuple[str, str]:
     """Return (category, naming_observation) - the observation is the audit
     trail for *why* this category was picked, for the "naming_observation"
@@ -679,6 +707,8 @@ def _classify_locality(
         return "mountain", "manually verified mountain-appendix section (_MOUNTAIN_APPENDIX_SECTIONS)"
     if force_mountain_point:
         return "mountain", "manually verified individual mountain point amid an otherwise coastal section (_MOUNTAIN_POINT_OVERRIDES)"
+    if force_river_point:
+        return "river", "manually verified individual river-boundary point amid an otherwise coastal section (_RIVER_POINT_OVERRIDES)"
     if _KAP_WORD_RE.search(name):
         # A name containing "Kap" is unambiguously a cape - even when it
         # also carries a mountain-range aside, e.g. "Kap Oiarso,
@@ -988,7 +1018,7 @@ def load_xlsx(path: Path) -> list[Reference]:
         id_parts = str(section_rows[0][0]).split(".")
         book_map_section = (".".join(id_parts[:2]), id_parts[2] if len(id_parts) > 2 else "")
         force_island = book_map_section in _ISLAND_APPENDIX_SECTIONS
-        force_noncoastal = book_map_section in _NONCOASTAL_EXCEPTION_SECTIONS
+        section_force_noncoastal = book_map_section in _NONCOASTAL_EXCEPTION_SECTIONS
         force_mountain = book_map_section in _MOUNTAIN_APPENDIX_SECTIONS
         force_coastal = book_map_section in _COASTAL_APPENDIX_SECTIONS
 
@@ -1009,10 +1039,11 @@ def load_xlsx(path: Path) -> list[Reference]:
                 section_is_coastal,
                 force_island=force_island,
                 force_island_point=str(_id) in _ISLAND_POINT_OVERRIDES,
-                force_noncoastal=force_noncoastal,
+                force_noncoastal=section_force_noncoastal or str(_id) in _NONCOASTAL_POINT_OVERRIDES,
                 force_mountain=force_mountain,
                 force_mountain_point=str(_id) in _MOUNTAIN_POINT_OVERRIDES,
                 force_coastal=force_coastal,
+                force_river_point=str(_id) in _RIVER_POINT_OVERRIDES,
             )
             refs.append(
                 Reference(
@@ -1690,6 +1721,47 @@ _RIVER_LINE_SKIP_REF_IDS = {
     "2.15.01.06",  # Danuvius (Einmündung des Savus) - topostext (2.15.1.1): "...on the south by Illyria which extends from the indicated terminus as far as the bend in the Danube near which the Savos river empties into it" - Pannonia Inferior's own boundary description, citing the Savus confluence purely as its terminus. The dedup (exact coordinate match, distance 0.0) kept this one because "2.15.01" sorts before "2.15.02", pulling it in front of Cirpi's *later* bend (2.15.02.04/2.11.05.16) and out of the real downstream order (Cirpi -> Dravus confluence -> Cornacum -> Acumincum -> Rittium -> Savus confluence) that Moesia Superior's own section 2.15.02 narrates as one continuous run - the same physical point is re-cited there too, correctly placed at the end, as "Danuvius (Biegung bei der Einmündung des Savus)" (2.15.02.18, also distance 0.0 from this one). Skipping this citation here lets that correctly-sequenced duplicate survive the dedup instead.
 }
 
+# Ptolemy reuses common river names for entirely unrelated rivers within
+# the *same* book, not just across books - Britain alone has two rivers
+# each called "Deva" and two each called "Alaunus" (topostext confirms:
+# `2.03.02.06` "mouth of the Devas river" sits on the west coast between
+# Iena and Novius estuaries, while `2.03.05.12` "mouth of the Deva river"
+# sits on the opposite, northeast coast between Taezalon promontory and
+# Tina estuary, nowhere near the first one's narrative context;
+# `2.03.04.06` "mouth of the Alaunus river" is on the south coast between
+# Isca and Magnus Portus, while `2.03.06.01` "mouth of the Alaunus river"
+# is far north on the east coast between Boderia estuary/the Firth of
+# Forth and Vedra/the Wear - modern Dee-side Chester vs. Dee-side
+# Aberdeen, and the Hampshire Aln vs. the Northumberland Aln, two
+# same-named-river coincidences, not one river each). Found by the user
+# asking for a north-south river crossing Britain's own coastline as a
+# review target: both pairs sit close enough (~6-8 degrees) to fall under
+# `_RIVER_LINE_MAX_GAP_DEG` and get merged into one two-point "river"
+# cutting straight across the island - short enough (2 points, 1 segment)
+# to never trip `check_self_intersections.py`'s `len(trail) >= 4` floor,
+# and a *coastline* crossing rather than a self-crossing, which that
+# checker never tests for at all. Lowering the general gap threshold
+# would risk splitting genuinely long, distorted rivers elsewhere
+# (Nile/Ganges/Indus already have confirmed-genuine internal jumps closer
+# to 20 degrees) - so this is a narrow, evidence-specific pairing
+# exclusion instead, the same shape as `_COASTLINE_HARD_BREAKS`.
+_RIVER_LINE_NO_MERGE_REF_ID_PAIRS: set[tuple[str, str]] = {
+    ("2.03.02.06", "2.03.05.12"),  # Deva (Chester) vs. Deva (Aberdeen)
+    ("2.03.04.06", "2.03.06.01"),  # Alaunus (Hampshire) vs. Alaunus (Northumberland)
+    #
+    # Found by generalizing the Deva/Alaunus check catalogue-wide (a new
+    # river-vs-coastline crossing check, since a same-name-merged river is
+    # usually only 2 points - too short for check_self_intersections.py's
+    # own len>=4 floor to ever catch as a self-crossing): the same reused-
+    # name coincidence, confirmed each time by two different `Modern_location`
+    # values and/or non-adjacent book.maps, not one continuous course:
+    ("4.01.02.06", "4.01.04.06"),  # Sala (Bou Regreg, Rabat) vs. Sala (Oued Tamrakt, ~7 degrees south) - both in book.map 4.01 (Mauretania Tingitana) but different modern rivers
+    ("3.02.05.01", "3.03.02.10"),  # Heiliger Fluss/"Sacred river" (Corsica's Fium'Orbo, book.map 3.02) vs. Heiliger Fluss (Sardinia, book.map 3.03) - a descriptive name ("Hieros Potamos"), not a proper name, reused independently on each island
+    ("3.13.18.11", "3.16.06.03"),  # Peneios-Quelle, Thessaly (book.map 3.13, near Mt. Pindos) vs. Peneios-Mündung, the Peloponnese (book.map 3.16) - two real, still-named rivers (Pineios of Thessaly and Pineios of Elis), not one course; the Thessalian mouth+source pair (3.13.15.07/3.13.18.11) stays merged as one line
+    ("3.15.13.09", "3.16.03.04"),  # Asopos (confluence with Kephisos/Ismenos - Boiotian rivers, book.map 3.15) vs. Asopos-Mündung, the Peloponnese (book.map 3.16) - the Boiotian Asopos (of the Battle of Plataia) and the Peloponnesian Asopos near Sikyon are two different rivers sharing a name
+    ("5.06.07.05", "5.14.02.06"),  # Lykos-Quellen (Kelkit Çayı, Pontus, book.map 5.06) vs. Lykos-Mündung (Kuris, book.map 5.14, far south) - different modern rivers entirely
+}
+
 
 def build_river_lines(refs: list[Reference]) -> list[list[Reference]]:
     """Connect river/river-mouth points that share a base name into a line
@@ -1748,7 +1820,11 @@ def build_river_lines(refs: list[Reference]) -> list[list[Reference]]:
             continue
         run = [items[0]]
         for prev, cur in zip(items, items[1:]):
-            if _ref_dist(prev, cur) > _RIVER_LINE_MAX_GAP_DEG:
+            no_merge = (prev.ref_id, cur.ref_id) in _RIVER_LINE_NO_MERGE_REF_ID_PAIRS or (
+                cur.ref_id,
+                prev.ref_id,
+            ) in _RIVER_LINE_NO_MERGE_REF_ID_PAIRS
+            if no_merge or _ref_dist(prev, cur) > _RIVER_LINE_MAX_GAP_DEG:
                 if len(run) >= 2:
                     lines.append(run)
                 run = [cur]
@@ -2239,9 +2315,14 @@ def build_map(
         )
         color = CATEGORIES[ref.category]["color"]
         is_coast_family = ref.category in _COASTLINE_CATEGORIES or ref.ref_id in island_position
+        # Lakes share the rivers' light-blue color now (both are "inland
+        # water" to a reader at a glance) - sized up instead, so a lake is
+        # still visually distinct from an ordinary river bend/confluence
+        # rather than just blending into the same-colored dots around it.
+        radius = 11 if ref.category == "lake" else (8 if is_coast_family else 5)
         marker = folium.CircleMarker(
             location=[ref.lat_modern, ref.lon_modern],
-            radius=8 if is_coast_family else 5,
+            radius=radius,
             color=color,
             weight=2,
             fill=True,

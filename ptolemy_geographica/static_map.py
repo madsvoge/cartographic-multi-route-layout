@@ -173,13 +173,17 @@ def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False,
         pts = [(r.lon_modern, r.lat_modern) for r in in_view if r.category == cat]
         xs, ys = zip(*pts)
         is_coast_family = cat in ("coast", "harbor", "river_mouth")
+        # Lakes share the rivers' light-blue color now - sized up instead,
+        # so a lake still reads as visually distinct rather than blending
+        # into the same-colored river points around it.
+        size = 70 if cat == "lake" else (42 if is_coast_family else 16)
         ax.scatter(
             xs,
             ys,
-            s=42 if is_coast_family else 16,
+            s=size,
             color=CATEGORIES[cat]["color"],
-            alpha=0.85 if is_coast_family else 0.75,
-            linewidths=0.6 if cat == "coast" else 0.3,
+            alpha=0.85 if is_coast_family or cat == "lake" else 0.75,
+            linewidths=0.6 if cat in ("coast", "lake") else 0.3,
             edgecolors="white",
             zorder=5,
             label=f"{CATEGORIES[cat]['label']} ({len(pts)})",
