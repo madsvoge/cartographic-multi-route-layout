@@ -138,7 +138,15 @@ _RIVERFEAT_RE = re.compile(r"quell|einmündung|ursprung|zusammenfluss|ausfluss",
 # spliced into the middle of that coastal walk out of geographic order.
 # One legitimate exception: a bend *in a gulf's own coastline* ("Elanitischer
 # Golf (Biegung)") isn't a river feature, hence the golf/bay guard.
-_RIVER_COURSE_RE = re.compile(r"\(mitte\)|biegung|abzweigung|aufteilung|oberlauf|unterlauf", re.IGNORECASE)
+# "teilung" (bare, not just "-aufteilung") catches four more delta-fork
+# citations along the Danube's own branching mouths ("Ister (Teilung des
+# nördlichsten Armes)", "Ister (Teilung)" x2, "Ister (1. Teilung bei
+# Noviodunum)") that had fallen through to the default `city` - checked
+# against the whole catalogue first: every other "teilung" hit is already
+# an "-aufteilung" delta-fork citation elsewhere (the Nile's own five
+# delta divisions, four more river forks in India), so broadening to the
+# bare word introduces no false positives.
+_RIVER_COURSE_RE = re.compile(r"\(mitte\)|biegung|abzweigung|aufteilung|teilung|oberlauf|unterlauf", re.IGNORECASE)
 _GULF_RE = re.compile(r"golf|meerbusen|bucht", re.IGNORECASE)
 _MOUTH_RE = re.compile(r"mündung", re.IGNORECASE)
 _CAPE_RE = re.compile(r"^kap\b|spitze|vorgebirge|promont", re.IGNORECASE)
@@ -1097,6 +1105,70 @@ _COASTLINE_SKIP_REF_IDS = {
 _COASTLINE_HARD_BREAKS: set[tuple[str, str]] = {
     ("3.11.02.10", "3.11.03.05"),
     ("5.01.04.07", "5.01.05.05"),
+    # Panysus-Mündung correctly ends the coast heading *south* from the
+    # Danube delta toward Thrace (topostext, book 3 map 10 section 3: "The
+    # eastern side of Moesia is bound by the coast following the mouths of
+    # Pontos as far as [Kap Pteron]...Tomoi...Kallatis...Tiristis
+    # promontory...Odessos...Panysos river mouth...Mesembria"). Axiakes-
+    # Mündung starts an entirely different stretch heading *north* from the
+    # delta toward the Dniester (topostext section 7: "northernmost mouth
+    # of the Istros until the mouth of the Borysthenes river and the
+    # hinterland...Axiakos river mouth..."). Catalogue order bridges them
+    # directly only because an inland digression (Danube-bank Roman cities,
+    # correctly `city`) sits between the two sections with nothing to mark
+    # the hard turn - a ~4 degree jump the user pointed at as "completely
+    # wrong" directly in a rendered map.
+    ("3.10.08.10", "3.10.14.02"),
+    # The delta's own six mouths reorder correctly south-to-north (see
+    # _COASTLINE_EXPLICIT_ORDER_OVERRIDES), ending at the *northernmost*
+    # one - but the coast heading south toward Thrace (Kap Pteron onward)
+    # naturally continues from there in ref_id order regardless, cutting
+    # straight back across the delta's own southward-opening branches
+    # (confirmed by check_self_intersections.py - three real crossings).
+    # Kap Pteron is topostext's own next-door neighbour to the *southern*
+    # mouth, Hieron/Heilige Mündung ("Sacred mouth of the Istros river,
+    # Pteron promontory" - one citation, not two), not the northern one.
+    # Breaking this edge and letting the ordinary proximity stitch
+    # reconnect Heilige Mündung to Kap Pteron instead (0.4 degrees apart,
+    # well under the stitch tolerance, and the closest pairing available)
+    # gives the delta a real branch shape: one open chain, walked
+    # south-to-north through the six mouths, with the rest of the coast
+    # rejoining at the south end where it geographically belongs.
+    ("3.10.04.03", "3.10.08.03"),
+}
+
+# build_coastlines assumes catalogue order (ref_id order) is walking order
+# - true for an ordinary coastal survey, but not for a river delta, which
+# Ptolemy describes as a *branching tree*, not a line: "the first division
+# of the mouths at Noviodunum...the southernmost part...flows out by the
+# Sacred mouth...the northernmost divides again...divides again...flows
+# out by Thiagola or Psilon...The more southerly of the second division
+# also splits...flows out by Boreios...also divides...flows out by
+# Narakion...also divides...flows out by Pseudostomon...the more
+# southerly flows out by Kalon" (topostext, book 3 map 10 - the Danube
+# delta). Reading that nested south/north branching in order (the
+# catalogue's own division points confirm every split: "Ister (1. Teilung
+# bei Noviodunum)", "...Teilung des nördlichsten Armes", two more bare
+# "Ister (Teilung)" citations - see _RIVER_COURSE_RE's "teilung" addition)
+# gives a real geographic south-to-north walk along the coast, confirmed
+# by every one of the six mouths' own latitude increasing monotonically
+# in this order - catalogue/ref_id order does not (it interleaves them
+# with the division points in a different sequence entirely). Found by
+# the user comparing the rendered result against old maps that draw this
+# delta as a single point fanning into several branches, and asking for
+# the branches to be worked through step by step rather than left to
+# ref_id order. `sort_key` below checks this override before falling back
+# to natural (book, tabula, section, item) order; unlisted ref_ids are
+# unaffected, and the six overrides are placed as extra tuple elements
+# immediately after the first mouth's own natural key so they sort
+# between it and the next unrelated point without disturbing anything
+# else in book.map "3.10".
+_COASTLINE_EXPLICIT_ORDER_OVERRIDES: dict[str, tuple] = {
+    "3.10.05.05": (3, 10, 2, 5, 1),  # Narakion-Mündung
+    "3.10.06.03": (3, 10, 2, 5, 2),  # Schöne Mündung (Kalon)
+    "3.10.06.02": (3, 10, 2, 5, 3),  # Pseudostomon (Mündung)
+    "3.10.05.03": (3, 10, 2, 5, 4),  # Nördliche Mündung (Boreios)
+    "3.10.04.03": (3, 10, 2, 5, 5),  # Psilon bzw. Thiagola (Mündung)
 }
 
 # A different, self-marking version of the same "same point re-cited"
@@ -1198,7 +1270,14 @@ _NO_CLOSE_LOOP_TRAILS = {
     # across the middle of the trail's own real path - the geometric
     # signature of a mainland coast's two ends happening to land near each
     # other, not an island's coastline genuinely returning to its start.
-    ("3.10.02.05", "3.10.14.06"),  # Heilige Mündung -> Harpis: Lower Moesia's Danube-delta-to-Dniester coast, not an island (was .../3.10.14.04 before Physke/Hermonax/Harpis joined the same trail - see _COASTAL_APPENDIX_SECTIONS' "3.10"/"14" entry)
+    # ("3.10.02.05", "3.10.14.06") - Heilige Mündung -> Harpis - was here,
+    # covering Lower Moesia's Danube-delta-to-Dniester coast. No longer
+    # needed: reordering the delta's own six mouths and rejoining the rest
+    # of the coast at the correct (southern) end instead
+    # (_COASTLINE_EXPLICIT_ORDER_OVERRIDES, _COASTLINE_HARD_BREAKS) changed
+    # this trail's own endpoints to Panysus-Mündung/Axiakes-Mündung, over
+    # 2.5 degrees apart - well outside a false closure's reach, so nothing
+    # replaces this entry.
     ("3.11.02.01", "3.11.06.09"),  # Nessos-Mündung -> Paktye: Thrace's Aegean-to-Propontis coast, not an island
     # Once Thrace (3.11) and Macedonia/Thessaly (3.13) stopped each falsely
     # closing on their own, the real Nessos-Mündung/Neapolis boundary stitch
@@ -1312,6 +1391,8 @@ def build_coastlines(refs: list[Reference]) -> list[list[Reference]]:
     """
 
     def sort_key(ref: Reference) -> tuple:
+        if ref.ref_id in _COASTLINE_EXPLICIT_ORDER_OVERRIDES:
+            return _COASTLINE_EXPLICIT_ORDER_OVERRIDES[ref.ref_id]
         return tuple(int(p) if p.isdigit() else p for p in ref.ref_id.split("."))
 
     def book_map(ref: Reference) -> str:

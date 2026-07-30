@@ -1439,6 +1439,63 @@ closing-ratio check) - updated the existing `3.10.02.05` `_NO_CLOSE_LOOP_TRAILS`
 entry to match the trail's new last point rather than adding a redundant
 one. `coast`: 753 → 756; `check_self_intersections.py` stays clean.
 
+**A ninth round, on the Danube delta's real shape**: even fixed, the delta
+still looked wrong to the user - pointing at two more edges directly
+("3.10.8.10 is completely wrongly connected to 3.10.14.02", "3.10.02.05 is
+wrongly connected to 3.10.04.03") and naming the actual cause: "old maps
+draw the Danube as ending in four/five/six branches from one point - you
+need to go through these parts step by step and make sure the order is
+right so nothing crosses." That reframed the whole problem. `build_coastlines`
+assumes catalogue order is walking order - true for an ordinary coastal
+survey, false for a river delta, which topostext describes as a nested
+*branching tree*, not a line: "The first division of the mouths at
+Noviodunum...the southernmost part...flows out by the Sacred mouth...the
+northernmost divides again...divides again...flows out by Thiagola or
+Psilon...The more southerly of the second division also splits...flows
+out by Boreios...also divides...flows out by Narakion...also divides...
+flows out by Pseudostomon...the more southerly flows out by Kalon." The
+catalogue's own four division-point citations ("Ister (1. Teilung bei
+Noviodunum)", "...Teilung des nördlichsten Armes", two more bare "Ister
+(Teilung)") confirm every split in that description one-for-one - and
+they'd been sitting in `city` themselves, the same `_RIVER_COURSE_RE` gap
+as "Aufteilung" elsewhere in the catalogue (Nile delta, India), just
+missing the bare word "teilung". Fixed generally (checked the whole
+catalogue first - every other hit was already an "-aufteilung" match, so
+broadening to the bare word adds no false positives).
+
+Reading the nested south/north branching in written order and walking it
+gives a real geographic south-to-north sequence - confirmed decisively by
+the six mouths' own latitude increasing monotonically in exactly this
+order, where catalogue/ref_id order does not. There's no existing
+mechanism for "reorder these specific points" (every fix so far only ever
+excluded a point or an edge, never resequenced), so this needed a new one:
+`_COASTLINE_EXPLICIT_ORDER_OVERRIDES` gives five of the six mouths a
+synthetic sort key placing them immediately after the sixth (the
+southernmost, already ref_id-first) in the derived order, leaving every
+other point in book.map `3.10` untouched.
+
+That alone wasn't sufficient, and the self-intersection checker caught
+why on the next run: the coast heading south toward Thrace (Kap Pteron
+onward) naturally continues in ref_id order from wherever the six mouths'
+*last* one landed - the *northernmost* mouth - cutting straight back
+across the delta's own southward-opening branches (three confirmed
+crossings). topostext's own text puts Kap Pteron right next to the
+*southern* mouth instead ("Sacred mouth of the Istros river, Pteron
+promontory" - one citation, not two). `_COASTLINE_HARD_BREAKS` cut the
+wrong (northern-end) connection; the ordinary proximity stitch then
+reconnected Kap Pteron to the southern mouth on its own; the same
+mechanism separately cut the unrelated ~4-degree jump from Panysus-
+Mündung to Axiakes-Mündung the user had flagged - topostext frames that as
+two different stretches heading in opposite directions from the delta
+(south toward Thrace vs. north toward the Dniester), never connected in
+the text at all.
+
+`river`: 300 → 304 (the four division points); `check_self_intersections.py`
+stays clean, and the delta now reads, top to bottom, exactly like the old
+maps the user was comparing against: one river forking into six mouths in
+correct geographic order, rejoining the rest of the coast at the correct
+end.
+
 topostext's covered range is now **all of books 2 through 7** (book 2
 maps 02-16, book 3 maps 01-17, book 4 maps 01-08, and all of books 5, 6,
 and 7 in full - book 1 has no coordinate data to check, being Ptolemy's
