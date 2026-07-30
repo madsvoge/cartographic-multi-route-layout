@@ -1,36 +1,64 @@
 #!/usr/bin/env python3
 """
-Cross-reference parsed topostext.org citations against our annotated
-catalogue, matching by *coordinate* (both sources encode the same
-Ferro-relative degrees-minutes values) rather than by section position -
-robust to topostext folding a paragraph's opening "shared boundary" point
-into prose instead of listing it as its own line (see parse_topostext.py).
+Flag category disagreements against topostext's own already-computed matches
+==============================================================================
 
-For each match, flags a naming_observation-vs-topostext-name disagreement:
-does our `category` look consistent with what topostext's own phrasing
-says the point is ("mouth of the X river" -> river_mouth/river, "island"
--> island, "promontory"/cape wording -> coast, etc)? This is the same kind
-of audit signal that found the Corfu/Euboea/Egypt bugs earlier, but from
-an independent source instead of guessing from Modern_location.
+For every catalogue point `link_matches.py` already matched to a topostext
+citation (`topostext_matched == "yes"`), does our `category` look
+consistent with what topostext's own English phrasing says the point is
+("mouth of the X river" -> river_mouth/coast/harbor, "island" -> island,
+"promontory"/cape wording -> coast/mountain, etc)? This is an independent
+check against topostext's own narrative, not a guess from Modern_location
+or a section-header keyword - the same kind of audit signal that found
+the Corfu/Euboea/Egypt bugs earlier in this project's history.
+
+Originally this script re-matched topostext_209.csv against the catalogue
+by coordinate with its own strict 0.02deg tolerance, duplicating work
+`link_matches.py` already does better (a graduated distance+name score,
+covering ~6000 matches instead of ~5000). It now just reads the
+annotated catalogue's own `topostext_matched`/`topostext_name` columns -
+run `link_matches.py` first.
+
+Two refinements over a naive "does topostext's wording match our
+category" check, both found by actually running this and reading the
+first batch of results:
+
+- A settlement topostext describes as a "city"/"town" that our own
+  category has as `coast`/`harbor`/`river_mouth` is not a disagreement -
+  it's how this project's schema works on purpose: a city sitting right
+  on the shore is still walked as part of the coastline (see "Point
+  classification & coastlines" in the README). Only a *plain settlement
+  word* with no coastal-family category at all is worth a look.
+- A "lake" mention against a `river` category is not a disagreement when
+  the catalogue's own name already marks it as a *location* reference
+  ("Padus (Ausfluss aus Lacus Larius)" - the Po's own point describing
+  where it exits Lake Como) rather than the lake's own identity - the
+  same distinction `_LAKE_LOCATION_REF_RE` in `ptolemy_map.py` draws for
+  classification itself, duplicated here as a filter rather than imported
+  to keep this script self-contained like the rest of `topostext/`.
+
+Sorted shortest topostext phrase first: a short citation ("Populonium
+city") is almost always about the matched point itself, while a long
+one is often a multi-clause boundary/region description that happens to
+mention several features in passing - only one of which is the actual
+matched point - so those are more likely to be noise and worth reviewing
+last.
 
 Usage
 -----
-    python3 crossref_topostext.py topostext_209.csv \
-        --catalogue ../data/ptolemy_catalogue_annotated.csv
+    python3 crossref_topostext.py
 """
 
 from __future__ import annotations
 
-import argparse
 import csv
 import re
-from collections import defaultdict
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 DEFAULT_CATALOGUE = SCRIPT_DIR.parent / "data" / "ptolemy_catalogue_annotated.csv"
 
-_MATCH_TOL_DEG = 0.02  # both sources round DMS the same way; a real match should be near-exact
+_COASTAL_FAMILY = {"coast", "harbor", "river_mouth"}
 
 _TYPE_HINTS: list[tuple[re.Pattern, set[str]]] = [
     (re.compile(r"\bmouth of\b|\bestuary\b", re.IGNORECASE), {"river_mouth", "coast", "harbor"}),
@@ -38,11 +66,19 @@ _TYPE_HINTS: list[tuple[re.Pattern, set[str]]] = [
     (re.compile(r"\bpromontory\b|\bcape\b", re.IGNORECASE), {"coast", "mountain"}),
     (re.compile(r"\bharbor\b|\bharbour\b|\bport\b", re.IGNORECASE), {"harbor", "coast"}),
     (re.compile(r"\bbay\b", re.IGNORECASE), {"coast"}),
-    (re.compile(r"\bcity\b|\btown\b", re.IGNORECASE), {"city"}),
+    (re.compile(r"\bcity\b|\btown\b", re.IGNORECASE), {"city"} | _COASTAL_FAMILY),
     (re.compile(r"\bsource[s]?\b|\bquelle\b", re.IGNORECASE), {"river"}),
     (re.compile(r"\blake\b", re.IGNORECASE), {"lake"}),
     (re.compile(r"\bmountain[s]?\b|\bmount\b", re.IGNORECASE), {"mountain"}),
 ]
+
+# Same distinction ptolemy_map.py's _LAKE_LOCATION_REF_RE draws when
+# classifying a point in the first place: a river/city point that merely
+# *names* a lake as its location ("(Ausfluss aus Lacus Larius)", "(Einmündung
+# des aus Lacus Benacus entspringenden Flusses)") isn't lying about being a
+# lake - topostext's own "lake" wording is describing the same location
+# reference, not a disagreement.
+_LAKE_LOCATION_REF_RE = re.compile(r"\b(?:am|im|vom|von|zum|aus|des)\s+[\w\-\s]*?(?:see|seen|palus|lacus)\b", re.IGNORECASE)
 
 
 def _guess_expected_categories(name_phrase: str) -> set[str] | None:
@@ -52,73 +88,41 @@ def _guess_expected_categories(name_phrase: str) -> set[str] | None:
     return None
 
 
-def load_catalogue(path: Path) -> dict[str, list[dict]]:
-    """Index catalogue rows by their ref_id's book component for a fast,
-    scoped search (topostext's own book number == our ref_id's book)."""
-    by_book: dict[str, list[dict]] = defaultdict(list)
+def load_matched_rows(path: Path) -> list[dict]:
     with path.open(newline="", encoding="utf-8") as fh:
-        for row in csv.DictReader(fh):
-            if not row.get("ref_id") or not row.get("lon_ptolemy"):
-                continue
-            book = row["ref_id"].split(".")[0]
-            by_book[book].append(row)
-    return by_book
+        return [row for row in csv.DictReader(fh) if row.get("topostext_matched") == "yes"]
 
 
-def find_match(topo_row: dict, candidates: list[dict]) -> dict | None:
-    best, best_dist = None, None
-    lon, lat = float(topo_row["lon_decimal"]), float(topo_row["lat_decimal"])
-    for cand in candidates:
-        d = abs(float(cand["lon_ptolemy"]) - lon) + abs(float(cand["lat_ptolemy"]) - lat)
-        if d <= _MATCH_TOL_DEG and (best_dist is None or d < best_dist):
-            best, best_dist = cand, d
-    return best
-
-
-def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("topostext_csv", type=Path)
-    parser.add_argument("--catalogue", type=Path, default=DEFAULT_CATALOGUE)
-    args = parser.parse_args(argv)
-
-    by_book = load_catalogue(args.catalogue)
-
-    with args.topostext_csv.open(newline="", encoding="utf-8") as fh:
-        topo_rows = list(csv.DictReader(fh))
-
-    unmatched: list[dict] = []
-    matched = 0
-    disagreements: list[tuple[dict, dict, set[str]]] = []
-    for topo_row in topo_rows:
-        candidates = by_book.get(topo_row["book"], [])
-        match = find_match(topo_row, candidates)
-        if match is None:
-            unmatched.append(topo_row)
+def find_disagreements(rows: list[dict]) -> list[tuple[dict, set[str]]]:
+    disagreements: list[tuple[dict, set[str]]] = []
+    for row in rows:
+        phrase = row.get("topostext_name") or ""
+        expected = _guess_expected_categories(phrase)
+        if expected is None or row["category"] in expected:
             continue
-        matched += 1
-        expected = _guess_expected_categories(topo_row["name_phrase"])
-        if expected is not None and match["category"] not in expected:
-            disagreements.append((topo_row, match, expected))
+        if "lake" in expected and row["category"] == "river" and _LAKE_LOCATION_REF_RE.search(row["name"]):
+            continue
+        disagreements.append((row, expected))
+    disagreements.sort(key=lambda pair: len(pair[0].get("topostext_name") or ""))
+    return disagreements
 
-    print(f"{len(topo_rows)} topostext citations, {matched} matched by coordinate, {len(unmatched)} unmatched")
+
+def main() -> int:
+    rows = load_matched_rows(DEFAULT_CATALOGUE)
+    disagreements = find_disagreements(rows)
+
+    print(f"{len(rows)} catalogue points matched to a topostext citation (topostext_matched == 'yes')")
     print()
     if disagreements:
-        print(f"=== {len(disagreements)} possible category disagreements ===")
-        for topo_row, match, expected in disagreements:
+        print(f"=== {len(disagreements)} possible category disagreements (shortest topostext phrase first) ===")
+        for row, expected in disagreements:
             print(
-                f"§{topo_row['book']}.{topo_row['map']}.{topo_row['section']} "
-                f"topostext=\"{topo_row['name_phrase']}\" ({topo_row['lon_dms']} . {topo_row['lat_dms']}) "
-                f"-> ref_id={match['ref_id']} name=\"{match['name']}\" our_category={match['category']!r} "
-                f"expected~{sorted(expected)}"
+                f"ref_id={row['ref_id']} name={row['name']!r} our_category={row['category']!r} "
+                f"expected~{sorted(expected)} topostext=\"{row['topostext_name']}\" "
+                f"(topostext_ref={row['topostext_ref']}, score={row['topostext_match_score']})"
             )
-        print()
-    if unmatched:
-        print(f"=== {len(unmatched)} unmatched topostext citations (no catalogue point within {_MATCH_TOL_DEG} deg) ===")
-        for topo_row in unmatched:
-            print(
-                f"§{topo_row['book']}.{topo_row['map']}.{topo_row['section']}.{topo_row['position']} "
-                f"\"{topo_row['name_phrase']}\" ({topo_row['lon_dms']} . {topo_row['lat_dms']})"
-            )
+    else:
+        print("no category disagreements found")
     return 0
 
 

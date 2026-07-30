@@ -267,6 +267,19 @@ _ISLAND_APPENDIX_SECTIONS = {
     ("3.11", "14"),  # Kyaneen/Proikonesos/Thasos/Samothrake
     ("3.13", "47"),  # Saso/Skiathos/Peparethos/Skopelos (Sporades)
     ("3.14", "11"),  # Kassiope/Ptychia/Korkyra + Kap Leukimma/Amphipagos/Phalakron - Corfu
+    # Found by the systematic topostext-disagreement review (2026-07-30):
+    # the *other* Ionian islands, each cited once (not a coastal walk of
+    # any single one, so no _ISLAND_LINE_GROUPS entry - just the "list of
+    # several different islands" shape _ISLAND_APPENDIX_SECTIONS exists
+    # for). Section "12": Kephallenia ("Kephallenia island, with a city of
+    # the same name...its northernmost promontory" / "the southern
+    # promontory" - both capes stay `island` too, the same as Corfu's own
+    # capes above), Erikusa, Skopelos, Leukas ("Leukas island"). Section
+    # "13": Echinaden ("the Echinades islands"), Ithake ("in which a city
+    # of that name"), Lotoa ("Letoa island"), Zakynthos ("in which a city
+    # of the same name"). All were sitting in `city`.
+    ("3.14", "12"),
+    ("3.14", "13"),
     ("3.15", "23"),  # Kap Kenaion/Atalante/Aidepsos - Euboea (NW coast)
     ("3.15", "24"),  # Chalkis/Eretria/Amarynthos/Karystos/Geraistos - Euboea (cities)
     ("3.15", "25"),  # Kap Kaphereus/Budoros-Mündung/Kerinthos/Kap Phalassia/Kap Dion - Euboea (S/E coast)
@@ -609,6 +622,82 @@ _COASTAL_APPENDIX_SECTIONS = {
     # sitting in `city`; the two river mouths and Kap Sigeion were already
     # correctly `river_mouth`/`coast` via their own name keywords.
     ("5.02", "03"),
+    # Found by the systematic topostext-disagreement review (2026-07-30):
+    # Marmarica/Cyrenaica's own Mediterranean coast (book.map "4.05",
+    # sections "03" through "07") continues directly from section "02"'s
+    # own coastal declaration ("on the north by the Egyptian sea. This
+    # seacoast is thus described: In the nomes of Marmarike are: Aziris
+    # village...") without repeating a sea-word header of its own -
+    # topostext confirms one continuous run of harbor/promontory/village
+    # citations straight through ("Antipyrgos harbor...Big Petras
+    # harbor...Panormos harbor...Ainesisphyra harbor...Selinous
+    # harbor...Graias Gony, harbor...Gyzis or Zygis harbor...Phoinikos
+    # harbor...Leukaspis harbor..."), matching the catalogue's own item
+    # order. The "Kap"-named capes in this stretch were already correctly
+    # `coast`; the plain-named harbor towns between them (Antipyrgos,
+    # Skythranios, Petra Megale, Panormos, Ainesisphyra, Zygris, Chettaia,
+    # Zagylis, Selinus, Graias Gony, Zygis, Leuke Akte, Antiphrai,
+    # Leukaspis) fell through to `city` for lack of a keyword of their own.
+    ("4.05", "03"),
+    ("4.05", "04"),
+    ("4.05", "05"),
+    ("4.05", "06"),
+    ("4.05", "07"),
+    # The same gap recurs on Egypt's Red Sea coast: section "13" is headed
+    # "Arabischer Golf" ("Arabian Gulf", the Red Sea) and correctly
+    # coastal, but sections "14" and "15" continue the same walk south
+    # without repeating that header - topostext confirms an unbroken run
+    # ("above-mentioned inmost point of the gulf...Arsinoe, Klysma
+    # castle, Drepanon promontory, Myos hormos, Philoteras harbor, Mt.
+    # Aias" straight into "Leukos harbor, Mt. Akabe, Nechesia, Mt.
+    # Samaragdos, Lepte akra, Berenike, Mt. Pentadaktylon, Bazion
+    # promontory" - the same mountains-ending-at-the-shore shape already
+    # established for Mt. Athos/Akrokeraunia, correctly staying coastal
+    # here too rather than being reclassified). Arsinoe, Klysma, Myos
+    # Hormos and Philoteras (section 14) were sitting in `city`.
+    ("4.05", "14"),
+    ("4.05", "15"),
+    # Epirus's own Ionian coast (book.map "3.14"): section "01" is headed
+    # "Ionisches Meer" and correctly coastal, but sections "02" and "04"
+    # continue the same walk without repeating that header - topostext
+    # confirms an unbroken run ("Chaonia Orikon" straight into "Panormos
+    # harbor...Onchesmos harbor...Kassiope harbor", then "Bouthroton
+    # gulf...Pelodes harbor" between the two already-coastal capes Kap
+    # Poseidion/Kap Thyamis). Orikon, Panormos, Onchesmos, Kassiope
+    # (section 02) and Buthroton, Schlammhafen (section 04) were sitting
+    # in `city`.
+    ("3.14", "02"),
+    ("3.14", "04"),
+    # A wide batch found by the same systematic topostext-disagreement
+    # review, each independently confirmed the same way: a plain-named
+    # harbor town or headland sitting in `city`, whose section has no
+    # sea-word header of its own but whose topostext citation both names
+    # it a harbor/port *and* sits in an unbroken run of coastal citations
+    # (river mouths, capes, other harbors) either side of it in the same
+    # section - the same "province/tribe name instead of sea name" header
+    # gap already fixed many times this session, just not yet swept
+    # outside the regions checked so far:
+    ("4.03", "04"),  # Africa: "Holcachites gulf...Tacatye...Lesser Collops...Siur port"
+    ("3.03", "02"),  # Sardinia, explicitly "Description of the coast...west side": Nymphaeum/Korakodes harbors among capes and river mouths
+    ("3.03", "03"),  # Sardinia, "Description of the southern side": Sulci/Bithia harbors among capes
+    ("3.03", "04"),  # Sardinia, "Description of the eastern side": Sulpicius/Olbian harbors among capes and river mouths
+    ("3.04", "07"),  # Sicily: river mouths and promontories either side of Kaukana harbor
+    ("3.15", "07"),  # Attica: "Peiraieus...Ilissos river outlet...Mounychias harbor...Hyphormos harbor...Sounion promontory..."
+    ("3.16", "03"),  # Korinthia: "Sanctuary of Hera of Corinth...Lechaion port...Asopos river outlet..."
+    ("3.16", "05"),  # Achaia proper: "Aigeira...Erineos harbor...Rhion promontory..."
+    ("3.16", "06"),  # Elis: "Kyllene port...Peneios river outlet...Chelonitis headland..."
+    ("3.16", "11"),  # Argolis: "Astron...Inachos river outlet...Nauplia port...Skyllaion promontory..."
+    ("3.16", "13"),  # Argolis/Korinthia continuation: "...Speiraion promontory...Kenchreai port...Schoinous harbor"
+    ("3.17", "02"),  # Crete, "Description of the western side": Korykos headland/city into Rhamnous harbor
+    ("3.17", "05"),  # Crete, "Description of the east side": Sammonion promontory into Minoa harbor
+    ("4.01", "02"),  # Mauretania Tingitana: a run of river mouths ending at Rusibis harbor
+    ("4.01", "03"),  # Mauretania Tingitana continuation: river mouths and capes around Mysokaras harbor
+    ("4.02", "02"),  # Mauretania Caesariensis: "Malva river mouth, Great promontory...Gypsaria harbor..."
+    ("4.03", "12"),  # Africa: a city-at-the-limit/promontory run including Pisidon and Garapha harbors
+    ("4.04", "03"),  # Cyrenaica (Syrtis): "Automalax fort...Drepanon promontory...Diarroia harbor...Tower of Herakles..."
+    ("4.04", "05"),  # Cyrenaica: "Phykous promontory...Apollonia [naval station]...Naustathmon harbor...Zephyrion promontory..."
+    ("5.06", "06"),  # Pontus (Kissian coast): "Opious...Rizous harbor...Athenon promontory..."
+    ("6.08", "09"),  # India: "Gulf of Paragon...Derane Billa...Kophanta harbor...river mouth..."
 }
 
 # The mountain-side counterpart of _ISLAND_POINT_OVERRIDES: a lone mountain

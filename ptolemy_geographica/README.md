@@ -526,7 +526,8 @@ the conversation, save it under `topostext/raw_209_<range>.txt`, then:
 ```bash
 cd topostext
 python3 parse_topostext.py raw_209_<range>.txt -o topostext_209.csv --append
-python3 crossref_topostext.py topostext_209.csv
+python3 link_matches.py
+python3 crossref_topostext.py
 ```
 
 `parse_topostext.py` splits the pasted text on `§ B.M.S` markers and pulls
@@ -537,10 +538,13 @@ lead sentence as a restatement of the *previous* paragraph's last point
 ("from the Boreum promontory which is in 11°00' . 61°00'..."), the exact
 same "shared boundary citation" pattern already found directly in our own
 data (Kap Oiarso, Nordspitze, Acheloos-Mündung) - so position-in-paragraph
-isn't a reliable join key. `crossref_topostext.py` instead matches by
-*coordinate* (both sources encode the same Ferro-relative degrees-minutes
-values, so a real match is near-exact) and flags cases where our
-`category` looks inconsistent with topostext's own wording.
+isn't a reliable join key. `link_matches.py` instead matches by a blended
+distance+name score (see "Coverage" below) and writes the result back
+into the annotated catalogue; `crossref_topostext.py` reads those columns
+and flags cases where our `category` looks inconsistent with topostext's
+own wording (originally it re-matched by coordinate itself, with a
+strict tolerance and no fuzzy fallback - see the "closing the validation
+loop" round further down for why and how that changed).
 
 The first pilot run (Ireland and Britain, `§2.2`-`§2.3`) found two real,
 previously-undetected bugs this way:
@@ -1817,6 +1821,97 @@ blend into the river points around it. `harbor` takes the green
 (unchanged in `_COASTLINE_CATEGORIES`, still traced into the coastline
 same as before), just recolored. `coast` itself (dark blue) and every
 non-water category (`city`, `mountain`, `island`) are unchanged.
+
+**A thirteenth round, closing the validation loop**: a methodological
+question rather than a bug report - every fix so far this session had
+been found reactively (a self-intersection, the user's own eye on a
+rendered map, a targeted header scan of one region at a time), never
+by a systematic, topostext-driven sweep of the *whole* catalogue's
+category assignments. `crossref_topostext.py` already existed to do
+exactly that (compare our `category` against what topostext's own
+English phrasing implies - "mouth of"/"estuary" -> river_mouth/coast,
+"harbor"/"port" -> harbor/coast, "island" -> island, etc.) but re-matched
+topostext against the catalogue with its own strict 0.02deg coordinate
+tolerance instead of using `link_matches.py`'s better, ~6000-match fuzzy
+matches already sitting in the annotated CSV - so it had only ever
+checked a subset, and, going by the absence of any fix in this session's
+history that traces back to it, had likely never actually been run and
+acted on. Rewritten to read the catalogue's own `topostext_matched`/
+`topostext_name` columns directly (no more separate re-matching), plus
+two refinements found immediately on the first run: a settlement
+topostext calls a "city"/"town" isn't a disagreement when our own
+category is anywhere in the coastal family (`coast`/`harbor`/
+`river_mouth`) - that's this project's schema working as intended, a
+coastal city still walks the shore - and a "lake" mention against a
+`river` category isn't one either when the catalogue's own name already
+marks it as a location reference rather than the lake's own identity
+(`_LAKE_LOCATION_REF_RE`, duplicated from `ptolemy_map.py` to keep this
+script self-contained).
+
+First run: 200 candidate disagreements (up from the old script's zero
+findings this session, simply because it was never run). Worked through
+in short-phrase-first order (a clean "X harbor" citation is almost always
+about the matched point itself; a long multi-clause boundary/region
+description mentioning several features in passing is usually noise -
+sorting this way put the signal at the top and the noise at the bottom
+without having to solve that generally). Concrete fixes, each verified
+the same way as every prior round (topostext quote + section-header
+check before touching anything):
+
+- **Marmarica/Cyrenaica's Mediterranean coast** (book.map `4.05`,
+  sections `03`-`07`) and **Egypt's Red Sea coast continuation**
+  (sections `14`-`15`) - the same "sea named once, not repeated" header
+  gap as several regions found earlier this session, this time in North
+  Africa: 14+ harbor towns (Antipyrgos, Panormos, Selinus, Leukaspis,
+  Arsinoe, Myos Hormos...) sitting in `city`.
+- **Epirus's own Ionian coast** (book.map `3.14`, sections `02`/`04`) -
+  Orikon, Panormos, Onchesmos, Kassiope, Buthroton, Schlammhafen, the
+  same gap shape, continuing section `01`'s "Ionisches Meer" header.
+- **The other Ionian islands** (book.map `3.14`, sections `12`/`13`) -
+  Kephallenia, Erikusa, Skopelos, Leukas, the Echinades, Ithaca, Lotoa/
+  Letoa, Zakynthos - each a real, separate island cited once (not a
+  single island's own coastal walk, so `_ISLAND_APPENDIX_SECTIONS`, not
+  `_ISLAND_LINE_GROUPS`), sitting in `city`.
+- **A wide batch of the same "plain-named harbor, no sea-word header"
+  gap** across regions never checked for it before: Sardinia (explicitly
+  headed "Description of the coast/southern side/eastern side" in
+  topostext, book.map `3.03`), Sicily (`3.04.07`), the whole Peloponnese
+  coast book.map by book.map (Korinthia/Achaia/Elis/Argolis, `3.16.03`
+  through `3.16.13`), Attica (`3.15.07`), Crete's west and east coasts
+  (`3.17.02`/`05`), Mauretania (`4.01.02`/`03`, `4.02.02`), Africa
+  (`4.03.04`, `4.03.12`), Cyrenaica again (`4.04.03`/`05`), Pontus
+  (`5.06.06`), India (`6.08.09`) - 21 sections, each independently
+  confirmed via its own topostext passage before being added.
+
+`coast`: 754 -> 864 (+110 across this round); `island`: 307 -> 317 (+10,
+the Ionian islands); `check_self_intersections.py` stays at 1. The
+river-vs-coastline crossing check (this session's other diagnostic, not
+part of the regular pipeline either) picked up one new near-miss once
+Argolis's coast was filled in - the Inachos river's straight source-to-
+mouth line now grazes a *different*, unrelated stretch of the same
+Peloponnese coastline near Lakonia. Checked and left alone, the same
+"genuine Ptolemaic distortion of a real mouth+source pair" call as
+Kaystros/Thermodon/Tyras/Volturnum-Cumae earlier - the coastline itself
+didn't get any less correct by being completed, it just made a
+pre-existing distortion in the *river's* coordinates newly visible.
+
+The other ~150 remaining disagreements were checked in bulk and are not
+bugs: a name shared between an island and its own city (Chios, Korkyra,
+Tenedos-style - `island` is the deliberate, already-established choice);
+a cape sitting on an island, correctly `island` rather than `coast`
+(matches the sea it's on either way); a mountain that genuinely ends at
+the shore (Mt. Athos/Akrokeraunia/Garganus-style, correctly `coast` -
+verified geometrically too, each sits smoothly in-line with its coastal
+neighbors' own coordinates rather than offset inland); the Maiotic Lake/
+Sea of Azov, correctly treated as coastal water in this catalogue rather
+than a small inland lake; a handful of fuzzy-match near-misses where the
+*matched citation* is wrong, not the category (Priene/Mylasa picked up a
+nearby "named mountains of Asia" citation instead of their own); and a
+long tail of multi-clause boundary/region descriptions that mention a
+harbor or estuary only in passing while describing an unrelated inland
+city (Camulodunum, Petuaria, Flavium Brigantium, Banatia) - the same
+shape already confirmed non-coastal earlier this session, re-confirmed
+here rather than reversed.
 
 ### Coverage: how much of each catalogue is mapped to the other, and a fuzzy match score
 
