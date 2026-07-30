@@ -561,6 +561,21 @@ _COASTAL_APPENDIX_SECTIONS = {
     # the water" north of Kap gleich daneben, unconnected to the rest of
     # the peninsula's own coastline.
     ("3.12", "04"),
+    # Lower Moesia's own coast resuming past the Danube delta (book.map
+    # "3.10" section "14", no header of its own) - topostext confirms the
+    # real sequence is a clean coastal run: "7.1 northernmost mouth of the
+    # Istros until the mouth of the Borysthenes...7.2 Axiakos river
+    # mouth / 7.3 Physke city / 7.4 Tyras river mouth / 7.5 Hermonaktos
+    # village / 7.6 Arpis city" - matching our own item order exactly
+    # (`.02` Axiakes-Mündung, `.03` Physke, `.04` Tyras-Mündung, `.05`
+    # Dorf des Hermonax, `.06` Harpis). Found by the user pointing at
+    # Axiakes-Mündung looking disconnected in a rendered map - it was
+    # technically connected already (to Panysus-Mündung, a real but large
+    # jump across an inland digression - see _COASTLINE_HARD_BREAKS'
+    # sibling comments), but the walk continuing *past* it dead-ended at
+    # Tyras-Mündung because Physke/Hermonax/Harpis, the points that should
+    # carry it onward, were sitting in `city`.
+    ("3.10", "14"),
 }
 
 # The mountain-side counterpart of _ISLAND_POINT_OVERRIDES: a lone mountain
@@ -1183,7 +1198,7 @@ _NO_CLOSE_LOOP_TRAILS = {
     # across the middle of the trail's own real path - the geometric
     # signature of a mainland coast's two ends happening to land near each
     # other, not an island's coastline genuinely returning to its start.
-    ("3.10.02.05", "3.10.14.04"),  # Heilige Mündung -> Tyras-Mündung: Lower Moesia's Danube-delta-to-Dniester coast, not an island
+    ("3.10.02.05", "3.10.14.06"),  # Heilige Mündung -> Harpis: Lower Moesia's Danube-delta-to-Dniester coast, not an island (was .../3.10.14.04 before Physke/Hermonax/Harpis joined the same trail - see _COASTAL_APPENDIX_SECTIONS' "3.10"/"14" entry)
     ("3.11.02.01", "3.11.06.09"),  # Nessos-Mündung -> Paktye: Thrace's Aegean-to-Propontis coast, not an island
     # Once Thrace (3.11) and Macedonia/Thessaly (3.13) stopped each falsely
     # closing on their own, the real Nessos-Mündung/Neapolis boundary stitch

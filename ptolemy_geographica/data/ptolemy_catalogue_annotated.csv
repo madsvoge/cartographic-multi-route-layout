@@ -2015,10 +2015,10 @@ ref_id,name,category,book,tabula,modern_location,recension,lon_ptolemy,lat_ptole
 3.10.12.02,Tibisca,city,Europe,EU09,,Omega,55.0,46.3333333333333,no specific keyword match; section not sea-headed (default),,,,,,,,,,,,yes,3.10.6.2,Tibiska,100.0
 3.10.14.01,Borysthenes-Mündung,river_mouth,Europe,EU09,Dnjepr-Mündung,Omega,57.5,48.5,"matches 'Mündung' (river mouth) - coastal, colored separately",,,,,,,,,,,,yes,3.5.2.1,Borysthenes river mouth,100.0
 3.10.14.02,Axiakes-Mündung,river_mouth,Europe,EU09,Tiligul-Mündung,Omega,57.0,48.0,"matches 'Mündung' (river mouth) - coastal, colored separately",coastline_011_EU09,9,,,,,,,,,,yes,3.10.7.2,Axiakos river mouth,100.0
-3.10.14.03,Physke,city,Europe,EU09,,Omega,56.0,47.6666666666667,no specific keyword match; section not sea-headed (default),,,,,,,,,,,,yes,3.10.8.6,Tyras city,100.0
-3.10.14.04,Tyras-Mündung,river_mouth,Europe,EU09,Dnjestr-Mündung,Omega,56.3333333333333,47.6666666666667,"matches 'Mündung' (river mouth) - coastal, colored separately",coastline_011_EU09,10,,river_027_Tyras,2,,,,,,,yes,3.10.7.4,Tyras river mouth,100.0
-3.10.14.05,Dorf des Hermonax,city,Europe,EU09,,Omega,56.25,47.5,no specific keyword match; section not sea-headed (default),,,,,,,,,,,,yes,3.10.7.5,Hermonaktos village,100.0
-3.10.14.06,Harpis,city,Europe,EU09,,Omega,56.0,47.25,no specific keyword match; section not sea-headed (default),,,,,,,,,,,,yes,3.10.7.6,Arpis city,100.0
+3.10.14.03,Physke,coast,Europe,EU09,,Omega,56.0,47.6666666666667,no specific keyword match; section header names a sea/ocean/gulf,coastline_011_EU09,10,,,,,,,,,,yes,3.10.8.6,Tyras city,100.0
+3.10.14.04,Tyras-Mündung,river_mouth,Europe,EU09,Dnjestr-Mündung,Omega,56.3333333333333,47.6666666666667,"matches 'Mündung' (river mouth) - coastal, colored separately",coastline_011_EU09,11,,river_027_Tyras,2,,,,,,,yes,3.10.7.4,Tyras river mouth,100.0
+3.10.14.05,Dorf des Hermonax,coast,Europe,EU09,,Omega,56.25,47.5,no specific keyword match; section header names a sea/ocean/gulf,coastline_011_EU09,12,,,,,,,,,,yes,3.10.7.5,Hermonaktos village,100.0
+3.10.14.06,Harpis,coast,Europe,EU09,,Omega,56.0,47.25,no specific keyword match; section header names a sea/ocean/gulf,coastline_011_EU09,13,,,,,,,,,,yes,3.10.7.6,Arpis city,100.0
 3.10.15.02,Zargidava,city,Europe,EU09,,Omega,55.6666666666667,47.75,no specific keyword match; section not sea-headed (default),,,,,,,,,,,,yes,3.10.8.1,"The inland cities on that side are, along the Hierasos river, Zargidaua",58.3
 3.10.15.03,Tamasidava,city,Europe,EU09,,Omega,55.3333333333333,47.5,no specific keyword match; section not sea-headed (default),,,,,,,,,,,,yes,3.10.8.2,Tamasidaua,58.8
 3.10.15.04,Piroboridava (Proboridava),city,Europe,EU09,,Omega,54.5,47.0,no specific keyword match; section not sea-headed (default),,,,,,,,,,,,yes,3.10.8.3,Piroboridaua,77.9

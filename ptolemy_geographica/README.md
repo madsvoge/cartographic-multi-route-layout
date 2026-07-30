@@ -1421,6 +1421,24 @@ merged into three longer ones); `check_self_intersections.py` stays clean
 explicit pair like these, so it can't introduce a new crossing the way a
 distance-based bridge could.
 
+**An eighth round**, back at the Danube delta: the user spotted
+Axiakes-Mündung (`3.10.14.02`) looking disconnected in a rendered map. It
+was technically already part of a coastline (linked to Panysus-Mündung
+across the same large, already-documented digression-jump as the Danube
+bends), but the walk *past* it dead-ended, because the three points that
+should carry it onward - Physke, "Dorf des Hermonax", Harpis
+(`3.10.14.03`/`.05`/`.06`) - were sitting in `city`. Section `14` has no
+header of its own; topostext confirms the real sequence is a clean coastal
+run matching the catalogue's own item order exactly: "northernmost mouth
+of the Istros until the mouth of the Borysthenes...Axiakos river mouth /
+Physke city / Tyras river mouth / Hermonaktos village / Arpis city".
+Fixing it created a fresh instance of the same false-loop-closure shape
+seen twice already this session (the trail's new endpoint, Harpis, landed
+close enough to the delta's own start, Heilige Mündung, to pass the
+closing-ratio check) - updated the existing `3.10.02.05` `_NO_CLOSE_LOOP_TRAILS`
+entry to match the trail's new last point rather than adding a redundant
+one. `coast`: 753 → 756; `check_self_intersections.py` stays clean.
+
 topostext's covered range is now **all of books 2 through 7** (book 2
 maps 02-16, book 3 maps 01-17, book 4 maps 01-08, and all of books 5, 6,
 and 7 in full - book 1 has no coordinate data to check, being Ptolemy's
