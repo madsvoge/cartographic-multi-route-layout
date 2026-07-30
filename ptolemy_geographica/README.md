@@ -2191,6 +2191,91 @@ session); `river`: 306 -> 314 (Krümmung + Zufluss); `city`: 4000 -> 3634;
 Campania wobble) after 8 targeted follow-up fixes.
 `export_geopackage.py` re-run to refresh the delivered file.
 
+**An eighteenth round, quantifying the classification premise itself**:
+after the Levant/India rounds above, the user asked four direct
+questions about the method rather than a specific point - is it actually
+true that Ptolemy doesn't mix categories within a section, how much can
+a section's *header* alone (from either source) tell you about its
+points' category, what kind of signal only ever shows up at the
+individual point, and how much do the two sources' own section headers
+agree with each other. `topostext/section_header_check.py` answers all
+four with real numbers instead of impression, the section-level
+counterpart of `category_check.py`'s per-point question:
+
+- **Are sections category-homogeneous?** Yes, overwhelmingly: of 1067
+  catalogue sections with 2+ classified points, **939 (88.0%) are a
+  single category-family** (`coast`/`harbor`/`river_mouth` counted as
+  one "coastal" family, matching this project's whole classification
+  premise) and another 51 (4.8%) are ≥80% one family with only a small
+  aside. Only **77 (7.2%)** have no majority family at all - and
+  breaking those 77 down by which two families they mix shows it isn't
+  random noise: `(coastal, river)` 18, `(city, river)` 10, `(city,
+  mountain)` 8, `(coastal, mountain)` 7, `(mountain, river)` 6, `(city,
+  island)` 5, the rest smaller 2-3-way combinations. Every one of these
+  pairings is the same shape already found and fixed by hand throughout
+  this session - a boundary/source citation of a different type sitting
+  as an aside inside an otherwise-homogeneous run (Durius/Anas, Argaios,
+  Zames, the many `Grenzpunkt` entries) - not evidence the premise is
+  wrong, evidence for *why* the point-level override lists
+  (`_RIVER_POINT_OVERRIDES`/`_NONCOASTAL_POINT_OVERRIDES`/
+  `_ISLAND_POINT_OVERRIDES`/`_MOUNTAIN_POINT_OVERRIDES`, 29 entries
+  total) had to exist as a separate mechanism from the section-level
+  ones (`_COASTAL_APPENDIX_SECTIONS` and its three siblings, 276 entries
+  total) in the first place.
+
+- **How much can a header alone tell you?** Both sources' own section
+  headers were classified independently and blind (a small ordered
+  German keyword list for the catalogue's own un-coordinated header
+  rows; `category_check.py`'s existing English patterns, reused as-is,
+  for topostext's own lead-in prose before a section's first
+  coordinate), then checked against the section's actual verified
+  dominant category. The catalogue's own header is a weak, sparse
+  signal: of 952 checkable sections, **714 (75%) have no recognizable
+  German keyword at all**, and of the 238 that do, only **50.8%** match
+  the section's real category - because a header naming a sea or a
+  mountain range is naming a *landmark*, not committing to what type
+  every point in the section will turn out to be. topostext's own prose
+  is a meaningfully stronger signal - still sparse (341/521, 65%, no
+  keyword) but **70.6%** accurate when it does venture one - confirming
+  by the numbers what the Levant find already showed by example.
+
+- **What can only be read at the point level?** Two systematic classes,
+  both visible directly in the confusion matrix below: a section headed
+  by a *mountain range* whose points are actually river **sources**
+  ("Vindion-Gebirge" heading a run of "Sources of the River Namados in
+  the Ouindion range" citations - 14 such sections in India's book 7
+  alone) - the header names the orienting landmark, and only the
+  individual point's own "Quelle"/"Ursprung"/"sources of" wording says
+  what *that point* actually is; and a section headed by a *sea name*
+  whose points are actually an **island** appendix ("islands lying near
+  Italy in the Ligurian sea" - 17 such sections) - the pre-existing
+  shape `_ISLAND_APPENDIX_SECTIONS` already exists to handle. Beyond
+  these two systematic patterns, the same point-level-only signals
+  found by hand all session remain the only way to resolve the
+  remaining asides: German morphological suffixes (`-Mündung`/
+  `-Quelle(n)`/`-Gebirge`/`-See`), the literal word "Grenzpunkt"
+  (boundary point), a `Modern_location` cross-check (Tejo confirming
+  Tagus), and shared island/city names.
+
+- **Do the two sources' own headers agree with each other?** Of 450
+  sections with a header from *both* sources, only 92 get a keyword
+  guess from both, and of those, **47 (51.1%) agree**. The confusion
+  matrix shows the disagreement is the same two systematic patterns
+  above, not noise - `mountain`(catalogue) vs `river`(topostext) (14
+  cases: both readings are correct, they're just answering "what
+  landmark is this near" vs "what is this point" respectively) and
+  `coastal`(catalogue) vs `island`(topostext) (17 cases: topostext's
+  phrasing is the more precise one, and matches `_ISLAND_APPENDIX_SECTIONS`
+  exactly). So a low cross-source agreement rate here isn't evidence
+  either header is unreliable in general - it's confirmation that a
+  sea-name or mountain-name header is a landmark reference, not a
+  category label, which is exactly why this project classifies by
+  *point*, using the section header only as one input among several.
+
+```
+$ python3 section_header_check.py
+```
+
 ### Coverage: how much of each catalogue is mapped to the other, and a fuzzy match score
 
 `crossref_topostext.py` flags category disagreements on individual
