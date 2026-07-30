@@ -2093,6 +2093,104 @@ correctly `island` via an existing entry.
 `check_self_intersections.py` stays at 1. `export_geopackage.py`
 re-run again to refresh the delivered file.
 
+**A seventeenth round, generalizing the Levant fix catalogue-wide**: the
+user's response to the Levant fix was pointed - this is exactly why
+topostext deserves more weight than it's been given, and *why* the
+earlier per-point checks (`crossref_topostext.py`/`category_check.py`)
+missed it deserved a real answer, not just agreement. The reason is
+structural: those checks only ever flag a `city` point when *that
+point's own* topostext phrase contains a coastal keyword. Sidon's,
+Tyros's and Byblos's own citations are bare names - no keyword at all.
+The signal was never in their own phrase, it was in their *section*:
+sitting between already-correctly-classified points that do carry a
+keyword (a `-Mündung` river mouth, a `Kap` cape).
+
+That turned out to be checkable without topostext at all, first: any
+section mixing coastal-family points (`coast`/`harbor`/`river_mouth`)
+with plain `city` points, and not already sea-headed, is structurally
+suspicious on its own - this project's whole classification premise is
+that Ptolemy's sections are narratively homogeneous (a coastal run OR
+an inland list), so a section doing both at once is far more likely to
+be one coastal run some of whose points merely lack their own keyword.
+That test alone found **110 sections** catalogue-wide - roughly ten
+times the size of any single earlier round.
+
+Every one got checked against its own full topostext text (not just the
+flagged points' bare phrases) before being added - 109 confirmed
+straightforwardly coastal (Lusitania, the Basque/Catalan coast,
+Dalmatia, Macedonia and Thessaly, Boiotia, Messenia, Crete's south
+coast, a dozen North African provinces, a dozen Anatolian ones, the
+Levant's own continuation past the earlier fix, the Persian Gulf coast
+of Babylonia/Susiane/Persis, and India's Malabar/Coromandel/Ganges-delta
+coasts - the full list and representative quotations are in the code
+comment on `_COASTAL_APPENDIX_SECTIONS`). One, `3.05.14`, was excluded:
+its own `city` point is a boundary marker at the Tanais' *source*, the
+same Durius/Anas shape, not a coastal gap.
+
+Applying 109 sections at once - roughly a third more coastal points
+catalogue-wide in one commit than every prior round of this session
+combined - surfaced real interaction bugs with several already-
+carefully-tuned areas, exactly the same way fixing the Durius Grenzpunkt
+exposed a second bug at Balsa a few rounds ago, just seven times over.
+Each was tracked down with the same rigor as every other fix this
+session, not batch-applied blind:
+
+- **Lusitania** (`2.05`): a second "Tagus (Grenzpunkt Lusitania,
+  Tarraconensis)" - Modern_location "Tejo" - and a second re-citation of
+  Durius-Mündung itself, both newly swept in by section `2.05.04`
+  becoming coastal. Fixed the same way as the Durius/Anas cases
+  (`_RIVER_POINT_OVERRIDES`, `_COASTLINE_SKIP_REF_IDS`).
+- **The Danube delta** (`3.10`): section `3.10.08`'s own cities (Histria,
+  Tomi, Callatis, Dionysopolis, Odessus) extended that coastal run past
+  its old end (Panysus-Mündung, already hard-broken from the delta) to
+  its *real* end, Mesembria - matching topostext's own list exactly
+  ("...Panysos river mouth...Mesembria") - but the existing hard break
+  didn't follow the run's new endpoint, so the ordinary stitch wired
+  Mesembria straight to the delta's Axiakes-Mündung instead. Added a
+  second `_COASTLINE_HARD_BREAKS` entry at the run's new true end.
+- **Macedonia** (`3.13.06`): a section that was never really a gap -
+  "Malischer Golf" already self-classified via the word "Golf" - just
+  happened to also contain a `Grenzpunkt` (Achaia/Epiros/Makedonia's own
+  land tripoint via Mt. Pindos) that the structural mix-detector flagged
+  along with it. Excluded via `_NONCOASTAL_POINT_OVERRIDES`.
+- **Bithynia/Pontus** (`5.01.06`): a genuine second keyword gap, not a
+  section problem - "Sangarios (erste/zweite/dritte Krümmung)" uses
+  "Krümmung" ("bend"), a synonym of "Biegung" that `_RIVER_COURSE_RE`
+  didn't recognize, so these river-bend points fell through to `coast`
+  once their section was correctly made coastal for the river's mouth.
+  Checked the whole catalogue (6 "Krümmung" hits: 5 genuine river bends,
+  1 a plain administrative boundary bend that needed excluding by
+  pattern, not by hand) before broadening the regex.
+- **The Levant** (`5.16.01`): the exact same re-citation shape as the
+  Durius case, one book.map over - a bit-identical coordinate duplicate
+  of Egypt's own Grenzpunkt (`4.05.13.03`, already correctly part of
+  Egypt's coastline), re-cited as Judaea's introductory boundary point
+  before its own walk (Kaisareia down to Anthedon) became coastal.
+- **Gedrosia/India** (`6.21`): the same shape a third time - a duplicate
+  citation of the walk's own real last point re-cited earlier as an
+  introduction - plus a genuine third keyword gap, "Zufluss" (inflow/
+  tributary, the same shape as the already-recognized "Ausfluss"):
+  "Arbis (Namenloser Zufluss aus Drangiane)" sits 5 degrees north of the
+  coastal walk it was swept into, a real river-tributary point, not a
+  coastal one. Checked catalogue-wide (4 "Zufluss" hits, all genuine
+  tributary citations) before broadening `_RIVERFEAT_RE`.
+
+The river-vs-coastline crossing check (not part of the regular pipeline,
+run manually given the scale of this change) found two more new
+near-misses once the newly-completed coastlines started passing close to
+existing river lines - the Po (`3.01.24`) and the Kaikos/Bakır Çayı
+(`5.02.05`). Both checked and left alone: genuine mouth-and-source pairs
+of real, correctly-identified rivers (Modern_location confirms both),
+the same "coastline got more complete, so a pre-existing coordinate
+distortion became newly visible" shape as Kaystros/Thermodon/Tyras/
+Volturnum-Cumae earlier.
+
+`coast`: 909 -> 1268 (+359, the single largest jump of any round this
+session); `river`: 306 -> 314 (Krümmung + Zufluss); `city`: 4000 -> 3634;
+`check_self_intersections.py`: back down to 1 (the one deliberately-left
+Campania wobble) after 8 targeted follow-up fixes.
+`export_geopackage.py` re-run to refresh the delivered file.
+
 ### Coverage: how much of each catalogue is mapped to the other, and a fuzzy match score
 
 `crossref_topostext.py` flags category disagreements on individual
