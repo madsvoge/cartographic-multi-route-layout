@@ -1394,6 +1394,33 @@ connect normally to everything else.
 duplicate); the self-intersection checker is clean across the whole
 Black Sea/Aegean/Propontis region after this round.
 
+**A seventh round, back to `_BOUNDARY_STITCH_REF_ID_PAIRS`**: with the
+crossings gone, the user zoomed out and spotted three real gaps along
+Turkey's own north/east Black Sea coast instead - the coastline breaking
+cleanly at three points rather than connecting wrong. Not a new bug shape,
+just three more instances of the existing "real province-boundary river,
+split across a book.map change" pattern (`_BOUNDARY_STITCH_REF_ID_PAIRS`
+already has five other such pairs, e.g. the Morocco/Algeria and
+Algeria/Tunisia border rivers). Bithynia (`5.01`), Paphlagonia+Pontus
+(`5.04`), the three "Pontus" sub-provinces (`5.06`), and Colchis (`5.10`)
+are four different Roman-administrative book.maps covering one continuous
+real shore, and each handoff sits at a real, named river confirmed by
+`Modern_location`:
+
+- `5.01.07.07` → `5.04.02.02`: Parthenios-Mündung (Bartın Su) - the real
+  Bithynia/Paphlagonia border river.
+- `5.04.03.07` → `5.06.02.03`: Amisos (Samsun) → Iris-Mündung
+  (Yeşilırmak) - the coast right at Samsun.
+- `5.06.07.02` → `5.10.02.09`: Apsorros-Mündung (Çoruh) → Phasis-Mündung
+  (Rioni) - the real Turkey/Georgia border river, handing off to the
+  Rioni, the Golden Fleece's own river in Colchis.
+
+Coastline feature count dropped from 58 to 55 (three pairs of trails
+merged into three longer ones); `check_self_intersections.py` stays clean
+- a stitch join only fires within the existing tight tolerance or an
+explicit pair like these, so it can't introduce a new crossing the way a
+distance-based bridge could.
+
 topostext's covered range is now **all of books 2 through 7** (book 2
 maps 02-16, book 3 maps 01-17, book 4 maps 01-08, and all of books 5, 6,
 and 7 in full - book 1 has no coordinate data to check, being Ptolemy's

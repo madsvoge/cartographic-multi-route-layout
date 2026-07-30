@@ -1130,6 +1130,15 @@ _BOUNDARY_STITCH_REF_ID_PAIRS = {
     ("2.06.20.04", "2.10.02.07"),  # Clodianus-Mündung/Fluvià (end of Iberia's Mediterranean coast) -> Heiligtum der Venus/Cap Béar (start of Gaul's) - the real Spain/France Mediterranean border, a second Kap-Oiarso-style hand-off on the Mediterranean side
     ("4.01.07.06", "4.02.02.05"),  # Malua-Mündung/Moulouya (end of Mauretania Tingitana) -> Siga-Mündung/Tafna (start of Mauretania Caesariensis) - the real Morocco/Algeria border river
     ("4.02.11.06", "4.03.03.05"),  # Ampsaga-Mündung/Oued el-Kebir (end of Mauretania Caesariensis) -> Kap Treton/Bougaroun (start of Africa Proconsularis) - the real Algeria/Tunisia border river
+    # Three more of the same shape, found by the user on Turkey's own
+    # Black Sea coast (book.maps 5.01/5.04/5.06/5.10, each a different
+    # Roman-administrative sub-province - Bithynia, Paphlagonia+Pontus,
+    # then the three "Pontus" sub-provinces, then Colchis - covering the
+    # same continuous real shore end to end, split only by where one
+    # province's own book.map hands off to the next).
+    ("5.01.07.07", "5.04.02.02"),  # Parthenios-Mündung/Bartın Su - Bithynia -> Paphlagonia, the real Bithynia/Paphlagonia border river
+    ("5.04.03.07", "5.06.02.03"),  # Amisos/Samsun -> Iris-Mündung/Yeşilırmak - Paphlagonia+Pontus -> Pontus Galaticus, the coast right at Samsun
+    ("5.06.07.02", "5.10.02.09"),  # Apsorros-Mündung/Çoruh -> Phasis-Mündung/Rioni - Pontus Cappadocicus -> Colchis, the real Turkey/Georgia border river to the Golden Fleece's own river
 }
 
 # Two catalogue points are treated as "the same physical spot" (a shared
