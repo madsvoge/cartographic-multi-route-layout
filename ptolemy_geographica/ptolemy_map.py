@@ -378,6 +378,21 @@ _ISLAND_LINE_GROUPS: dict[tuple[str, str], str] = {
 _NONCOASTAL_EXCEPTION_SECTIONS = {
     ("2.03", "17"),  # Eboracum/Camulodunum/Petuaria - York/Colchester/Brough
     ("4.01", "10"),  # Pyrrhon-Ebene - an inland plain embedded in a tribal-boundary description (topostext: "...below whom are the Nectiberes; and next is the Pyrrhon Plain...Below these are the Zegrenses..."), not a coastal point
+    # Found in the same edge-by-edge Black Sea sweep as the newest
+    # _COASTAL_APPENDIX_SECTIONS entries, but the opposite problem: section
+    # "5.09.11"'s own header happens to include "Hyrkanisches Meer" (the
+    # Caspian) as the far end of a *boundary-line* description ("Thence it
+    # extends along Iberia, with the Sarmatian Gates...thence along Albania
+    # to the limit on the Hyrkanian sea" - topostext) - Sarmatia-in-Asia's
+    # inland border with Iberia/Albania, not a continuation of its Black Sea
+    # coast, which topostext explicitly ends one section earlier ("The limit
+    # on the side of Kolchis is at", 5.09.10 - left alone, correctly coastal).
+    # "Sarmatische Pforten" (the Sarmatian/Caucasian Gates, a mountain pass)
+    # had been swept into `coast` by the header match and strung onto the
+    # real coastline via catalogue-order adjacency, a spurious ~2 degree
+    # detour east from the Kolchis boundary point that had nothing to do
+    # with the shore.
+    ("5.09", "11"),
 }
 
 # The mountain-side counterpart of _ISLAND_APPENDIX_SECTIONS: a section
@@ -520,6 +535,17 @@ _COASTAL_APPENDIX_SECTIONS = {
     ("5.06", "03"),  # Pontus Galaticus' coast (topostext: "...the plain by Phanagoria: Themiskyra...") - legendary home of the Amazons, a real coastal city
     ("5.06", "04"),  # Pontus Polemoniacus' coast (topostext: "Of Polemonian Pontos...") - Polemonion and neighbours
     ("5.06", "05"),  # Pontus Cappadocicus' coast (topostext: "...near Sidene: Ischopolis...") - Kerasous/Giresun, Pharnakia, on the way to Trapezous/Trebizond
+    # A fourth round, from a systematic edge-by-edge sweep of every coastline
+    # in the wider Black Sea/Sea of Azov region (every consecutive-point gap
+    # over ~1.8 degrees, checked one at a time against topostext and the raw
+    # section headers, per the user's request after the third round still
+    # left some "non-neighbour" connections) - the same header-language gap
+    # as the fixes above, just two sections these earlier passes hadn't
+    # reached yet:
+    ("3.06", "03"),  # Crimea's coast continues past Kap Korax/Istrianos-Mündung with no header of its own - Theodosia (Feodosia) and Nymphaion were sitting in `city`, missing from the traced coastline entirely (topostext: "...Istrianos river mouth, Theodosia, Nymphaion" - directly between the two already-coastal sections either side)
+    ("3.05", "11"),  # Sarmatia-in-Europe's coast opens with "Neue Festung" (topostext: "isthmus...toward the Karkinites river, Neon Teichos") - the walk's own starting point, sitting in `city`
+    ("3.05", "12"),  # ...continuing (topostext, by name match - this book.map's own section numbering runs well ahead of topostext's: "Leianon city...Akra city...Gerros river mouth...Kremnoi city") - Leianon and Akra were `city`
+    ("3.05", "13"),  # ...continuing to the Tanais/Don (topostext: "...Agaron promontory...Hygreis city...Karoia kome...western mouth of the Tanais") - Kneme, Hygreis, Karoia were `city`
 }
 
 # The mountain-side counterpart of _ISLAND_POINT_OVERRIDES: a lone mountain

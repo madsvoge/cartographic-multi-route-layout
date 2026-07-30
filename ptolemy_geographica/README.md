@@ -1228,6 +1228,47 @@ region's real stepping-stones are missing from the graph. `coast`: 706 →
 739, `city`: 4220 → 4187 (net zero); coastline feature count held at 59
 (1171 → 1204 points) - all fill-in, no new lines needed.
 
+**A fourth round**: asked to go through the Black Sea region systematically
+rather than fix-what's-visible, since "there are still clearly points
+being connected as coast that shouldn't be - the points look correct, the
+*order* is what's off." Wrote a small one-off sweep (not part of the
+regular pipeline) computing the distance between every consecutive pair of
+points in every coastline trail across the wider Black Sea/Sea of
+Azov/Sarmatia region, flagging anything over ~1.8° for individual review
+against topostext and the raw section headers - the same manual
+verification standard as every fix above, just driven by a systematic scan
+instead of eyeballing a render. Most flagged jumps turned out legitimate
+(a real long sandspit, a documented narrative transition, already
+cross-checked above); two were real:
+
+- Sarmatia-in-Europe's own coast (book.map `3.05`) had the same
+  header-language gap one section earlier than the sweep had reached:
+  sections `11`-`13` open the walk itself ("Neue Festung" - topostext's
+  "Neon Teichos", the walk's own starting point) and continue it (Leianon,
+  Akra, Kneme, Hygreis, Karoia) - all sitting in `city` with nothing to
+  connect them, verified by name against topostext (whose own section
+  numbering for this book.map runs well ahead of the catalogue's, so
+  matched by content, not section index).
+- Crimea's coast (`3.06.03`) was missing Theodosia (Feodosia) and
+  Nymphaion entirely - topostext's own text puts them directly between two
+  *already*-coastal sections ("...Istrianos river mouth, Theodosia,
+  Nymphaion..."), a one-section gap the third round's `3.06.02`/`04` fix
+  had stepped right over.
+- The opposite problem, once: `5.09.11`'s own header happens to include
+  "Hyrkanisches Meer" (the Caspian) as the far endpoint of an inland
+  *boundary-line* description ("thence along Albania to the limit on the
+  Hyrkanian sea" - topostext) - Sarmatia-in-Asia's border with
+  Iberia/Albania, not a continuation of its Black Sea coast (which
+  topostext explicitly ends one section earlier, at the Kolchis boundary).
+  "Sarmatische Pforten" (the Sarmatian Gates, a Caucasus mountain pass) had
+  been swept into `coast` by that header match and strung onto the real
+  coastline as a spurious ~2° detour. Fixed the other way round from the
+  rest of this round - `_NONCOASTAL_EXCEPTION_SECTIONS`, not
+  `_COASTAL_APPENDIX_SECTIONS`.
+
+`coast`: 739 → 747, `city`: 4187 → 4179 (net: 8 points gained `coast`, one
+lost it). Re-ran the full pipeline; topostext coverage unaffected.
+
 topostext's covered range is now **all of books 2 through 7** (book 2
 maps 02-16, book 3 maps 01-17, book 4 maps 01-08, and all of books 5, 6,
 and 7 in full - book 1 has no coordinate data to check, being Ptolemy's
