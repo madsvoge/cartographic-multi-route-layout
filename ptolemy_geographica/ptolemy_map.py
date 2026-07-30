@@ -698,6 +698,19 @@ _COASTAL_APPENDIX_SECTIONS = {
     ("4.04", "05"),  # Cyrenaica: "Phykous promontory...Apollonia [naval station]...Naustathmon harbor...Zephyrion promontory..."
     ("5.06", "06"),  # Pontus (Kissian coast): "Opious...Rizous harbor...Athenon promontory..."
     ("6.08", "09"),  # India: "Gulf of Paragon...Derane Billa...Kophanta harbor...river mouth..."
+    # Found by an independent second pass: building a standalone category
+    # guess purely from topostext's own wording (category_check.py, no
+    # access to the catalogue's category, name, or any exception list)
+    # and comparing it to the catalogue's category surfaced a few more
+    # instances of the same gap the batch above missed:
+    ("3.01", "21"),  # Picenum's own Adriatic coast: "Castrum...Cupra Maritima...mouth of the Truentini river...Potentia...Numana...Ancona"
+    ("3.13", "03"),  # Illyria: "west by the Ionian Sea from Dyrrachion...per the following description"..."Panyasos river outlet...Apollonia...Aoos river outlet...Aulon city and port"
+    ("4.07", "05"),  # Barbaria/Cape Guardafui coast: "Bazion promontory...Chersonesos...Deep harbor...Dioskoroi harbor...Lookout of Demeter promontory"
+    ("5.02", "10"),  # Doris/Caria: "Skopia promontory...Halikarnassos...Keramos...Knidos city and promontory"
+    ("3.04", "09"),  # Sicily's own east coast: "Syrakousai...Tauros promontory...Katane...Symaithos river mouth...Tauromenion...Argennon promontory...Messene in the strait"
+    ("4.03", "05"),  # Numidia/Africa coast at Cape Bon: "Hippo promontory...Stoborrum promontory...Aphrodisium...Hippo Regius...Rubricatus river mouth...Thabraca"
+    ("5.02", "06"),  # Aiolis' own coast: "Kaine promontory...Elaia...Myrina...Hydra promontory...Kyme...Phokaia...mouth of the Hermos river"
+    ("7.04", "05"),  # Taprobane's own coast: "Dagana...Cape of Dionysos...Ketaion Cape...Mouth of the river Barakes...the haven of Mardos"
 }
 
 # The mountain-side counterpart of _ISLAND_POINT_OVERRIDES: a lone mountain

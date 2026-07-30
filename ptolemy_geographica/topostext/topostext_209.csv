@@ -3406,7 +3406,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 4,7,5,4,Ision mountain,65°30',21°20',65.5,21.3333,yes,4.07.05.05,Ision-Berg,100.0
 4,7,5,5,Deep harbor,65°00',21°10',65.0,21.1667,yes,4.07.05.06,Tiefer Hafen,79.4
 4,7,5,6,Dioskoroi harbor,65°00',21°00',65.0,21.0,yes,4.07.05.06,Tiefer Hafen,100.0
-4,7,5,7,Lookout of Demeter promontory,65°20',20°15',65.3333,20.25,yes,4.07.05.08,Warte der Demeter,66.8
+4,7,5,7,Lookout of Demeter promontory,65°20',20°15',65.3333,20.25,yes,4.07.05.08,Warte der Demeter,74.8
 4,7,6,1,Aspis promontory,65°30',19°45',65.5,19.75,yes,4.07.06.01,Kap Aspis,100.0
 4,7,6,2,Diogenes promontory,65°40',19°40',65.6667,19.6667,yes,4.07.06.02,Kap Diogenes,100.0
 4,7,6,3,Satyron mountains,65°40',19°00',65.6667,19.0,yes,4.07.06.03,Satyron-Berg,100.0
@@ -6217,7 +6217,7 @@ Uxenton-Gebirge her)",38.1
 7,4,4,6,"N. Odoka, a city",123°00',2°,123.0,2.0,no,7.04.04.01,Anubingara,8.0
 7,4,4,7,"S. Orneon, (Birds' Point) a headland",125°00',2°30' S,125.0,-2.5,yes,7.04.04.08,Kap der Vögel,100.0
 7,4,5,1,"Dagana, a city sacred to the Moon",126°00',2°,126.0,2.0,no,7.04.04.06,Azanos-Quellen,18.3
-7,4,5,2,"S. Korkobara, a city",127°20',2°20' S,127.3333,-2.3333,yes,7.04.05.02,Korkobara (Krokobara),93.3
+7,4,5,2,"S. Korkobara, a city",127°20',2°20' S,127.3333,-2.3333,yes,7.04.05.02,Korkobara (Krokobara),85.3
 7,4,5,3,Cape of Dionysos,130°00',1°30' S,130.0,-1.5,yes,7.04.05.03,Stadt des Dionysos,100.0
 7,4,5,4,Ketaion Cape,132°30',2°20' S,132.5,-2.3333,yes,7.04.05.04,Kap Ketaion,53.0
 7,4,5,5,Mouth of the river Barakes,131°30',1°,131.5,1.0,yes,7.04.05.05,Barakes-Mündung,100.0

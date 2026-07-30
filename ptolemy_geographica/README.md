@@ -1913,6 +1913,78 @@ city (Camulodunum, Petuaria, Flavium Brigantium, Banatia) - the same
 shape already confirmed non-coastal earlier this session, re-confirmed
 here rather than reversed.
 
+**A fourteenth round, quantifying the question the whole review was
+built on**: rather than another region, a methodological one - if you
+classified purely from topostext's own English wording, with no access
+to the catalogue's category, its German name, or any of this project's
+exception lists, how often would that land on the same category the
+catalogue/keyword pipeline produces? A new script, `topostext/
+category_check.py`, builds exactly that: one ordered keyword list
+(island > mouth/estuary > harbor/port > promontory/cape > bay/gulf >
+lake > source/spring > mountain > city/town/village), first match wins,
+deliberately cruder than `_classify_locality` (no section-header
+context, no location-reference guards, no hand-verified exceptions) so
+the comparison is a genuinely independent second opinion rather than a
+restatement of the same logic.
+
+Result: of 6207 matched points, 4600 have no recognizable category
+keyword in their topostext phrase at all - just a bare name, most often
+for `city` points (3666 of 4290 plain cities are uninformative this way)
+- so a topostext-only classifier could never *replace* the primary one,
+only check a subset of it. Where it does venture a guess (1607 points),
+raw agreement is 76.5%, but that number undersells it: broken down by
+category, the categories with the *lowest* raw agreement (`coast` 58%,
+`harbor` 33%, `mountain` 68%, `lake` 59%) aren't lower because topostext
+is right and the catalogue is wrong - pulling the actual rows behind
+each shows they're overwhelmingly the same three structural mismatches
+already identified by hand in the thirteenth round: a coastal city reads
+`coast` in our schema but topostext's phrase just says "city" with no
+coastal word (108 of the `coast`/`city` mismatches, spot-checked -
+Populonium, Tempsa, Locri, Sulci, Bithia, Nora... all genuinely coastal,
+several fixed *this session*); a coastal mountain reads `coast` but
+topostext says "mountain" (the Athos/Akrokeraunia shape); the Maiotic
+Lake reads `coast` but topostext says "lake". None of these are errors -
+they're a finer-grained schema (this project distinguishes *where* a
+point sits from *what kind* of feature topostext's prose calls it) being
+compared against a cruder one that can't make the same distinction.
+
+That said, the reverse direction - `city` points where topostext's own
+wording implies something coastal - is exactly where a genuine miss
+would hide, and checking all 26 of those (not just the ones
+`crossref_topostext.py`'s wider net had already caught) found five more
+real gaps the thirteenth round's manual sweep missed: Illyria's own
+Ionian coast (Dyrrhachion/Apollonia/Aulon, `3.13.03`), Picenum's
+Adriatic coast (`3.01.21`), Sicily's east coast including Taormina
+(`3.04.09`), Numidia's coast at Cape Bon (`4.03.05`), Aiolis' own coast
+including Elaia (`5.02.06`), Cape Guardafui (`4.07.05`), Doris/Caria
+around Halikarnassos and Knidos (`5.02.10`) - eight sections, added to
+`_COASTAL_APPENDIX_SECTIONS` the same way as every other round. One
+candidate (`3.02.06.03` "Tarrabenier") turned out to be a mismatched
+topostext citation (a different, unrelated "Casalus bay" citation from
+a different section entirely, coincidentally scoring high enough to
+match) rather than a real gap - left alone, `city` is correct (an inland
+tribal-list entry, not a coastal point).
+
+`coast`: 864 -> 895; `check_self_intersections.py` stays at 1.
+
+**So: should this run early in the pipeline, ahead of the German-keyword
+classification, the way the user asked?** No - and the numbers say why,
+not just precedent. Two thirds of all matched points have no usable
+signal in topostext's phrasing at all (a bare name, nothing else), and
+where it does have a signal, it's frequently *coarser* than what this
+project's schema actually wants (topostext doesn't distinguish "a
+coastal cape" from "an inland mountain that happens to end at the
+coast", or "a harbor town" from "an ordinary coastal city" the way the
+catalogue-driven categories do). Running topostext-first would mean
+classifying two thirds of the catalogue from nothing and the rest from a
+blunter signal than what's used today. What the numbers *do* support is
+exactly what this round demonstrated: topostext is a strong, independent
+*validator* for the subset it can speak to, worth running as a
+recurring check (the same standing as `check_self_intersections.py`
+and the river-vs-coastline crossing check) - not a replacement for the
+primary classification, a second opinion that catches what the primary
+one's keyword rules structurally can't see.
+
 ### Coverage: how much of each catalogue is mapped to the other, and a fuzzy match score
 
 `crossref_topostext.py` flags category disagreements on individual
