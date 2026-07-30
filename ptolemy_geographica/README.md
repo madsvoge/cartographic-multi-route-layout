@@ -1269,6 +1269,65 @@ cross-checked above); two were real:
 `coast`: 739 → 747, `city`: 4187 → 4179 (net: 8 points gained `coast`, one
 lost it). Re-ran the full pipeline; topostext coverage unaffected.
 
+**A fifth round, and a new permanent diagnostic**: the user's own framing
+broke the pattern of the previous four rounds - "a coastline is by
+definition non-crossing, like a road on a map" - and asked for an
+algorithm, not another eyeballed render. `check_self_intersections.py` is
+that algorithm: it builds every drawn coastline/river/island/mountain line
+and checks each pair of *non-adjacent* segments for a real crossing (via
+shapely), independent of any distance threshold - a self-crossing line has
+an ordering bug almost by definition, whether or not the jump that causes
+it happens to look large. It's a diagnostic, not part of the regular
+pipeline - run it after any classification/line-building change, the same
+way the edge-distance sweep was used ad hoc for the fourth round, except
+this one doesn't need a threshold picked by hand and catches crossings a
+distance sweep can miss entirely (a short "return" edge can still cut back
+through a much longer earlier detour).
+
+Run once, it found real bugs immediately - the same *introductory
+boundary citation* shape as `_COASTLINE_SKIP_REF_IDS`'s existing entries,
+just surfaced as a crossing instead of a visible jump:
+
+- Macedonia's own southern border marker, "Malischer Golf" (`3.13.06.05`,
+  cited alongside the Pindos/Oite mountains' own boundary midpoints,
+  before the region's coastal walk actually begins at Neapolis) - left in,
+  its first edge crossed twelve of the walk's own later segments.
+- The same shape, three more times, in Lykia/Pamphylia/Kilikia
+  (`5.03.01.06`/`5.05.01.09`/`5.08.01.09`) - each book.map opens with an
+  explicit "limit of [province] ... to the sea at [point]" boundary-line
+  sentence (topostext) *before* "the following" starts the actual coastal
+  enumeration from a different point entirely.
+- One more undermarked re-citation, the same shape as Borysthenes-Mündung
+  earlier but without an arrow this time: "Kap Bithynia" (`5.01.05.04`)
+  re-describes the same headland as "Spitze Bithyniens mit
+  Artemis-Heiligtum" (`5.01.02.02`, same latitude exactly, topostext
+  re-describing it near-verbatim) to reorient the reader after a detour
+  into the Gulf of Astakos - left in, it cut straight back across that
+  detour's own segments.
+- Two false "close the loop" calls whose closing edge cut straight across
+  the rest of the trail - the same shape the third round's Macedonia/
+  Thessaly entry already covers, just for two more trails
+  (`3.10.02.05`/`3.10.14.04`, Lower Moesia's Danube-delta-to-Dniester
+  coast; `3.11.02.01`/`3.11.06.09`, Thrace's Aegean-to-Propontis coast) -
+  plus a *follow-on* case the fix itself created: once those two trails
+  stopped falsely closing on their own, the real Nessos-Mündung/Neapolis
+  boundary stitch correctly merged Thrace and Macedonia/Thessaly into one
+  ~58-point trail, whose own two new loose ends (Paktye, Spercheios-
+  Mündung) then satisfied the same false-closing check *themselves*,
+  closing a loop across the whole Aegean. Same fix, one level up
+  (`3.11.06.09`/`3.13.17.10`) - a reminder that this class of check needs
+  re-running after a fix, not just before one.
+
+Not every crossing found is a bug: a genuinely complex bay or peninsula
+sampled by only a handful of named points can still cross itself in a
+straight-line rendering even though the real shore never does - that's a
+sparse-sampling artifact of connecting the dots, not an ordering error, and
+isn't safe to "fix" by reordering points without the same kind of textual
+evidence every other fix in this README rests on. A few such crossings
+remain (currently in the catalogue's Iberia and Liguria/Campania regions,
+and a small one in Bithynia's Gulf of Astakos) - left for a future pass
+rather than forced without that evidence.
+
 topostext's covered range is now **all of books 2 through 7** (book 2
 maps 02-16, book 3 maps 01-17, book 4 maps 01-08, and all of books 5, 6,
 and 7 in full - book 1 has no coordinate data to check, being Ptolemy's

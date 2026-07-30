@@ -1013,6 +1013,22 @@ _COASTLINE_SKIP_REF_IDS = {
     # camps, sections "09"-"13", correctly left `city`) - a zigzag with no geographic basis, reported by
     # the user as "two strange lines...as if it's trying to connect the wrong features". Skipping this one
     # re-citation lets 3.10's own walk connect directly to its real next point instead.
+    #
+    # The four entries below were found a different way: a real coastline
+    # never crosses itself (the same "a road doesn't cross itself" argument
+    # the user made, prompting this check) - so any drawn coastline whose
+    # own line self-intersects has a real ordering bug somewhere, findable
+    # without eyeballing a render or hand-picking a distance threshold.
+    # Checked every coastline/river/island/mountain line in the catalogue
+    # with shapely's line-segment intersection test; all four hits below
+    # turned out to be the *introductory boundary point* pattern above,
+    # just not yet found because a false self-crossing edge is a different
+    # symptom than a straight-line "jump" is.
+    "3.13.06.05",  # Malischer Golf - Macedonia's own southern border marker (topostext, by name match: cited alongside "Pindos mountain midpoint"/"Oite mountain midpoint" as boundary landmarks with Achaia/Epirus), stated *before* the region's coastal walk actually begins at Neapolis (3.13.09.03) - left in, its first edge (straight to Neapolis, far north) crossed twelve later segments of the walk it correctly closes back near its own start (Malischer Golf and Spercheios-Mündung are both near Thermopylae - see the existing 3.13.09.03/3.13.17.10 _NO_CLOSE_LOOP_TRAILS entry, which this restores)
+    "5.03.01.06",  # Grenzpunkt (Lykien, Pamphylien) - Lykia's own eastern border marker (topostext: "limit of Asia through the Masikytos mountain, as far as the sea at..." - its own separate introductory section, before "the following" starts the coastal walk at Kaunos/Xanthos)
+    "5.05.01.09",  # Grenzpunkt (Kilikien, Pamphylien) - Pamphylia's, the same shape (topostext: "limit point near Galatia to the Pamphylian sea, the limit point of this line at..." then "the shores of Pamphylia: Olbia, Attaleia...")
+    "5.08.01.09",  # Grenzpunkt (Kilikien, Syrien) - Cilicia's, the same shape again (topostext: "limit at Kappadokia extending to the Issian Gulf and Amanikian Gates, which limit..." then "In Selinitis of Kilikia Tracheia Iotape...")
+    "5.01.05.04",  # Kap Bithynia - an undermarked re-citation of the same headland as "Spitze Bithyniens mit Artemis-Heiligtum" (5.01.02.02): same latitude exactly, topostext re-describing it verbatim ("mouth of the Pontos and the sanctuary of Artemis Bithynian promontory") to reorient the reader before continuing west past Artake/Psyllis/Kalpas - the same shape as the Borysthenes-Mündung case, just without an explicit arrow marker this time. Left in, its edge from Rhyndakos-Mündung (the Gulf of Astakos digression's own inner end) cut straight back across the gulf, crossing three of the digression's own segments.
 }
 
 # A different, self-marking version of the same "same point re-cited"
@@ -1099,6 +1115,22 @@ _CLOSE_LOOP_MAX_GAP_RATIO = 0.3
 # _ISLAND_APPENDIX_SECTIONS and _NONCOASTAL_EXCEPTION_SECTIONS.
 _NO_CLOSE_LOOP_TRAILS = {
     ("3.13.09.03", "3.13.17.10"),  # Neapolis (Kavala) -> Spercheios-Mündung: mainland Macedonia/Thessaly coast, not an island
+    # Both found via the self-intersection sweep (see _COASTLINE_SKIP_REF_IDS
+    # above): a small enough closing gap relative to path length to pass
+    # _CLOSE_LOOP_MAX_GAP_RATIO, but the resulting closing edge cut straight
+    # across the middle of the trail's own real path - the geometric
+    # signature of a mainland coast's two ends happening to land near each
+    # other, not an island's coastline genuinely returning to its start.
+    ("3.10.02.05", "3.10.14.04"),  # Heilige Mündung -> Tyras-Mündung: Lower Moesia's Danube-delta-to-Dniester coast, not an island
+    ("3.11.02.01", "3.11.06.09"),  # Nessos-Mündung -> Paktye: Thrace's Aegean-to-Propontis coast, not an island
+    # Once Thrace (3.11) and Macedonia/Thessaly (3.13) stopped each falsely
+    # closing on their own, the real Nessos-Mündung/Neapolis boundary stitch
+    # (_BOUNDARY_STITCH_REF_ID_PAIRS, below) correctly merged them into one
+    # much longer trail - whose own two new loose ends, Paktye and
+    # Spercheios-Mündung, then happened to satisfy the same ratio check
+    # themselves, closing a ~58-point trail across the whole Aegean and
+    # self-crossing the same way. Same fix, one level up.
+    ("3.11.06.09", "3.13.17.10"),  # Paktye -> Spercheios-Mündung: the merged Thrace+Macedonia+Thessaly coast, not an island
 }
 
 # Separate trails within the same book.map region are stitched together if
