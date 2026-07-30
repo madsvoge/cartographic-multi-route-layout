@@ -401,6 +401,21 @@ _NONCOASTAL_EXCEPTION_SECTIONS = {
     # detour east from the Kolchis boundary point that had nothing to do
     # with the shore.
     ("5.09", "11"),
+    # Found by the systematic whole-catalogue self-intersection review
+    # (2026-07-30): three sections in the Maritime Alps (book.map "3.01",
+    # sections 41-43) are each headed "Meeralpen" ("Maritime Alps") -
+    # matching `_COASTAL_HDR_RE`'s bare "meer" the same way "Hyrkanisches
+    # Meer" did above, even though their content is inland Alpine tribal
+    # cities (topostext: "Of the Nerusi in the Maritime Alps Vintium", "Of
+    # the Suetri in the Maritime Alps Salinae", "Of the Vedianti in the
+    # Maritime Alps Cemenelum"), not points on the actual coast - the real
+    # Ligurian-sea coastal walk runs through the separate, correctly-headed
+    # sections "3.01.01"/"3.01.02" (Varus-Mündung, Nicaea, Hercules-Hafen,
+    # ...). Left as coastal, these four points' edges cut back across the
+    # real coastline near Nicaea.
+    ("3.01", "41"),
+    ("3.01", "42"),
+    ("3.01", "43"),
 }
 
 # The mountain-side counterpart of _ISLAND_APPENDIX_SECTIONS: a section
@@ -1068,6 +1083,12 @@ _COASTLINE_SKIP_REF_IDS = {
     "5.08.01.09",  # Grenzpunkt (Kilikien, Syrien) - Cilicia's, the same shape again (topostext: "limit at Kappadokia extending to the Issian Gulf and Amanikian Gates, which limit..." then "In Selinitis of Kilikia Tracheia Iotape...")
     "5.01.05.04",  # Kap Bithynia - an undermarked re-citation of the same headland as "Spitze Bithyniens mit Artemis-Heiligtum" (5.01.02.02): same latitude exactly, topostext re-describing it verbatim ("mouth of the Pontos and the sanctuary of Artemis Bithynian promontory") to reorient the reader before continuing west past Artake/Psyllis/Kalpas - the same shape as the Borysthenes-Mündung case, just without an explicit arrow marker this time. Left in, its edge from Rhyndakos-Mündung (the Gulf of Astakos digression's own inner end) cut straight back across the gulf, crossing three of the digression's own segments.
     "3.12.04.05",  # Kallipolis - the Thracian Chersonese's own loop closing back to its start (topostext, book 3 map 11 section 9: "...Sestos, next the above-mentioned Kallipolis"), a bit-identical coordinate duplicate of 3.12.01.05. Left in as a fresh point, it would just re-close the loop a second time at the same node - the ordinary close-loop mechanism (feature_closes_loop) already does this correctly once 3.12's own points are traced.
+    #
+    # Found by the systematic whole-catalogue self-intersection review
+    # (2026-07-30), same "Grenzpunkt" boundary-marker pattern as the five
+    # entries above, this time in Iberia rather than the Aegean/Black Sea:
+    "2.04.03.04",  # Anas (Grenzpunkt Baetica, Lusitania, Tarraconensis) - a border marker *up the river Anas/Guadiana itself* (topostext: "Where the river touches the border of Lusitania", right after "Before the river turns towards the east") at -8.67,39.0 - over 4 degrees inland/east of either of the river's own two mouths. Left in as coastal, its edge from the eastern mouth cut straight back across the walk's own western end (Onoba/Baetis-Mündung, the same estuary as the western Anas mouth that closes this loop).
+    "2.04.03.07",  # Baetica (Ostende am Baliarischen Meer) - the very next citation, Baetica's own *eastern* border marker where the province line meets "the Balearic sea" (topostext: "there along the border of Tarraconensis to where the Balearic sea ends") - a second inland/administrative boundary point in the same short digression as the one above, not a coastal step either.
 }
 
 # A narrower tool than _COASTLINE_SKIP_REF_IDS: that one drops a point from
@@ -1642,6 +1663,24 @@ def _river_base_name(name: str) -> str:
     return _RIVER_SUFFIX_RE.sub("", name).strip()
 
 
+# The river-line counterpart of _COASTLINE_SKIP_REF_IDS: a point excluded
+# from a river's node set entirely, rather than left to the ordinary
+# distance-based dedup below to sort out. Needed when the dedup's "keep
+# whichever duplicate sorts first by ref_id" rule picks the *wrong* one of
+# two identical-coordinate re-citations - an earlier-numbered boundary-line
+# citation of a bend/confluence (stated as an orientation point for an
+# unrelated province's border) instead of the same bend's later, correctly-
+# sequenced appearance within the river's own continuous course narrative.
+# Found by the systematic self-intersection review (2026-07-30), re-
+# examining the three Danuvius crossings this session had previously
+# accepted as "genuine Ptolemaic distortion" without checking this
+# possibility first - the same premature call already corrected once this
+# session for the Danube delta.
+_RIVER_LINE_SKIP_REF_IDS = {
+    "2.15.01.06",  # Danuvius (Einmündung des Savus) - topostext (2.15.1.1): "...on the south by Illyria which extends from the indicated terminus as far as the bend in the Danube near which the Savos river empties into it" - Pannonia Inferior's own boundary description, citing the Savus confluence purely as its terminus. The dedup (exact coordinate match, distance 0.0) kept this one because "2.15.01" sorts before "2.15.02", pulling it in front of Cirpi's *later* bend (2.15.02.04/2.11.05.16) and out of the real downstream order (Cirpi -> Dravus confluence -> Cornacum -> Acumincum -> Rittium -> Savus confluence) that Moesia Superior's own section 2.15.02 narrates as one continuous run - the same physical point is re-cited there too, correctly placed at the end, as "Danuvius (Biegung bei der Einmündung des Savus)" (2.15.02.18, also distance 0.0 from this one). Skipping this citation here lets that correctly-sequenced duplicate survive the dedup instead.
+}
+
+
 def build_river_lines(refs: list[Reference]) -> list[list[Reference]]:
     """Connect river/river-mouth points that share a base name into a line
     tracing that river's course, in catalogue order - the same
@@ -1662,6 +1701,7 @@ def build_river_lines(refs: list[Reference]) -> list[list[Reference]]:
         if (
             ref.category not in _RIVER_LINE_CATEGORIES
             or not ref.ref_id
+            or ref.ref_id in _RIVER_LINE_SKIP_REF_IDS
             or not ref.is_plausible()
             or _RECAP_BACKREF_RE.search(ref.name)
         ):

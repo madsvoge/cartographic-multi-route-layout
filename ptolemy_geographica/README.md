@@ -1504,6 +1504,98 @@ own theoretical/methodological introduction) - `link_matches.py`'s
 match, adding 26 more province labels (Babylonia through Taprobane), for
 85 in total.
 
+**A tenth round, a systematic whole-catalogue review** rather than another
+region-by-region eyeball pass: with the three-layer method (catalogue ->
+topostext -> geometric self-intersection check) now proven on the Danube
+delta, the same rigor was pointed at `check_self_intersections.py`'s full,
+whole-catalogue output instead of one region at a time - six crossings,
+three of them (the Danuvius river ones) previously waved through as
+"genuine Ptolemaic distortion" without being checked against topostext
+first, the same kind of premature call already corrected once this session.
+All six were re-examined from scratch:
+
+- **Iberia** (`coastline_002_EU02`): `Anas (Grenzpunkt Baetica,
+  Lusitania, Tarraconensis)` (`2.04.03.04`) and the very next citation,
+  `Baetica (Ostende am Baliarischen Meer)` (`2.04.03.07`), are both
+  province-boundary markers *up the river Anas/Guadiana itself*
+  (topostext: "Where the river touches the border of Lusitania", "there
+  along the border of Tarraconensis to where the Balearic sea ends"),
+  cited right after the river's own two mouths and its eastward bend -
+  the same "Grenzpunkt" boundary-citation pattern already found and fixed
+  five times in the Aegean/Black Sea (`5.03.01.06`, `5.05.01.09`,
+  `5.08.01.09`, `5.01.05.04`, `3.11.02.09`/`.10`), just not yet checked
+  this far west. Left in as coastal, the first one's edge (from the
+  river's eastern mouth, out to a point over 4 degrees inland) cut
+  straight back across the walk's own western end, the Baetis/Onoba
+  estuary that closes this loop. Added to `_COASTLINE_SKIP_REF_IDS`.
+- **Liguria** (`coastline_005_EU06`, first crossing): `Vintium`,
+  `Salinae`, `Cemenelum`, `Sanitium` (`3.01.41.03`/`3.01.42.03`/
+  `3.01.43.03`/`3.01.43.04`) are inland Alpine tribal cities (topostext:
+  "Of the Nerusi in the Maritime Alps Vintium", "Of the Suetri in the
+  Maritime Alps Salinae", "Of the Vedianti in the Maritime Alps
+  Cemenelum") - not a coastal survey at all. Their sections are each
+  headed "Meeralpen" ("Maritime Alps"), which contains the bare German
+  word "Meer" and satisfies `_COASTAL_HDR_RE` by accident, exactly the
+  same false-positive shape as "Hyrkanisches Meer" catching the
+  Sarmatian Gates mountain pass earlier this session. The real
+  Ligurian-sea coast (Varus-Mündung, Nicaea, Hercules-Hafen, ...) is told
+  in the separate, correctly-headed sections `3.01.01`/`3.01.02`. Added
+  `("3.01","41")`/`("3.01","42")`/`("3.01","43")` to
+  `_NONCOASTAL_EXCEPTION_SECTIONS`.
+- **Campania** (`coastline_005_EU06`, second crossing): `Volturnum` ->
+  `Liternum` X `Cumae` -> `Misenum`. Checked and left alone: all four
+  resolve to real, correctly-ordered, correctly-positioned modern towns
+  (Castel Volturno, Literno, Cuma, Miseno via `Modern_location`), and
+  topostext confirms the exact same sequential order (positions 3-6 of
+  section `3.1.6`). The crossing is real but tiny - Liternum and Cumae's
+  own Ptolemaic coordinates are swapped by only 0.17° of longitude,
+  a couple of kilometers at this latitude, out of an otherwise perfectly
+  ordered five-town stretch. Unlike every other case in this round, there
+  is no boundary-citation pattern, no alternate narrative order, and no
+  category error to point at - just Ptolemy's (or the transcription's)
+  own imprecision between two towns a few kilometers apart. Left
+  unfixed, the one honest "genuine distortion" case in the batch.
+- **The Danuvius river** (all three remaining crossings, book.maps `2.11`/
+  `2.15`): re-examined properly rather than re-confirmed. The trail's
+  build (`build_river_lines`) already deduplicates re-cited points at the
+  same coordinate, keeping whichever sorts first by ref_id - correct for
+  every case checked so far, but here it silently picked the *wrong* one
+  of two identical-coordinate duplicates. `Danuvius (Einmündung des
+  Savus)` (`2.15.01.06`) is Pannonia Inferior's own boundary-line
+  citation (topostext, `2.15.1.1`: "...on the south by Illyria which
+  extends from the indicated terminus as far as the bend in the Danube
+  near which the Savos river empties into it") - an orientation point for
+  a province border, not a step in the river's course. Because
+  `"2.15.01"` sorts before `"2.15.02"`, the dedup kept this one and
+  discarded its exact-coordinate duplicate, `Danuvius (Biegung bei der
+  Einmündung des Savus)` (`2.15.02.18`) - the *correctly placed* citation
+  of the same bend, sitting at the end of Moesia Superior's own
+  continuous run through this stretch (`2.15.02`: Cirpi -> Dravus
+  confluence -> Cornacum -> Acumincum -> Rittium -> Savus confluence, in
+  that order). With the boundary citation in front, the trail visited the
+  Savus bend immediately after Cirpi - out of the river's real downstream
+  order - then jumped back upstream to Dravus, Cornacum and Acumincum,
+  crossing its own path three times. topostext has no narrative for this
+  particular stretch beyond the one boundary sentence (book.map `2.15`'s
+  only citation), so the fix rests on the catalogue's own internal
+  section order plus the exact coordinate match (distance 0.0° both
+  ways) between the two Savus citations, not on topostext confirmation -
+  the weaker of the two evidence tiers this project can draw on, flagged
+  here rather than left implicit. A new mechanism,
+  `_RIVER_LINE_SKIP_REF_IDS` (the river-line counterpart of
+  `_COASTLINE_SKIP_REF_IDS`), excludes `2.15.01.06` before the
+  dedup runs, letting `2.15.02.18` survive in its place. Plotting the
+  fixed line in isolation shows a single, monotonically south-eastward
+  run with no self-crossings, matching the Danube's real flow direction
+  through this stretch.
+
+`coast`: 756 -> 752 (net: -4 Maritime-Alps + 2 Iberia boundary points, but
+the Maritime Alps ones were never real coastal points to begin with, so
+this is a correction, not a loss); `check_self_intersections.py`: 6 -> 1
+(the one deliberately-left Campania wobble). Coverage unaffected (still
+6013/6178 catalogue points, 6137/6259 topostext citations matched) - every
+fix here changed classification/connectivity, not point identity.
+
 ### Coverage: how much of each catalogue is mapped to the other, and a fuzzy match score
 
 `crossref_topostext.py` flags category disagreements on individual
