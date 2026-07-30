@@ -2052,6 +2052,47 @@ longer inflating any count); `river`: 305 -> 306;
 the second one closed the gap the first one opened rather than just
 moving it. `export_geopackage.py` re-run to refresh the delivered file.
 
+**A sixteenth round, the Levant coast**: the user noticed several
+well-known Phoenician coastal cities - Sidon, Tyros, Byblos - plotting
+inland/at sea in a rendered map, and asked whether topostext gives any
+context confirming they sit on the coast (since the catalogue's own
+German names alone give none - "Sidon", "Tyros", "Byblos" carry no
+coastal keyword of their own).
+
+It does, decisively. Book.map "5.15" (Syria/Phoenicia/Palestine)
+section "02" is headed "Syrisches Meer" and correctly coastal
+(Alexandreia bei Issos, Myriandros, Rhosos...), but sections "03"
+through "05" continue the identical walk without repeating that header
+- the exact "sea named once, not repeated" gap fixed a dozen times
+already this session, just not yet checked for the Levant. topostext
+confirms one unbroken run, matching the catalogue's own item order
+exactly: "mouth of the Orontes river...Poseidion...Herakleia...
+Laodikeia...Gabala...Paltos...Balaneai" (section 03) straight into
+"Phoinike: mouth of Eleutheros river...Simyra...Orthosia...Tripolis...
+Theou prosopon promontory...Botrys...Byblos...mouth of the Adonis
+river" (section 04) straight into "Berytos...mouth of the Leon river...
+Sidon...Tyros...Ekdippa...Ptolemais...Sykaminon...Karmelos mountain...
+Dora...mouth of the Chorseos river" (section 05). Section "06" resumes
+with Judaea's own inland boundary description (`Grenzpunkt` entries,
+correctly `city`), cleanly bounding the gap to sections 03-05. All
+three added to `_COASTAL_APPENDIX_SECTIONS`.
+
+Checked the same rendered area for anything else nearby while at it:
+Cyprus's own "Kleiden" (`5.14.07.02`) was sitting in `city` too -
+topostext: "The islands on its coast are those called Cleides" - its
+neighbour "Karpasische Inseln" had already self-classified `island` via
+the bare word "Inseln" in its own name, but "Kleiden" (Cleides), a
+proper name with no such keyword, hadn't. Added `("5.14", "07")` to
+`_ISLAND_APPENDIX_SECTIONS` (a two-island list, the same shape as
+Corfu's Ionian-island neighbours earlier). The offshore islet also
+named "Tyros" (`5.15.27.03`, distinct from the mainland city - topostext:
+"Islands off Syria: Arados...and Tyros just offshore") was already
+correctly `island` via an existing entry.
+
+`coast`: 891 -> 909 (+18); `island`: 317 -> 318;
+`check_self_intersections.py` stays at 1. `export_geopackage.py`
+re-run again to refresh the delivered file.
+
 ### Coverage: how much of each catalogue is mapped to the other, and a fuzzy match score
 
 `crossref_topostext.py` flags category disagreements on individual

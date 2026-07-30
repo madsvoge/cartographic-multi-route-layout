@@ -331,6 +331,7 @@ _ISLAND_APPENDIX_SECTIONS = {
     ("4.07", "40"),  # Amiku/Myrsiake (+ already-island Menan) - the islands next to Aromata
     ("5.01", "15"),  # Thynias bzw. Daphnusa/Klippen Erythinoi (+ already-island Kyaneen) - islands off Bithynia
     ("5.05", "10"),  # Krambusa/Attelebusa - the two islands lying off Pamphylia
+    ("5.14", "07"),  # Kleiden/Karpasische Inseln - the two island groups off Cyprus's own coast (topostext: "The islands on its coast are those called Cleides..." then "the Karpasian islands") - "Karpasische Inseln" already matched `_ISLAND_RE` on its own name ("Inseln"), but "Kleiden" (Cleides), a bare proper name, fell through to `city`
     ("5.15", "27"),  # Arados/Tyros - the islands off Syria (topostext: "Islands off Syria: Arados...and Tyros just offshore") - this "Tyros" is the offshore islet citation, distinct from the mainland coastal city of the same name already catalogued at 5.15.05
     ("6.04", "08"),  # Tabiana/Sophtha + already-island "Insel des Alexander bzw. Arakia" - the islands adjacent to Persis (topostext: "Islands adjacent to Persis: Tabiana...Sophtha...Alexandrou or Arakia")
     ("6.08", "15"),  # Sagdana/Vorochtha - the islands lying off Karmania in the Persian Gulf (topostext: "The islands lying off Karmania are, in the Persian Gulf, Sagdana...Vorochtha") - both had been wrongly strung onto the *start* of coastline_045_AS06 by the coastline graph (the real coastal walk begins at the next section, 6.08.04's river mouths), the same spurious-tail pattern as Paena/Erythia earlier
@@ -711,6 +712,26 @@ _COASTAL_APPENDIX_SECTIONS = {
     ("4.03", "05"),  # Numidia/Africa coast at Cape Bon: "Hippo promontory...Stoborrum promontory...Aphrodisium...Hippo Regius...Rubricatus river mouth...Thabraca"
     ("5.02", "06"),  # Aiolis' own coast: "Kaine promontory...Elaia...Myrina...Hydra promontory...Kyme...Phokaia...mouth of the Hermos river"
     ("7.04", "05"),  # Taprobane's own coast: "Dagana...Cape of Dionysos...Ketaion Cape...Mouth of the river Barakes...the haven of Mardos"
+    # The Levant's own coast (book.map "5.15", Syria/Phoenicia/Palestine):
+    # found by the user noticing Sidon, Tyros and Byblos plotting inland
+    # in a rendered map ("real coastal cities... doesn't topostext give
+    # context that these sit along the water?"). Section "02" is headed
+    # "Syrisches Meer" and correctly coastal (Alexandreia bei Issos,
+    # Myriandros, Rhosos...), but sections "03" through "05" continue the
+    # same walk without repeating that header - topostext confirms one
+    # unbroken run: "mouth of the Orontes river...Poseidion...Herakleia...
+    # Laodikeia...Gabala...Paltos...Balaneai" straight into "Phoinike:
+    # mouth of Eleutheros river...Simyra...Orthosia...Tripolis...Theou
+    # prosopon promontory...Botrys...Byblos...mouth of the Adonis river"
+    # straight into "Berytos...mouth of the Leon river...Sidon...Tyros...
+    # Ekdippa...Ptolemais...Sykaminon...Karmelos mountain...Dora...mouth
+    # of the Chorseos river" - matching the catalogue's own item order
+    # exactly. Section "06" resumes with Judaea's own inland boundary
+    # description (Grenzpunkt entries, correctly `city`) - the gap is
+    # cleanly bounded to these three sections.
+    ("5.15", "03"),
+    ("5.15", "04"),
+    ("5.15", "05"),
 }
 
 # The mountain-side counterpart of _ISLAND_POINT_OVERRIDES: a lone mountain
