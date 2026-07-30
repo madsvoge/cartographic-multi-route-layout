@@ -489,6 +489,37 @@ _COASTAL_APPENDIX_SECTIONS = {
     ("5.09", "08"),
     ("5.09", "09"),
     ("5.09", "10"),
+    # The root cause behind all three Black Sea fixes above, generalized:
+    # `_COASTAL_HDR_RE` only recognizes *German* sea words ("Meer"/"Golf"/
+    # "Ozean"/...), but this catalogue routinely heads a Pontic-region
+    # section with the *Greek* proper noun instead ("Pontos Euxeinos",
+    # "Propontis", "Kimmerischer Bosporos") - which never matches. Reported
+    # by the user as points "hopping and dancing" around the Black Sea,
+    # Bosphorus and Thrace/Bithynia - not a classification problem exactly
+    # (each point's own coordinate was always right), but a *connectivity*
+    # one: with real waypoints along the shore sitting in `city` instead of
+    # `coast`, the graph had nothing to connect but the few points that did
+    # happen to match some other keyword, forcing long, geographically
+    # senseless edges between them instead of the short, orderly hops a
+    # complete coastal walk would draw. Checked every section headed by a
+    # Greek Pontic sea-name across the whole catalogue (via a regex on the
+    # header text) and triaged each one individually - most were already
+    # fine (either already `coast`, or genuinely inland, like `5.06.09`-
+    # `11`'s "Pontos" *province* name, Amaseia and neighbours, nowhere near
+    # the shore) or too low-impact/uncertain to act on without further
+    # verification (single boundary-point sections). These sections had a
+    # real, topostext-confirmed gap:
+    ("3.06", "02"),  # Crimea/Chersonesus Taurica's coast (topostext: "...in the Pontus: Dandake...Chersonesos...") - Eupatoria (Yevpatoria), Dandake etc.
+    ("3.06", "04"),  # The Cimmerian Bosphorus/Kerch strait's own coast (topostext: "On the Cimmerian Bosphorus, Tyriktake...Pantikapaia...") - the Bosporan Kingdom's capital
+    ("3.11", "03"),  # Thrace's own Black Sea coast, its boundary hand-off from Lower Moesia
+    ("3.11", "05"),  # Byzantion itself - the missing hinge point between Thrace's Black Sea coast (section "04") and its Propontis coast (section "06")
+    ("3.11", "06"),  # Thrace's Propontis coast (topostext: "Next, in Propontis...") - Selymbria, Herakleia, Bisanthe, the Long Wall, Paktye
+    ("5.01", "02"),  # Bithynia's Bosphorus-mouth coast - Chalkedon (Kadıköy) and Trarion
+    ("5.01", "05"),  # Bithynia's own coast continuing east - Artake (topostext: "Artake kome")
+    ("5.02", "02"),  # Mysia/Troad's Propontis coast (topostext: "In the Propontis...Kyzikos...Parion...") - two more well-attested ancient ports
+    ("5.06", "03"),  # Pontus Galaticus' coast (topostext: "...the plain by Phanagoria: Themiskyra...") - legendary home of the Amazons, a real coastal city
+    ("5.06", "04"),  # Pontus Polemoniacus' coast (topostext: "Of Polemonian Pontos...") - Polemonion and neighbours
+    ("5.06", "05"),  # Pontus Cappadocicus' coast (topostext: "...near Sidene: Ischopolis...") - Kerasous/Giresun, Pharnakia, on the way to Trapezous/Trebizond
 }
 
 # The mountain-side counterpart of _ISLAND_POINT_OVERRIDES: a lone mountain

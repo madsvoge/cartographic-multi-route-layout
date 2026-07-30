@@ -1201,6 +1201,33 @@ Black Sea coast (Turkey's north coast by name).
   newly `coast` points filled gaps *within* already-existing trails rather
   than starting new ones.
 
+**A third round**: after the Hormuz/Black Sea fixes above, the user
+reported the Black Sea, Bosphorus and Thrace/Bithynia coast still "hopping
+and dancing" - explicitly noting the *points* looked right, it was the
+*connection order* that was wrong. That framing was the clue: it's not a
+classification problem in the usual sense, it's a *connectivity* one.
+Checked every section across the whole catalogue headed by a Greek Pontic
+sea-name our German-only `_COASTAL_HDR_RE` can't match ("Pontos Euxeinos",
+"Propontis", "Kimmerischer Bosporos") and triaged each by hand - most were
+already fine or genuinely inland (`5.06.09`-`11`'s header uses "Pontos" as
+a *province* name, Amaseia and neighbours, nowhere near the shore), but
+eleven had a real, topostext-confirmed gap: Crimea's own coast
+(`3.06.02`/`04` - Eupatoria, the Bosporan Kingdom's capital Pantikapaia),
+Thrace's Black Sea coast and its Propontis coast on the other side of
+Byzantion (`3.11.03`/`05`/`06` - `05` is Byzantion itself, the missing
+hinge point the two other sections needed to connect *through*), Bithynia
+(`5.01.02`/`05` - Chalkedon, Artake), the Troad's Propontis shore
+(`5.02.02` - Kyzikos, Parion), and the three Roman "Pontus" sub-provinces'
+own coast further east (`5.06.03`/`04`/`05` - Themiskyra, Polemonion,
+Kerasous/Giresun, Pharnakia, on the way to Trapezous/Trebizond). With
+those real waypoints missing, the coastline graph had nothing to connect
+but the few points that already happened to match some other keyword,
+forcing long, geographically senseless edges between them - which is
+exactly what reads as points "hopping and dancing" once so many of a
+region's real stepping-stones are missing from the graph. `coast`: 706 →
+739, `city`: 4220 → 4187 (net zero); coastline feature count held at 59
+(1171 → 1204 points) - all fill-in, no new lines needed.
+
 topostext's covered range is now **all of books 2 through 7** (book 2
 maps 02-16, book 3 maps 01-17, book 4 maps 01-08, and all of books 5, 6,
 and 7 in full - book 1 has no coordinate data to check, being Ptolemy's
