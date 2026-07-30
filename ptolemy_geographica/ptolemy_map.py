@@ -547,6 +547,20 @@ _COASTAL_APPENDIX_SECTIONS = {
     ("3.05", "11"),  # Sarmatia-in-Europe's coast opens with "Neue Festung" (topostext: "isthmus...toward the Karkinites river, Neon Teichos") - the walk's own starting point, sitting in `city`
     ("3.05", "12"),  # ...continuing (topostext, by name match - this book.map's own section numbering runs well ahead of topostext's: "Leianon city...Akra city...Gerros river mouth...Kremnoi city") - Leianon and Akra were `city`
     ("3.05", "13"),  # ...continuing to the Tanais/Don (topostext: "...Agaron promontory...Hygreis city...Karoia kome...western mouth of the Tanais") - Kneme, Hygreis, Karoia were `city`
+    # The Thracian Chersonese's own coast (book.map "3.12", a self-contained
+    # peninsula loop distinct from mainland Thrace's - see topostext,
+    # book 3 map 11 section 9, oddly filed under Thrace's own map rather
+    # than getting its own: "the part of Propontis on that side as far as
+    # Kallipolis...on the west...Kardia city...Mastousia promontory...on
+    # the south...the city Elaious...the protruding promontory...on the
+    # East by the Hellespont, on which are the cities: Koila, Sestos, next
+    # the above-mentioned Kallipolis" - a closed loop back to its own
+    # start). Section "04"'s own header is "Hellespont" (Greek proper
+    # noun, not `_COASTAL_HDR_RE`'s German sea words) - Koila and Sestos
+    # were sitting in `city`, the two points the user spotted "floating in
+    # the water" north of Kap gleich daneben, unconnected to the rest of
+    # the peninsula's own coastline.
+    ("3.12", "04"),
 }
 
 # The mountain-side counterpart of _ISLAND_POINT_OVERRIDES: a lone mountain
@@ -1030,6 +1044,44 @@ _COASTLINE_SKIP_REF_IDS = {
     "5.05.01.09",  # Grenzpunkt (Kilikien, Pamphylien) - Pamphylia's, the same shape (topostext: "limit point near Galatia to the Pamphylian sea, the limit point of this line at..." then "the shores of Pamphylia: Olbia, Attaleia...")
     "5.08.01.09",  # Grenzpunkt (Kilikien, Syrien) - Cilicia's, the same shape again (topostext: "limit at Kappadokia extending to the Issian Gulf and Amanikian Gates, which limit..." then "In Selinitis of Kilikia Tracheia Iotape...")
     "5.01.05.04",  # Kap Bithynia - an undermarked re-citation of the same headland as "Spitze Bithyniens mit Artemis-Heiligtum" (5.01.02.02): same latitude exactly, topostext re-describing it verbatim ("mouth of the Pontos and the sanctuary of Artemis Bithynian promontory") to reorient the reader before continuing west past Artake/Psyllis/Kalpas - the same shape as the Borysthenes-Mündung case, just without an explicit arrow marker this time. Left in, its edge from Rhyndakos-Mündung (the Gulf of Astakos digression's own inner end) cut straight back across the gulf, crossing three of the digression's own segments.
+    "3.12.04.05",  # Kallipolis - the Thracian Chersonese's own loop closing back to its start (topostext, book 3 map 11 section 9: "...Sestos, next the above-mentioned Kallipolis"), a bit-identical coordinate duplicate of 3.12.01.05. Left in as a fresh point, it would just re-close the loop a second time at the same node - the ordinary close-loop mechanism (feature_closes_loop) already does this correctly once 3.12's own points are traced.
+}
+
+# A narrower tool than _COASTLINE_SKIP_REF_IDS: that one drops a point from
+# every edge it would touch, incoming or outgoing. Sometimes only *one*
+# specific edge is wrong and the point itself is a real, correctly-placed
+# step that should stay connected to what comes *before* it - just not to
+# what catalogue order happens to put right after it. Found by the user
+# pointing at two exact edges directly in a rendered map ("the line from
+# this point onward is wrong"):
+#
+# - `3.11.02.10` ("Grenzpunkt der Thrakischen Chersones an der Propontis")
+#   correctly ends Thrace's Aegean-coast-and-Chersonese-boundary walk, but
+#   catalogue order puts `3.11.03.05` ("Grenze bei Moesia Inferior") right
+#   after it - and topostext shows that's not a continuation at all: "3.1
+#   On the east by the Propontis and the mouth of Pontos...and by the
+#   onward shores of Pontos until the border with Lower Moesia" is a fresh
+#   *restatement* of Thrace's whole eastern boundary line, whose own
+#   enumeration ("3.2 which border the description is the following:
+#   after Mesembria of Moesia, Anchialos...") starts a new, independent
+#   coastal walk (already `_COASTAL_APPENDIX_SECTIONS`-fixed at
+#   `5.04`/`3.11.04` etc.) that never comes back near the Chersonese.
+#   Breaking just this edge lets that Black-Sea-and-Propontis walk stand
+#   as its own trail instead of bridging 3.2 degrees across Thrace's
+#   interior to a point it was never narratively connected to.
+# - `5.01.04.07` (Rhyndakos-Mündung) correctly ends the Gulf of
+#   Astakos/Marmara-south-shore digression (Astakos through Daskylion,
+#   `5.01.04`), but catalogue order puts Artake (`5.01.05.05`, where the
+#   main Propontis coast resumes past the Kap Bithynia re-citation) right
+#   after it - an edge that cut back across the whole digression regardless
+#   of which intermediate points were included (see check_self_intersections.py).
+#   Unlike the Thrace case there's no boundary-line sentence marking this
+#   one explicitly, but the same shape - a real digression's own end,
+#   bridged by catalogue adjacency to an unrelated resumption point - fits
+#   every other fact of the case.
+_COASTLINE_HARD_BREAKS: set[tuple[str, str]] = {
+    ("3.11.02.10", "3.11.03.05"),
+    ("5.01.04.07", "5.01.05.05"),
 }
 
 # A different, self-marking version of the same "same point re-cited"
@@ -1270,7 +1322,12 @@ def build_coastlines(refs: list[Reference]) -> list[list[Reference]]:
                 or _RECAP_BACKREF_RE.search(ref.name)
             ):
                 continue
-            if prev is not None and _dist((prev.lat_modern, prev.lon_modern), (ref.lat_modern, ref.lon_modern)) <= _MAX_COASTAL_GAP_DEG:
+            if (
+                prev is not None
+                and _dist((prev.lat_modern, prev.lon_modern), (ref.lat_modern, ref.lon_modern)) <= _MAX_COASTAL_GAP_DEG
+                and (prev.ref_id, ref.ref_id) not in _COASTLINE_HARD_BREAKS
+                and (ref.ref_id, prev.ref_id) not in _COASTLINE_HARD_BREAKS
+            ):
                 edges.append((prev, ref))
             prev = ref
 

@@ -1333,17 +1333,66 @@ spotted the crossing directly in a rendered screenshot: one real
 classification gap found and fixed along the way (`5.01.04`'s Prusias and
 Apameia - Modern_location Gemlik and Mudanya, both real Marmara ports -
 were sitting in `city` between two already-coastal river mouths, the same
-shape as every other fix this session), but it doesn't fully resolve the
-crossing, and unlike every other case above there isn't a single citation
-to point to as the culprit. The edge from Rhyndakos-Mündung (the gulf
-digression's own western end) to Artake (where the Marmara coast resumes)
-crosses the gulf's own entry path regardless of which intermediate points
-are included, and topostext's own text has nothing between them beyond the
-already-excluded Kap Bithynia re-citation. Reordering the gulf's own
-points (Astakos/Nikomedeia/Olbia/Poseidion/Askanios/Prusias/Apameia/
-Daskylion) might resolve it, but nothing found so far justifies a
-*specific* reordering over any other - this is left flagged, not fixed,
-rather than guessed at.
+shape as every other fix this session), but that alone didn't resolve the
+crossing - see the sixth round below for how it was actually fixed.
+
+**A sixth round, and a narrower tool**: the user kept looking, this time
+pointing at two *exact edges* directly in a rendered screenshot ("the line
+from this point onward is wrong") rather than a general area, plus two
+cities they could see sitting in open water. `_COASTLINE_SKIP_REF_IDS`
+turned out to be the wrong tool for what these needed - it drops a point
+from *every* edge it touches, but in both cases the point itself is a
+real, correctly-placed step that should stay connected to what comes
+*before* it in the walk, just not to what catalogue order happens to put
+right after it. `_COASTLINE_HARD_BREAKS` is the narrower fix: a set of
+specific ref_id *pairs* whose edge is skipped, leaving both points free to
+connect normally to everything else.
+
+- `3.11.02.10` ("Grenzpunkt der Thrakischen Chersones an der Propontis")
+  correctly ends Thrace's Aegean-coast walk, but catalogue order puts
+  `3.11.03.05` ("Grenze bei Moesia Inferior") right after it - and
+  topostext shows that's not a continuation at all: "On the east by the
+  Propontis and the mouth of Pontos...and by the onward shores of Pontos
+  until the border with Lower Moesia" is a fresh *restatement* of
+  Thrace's whole eastern boundary line, whose own enumeration ("which
+  border the description is the following: after Mesembria of Moesia,
+  Anchialos...") starts a new, independent coastal walk that never comes
+  back near the Chersonese. Breaking just this edge stopped it bridging
+  3.2 degrees across Thrace's interior to a point it was never
+  narratively connected to - and, as a side effect, un-did the
+  `_BOUNDARY_STITCH_REF_ID_PAIRS`-driven merge with Macedonia/Thessaly
+  from the fifth round (that merge point, Nessos-Mündung, is on the
+  *Aegean* side and is unaffected; the Black-Sea-and-Propontis stretch
+  this break frees up was never really part of that merge's own story).
+- `5.01.04.07` (Rhyndakos-Mündung) correctly ends the Gulf of
+  Astakos/Marmara-south-shore digression, but catalogue order bridges it
+  straight to Artake (`5.01.05.05`, where the main Propontis coast
+  resumes past the already-excluded Kap Bithynia re-citation) - an edge
+  that cut back across the whole digression regardless of which
+  intermediate points were included. No boundary-line sentence marks this
+  one as explicitly as the Thrace case, but every other fact fits the same
+  shape, and breaking it resolved the crossing completely.
+- The Thracian Chersonese (book.map `3.12`) turned out to be its own
+  self-contained peninsula loop, described separately from mainland
+  Thrace's coast - topostext files it under book 3 map 11's own section 9
+  rather than giving it a separate map number: "the part of Propontis on
+  that side as far as Kallipolis...on the west...Kardia city...Mastousia
+  promontory...on the south...the city Elaious...the protruding
+  promontory...on the East by the Hellespont, on which are the cities:
+  Koila, Sestos, next the above-mentioned Kallipolis" - an explicit closed
+  loop back to its own start. Section `04`'s own header is "Hellespont"
+  (a Greek proper noun, not `_COASTAL_HDR_RE`'s German sea words) - Koila
+  and Sestos, the two cities the user spotted floating unconnected in the
+  water north of Kap gleich daneben, were sitting in `city` for the usual
+  reason. The loop-closing re-citation of Kallipolis itself
+  (`3.12.04.05`, a bit-identical coordinate duplicate of `3.12.01.05`) got
+  the same treatment as Borysthenes-Mündung earlier - `_COASTLINE_SKIP_REF_IDS`,
+  letting the ordinary close-loop mechanism do the job once instead of
+  re-closing the same node a second time.
+
+`coast`: 750 → 753 (Koila, Sestos, and the now-unused Kallipolis
+duplicate); the self-intersection checker is clean across the whole
+Black Sea/Aegean/Propontis region after this round.
 
 topostext's covered range is now **all of books 2 through 7** (book 2
 maps 02-16, book 3 maps 01-17, book 4 maps 01-08, and all of books 5, 6,
