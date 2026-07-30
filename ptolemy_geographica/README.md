@@ -1985,6 +1985,73 @@ and the river-vs-coastline crossing check) - not a replacement for the
 primary classification, a second opinion that catches what the primary
 one's keyword rules structurally can't see.
 
+**A fifteenth round, auditing the GeoPackage directly in QGIS**: the
+user opened `ptolemy_geographica.gpkg` in QGIS and, using the new
+combined line+node layers, clicked a stray `coastlines` node near the
+Douro and found `2.05.01.06` ("Durius (Grenzpunkt Lusitania,
+Tarraconensis)", `Modern_location` "Douro") sitting in `category=coast`
+- the same shape as the Anas/Baetica boundary markers found earlier this
+session, just not yet checked this far north, and asked whether the
+catalogue has other "Grenzpunkt" points with the same problem.
+
+It does, but not many: of 97 "Grenzpunkt"/"Endpunkt"/"Grenze"-named
+points catalogue-wide, only 27 are `coast`. Checked each one against
+its own topostext citation - 23 are genuinely coastal (topostext
+explicitly names a sea/gulf as the boundary's own endpoint - "the other
+on the Adriatic at", "termination at the sea", "the inner recess of
+the...Maisanites Gulf" - or, for the Arabia Felix "Endpunkt am Meer"
+mountain pairs, sit smoothly in-line with their coastal neighbours' own
+coordinates, the Athos/Akrokeraunia shape already confirmed earlier)
+and left alone. Three are not:
+
+- `2.05.01.06` itself - fixed the same way as Anas, added to
+  `_RIVER_POINT_OVERRIDES`.
+- `2.16.01.04` ("Grenzpunkt (Illyricum, Pannonia Superior)") - topostext
+  explicitly contrasts it with a *different*, genuinely coastal sibling
+  ("Illyria is bounded on the north by the two Pannonias...the other
+  [end] on the Adriatic at" - that other end is `2.16.01.05`, correctly
+  left coastal). This one is the inland end.
+- `6.14.01.06` ("Grenzpunkt (beide Skythien, unbekanntes Land)") - a
+  pure Central-Asian land-boundary description (Sarmatia/unknown land/
+  Mt. Imaos), no sea mentioned anywhere in its citation.
+- `5.19.01.04` ("Grenzpunkt (Arabia Deserta, Babylonien, Mesopotamien)")
+  - the same river-following-boundary shape as Durius/Anas (topostext:
+  "the remaining part of the Euphrates river...to the limit point at"),
+  well inland of the same walk's own two genuinely coastal points a few
+  steps later (`5.19.01.11`/`.13`, both explicitly "the Persian Gulf").
+
+These three, lacking a clean single named-river attachment the way
+Durius/Anas had, went into `_NONCOASTAL_POINT_OVERRIDES` instead
+(`city`, the same fallback as the earlier Baetica-Ostende case). The
+7 "Grenzpunkt"-named points in `river`/`mountain`/`lake` were checked
+too and are all already correct (Pyrene-Gebirge, the Rha/Volga bend,
+Lake Byke's own end point, etc.).
+
+Fixing Durius surfaced a second, independent bug once the pipeline
+re-ran: with the inland Grenzpunkt gone, `Durius-Mündung` (the Douro's
+real mouth, correctly `river_mouth`) became a direct coastline edge
+straight to Balsa in the Algarve, cutting across the rest of Lusitania's
+own coastal loop three times - a crossing that didn't exist before
+purely because the *wrong* two-hop path (via the inland Grenzpunkt)
+happened not to cross anything, by coincidence. Reading the full trail
+(Balsa -> Ossonoba -> Heiliges Kap/Cape St Vincent -> up the west coast
+-> Vacua-Mündung, a few hundredths of a degree from Durius-Mündung's own
+coordinate) showed the exact Acheloos-/Borysthenes-Mündung shape from
+earlier this session: Durius-Mündung is Lusitania's own *northern*
+boundary marker, stated first as an orientation point (topostext: "The
+southern side of Lusitania is the common boundary with...Baetica. The
+northern side links to Tarraconensis along the western part of the
+Dourius river...The mouth of the river, which flows into the Outer
+Sea") - the walk proper starts at Balsa (the Baetica-border end) and
+closes the loop back up near Porto on its own. Added to
+`_COASTLINE_SKIP_REF_IDS`.
+
+`coast`: 895 -> 891 (net: -5 recategorized, +1 Durius's own edges no
+longer inflating any count); `river`: 305 -> 306;
+`check_self_intersections.py` stays at 1 after both fixes, confirming
+the second one closed the gap the first one opened rather than just
+moving it. `export_geopackage.py` re-run to refresh the delivered file.
+
 ### Coverage: how much of each catalogue is mapped to the other, and a fuzzy match score
 
 `crossref_topostext.py` flags category disagreements on individual

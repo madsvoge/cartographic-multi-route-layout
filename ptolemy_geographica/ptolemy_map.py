@@ -743,6 +743,14 @@ _MOUNTAIN_POINT_OVERRIDES = {
 # one of two odd-looking dots sitting inland in Spain on a rendered map.
 _RIVER_POINT_OVERRIDES = {
     "2.04.03.04",  # Anas (Grenzpunkt Baetica, Lusitania, Tarraconensis) - a boundary marker up the river Anas/Guadiana itself (topostext: "Where the river touches the border of Lusitania", Modern_location "Guadiana"), not a coastal point - already excluded from the coastline's own edges (_COASTLINE_SKIP_REF_IDS) but still carried the wrong point category/color
+    # Found by the user auditing the GeoPackage export directly in QGIS
+    # (2026-07-30) - the same shape, a different river: "Durius (Grenzpunkt
+    # Lusitania, Tarraconensis)" (Modern_location "Douro", topostext: "The
+    # part of the river where Lusitania begins") is a boundary marker up
+    # the Durius/Douro, not a point on the coast - prompted a full sweep
+    # of every "Grenzpunkt"/"Endpunkt" name still categorized `coast`
+    # (see `_NONCOASTAL_POINT_OVERRIDES` below for the rest of that sweep).
+    "2.05.01.06",
 }
 
 # The second of the two odd-looking Spain dots the user flagged is not
@@ -759,6 +767,20 @@ _RIVER_POINT_OVERRIDES = {
 _NONCOASTAL_POINT_OVERRIDES = {
     "2.04.03.07",
     "2.06.12.05",
+    # The rest of the "every remaining Grenzpunkt/Endpunkt still marked
+    # `coast`" sweep prompted by the Durius find above: of 27 such points,
+    # 23 are genuinely coastal (topostext explicitly names a sea/gulf as
+    # the boundary's own endpoint - "the other on the Adriatic at",
+    # "termination at the sea", "the inner recess of the...Maisanites
+    # Gulf" - or, for the Arabia Felix "Endpunkt am Meer" mountain cases,
+    # sit smoothly in-line with their coastal neighbours' own coordinates,
+    # the same Athos/Akrokeraunia shape already confirmed this session)
+    # and left untouched. These three are pure land-boundary descriptions
+    # with no sea/gulf mentioned anywhere in their citation, or explicitly
+    # contrasted with a *different*, genuinely coastal sibling point:
+    "2.16.01.04",  # Grenzpunkt (Illyricum, Pannonia Superior) - topostext: "Illyria is bounded on the north by the two Pannonias...whose midpoint toward the limit point of Upper Pannonia at" - the *inland* end of a line whose text explicitly names a second, different end "on the Adriatic" (2.16.01.05, correctly left coastal) - this one is the land end, not the sea end
+    "6.14.01.06",  # Grenzpunkt (beide Skythien, unbekanntes Land) - topostext: "Scythia within Imaos is bounded on the west by Sarmatia...on the north by an unknown land...on the east by Mount Imaos" - a pure Central-Asian land-boundary description, no sea mentioned at all
+    "5.19.01.04",  # Grenzpunkt (Arabia Deserta, Babylonien, Mesopotamien) - topostext's own fuller citation (5.18.1.2): "On the south by the remaining part of the Euphrates river, along Arabia Deserta to the limit point at" - a river-following boundary marker (the same Anas/Durius shape, just without a clean single-river attachment to force `river` instead), well inland of the same walk's own two genuinely coastal points a few steps later (5.19.01.11/.13, both explicitly "the Persian Gulf")
 }
 
 
@@ -1232,6 +1254,26 @@ _COASTLINE_SKIP_REF_IDS = {
     # entries above, this time in Iberia rather than the Aegean/Black Sea:
     "2.04.03.04",  # Anas (Grenzpunkt Baetica, Lusitania, Tarraconensis) - a border marker *up the river Anas/Guadiana itself* (topostext: "Where the river touches the border of Lusitania", right after "Before the river turns towards the east") at -8.67,39.0 - over 4 degrees inland/east of either of the river's own two mouths. Left in as coastal, its edge from the eastern mouth cut straight back across the walk's own western end (Onoba/Baetis-Mündung, the same estuary as the western Anas mouth that closes this loop).
     "2.04.03.07",  # Baetica (Ostende am Baliarischen Meer) - the very next citation, Baetica's own *eastern* border marker where the province line meets "the Balearic sea" (topostext: "there along the border of Tarraconensis to where the Balearic sea ends") - a second inland/administrative boundary point in the same short digression as the one above, not a coastal step either.
+    #
+    # Found indirectly, by fixing the Durius Grenzpunkt (_RIVER_POINT_OVERRIDES,
+    # 2026-07-30): removing that inland point from the coastline exposed a
+    # second, previously-hidden bug in the same book.map - the exact
+    # Acheloos-/Borysthenes-Mündung shape above, just not visible before
+    # because the wrong two-hop path (via the now-removed Grenzpunkt)
+    # happened not to cross anything, by coincidence, while the shorter
+    # direct edge does. Durius-Mündung (topostext: "The southern side of
+    # Lusitania is the common boundary with...Baetica. The northern side
+    # links to Tarraconensis along the western part of the Dourius
+    # river...The mouth of the river, which flows into the Outer Sea") is
+    # Lusitania's own *northern* boundary marker, stated first as an
+    # orientation point - the walk proper starts at Balsa (the *southern*,
+    # Baetica-border end) and runs the whole Algarve-then-west-coast loop
+    # back up to Vacua-Mündung, a few hundredths of a degree from Durius-
+    # Mündung's own coordinate, closing the loop on its own without this
+    # edge. Left in, the direct Durius-Mündung -> Balsa edge (skipping
+    # straight from Porto to the Algarve) cut across the walk's own real
+    # west-coast return leg three times.
+    "2.05.01.04",
 }
 
 # A narrower tool than _COASTLINE_SKIP_REF_IDS: that one drops a point from
