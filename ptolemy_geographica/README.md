@@ -2243,3 +2243,40 @@ python3 static_map.py --region europe --output europe.png
 
 Built-in `--region` choices: `world` (default), `europe`, `mediterranean`,
 `asia`, `africa`. Or pass a custom `--bbox LON_MIN LAT_MIN LON_MAX LAT_MAX`.
+
+## GeoPackage export (for QGIS/ArcGIS)
+
+`export_geopackage.py` writes the same categories and constructed lines
+the two map renderers draw as real vector layers instead of a picture:
+
+```bash
+python3 export_geopackage.py                # -> ptolemy_geographica.gpkg
+python3 export_geopackage.py --output out.gpkg
+```
+
+One plain `Point` layer per category (`coast_points`, `river_points`,
+`island_points`, ...) - every point, whether or not it's part of a
+constructed line - plus one *combined* layer per line-building feature
+type:
+
+    coastlines, rivers, island_outlines, mountain_ranges
+
+Each of these four holds both the constructed line itself and its own
+ordered vertices in a single GeoPackage feature table, rather than a
+separate line layer plus a separate "nodes" point layer needing a
+GIS-side join to relate them - GeoPackage (like most of the OGC simple-
+features model) allows a layer's geometry column to be the generic
+`GEOMETRY` type instead of a single fixed type, so a `MultiLineString`
+(the line, `record_type="line"`) and a `Point` (one of its vertices,
+`record_type="node"`) can sit in the same table. `feature_id` is shared
+between a line row and its own node rows, so grouping/filtering by it in
+QGIS recovers "this one line plus its N vertices" with no join; each
+node row also carries its own `sequence_in_feature` (draw order) and the
+underlying point's own attributes (`category`, `Modern_location`,
+Ptolemy's own coordinates), the same as the plain `..._points` layers
+above, just pre-filtered to the subset that's actually part of a line.
+
+Written via `fiona`, whose GPKG driver represents this as `schema =
+{"geometry": "Unknown", ...}` - confirmed round-tripping cleanly through
+both `fiona` and `geopandas` (`gdf.geom_type` shows the expected mix of
+`Point`/`MultiLineString` rows, one query, no join).

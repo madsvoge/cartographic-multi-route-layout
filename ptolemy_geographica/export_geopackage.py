@@ -19,23 +19,24 @@ catalogue - every point, whether or not it's part of a constructed line):
 
 Plus, for the four point categories that get connected into a line
 (coastlines walk the shore through coast/harbor/river_mouth points; rivers,
-islands and mountain ranges connect same-named points elsewhere), a
-LineString layer *and* a Point "nodes" layer - the nodes are the ordered
-subset of the category points above that actually belong to a line, each
-carrying its line's feature_id and its draw-order position, so the line and
-its vertices can be related/joined in a GIS tool without recomputing
-anything:
+islands and mountain ranges connect same-named points elsewhere), a single
+*combined* layer holding both the line itself and its own ordered vertices
+- one GeoPackage feature table with a generic geometry column
+(`MultiLineString` for the line row, `Point` for each node row), rather
+than a separate line layer plus a separate "nodes" point layer requiring a
+GIS-side join to relate them:
 
-    coastlines          + coastline_nodes
-    rivers               + river_nodes
-    island_outlines      + island_outline_nodes
-    mountain_ranges       + mountain_range_nodes
+    coastlines, rivers, island_outlines, mountain_ranges
 
-(A "nodes" layer's points are also present in the corresponding category
-layer above - e.g. every coastline_nodes point is also in coast_points,
-harbor_points or river_mouth_points - the nodes layer exists so a line's
-vertices are available pre-filtered and pre-ordered, without a GIS-side
-join.)
+A `record_type` property (`"line"` or `"node"`) tells the two kinds of
+row apart within the layer; `feature_id` is shared between a line row and
+its own node rows, so grouping/filtering by `feature_id` in a GIS tool
+recovers "this one line plus its N vertices" without any join. A node
+row also carries its own `sequence_in_feature` (draw order along the
+line) and every attribute the corresponding `..._points` layer above has
+for that point (category, Modern_location, Ptolemy coordinates, ...) -
+it's the same point, just pre-filtered and pre-ordered to the subset
+that's actually part of a line.
 
 All geometry is in WGS84 (EPSG:4326), at the same Ferro-corrected modern
 coordinates the map renderers use (see ptolemy_map.py's FERRO_OFFSET_DEG) -
@@ -93,16 +94,34 @@ _POINT_PROPERTIES = {
     "label_note": "str",
 }
 
-_LINE_PROPERTIES = {
-    "feature_id": "str",
+# One combined layer per line-building feature type: a "line" row (the
+# whole constructed line, as a MultiLineString) and its own "node" rows
+# (each vertex, as a Point, in draw order) share this same property
+# schema - record_type tells them apart, and the columns each kind
+# doesn't use are left blank rather than needing two separate schemas.
+_COMBINED_PROPERTIES = {
+    "record_type": "str",  # "line" or "node"
+    "feature_id": "str",  # shared key between a line row and its own node rows
     "feature_type": "str",
     "name": "str",
+    # line-only:
     "point_count": "int",
     "closes_loop": "bool",
     "start_ref_id": "str",
     "end_ref_id": "str",
     "start_name": "str",
     "end_name": "str",
+    # node-only - the underlying point's own attributes, plus its position
+    # along this particular line:
+    "ref_id": "str",
+    "sequence_in_feature": "int",
+    "category": "str",
+    "book": "str",
+    "tabula": "str",
+    "modern_location": "str",
+    "recension": "str",
+    "lon_ptolemy": "float",
+    "lat_ptolemy": "float",
 }
 
 
@@ -155,44 +174,75 @@ def _write_points_layer(gpkg: Path, layer: str, refs: list[Reference]) -> int:
     return len(refs)
 
 
-def _write_lines_layer(gpkg: Path, layer: str, feature_type: str, lines: list[list[Reference]]) -> int:
+# (feature_id attr, sequence attr, closes-loop attr or None) per feature
+# type - the four different Reference attribute names build_coastlines()/
+# build_river_lines()/build_island_lines()/build_mountain_lines() each
+# write their own line membership into.
+_FEATURE_ATTRS: dict[str, tuple[str, str, str | None]] = {
+    "coastline": ("feature_id", "sequence_in_feature", "feature_closes_loop"),
+    "river": ("river_feature_id", "river_sequence_in_feature", None),
+    "island_outline": ("island_feature_id", "island_sequence_in_feature", "island_feature_closes_loop"),
+    "mountain_range": ("mountain_feature_id", "mountain_sequence_in_feature", None),
+}
+
+
+def _write_combined_layer(gpkg: Path, layer: str, feature_type: str, lines: list[list[Reference]]) -> int:
+    """One layer per feature type holding both the constructed line (as a
+    MultiLineString, `record_type="line"`) and its own ordered vertices
+    (as Points, `record_type="node"`) - see the module docstring."""
     lines = [line for line in lines if len(line) >= 2]
     if not lines:
         return 0
-    schema = {"geometry": "LineString", "properties": _LINE_PROPERTIES}
+    feature_id_attr, sequence_attr, closes_loop_attr = _FEATURE_ATTRS[feature_type]
+    schema = {"geometry": "Unknown", "properties": _COMBINED_PROPERTIES}
+    written = 0
     with fiona.open(gpkg, "w", driver="GPKG", crs=CRS, schema=schema, layer=layer) as dst:
         for line in lines:
             first, last = line[0], line[-1]
-            feature_id = {
-                "coastline": first.feature_id,
-                "river": first.river_feature_id,
-                "island_outline": first.island_feature_id,
-                "mountain_range": first.mountain_feature_id,
-            }[feature_type]
-            closes_loop = {
-                "coastline": first.feature_closes_loop,
-                "island_outline": first.island_feature_closes_loop,
-            }.get(feature_type, False)
+            feature_id = getattr(first, feature_id_attr)
+            closes_loop = bool(getattr(first, closes_loop_attr)) if closes_loop_attr else False
             coords = [(r.lon_modern, r.lat_modern) for r in line]
             if closes_loop:
                 coords = coords + [coords[0]]
-            dst.write(
+            line_properties = dict.fromkeys(_COMBINED_PROPERTIES)
+            line_properties.update(
                 {
-                    "geometry": {"type": "LineString", "coordinates": coords},
-                    "properties": {
-                        "feature_id": feature_id,
-                        "feature_type": feature_type,
-                        "name": _feature_name(feature_id),
-                        "point_count": len(line),
-                        "closes_loop": bool(closes_loop),
-                        "start_ref_id": first.ref_id,
-                        "end_ref_id": last.ref_id,
-                        "start_name": first.name,
-                        "end_name": last.name,
-                    },
+                    "record_type": "line",
+                    "feature_id": feature_id,
+                    "feature_type": feature_type,
+                    "name": _feature_name(feature_id),
+                    "point_count": len(line),
+                    "closes_loop": closes_loop,
+                    "start_ref_id": first.ref_id,
+                    "end_ref_id": last.ref_id,
+                    "start_name": first.name,
+                    "end_name": last.name,
                 }
             )
-    return len(lines)
+            dst.write({"geometry": {"type": "MultiLineString", "coordinates": [coords]}, "properties": line_properties})
+            written += 1
+            for r in line:
+                node_properties = dict.fromkeys(_COMBINED_PROPERTIES)
+                node_properties.update(
+                    {
+                        "record_type": "node",
+                        "feature_id": feature_id,
+                        "feature_type": feature_type,
+                        "name": r.name,
+                        "ref_id": r.ref_id,
+                        "sequence_in_feature": getattr(r, sequence_attr),
+                        "category": r.category,
+                        "book": r.book,
+                        "tabula": r.tabula,
+                        "modern_location": r.modern_location,
+                        "recension": r.recension,
+                        "lon_ptolemy": r.lon_ptolemy,
+                        "lat_ptolemy": r.lat_ptolemy,
+                    }
+                )
+                dst.write({"geometry": {"type": "Point", "coordinates": (r.lon_modern, r.lat_modern)}, "properties": node_properties})
+                written += 1
+    return written
 
 
 def export(refs: list[Reference], output: Path) -> None:
@@ -212,31 +262,10 @@ def export(refs: list[Reference], output: Path) -> None:
     if unclassified:
         counts["unclassified_points"] = _write_points_layer(output, "unclassified_points", unclassified)
 
-    coastlines = get_coastlines(refs)
-    rivers = get_river_lines(refs)
-    islands = get_island_lines(refs)
-    mountains = get_mountain_lines(refs)
-
-    counts["coastlines"] = _write_lines_layer(output, "coastlines", "coastline", coastlines)
-    counts["coastline_nodes"] = _write_points_layer(
-        output, "coastline_nodes", sorted((r for line in coastlines for r in line), key=lambda r: (r.feature_id, r.sequence_in_feature))
-    )
-    counts["rivers"] = _write_lines_layer(output, "rivers", "river", rivers)
-    counts["river_nodes"] = _write_points_layer(
-        output, "river_nodes", sorted((r for line in rivers for r in line), key=lambda r: (r.river_feature_id, r.river_sequence_in_feature))
-    )
-    counts["island_outlines"] = _write_lines_layer(output, "island_outlines", "island_outline", islands)
-    counts["island_outline_nodes"] = _write_points_layer(
-        output,
-        "island_outline_nodes",
-        sorted((r for line in islands for r in line), key=lambda r: (r.island_feature_id, r.island_sequence_in_feature)),
-    )
-    counts["mountain_ranges"] = _write_lines_layer(output, "mountain_ranges", "mountain_range", mountains)
-    counts["mountain_range_nodes"] = _write_points_layer(
-        output,
-        "mountain_range_nodes",
-        sorted((r for line in mountains for r in line), key=lambda r: (r.mountain_feature_id, r.mountain_sequence_in_feature)),
-    )
+    counts["coastlines"] = _write_combined_layer(output, "coastlines", "coastline", get_coastlines(refs))
+    counts["rivers"] = _write_combined_layer(output, "rivers", "river", get_river_lines(refs))
+    counts["island_outlines"] = _write_combined_layer(output, "island_outlines", "island_outline", get_island_lines(refs))
+    counts["mountain_ranges"] = _write_combined_layer(output, "mountain_ranges", "mountain_range", get_mountain_lines(refs))
 
     print(f"wrote {output}")
     for layer, n in counts.items():
