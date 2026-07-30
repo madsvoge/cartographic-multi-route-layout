@@ -1596,6 +1596,50 @@ this is a correction, not a loss); `check_self_intersections.py`: 6 -> 1
 6013/6178 catalogue points, 6137/6259 topostext citations matched) - every
 fix here changed classification/connectivity, not point identity.
 
+The third piece of the review, a catalogue-wide sweep of every section
+header against `_COASTAL_HDR_RE` (not just the Black Sea, where this had
+already been done), turned up far more false leads than real ones -
+useful in itself, since it means the earlier fixes weren't leaving an
+easy pattern of remaining bugs behind. Checked and correctly left alone:
+region names that happen to contain "Pontos" as an administrative label,
+not the sea (`"Galatischer/Polemoniakischer/Kappadokischer Pontos"`,
+book.map `5.06` sections `09`-`11` - topostext's own text says "in the
+*interior* of Galatian Pontos"/"in Kappadokian Pontos *inland*", settling
+what could otherwise look like a Black-Sea-coast gap); boundary-line
+endpoints incidentally named after the sea they terminate at (`"Endpunkt
+beim Pontus"`/`"beim Pontus"`/`bei Thrakien`, `3.10.01`/`3.10.07` - both
+matched, at 100%, to the same single topostext citation, a boundary
+description, not a coastal citation); and a batch of `"-See"` (lake) name
+hits that were never a `_COASTAL_HDR_RE` question in the first place,
+since individual lake points classify by their own name pattern
+regardless of section header. One genuine gap survived the check:
+Troas's own Hellespont shore (book.map `5.02` section `03`) is the same
+"Hellespont"-not-a-German-sea-word gap already found and fixed once this
+session on the opposite shore (the Thracian Chersonese, `3.12.04`) -
+topostext confirms a clean coastal run ("on the Hellespont: Abydos /
+mouth of the Simoeis river / Dardanon / mouth of the Skamander river /
+Sigeion promontory"), with Abydos and Dardanon sitting in `city` for lack
+of a keyword of their own. Added to `_COASTAL_APPENDIX_SECTIONS`.
+`coast`: 752 -> 754; `check_self_intersections.py` stays at 1.
+
+The Nile delta (book.map `4.05`, the branching-tree candidate flagged
+alongside the Danube delta) turned out to have a *different* shape, not
+yet fixed: its five fork citations ("Grosses Delta", "Kleines Delta",
+"Drittes Delta", two "Namenloses Delta") each have a *distinct* name, so
+`build_river_lines`'s name-based grouping never puts any two of them in
+the same line - each sits alone (or, for the two identically-named
+"Namenloses Delta" ones, gets dropped outright by `_GENERIC_RIVER_NAME_RE`,
+the same "never a safe grouping key" rule that excludes every unrelated
+"Namenloser Fluss" elsewhere in the catalogue). None of this shows up as
+a crossing, because nothing is drawn to cross - it's a representation gap
+(a real three-way-plus branching structure sitting as five disconnected
+dots), not a connectivity bug like the Danube's was. Fixing it properly
+would mean identifying the Nile's own named branches (Agathos Daimon,
+Bubastikos, Busiritikos, Phermuthiakos, Taly, and the mouths each ends
+at) as their own lines and bridging the fork points between trunk and
+branch - a larger, separate piece of work, flagged here rather than
+attempted inline.
+
 ### Coverage: how much of each catalogue is mapped to the other, and a fuzzy match score
 
 `crossref_topostext.py` flags category disagreements on individual

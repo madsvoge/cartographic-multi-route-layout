@@ -599,6 +599,16 @@ _COASTAL_APPENDIX_SECTIONS = {
     # Tyras-Mündung because Physke/Hermonax/Harpis, the points that should
     # carry it onward, were sitting in `city`.
     ("3.10", "14"),
+    # Found by the systematic catalogue-wide header scan (2026-07-30): the
+    # Troad's own Hellespont shore (book.map "5.02" section "03") is the
+    # same "Hellespont" (Greek, not `_COASTAL_HDR_RE`'s German sea words)
+    # gap as the Thracian Chersonese case above, just on the opposite
+    # shore of the strait - topostext confirms a clean coastal run: "on the
+    # Hellespont: Abydos / mouth of the Simoeis river / Dardanon / mouth of
+    # the Skamander river / Sigeion promontory". Abydos and Dardanon were
+    # sitting in `city`; the two river mouths and Kap Sigeion were already
+    # correctly `river_mouth`/`coast` via their own name keywords.
+    ("5.02", "03"),
 }
 
 # The mountain-side counterpart of _ISLAND_POINT_OVERRIDES: a lone mountain
