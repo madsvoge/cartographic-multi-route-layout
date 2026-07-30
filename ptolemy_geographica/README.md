@@ -1328,6 +1328,23 @@ remain (currently in the catalogue's Iberia and Liguria/Campania regions,
 and a small one in Bithynia's Gulf of Astakos) - left for a future pass
 rather than forced without that evidence.
 
+**Bithynia's Gulf of Astakos, investigated further** after the user
+spotted the crossing directly in a rendered screenshot: one real
+classification gap found and fixed along the way (`5.01.04`'s Prusias and
+Apameia - Modern_location Gemlik and Mudanya, both real Marmara ports -
+were sitting in `city` between two already-coastal river mouths, the same
+shape as every other fix this session), but it doesn't fully resolve the
+crossing, and unlike every other case above there isn't a single citation
+to point to as the culprit. The edge from Rhyndakos-Mündung (the gulf
+digression's own western end) to Artake (where the Marmara coast resumes)
+crosses the gulf's own entry path regardless of which intermediate points
+are included, and topostext's own text has nothing between them beyond the
+already-excluded Kap Bithynia re-citation. Reordering the gulf's own
+points (Astakos/Nikomedeia/Olbia/Poseidion/Askanios/Prusias/Apameia/
+Daskylion) might resolve it, but nothing found so far justifies a
+*specific* reordering over any other - this is left flagged, not fixed,
+rather than guessed at.
+
 topostext's covered range is now **all of books 2 through 7** (book 2
 maps 02-16, book 3 maps 01-17, book 4 maps 01-08, and all of books 5, 6,
 and 7 in full - book 1 has no coordinate data to check, being Ptolemy's

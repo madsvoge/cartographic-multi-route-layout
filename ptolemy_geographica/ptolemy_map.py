@@ -530,6 +530,7 @@ _COASTAL_APPENDIX_SECTIONS = {
     ("3.11", "05"),  # Byzantion itself - the missing hinge point between Thrace's Black Sea coast (section "04") and its Propontis coast (section "06")
     ("3.11", "06"),  # Thrace's Propontis coast (topostext: "Next, in Propontis...") - Selymbria, Herakleia, Bisanthe, the Long Wall, Paktye
     ("5.01", "02"),  # Bithynia's Bosphorus-mouth coast - Chalkedon (Kadıköy) and Trarion
+    ("5.01", "04"),  # Bithynia's coast continuing past the Gulf of Astakos - Prusias (Modern_location: Gemlik) and Apameia (Modern_location: Mudanya), both real Marmara Sea ports; Askania-See stays `lake` regardless (matched by _LAKE_RE before the section-level fallback ever gets a turn)
     ("5.01", "05"),  # Bithynia's own coast continuing east - Artake (topostext: "Artake kome")
     ("5.02", "02"),  # Mysia/Troad's Propontis coast (topostext: "In the Propontis...Kyzikos...Parion...") - two more well-attested ancient ports
     ("5.06", "03"),  # Pontus Galaticus' coast (topostext: "...the plain by Phanagoria: Themiskyra...") - legendary home of the Amazons, a real coastal city
