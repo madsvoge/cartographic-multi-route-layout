@@ -1028,6 +1028,21 @@ _NONCOASTAL_POINT_OVERRIDES = {
     # the same plain-settlement-amid-a-coastal-walk shape as every other
     # entry above, just found by a crossing instead of a keyword sweep.
     "5.17.01.11",
+    # Resolves the Apsorros/Sebastopolis case flagged in
+    # _BOUNDARY_STITCH_REF_ID_PAIRS above: "Sebastopolis 1" sits right after
+    # three genuine river-course points (Apsorros splitting into the Glaukos
+    # and Lykos, their sources - all correctly `river`, describing the
+    # Çoruh's own tributary system inland), and its own topostext citation
+    # is a fragment of boundary language ("...to the terminus which is
+    # located in...") rather than a coastal citation - not the walk
+    # continuing, an aside citing an administrative limit. Its
+    # Modern_location, "Sulusaray", is a Cappadocian inland town nowhere
+    # near this Black Sea coast, while the real coastal Sebastopolis
+    # (Dioskurias, Sukhumi) already sits correctly elsewhere in the
+    # catalogue (5.10.02.02) - two different places sharing one name, the
+    # same shape as the Deva/Alaunus/Sala rivers, just found on a coastline
+    # instead of a river this time.
+    "5.06.07.06",
 }
 
 
@@ -1740,20 +1755,24 @@ _BOUNDARY_STITCH_REF_ID_PAIRS = {
     # point, with the trail continuing past it). Five of the six had an
     # obvious, still-correct replacement endpoint immediately findable this
     # way and are corrected below (kept as edits to the same fact, not new
-    # entries) - the sixth, Apsorros-Mündung/Çoruh -> Phasis, could not be:
-    # its trail's new "end" is a point named "Sebastopolis 1" whose own
-    # Modern_location ("Sulusaray") is a Cappadocian inland town, nowhere
-    # near this Black Sea coast, while the *correct* coastal Sebastopolis
-    # (Dioskurias, Sukhumi) already sits correctly elsewhere in the
-    # catalogue - the same reused-name-different-place shape as the
-    # Deva/Alaunus/Sala rivers (_RIVER_LINE_NO_MERGE_REF_ID_PAIRS), just not
-    # yet investigated for a coastal point. Left disconnected rather than
-    # guessed at; needs its own look before either a stitch or a skip.
+    # entries) - the sixth, Apsorros-Mündung/Çoruh -> Phasis, needed a real
+    # fix instead of a relink: its trail's new "end" was a point named
+    # "Sebastopolis 1" whose own Modern_location ("Sulusaray") is a
+    # Cappadocian inland town, nowhere near this Black Sea coast, sitting
+    # right after three genuine inland river-course points (Apsorros
+    # splitting into the Glaukos/Lykos, their sources) with a fragmentary,
+    # boundary-flavoured topostext citation of its own ("...to the terminus
+    # which is located in...") - the real coastal Sebastopolis (Dioskurias,
+    # Sukhumi) already sits correctly elsewhere in the catalogue. Excluded
+    # via `_NONCOASTAL_POINT_OVERRIDES` (5.06.07.06), restoring
+    # Apsorros-Mündung as the trail's real end - the original pair below,
+    # unchanged.
     ("3.13.05.03", "3.14.02.02"),  # was ("3.13.05.03","3.14.02.03") - Kelydnos-Mündung/Dukati -> Orikon (the Ceraunian coast's real next point is Orikon, not Akrokeraunische Berge - the mountain-range aside sits one point later in the same walk)
     ("4.01.07.06", "4.02.02.02"),  # was ("4.01.07.06","4.02.02.05") - Malua-Mündung/Moulouya -> Grosses Kap (topostext matches both to the identical phrase "Malva river mouth, Great promontory" - literally one citation)
     ("5.01.07.11", "5.04.02.02"),  # was ("5.01.07.07","5.04.02.02") - Kytoros -> Klimax (Bithynia/Paphlagonia border; Parthenios-Mündung is now an interior point of the same walk, not its end)
     ("5.04.03.07", "5.06.02.02"),  # was ("5.04.03.07","5.06.02.03") - Amisos/Samsun -> Ankon der Leukosyrer (topostext: "the coastal part of this section...Of the Leukosyroi, Ankon of the Leukosyrians", directly continuing from Amisos)
     ("4.02.11.06", "4.03.03.02"),  # was ("4.02.11.06","4.03.03.05") - Ampsaga-Mündung/Oued el-Kebir -> Winkel des Numidischen Golfes (topostext matches both to "Ampsagas river mouth: Numidicus harbor interior")
+    ("5.06.07.02", "5.10.02.10"),  # was ("5.06.07.02","5.10.02.09") - Apsorros-Mündung/Çoruh -> Phasis* (Pontus Cappadocicus -> Colchis, the real Turkey/Georgia border river - restored now that Sebastopolis-1 is excluded above)
     #
     # New pairs found by the same nearest-endpoint-distance check, each
     # individually confirmed via topostext continuity and/or Modern_location
@@ -1785,6 +1804,18 @@ _BOUNDARY_STITCH_REF_ID_PAIRS = {
     ("7.01.18.07", "7.02.02.04"),  # Ganges-Mündung (Antibole-Mündung) -> Pentapolis (India's own coast handing off toward Indochina; topostext: "In the Gangetic Gulf beyond the Mouth of the Ganges called Antibolei...Pentapolis")
     ("2.11.01.04", "2.09.14.06"),  # Rhenus-Mündung (östliche) -> Batavodurum (the Rhine delta, real Dutch geography)
     #
+    # A twenty-second round (still 2026-07-31), tracing which of the 28
+    # coastline features chain into one another - see README.md's "Closing
+    # the coastline into fillable rings" - resolved two more of the pairs
+    # noted as unconfirmed above:
+    ("4.01.04.07", "4.06.05.02"),  # Grösserer Atlas -> Subos-Mündung (Morocco's own Atlantic coast/Mauretania Tingitana border - "Grösserer Atlas" is `coast`, not `mountain`: the Atlas range reaching the shore, same shape as Athos/Akrokeraunia already confirmed elsewhere this session)
+    ("4.05.15.08", "4.07.05.03"),  # Kap Bazion -> Chersonesos (Red Sea/Egypt coast continuing toward Barbaria; confirmed, not a second world-edge case - the intervening mountain aside's own topostext citation says so directly: "Bazion promontory referred to above: Prionoton mountain")
+    ("2.04.03.01", "2.05.03.04"),  # Anas-Mündung (westliche) -> Balsa (Baetica's own coastal walk and Lusitania's own coastal walk both start from the shared Anas/Guadiana border mouth, walking opposite ways - Modern_location confirms real adjacency, Guadiana-Mündung to Tavira, right next to each other on the Algarve/Andalusia coast; distinct from the up-river "Anas (Biegung)"/"Anas (Grenzpunkt)" boundary citations already excluded elsewhere - this is the river's own real western mouth, correctly `river_mouth`)
+    ("4.03.13.06", "4.04.03.02"),  # Kap Kephalai -> Festung Automala (Libya's own Gulf of Sidra/Syrtis coast, Misurata region continuing toward Cyrenaica - a genuinely sparser stretch of named points, hence the larger gap, not a sign of a false match)
+    ("4.07.11.10", "4.07.11.11"),  # Essina -> Sarapion (Barbaria/Somalia coast; Modern_location confirms real-world adjacency - Wasin and Warsheik sit right next to each other on the Somali coast - despite the larger Ptolemaic-coordinate gap, the same growing-distortion-with-distance-from-the-Mediterranean pattern noted elsewhere this session)
+    ("5.09.10.05", "5.10.02.01"),  # Grenzpunkt (Asiatisches Sarmatien, Iberien, Kolchis) -> Korax-Mündung (no topostext match for either this far into the corpus, but the names align directly - a Kolchis boundary point next to the Korax/Bzyb river, which *is* in Kolchis - and this is the only candidate at all for either endpoint)
+    ("6.08.10.01", "6.21.02.03"),  # Grenzpunkt (Gedrosien, Karmanien) -> Arbis-Mündung (both citations name Karmania explicitly as the shared boundary - "the earlier mentioned limit of the Indian sea" / "extremity towards Karmania the mouth of the River Arabis")
+    #
     # Not applied this round, left for individual follow-up rather than
     # guessed at from distance alone: Anas-Mündung(westliche)/Balsa (2.04.03.01/
     # 2.05.03.04, 0.42°) risks reopening the Durius/Anas introductory-citation
@@ -1799,13 +1830,7 @@ _BOUNDARY_STITCH_REF_ID_PAIRS = {
     # including one toward the Gulf of Suez) both already have an
     # established place in the Levant/Lykia coast from earlier rounds and
     # these longer-distance matches are more likely coincidental proximity
-    # than real hand-offs; Grösserer Atlas/Subos-Mündung (4.01.04.07/
-    # 4.06.05.02, 1.8°) pairs a named *mountain* endpoint with a coastline
-    # trail, worth understanding before connecting; Kap Bazion/Chersonesos
-    # (4.05.15.08/4.07.05.03, 1.0°) sits right in the same Horn-of-Africa
-    # region as this round's confirmed world-edge points (Kap Rhapton) and
-    # needs checking it isn't actually another edge-of-the-known-world case
-    # rather than a real stitch; the remaining handful (Grenzpunkt entries
+    # than real hand-offs; the remaining handful (Grenzpunkt entries
     # at 0.75-2.4°: Hyrkanien/Medien-Saramanne, Gedrosien/Karmanien-Arbis,
     # Indien jenseits des Ganges-Aspitharas) have only thin, one-sided
     # topostext evidence and weren't confirmed either way.

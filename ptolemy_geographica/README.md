@@ -2832,6 +2832,50 @@ Indian-Ocean-enclosure pair (Kap Rhapton <-> Kap der Satyrn/Kattigara)
 specifically, since that closure is the one with actual textual backing
 in Ptolemy's own claims about the shape of the world, unlike the others.
 
+**A twenty-second round**, the same session, traced which of the (by then)
+28 coastline features chain into one another - not just the pairs within
+3° found automatically, but following each trail's own loose end to
+whatever it should plausibly connect to next, the same way a person
+tracing a real coastline on a map would. Confirmed and added five more
+hand-offs, each checked individually (topostext continuity where
+available, Modern_location cross-check otherwise, never distance alone):
+the Anas/Guadiana river mouth where Baetica's and Lusitania's own coastal
+walks both start (opposite directions from the same shared border point -
+the same "Kap Oiarso" shape already confirmed elsewhere); two gaps along
+Libya/Somalia's coast, both confirmed via Modern_location even though the
+Ptolemaic-coordinate gap looked large (Kap Kephalai/Festung Automala,
+Essina/Sarapion - the latter's Modern_locations, Wasin and Warsheik,
+sit right next to each other in reality); and two Caucasus/Persia
+hand-offs whose citations name the same shared boundary explicitly even
+without a topostext match (Kolchis's own Grenzpunkt next to the
+Korax/Kolchis river; Gedrosia/Karmania's Grenzpunkt next to
+Arbis-Mündung, both citations naming Karmania).
+
+Two of the resulting trails are now genuinely complete, confirmed-
+endpoint-to-confirmed-endpoint arcs of the known world's outer edge:
+**Africa**, Hypodromos Aithiopias (Atlantic edge) to Kap Rhapton (Indian
+Ocean edge), 275 points in one piece; and the bulk of **Eurasia**,
+currently Side* (Lykia) to Chesinos-Mündung (Sarmatia's own northern
+edge), 645 points, though Side* isn't itself a confirmed world edge -
+just the current unmerged frontier, since the one remaining candidate
+there (Anemurion, ~1.8°) was left unconfirmed for the same reason noted
+above (Side/Phaselis/Anemurion each already have an established place in
+the Lykia coast). A handful of smaller fragments remain unmerged for lack
+of strong-enough evidence rather than lack of a candidate: Anthedon/Zipfel
+des Arabischen Golfes (Judaea to Sinai, ~2.3°), Iokura/Tigris-Mündung
+(östliche) (~2.3°), Aspabota/Grenzpunkt (Hyrkanien, Medien) (~2.2° - this
+one and Saramanne/Oxos-Mündung, ~0.75° and 2.24° to *each other*, are
+mutually closest and could form their own small closed loop, but neither
+has any topostext or Modern_location backing at all, so left alone), and
+Aspitharas-Mündung/Kap der Satyrn's own far end toward
+Kutiaris-Mündung/Kattigara* (~7.3°, the same widening-gap-near-the-edge-
+of-knowledge pattern as the confirmed Africa hand-offs, but not yet
+individually checked).
+
+Coastline features: 55 -> 20. `db/build_database.py` re-run; see the
+`_BOUNDARY_STITCH_REF_ID_PAIRS` code comments for the full list with
+evidence.
+
 ## GeoPackage export (for QGIS/ArcGIS)
 
 `export_geopackage.py` writes the same categories and constructed lines
