@@ -14,4 +14,3 @@ ptolemy_geographica/*.html
 ptolemy_geographica/*.png
 ptolemy_geographica/*.gpkg
 ptolemy_geographica/ptolemy_geographica_defaux_style.json
-ptolemy_geographica/db/*.db
