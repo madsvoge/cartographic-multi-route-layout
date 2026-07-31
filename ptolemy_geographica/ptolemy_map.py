@@ -881,6 +881,27 @@ _COASTAL_APPENDIX_SECTIONS = {
     ("4.03", "10"),
     ("4.03", "11"),
     ("4.03", "13"),
+    # Found by the user directly in a rendered map: a visible gap in the
+    # North African coast, orange `city` dots sitting where the dark-blue
+    # coastline should run, west of Cyrenaica. Section 4.03.14 is headed
+    # "Grosse Syrte" (the Gulf of Sidra/Great Syrtis) - topostext's own
+    # first citation confirms it explicitly: "Of Syrtis Major: Makomala or
+    # Kaloumakouma village" - but "Syrte"/"Syrtis" isn't one of
+    # _COASTAL_HDR_RE's recognized German sea-words, so the section defaulted
+    # to `city`. The point names confirm it independently: "Ras Bergavad"
+    # (ras = cape), "Hippu Akra" (akra = headland - a second, different
+    # point of this exact name already sits correctly `coast` elsewhere in
+    # book.map 4.03), and "Arae Philaenorum" (the historically-attested
+    # altar marking the Africa/Cyrenaica border, on the Gulf of Sidra shore
+    # itself). Not broadened into _COASTAL_HDR_RE itself: "Syrte" also
+    # appears in 4.03.41's own header ("Grosse Syrte | Kleine Syrte"), a
+    # section of genuinely inland Tripolitanian cities merely labelled with
+    # the region's name, not a coastal walk - broadening the regex would
+    # have wrongly swept that in too. 4.03.15 ("Grosse Syrte (Winkel)"),
+    # checked at the same time, is a single land-boundary tripoint
+    # ("inmost point of the Syrtis by the line running south...to the end
+    # point at") and correctly stays `city`.
+    ("4.03", "14"),
     ("4.04", "04"),
     ("4.06", "05"),
     ("4.06", "06"),
@@ -1811,7 +1832,7 @@ _BOUNDARY_STITCH_REF_ID_PAIRS = {
     ("4.01.04.07", "4.06.05.02"),  # Grösserer Atlas -> Subos-Mündung (Morocco's own Atlantic coast/Mauretania Tingitana border - "Grösserer Atlas" is `coast`, not `mountain`: the Atlas range reaching the shore, same shape as Athos/Akrokeraunia already confirmed elsewhere this session)
     ("4.05.15.08", "4.07.05.03"),  # Kap Bazion -> Chersonesos (Red Sea/Egypt coast continuing toward Barbaria; confirmed, not a second world-edge case - the intervening mountain aside's own topostext citation says so directly: "Bazion promontory referred to above: Prionoton mountain")
     ("2.04.03.01", "2.05.03.04"),  # Anas-Mündung (westliche) -> Balsa (Baetica's own coastal walk and Lusitania's own coastal walk both start from the shared Anas/Guadiana border mouth, walking opposite ways - Modern_location confirms real adjacency, Guadiana-Mündung to Tavira, right next to each other on the Algarve/Andalusia coast; distinct from the up-river "Anas (Biegung)"/"Anas (Grenzpunkt)" boundary citations already excluded elsewhere - this is the river's own real western mouth, correctly `river_mouth`)
-    ("4.03.13.06", "4.04.03.02"),  # Kap Kephalai -> Festung Automala (Libya's own Gulf of Sidra/Syrtis coast, Misurata region continuing toward Cyrenaica - a genuinely sparser stretch of named points, hence the larger gap, not a sign of a false match)
+    ("4.03.14.09", "4.04.03.02"),  # was ("4.03.13.06","4.04.03.02") - Philainu -> Festung Automala (section 4.03.14, "Grosse Syrte"/the Gulf of Sidra, was found and fixed afterward - see _COASTAL_APPENDIX_SECTIONS - which extended this trail nine points further and made Kap Kephalai an interior point, not the end)
     ("4.07.11.10", "4.07.11.11"),  # Essina -> Sarapion (Barbaria/Somalia coast; Modern_location confirms real-world adjacency - Wasin and Warsheik sit right next to each other on the Somali coast - despite the larger Ptolemaic-coordinate gap, the same growing-distortion-with-distance-from-the-Mediterranean pattern noted elsewhere this session)
     ("5.09.10.05", "5.10.02.01"),  # Grenzpunkt (Asiatisches Sarmatien, Iberien, Kolchis) -> Korax-Mündung (no topostext match for either this far into the corpus, but the names align directly - a Kolchis boundary point next to the Korax/Bzyb river, which *is* in Kolchis - and this is the only candidate at all for either endpoint)
     ("6.08.10.01", "6.21.02.03"),  # Grenzpunkt (Gedrosien, Karmanien) -> Arbis-Mündung (both citations name Karmania explicitly as the shared boundary - "the earlier mentioned limit of the Indian sea" / "extremity towards Karmania the mouth of the River Arabis")
