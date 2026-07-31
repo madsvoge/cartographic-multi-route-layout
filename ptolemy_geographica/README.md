@@ -2948,6 +2948,27 @@ already-decided closure. At `--region world`/large-bbox scale this is
 what actually makes the fill read as one coherent landmass rather than a
 landmass with a stray unfilled-looking notch on its western edge.
 
+**A twenty-sixth round** filled the big Scandinavia-to-Sarmatia arc itself,
+after the user asked why mainland Europe/Russia still had no land
+background out to the bbox edge. Unlike the Africa/Kattigara closure,
+this trail's *other* loose end - Side* (Pamphylia, south Anatolia) - has
+no textual world-edge backing at all; it's just this session's current
+unstitched frontier (the long-documented Side/Phaselis/Anemurion
+ambiguity). Closing it the same way as a confirmed edge would have
+misrepresented an unfinished stitch as settled fact, so the user was
+asked directly [`AskUserQuestion`] whether to (a) keep digging for a real
+stitch, (b) close it schematically anyway with a visual caveat, or (c)
+leave it open. They chose (b). `_build_eurasia_edge_polygon()` closes
+*both* Side* and Chesinos-Mündung against the world bbox's northern edge
+(the same edge Chesinos-Mündung already used) - at Side*'s own longitude
+that traverse happens to run up through real land (Anatolia, Ukraine,
+Russia) rather than across open sea the way closing to the west/east edge
+would have. `_build_eurasia_edge_unconfirmed_lines()` draws only Side*'s
+own share of that boundary (its drop to the edge, and the traverse back to
+Chesinos-Mündung's own meridian) as a **dashed** line - visually distinct
+from every solid confirmed-edge line elsewhere, so the one genuinely
+unconfirmed piece of this whole closure doesn't read as equally certain.
+
 ## GeoPackage export (for QGIS/ArcGIS)
 
 `export_geopackage.py` writes the same categories and constructed lines

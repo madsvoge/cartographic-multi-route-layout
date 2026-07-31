@@ -67,10 +67,21 @@ _KATTIGARA = "7.03.03.07"  # Asia's own far-eastern world edge, the "Land of the
 # of the shore at the latitude of Thule, i.e., the end of the known sea
 # 62deg00'.63deg00'..." - the same kind of explicit "last known point before
 # the Unknown Land" phrasing that identifies Kap Rhapton/Hypodromos
-# Aithiopias in the south. This trail's other end (Side*, in Anatolia) is
-# NOT a confirmed world edge and is deliberately left open - only this
-# northern end gets extended, straight up to the world bbox's own edge.
+# Aithiopias in the south.
 _CHESINOS_MUENDUNG = "3.05.02.05"
+
+# This same trail's *other* end, Side* (Pamphylia, south Anatolia) is NOT a
+# confirmed world edge - it's just this session's current unstitched
+# frontier (see README's "Filling Ptolemy's own coastline" section, the
+# Side/Phaselis/Anemurion ambiguity). Closing it to the box the same way as
+# a real world edge would misrepresent an unfinished stitch as settled
+# fact - but the user explicitly asked for it anyway, for a visually
+# complete fill, with the unconfirmed part drawn differently (dashed) so
+# it doesn't read as equally certain. Closes to the *northern* edge, same
+# as Chesinos-Mündung: at Side*'s own longitude that's real land the whole
+# way up (Anatolia -> Ukraine -> Russia), not a line cutting across sea the
+# way closing to the west/east edge would.
+_SIDE_STAR = "5.05.02.10"
 
 
 def _in_bbox(lon: float, lat: float, bbox: tuple[float, float, float, float]) -> bool:
@@ -176,6 +187,57 @@ def _build_north_edge_extension(refs) -> list[tuple[float, float]] | None:
     return [(chesinos.lon_modern, chesinos.lat_modern), (chesinos.lon_modern, lat_max)]
 
 
+def _eurasia_trail(refs):
+    """The big Scandinavia-to-Sarmatia trail, oriented Side* -> Chesinos-
+    Mündung, or None if it can't be found by both endpoints (e.g. a future
+    round finally stitches it into something bigger, or splits it)."""
+    coastlines = get_coastlines(refs)
+    trail, _ = _find_trail_by_endpoint(coastlines, _CHESINOS_MUENDUNG)
+    if trail is None or not trail:
+        return None
+    if trail[0].ref_id != _SIDE_STAR and trail[-1].ref_id != _SIDE_STAR:
+        return None
+    if trail[0].ref_id != _SIDE_STAR:
+        trail = list(reversed(trail))
+    return trail
+
+
+def _build_eurasia_edge_polygon(refs) -> list[tuple[float, float]] | None:
+    """Fillable shape for the whole Scandinavia-to-Sarmatia arc: the real
+    trail (Side* -> Chesinos-Mündung) plus both ends closed against the
+    world bbox's *northern* edge. Unlike `_build_world_edge_polygon()`,
+    only one end (Chesinos-Mündung) is a confirmed world edge - the other
+    (Side*) is a user-approved pragmatic closure of an unfinished stitch,
+    not a textual claim. See the comment above _SIDE_STAR."""
+    trail = _eurasia_trail(refs)
+    if trail is None:
+        return None
+    lat_max = _WORLD_EDGE_BBOX[3]
+    side, chesinos = trail[0], trail[-1]
+    top_under_side = (side.lon_modern, lat_max)
+    top_under_chesinos = (chesinos.lon_modern, lat_max)
+    coords = [(r.lon_modern, r.lat_modern) for r in trail]
+    coords += [top_under_chesinos, top_under_side]
+    return coords
+
+
+def _build_eurasia_edge_unconfirmed_lines(refs) -> list[list[tuple[float, float]]]:
+    """The part of `_build_eurasia_edge_polygon()`'s boundary that has no
+    textual backing at all: Side*'s own drop to the northern edge, and the
+    traverse along that edge back to the Chesinos-Mündung extension. Kept
+    visually distinct (dashed) from the confirmed Chesinos-Mündung
+    extension - both close the same way, but only one of them is Ptolemy's
+    own claimed world edge."""
+    trail = _eurasia_trail(refs)
+    if trail is None:
+        return []
+    lat_max = _WORLD_EDGE_BBOX[3]
+    side, chesinos = trail[0], trail[-1]
+    top_under_side = (side.lon_modern, lat_max)
+    top_under_chesinos = (chesinos.lon_modern, lat_max)
+    return [[(side.lon_modern, side.lat_modern), top_under_side, top_under_chesinos]]
+
+
 def render(
     refs,
     bbox,
@@ -230,6 +292,11 @@ def render(
             ax.add_patch(Polygon(world_edge_coords, closed=True, facecolor=LAND, edgecolor=BORDER, linewidth=0.6, zorder=2))
             n_filled += 1
 
+        eurasia_edge_coords = _build_eurasia_edge_polygon(refs)
+        if eurasia_edge_coords is not None:
+            ax.add_patch(Polygon(eurasia_edge_coords, closed=True, facecolor=LAND, edgecolor=BORDER, linewidth=0.6, zorder=2))
+            n_filled += 1
+
     coastline_segments_drawn = 0
     north_edge_line = _build_north_edge_extension(refs) if fill_ptolemy_land else None
     if north_edge_line is not None:
@@ -240,6 +307,13 @@ def render(
         for synthetic_line in _build_world_edge_synthetic_lines(refs):
             xs, ys = zip(*synthetic_line)
             ax.plot(xs, ys, color=CATEGORIES["coast"]["color"], linewidth=2.2, alpha=0.9, zorder=4)
+
+        # Side*'s own closure has no textual backing (see _SIDE_STAR) -
+        # dashed, so it doesn't read as equally certain as the solid lines
+        # above it.
+        for unconfirmed_line in _build_eurasia_edge_unconfirmed_lines(refs):
+            xs, ys = zip(*unconfirmed_line)
+            ax.plot(xs, ys, color=CATEGORIES["coast"]["color"], linewidth=2.2, alpha=0.9, zorder=4, linestyle="--")
     for trail_idx, trail in enumerate(coastlines):
         line_in_view = [(r.lon_modern, r.lat_modern, i, r) for i, r in enumerate(trail) if _in_bbox(r.lon_modern, r.lat_modern, bbox)]
         if len(line_in_view) < 2:
