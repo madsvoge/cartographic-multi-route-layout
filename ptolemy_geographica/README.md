@@ -2729,6 +2729,109 @@ regions would need stitching work next.
 python3 static_map.py --region mediterranean --fill-ptolemy-land --output med_filled.png
 ```
 
+**A twenty-first round** went ahead with the stitching work above,
+prompted by the user asking what it would actually take. Two separate
+findings, kept apart deliberately:
+
+**A) Missing stitches - real gaps between trails describing the same
+continuous real coastline.** Computed the nearest-endpoint distance
+between every one of the 44 open trails' own two loose ends and every
+other trail's - 77 of 88 endpoints had a candidate within 3 degrees, the
+same shape as the 9 hand-offs already in `_BOUNDARY_STITCH_REF_ID_PAIRS`.
+Checking those 9 *first*, as a sanity check before trusting the method on
+new candidates, found a real bug: **6 of the 9 no longer connected
+anything** - later rounds this session added more coastal points to one
+side of a hand-off, so the ref_id these pairs named was no longer that
+trail's actual endpoint (now an interior point, with the trail continuing
+past it silently). Five had an obvious, still-correct replacement
+endpoint and are fixed in place; the sixth (Apsorros-Mündung/Çoruh ->
+"Phasis") could not be, because the trail's *new* end is a point called
+"Sebastopolis 1" whose own Modern_location ("Sulusaray") is a Cappadocian
+inland town nowhere near this Black Sea coast - the real coastal
+Sebastopolis (Dioskurias, Sukhumi) already sits correctly elsewhere in
+the catalogue - the same reused-name-different-place shape as the
+Deva/Alaunus/Sala rivers, just not yet investigated for a coastal point.
+Left disconnected rather than guessed at.
+
+23 new pairs were added, each individually confirmed via topostext
+continuity and/or Modern_location (never applied on distance alone) -
+Kaunos/Kalinda, Phaselis/Olbia, the Rhine delta, the Persian Gulf's own
+head, Ganges-Mündung/Pentapolis continuing India's coast into Indochina,
+among others (full list, with evidence, in
+`_BOUNDARY_STITCH_REF_ID_PAIRS`'s own comments). A handful of candidates
+were found and deliberately *not* applied, each for a documented reason:
+Anas-Mündung(westliche)/Balsa risks reopening the Durius/Anas
+introductory-citation shape fixed earlier this session; the Persian
+Gulf's head had a genuine three-way ambiguity (Teredon, Iokura, and
+Tigris-Mündung(östliche) all landing within ~1.3° of the same point),
+resolved in the closest/best-evidenced candidate's favour, the other two
+left unexplained rather than force-connected; Side/Phaselis/Anemurion and
+Anthedon each had multiple candidates at 1.6-2.3° while already having an
+established place in the coast from earlier rounds - more likely
+coincidental proximity than a real hand-off; a mountain-named endpoint
+(Grösserer Atlas) and a handful of thin-evidence boundary markers were
+left for individual follow-up.
+
+Rebuilding after the batch (28 coastline features now, down from 55 -
+most of the merging is exactly the consolidation intended) surfaced one
+new self-intersection, the same "extending a coastline exposes an
+existing distortion that had nowhere to cross before" pattern as the
+Durius/Balsa case in round 15: the new Elana/Elanitischer Golf -> Onne
+stitch (Gulf of Aqaba -> Arabia) revealed that "Pharan", sitting between
+the gulf's own bend and its inner corner, is topostext's own "Pharan
+*kome*" (kome = village) - Modern_location "Feiran" confirms it's the
+interior Sinai oasis, not a point on the gulf shore at all. Added to
+`_NONCOASTAL_POINT_OVERRIDES`. One further self-intersection remained
+after that fix, in the same small area (Ras Muhammad -> the gulf's bend,
+crossing the corner -> Onne edge) - checked and left alone: the three
+remaining points are correctly categorized and correctly sequenced (this
+really is the real narrative order around the gulf), the crossing is
+simply what Ptolemy's own claimed coordinates for a narrow gulf produce
+when connected with straight lines - the same "genuine distortion, not a
+bug" class as Kaystros/Thermodon/the Po.
+
+**B) Genuine edges of the known world - the 11 endpoints with no nearby
+candidate at all.** The user asked whether the ~1400s printed editions of
+the Geography just drew a schematic closing edge to make coloring
+possible. Checked: yes and no. The Ulm 1482/1486 editions' world map does
+show a closed Indian Ocean with a "land bridge or unknown Southern
+Continent connecting Asia and Africa" - but that specific closure follows
+something Ptolemy's own text explicitly asserts (he believed and stated
+the Indian Ocean was landlocked), not an invented convenience; other
+edges of the map (the Atlantic coast of West Africa, the far northern/
+eastern edges) were either left at the page's own decorative frame
+(wind-head borders, unrelated to the actual coastline data) or - in later
+revisions like Nicolaus Germanus' - extended with genuinely new,
+non-Ptolemaic knowledge (the first printed map of Scandinavia), which
+this project should not do, since it would inject information Ptolemy
+never had.
+
+This catalogue's own 11 unmatched endpoints back this up directly, not
+just by analogy: **Kap Rhapton** (Barbaria, ~12° to its nearest other
+endpoint) is East Africa's coast, topostext's own words "this limit point
+along the remaining part of the Ethiopian interior to the Rhaptum
+promontory" - the exact spot classical scholarship already identifies as
+where Greco-Roman knowledge of Africa's east coast stopped, right before
+the hypothesized land bridge to Asia. **Hypodromos Aithiopias**
+(Hesperischer Golf, ~22°) is the equivalent on Africa's Atlantic side.
+**Kap der Satyrn / Kattigara** (Golf der Sinen, ~7-9°) is the other
+famous one - the far eastern edge of Ptolemy's Asia, at the "Land of the
+Sinai" (China). The rest (a Kolchis/Sarmatia/Iberia tripoint, two
+Cyrenaica points, a Sarmatian river mouth) are less individually famous
+but the same shape: a point whose own citation uses explicit
+limit/boundary language, with nothing else in the catalogue anywhere
+near it.
+
+No synthetic bounding box was built this round - the edge of Ptolemy's
+own known world turned out to already be identifiable directly from the
+data (a point with no plausible neighbour, confirmed by its own "limit
+point" phrasing), not something that needs inventing. Two honest options
+remain, not yet decided: leave these 11 open and unfilled (the most
+historically honest reading - "his knowledge ends here"), or draw the
+Indian-Ocean-enclosure pair (Kap Rhapton <-> Kap der Satyrn/Kattigara)
+specifically, since that closure is the one with actual textual backing
+in Ptolemy's own claims about the shape of the world, unlike the others.
+
 ## GeoPackage export (for QGIS/ArcGIS)
 
 `export_geopackage.py` writes the same categories and constructed lines
