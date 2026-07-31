@@ -121,6 +121,46 @@ def _build_world_edge_polygon(refs) -> list[tuple[float, float]] | None:
     return coords
 
 
+def _build_world_edge_synthetic_lines(refs) -> list[list[tuple[float, float]]]:
+    """The parts of `_build_world_edge_polygon()`'s boundary that aren't a
+    real catalogued trail: the Rhapton-Kutiaris land bridge, and the drop
+    down to/along/back up from the world bbox's southern edge. Without
+    this, only the polygon's own thin fill-edge marks these stretches -
+    visibly different from the thick coastline style used everywhere a
+    real trail exists, which reads as an unintended gap rather than a
+    deliberate schematic closure. Drawn in the same coastline style so the
+    whole boundary reads as one continuous line; still schematic, not a
+    claim that Ptolemy described this exact path."""
+    coastlines = get_coastlines(refs)
+    africa, _ = _find_trail_by_endpoint(coastlines, _KAP_RHAPTON)
+    kattigara_frag, _ = _find_trail_by_endpoint(coastlines, _KUTIARIS_MUENDUNG)
+    if africa is None or kattigara_frag is None:
+        return []
+    if africa[0].ref_id != _HYPODROMOS_AITHIOPIAS:
+        africa = list(reversed(africa))
+    if kattigara_frag[0].ref_id != _KUTIARIS_MUENDUNG:
+        kattigara_frag = list(reversed(kattigara_frag))
+    if kattigara_frag[-1].ref_id != _KATTIGARA:
+        return []
+
+    lon_min, lat_min, lon_max, lat_max = _WORLD_EDGE_BBOX
+    hypodromos = africa[0]
+    rhapton = africa[-1]
+    kutiaris = kattigara_frag[0]
+    kattigara = kattigara_frag[-1]
+    south_under_hypodromos = (hypodromos.lon_modern, lat_min)
+    south_under_kattigara = (kattigara.lon_modern, lat_min)
+
+    bridge = [(rhapton.lon_modern, rhapton.lat_modern), (kutiaris.lon_modern, kutiaris.lat_modern)]
+    southern_closure = [
+        (kattigara.lon_modern, kattigara.lat_modern),
+        south_under_kattigara,
+        south_under_hypodromos,
+        (hypodromos.lon_modern, hypodromos.lat_modern),
+    ]
+    return [bridge, southern_closure]
+
+
 def _build_north_edge_extension(refs) -> list[tuple[float, float]] | None:
     """A short schematic line from Chesinos-Mündung straight up to the
     world bounding box's northern edge - see the comment above
@@ -195,6 +235,11 @@ def render(
     if north_edge_line is not None:
         xs, ys = zip(*north_edge_line)
         ax.plot(xs, ys, color=CATEGORIES["coast"]["color"], linewidth=2.2, alpha=0.9, zorder=4)
+
+    if fill_ptolemy_land:
+        for synthetic_line in _build_world_edge_synthetic_lines(refs):
+            xs, ys = zip(*synthetic_line)
+            ax.plot(xs, ys, color=CATEGORIES["coast"]["color"], linewidth=2.2, alpha=0.9, zorder=4)
     for trail_idx, trail in enumerate(coastlines):
         line_in_view = [(r.lon_modern, r.lat_modern, i, r) for i, r in enumerate(trail) if _in_bbox(r.lon_modern, r.lat_modern, bbox)]
         if len(line_in_view) < 2:

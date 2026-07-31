@@ -2927,6 +2927,27 @@ isn't a confirmed world edge and stays open, same reasoning as the
 Eurasian loose end in the twenty-third round. Drawn only under
 `--fill-ptolemy-land`, alongside the southern closure.
 
+**A twenty-fifth round** fixed a visual inconsistency the user spotted by
+looking at a zoomed-in render of the west African coast: `_build_world_
+edge_polygon()`'s own closing boundary (the Rhapton-Kutiaris land bridge,
+and the drop down to/along/back up from the world bbox's southern edge)
+was only ever drawn as the filled polygon's own thin `edgecolor` line -
+visually a completely different, much fainter style than the thick navy
+line used for every real catalogued coastline trail right next to it. Below
+Hypodromos Aithiopias specifically, this read as the coastline just
+stopping dead with a flat grey wall instead of continuing to the map edge
+the way the newly-added Chesinos-Mündung extension does. `_build_world_
+edge_synthetic_lines()` now returns just the non-real portions of that
+boundary (the bridge; the south-edge drop/traverse/rise) as their own
+line(s), drawn in the same coastline style as everything else, so the
+whole schematic closure reads as one continuous line rather than an
+unexplained gap. Still schematic - the comment on `_WORLD_EDGE_BBOX`
+and the function's own docstring are explicit that this isn't a claim
+Ptolemy described this exact path, just a consistent way to draw the
+already-decided closure. At `--region world`/large-bbox scale this is
+what actually makes the fill read as one coherent landmass rather than a
+landmass with a stray unfilled-looking notch on its western edge.
+
 ## GeoPackage export (for QGIS/ArcGIS)
 
 `export_geopackage.py` writes the same categories and constructed lines
