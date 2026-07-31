@@ -1918,6 +1918,30 @@ _NO_CLOSE_LOOP_TRAILS = {
     ("3.11.06.09", "3.13.17.10"),  # Paktye -> Spercheios-Mündung: the merged Thrace+Macedonia+Thessaly coast, not an island
 }
 
+# The inverse problem: a trail whose two ends really are the same body of
+# water's shore closing back on itself, but far enough apart (in raw
+# distance and/or path-length ratio) that the ordinary auto-close check
+# below wouldn't catch it, and neither end has its own topostext/Modern_
+# location evidence pinning exactly how the missing stretch runs (see the
+# "not applied" fragments list in README.md's "Filling Ptolemy's own
+# coastline" section). Closed anyway on the user's own explicit request,
+# same pragmatic-closure standard as the Side*/world-bbox corner (see
+# static_map.py's _SIDE_STAR) - a straight line standing in for an
+# undescribed stretch of real shore, not a claim Ptolemy drew this exact
+# path.
+_FORCE_CLOSE_LOOP_TRAILS = {
+    # Aspabota* -> Grenzpunkt (Hyrkanien, Medien): the Caspian/Hyrcanian
+    # Sea's own coastal walk (book 5 Asia AS02/AS03/AS05, book 6 AS07),
+    # already tracing the north and west shore in order - missing only the
+    # east shore between the Jaxartes-mouth area and the Hyrcania/Media
+    # border, which this catalogue doesn't separately describe. Ptolemy's
+    # own text treats the Caspian as a landlocked sea (unlike the ocean-
+    # connected coasts elsewhere in this catalogue), so a closed loop here
+    # is the right shape even without a specific citation for this one
+    # stretch.
+    ("6.14.02.08", "6.02.02.12"),
+}
+
 # Separate trails within the same book.map region are stitched together if
 # their nearest endpoints are closer than this - a run breaks whenever a
 # non-coastal point interrupts an otherwise-continuous coast (a city point
@@ -2147,7 +2171,10 @@ def build_coastlines(refs: list[Reference]) -> list[list[Reference]]:
     for trail_refs in polylines:
         first, last = trail_refs[0], trail_refs[-1]
         no_close = (first.ref_id, last.ref_id) in _NO_CLOSE_LOOP_TRAILS or (last.ref_id, first.ref_id) in _NO_CLOSE_LOOP_TRAILS
-        if len(trail_refs) >= 4 and first is not last and not no_close:
+        force_close = (first.ref_id, last.ref_id) in _FORCE_CLOSE_LOOP_TRAILS or (last.ref_id, first.ref_id) in _FORCE_CLOSE_LOOP_TRAILS
+        if len(trail_refs) >= 4 and first is not last and force_close:
+            trail_refs = trail_refs + [first]
+        elif len(trail_refs) >= 4 and first is not last and not no_close:
             closing_gap = _ref_dist(first, last)
             path_length = sum(_ref_dist(trail_refs[i], trail_refs[i + 1]) for i in range(len(trail_refs) - 1))
             if closing_gap <= _CLOSE_LOOP_MAX_GAP_DEG and closing_gap <= _CLOSE_LOOP_MAX_GAP_RATIO * path_length:

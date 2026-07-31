@@ -43,6 +43,16 @@ TEXT_PRIMARY = "#0b0b0b"
 TEXT_SECONDARY = "#52514e"
 MOUNTAIN_LINE_COLOR = "#6b4226"
 
+# Closed coastline loops that are a landlocked *sea*, not land - the plain
+# "any closed loop is land" fill rule below would otherwise paint these
+# beige like an island. Filled with OCEAN instead, at a higher zorder than
+# any land polygon underneath, so it reads as a hole in whatever land fill
+# happens to reach this far (e.g. the Eurasia arc's own interior, which the
+# Caspian sits well within).
+_WATER_BODY_CLOSED_LOOP_REF_IDS = {
+    "6.14.02.08",  # Aspabota* - start of the Caspian/Hyrcanian Sea's own closed loop (see _FORCE_CLOSE_LOOP_TRAILS in ptolemy_map.py)
+}
+
 # --fill-ptolemy-land's world-edge closure: the same bounding box
 # --region world already renders with. Two of this catalogue's confirmed
 # world-edge points (see README.md's "Filling Ptolemy's own coastline")
@@ -203,34 +213,48 @@ def _eurasia_trail(refs):
 
 
 def _eurasia_closure_corner_points(refs):
-    """The three synthetic vertices that close the Eurasia polygon beyond
+    """The synthetic vertices that close the Eurasia polygon beyond
     Chesinos-Mündung's own confirmed rise to the northern edge: across the
-    top to the world bbox's own north-east corner, down that edge to
-    Side*'s own latitude, then back to Side* itself - "as if there were a
-    coastal point in the upper right corner" (the user's own framing),
-    rather than a short direct hop between the two loose ends' meridians.
-    Returns (top_under_chesinos, ne_corner, east_at_side_lat) or None."""
+    top to the world bbox's own north-east corner - "as if there were a
+    coastal point in the upper right corner" (the user's own framing) -
+    then down that same edge until it reaches a *real* drawn coastline
+    again (Kattigara*, the far-eastern end of `_build_world_edge_
+    polygon()`'s own trail) rather than cutting back west across the
+    middle of the map at Side*'s own latitude. Returns (top_under_chesinos,
+    ne_corner, east_at_kattigara_lat, kattigara_point) or None."""
     trail = _eurasia_trail(refs)
     if trail is None:
         return None
+    coastlines = get_coastlines(refs)
+    kattigara_frag, _ = _find_trail_by_endpoint(coastlines, _KATTIGARA)
+    if kattigara_frag is None:
+        return None
+    kattigara = kattigara_frag[0] if kattigara_frag[0].ref_id == _KATTIGARA else kattigara_frag[-1]
     lon_min, lat_min, lon_max, lat_max = _WORLD_EDGE_BBOX
-    side, chesinos = trail[0], trail[-1]
+    chesinos = trail[-1]
     top_under_chesinos = (chesinos.lon_modern, lat_max)
     ne_corner = (lon_max, lat_max)
-    east_at_side_lat = (lon_max, side.lat_modern)
-    return top_under_chesinos, ne_corner, east_at_side_lat
+    east_at_kattigara_lat = (lon_max, kattigara.lat_modern)
+    kattigara_point = (kattigara.lon_modern, kattigara.lat_modern)
+    return top_under_chesinos, ne_corner, east_at_kattigara_lat, kattigara_point
 
 
 def _build_eurasia_edge_polygon(refs) -> list[tuple[float, float]] | None:
     """Fillable shape for the whole Scandinavia-to-Sarmatia arc: the real
     trail (Side* -> Chesinos-Mündung), the confirmed rise from Chesinos-
     Mündung to the world bbox's northern edge, then a schematic hug of the
-    bbox's own north-east corner and east edge back down to Side*'s own
-    latitude, closing back to Side* itself. Unlike `_build_world_edge_
-    polygon()`, only the Chesinos-Mündung end is a confirmed world edge -
-    the corner-hugging closure back to Side* is a user-approved pragmatic
-    fill of an unfinished stitch, not a textual claim. See the comment
-    above _SIDE_STAR."""
+    bbox's own north-east corner and east edge down to Kattigara* - the
+    same real point `_build_world_edge_polygon()` already uses, so this
+    shape's boundary meets an actual drawn coastline instead of just
+    another synthetic edge. The final leg, from Kattigara* back to Side*,
+    is *not* drawn as its own line (see `_build_eurasia_edge_unconfirmed_
+    lines()`) - Matplotlib still closes the polygon there for fill
+    purposes, but that stretch runs south of essentially every point this
+    catalogue places, so it reads as open ocean rather than a line cutting
+    across mapped territory. Unlike `_build_world_edge_polygon()`, only the
+    Chesinos-Mündung end is a confirmed world edge - the corner-hugging
+    closure is a user-approved pragmatic fill of an unfinished stitch, not
+    a textual claim. See the comment above _SIDE_STAR."""
     trail = _eurasia_trail(refs)
     corner_points = _eurasia_closure_corner_points(refs)
     if trail is None or corner_points is None:
@@ -243,16 +267,16 @@ def _build_eurasia_edge_polygon(refs) -> list[tuple[float, float]] | None:
 def _build_eurasia_edge_unconfirmed_lines(refs) -> list[list[tuple[float, float]]]:
     """The part of `_build_eurasia_edge_polygon()`'s boundary that has no
     textual backing at all: the hug of the bbox's own north-east corner and
-    east edge, from Chesinos-Mündung's confirmed extension back down to
-    Side* itself. Kept visually distinct (dashed) from the confirmed
-    Chesinos-Mündung extension - both close the same shape, but only one
-    of them is Ptolemy's own claimed world edge."""
+    east edge, from Chesinos-Mündung's confirmed extension down to
+    Kattigara* - where it meets a real, already-drawn coastline and stops.
+    Kept visually distinct (dashed) from the confirmed Chesinos-Mündung
+    extension - both close the same shape, but only one of them is
+    Ptolemy's own claimed world edge."""
     trail = _eurasia_trail(refs)
     corner_points = _eurasia_closure_corner_points(refs)
     if trail is None or corner_points is None:
         return []
-    side = trail[0]
-    return [[*corner_points, (side.lon_modern, side.lat_modern)]]
+    return [list(corner_points)]
 
 
 def render(
@@ -301,7 +325,22 @@ def render(
             if not trail or not (trail[0].feature_closes_loop or trail[0].island_feature_closes_loop):
                 continue
             coords = [(r.lon_modern, r.lat_modern) for r in trail]
-            ax.add_patch(Polygon(coords, closed=True, facecolor=LAND, edgecolor=BORDER, linewidth=0.6, zorder=2))
+            is_water_body = trail[0].ref_id in _WATER_BODY_CLOSED_LOOP_REF_IDS
+            # A landlocked sea's own closed loop still needs painting
+            # *after* any land polygon it happens to sit inside of (the
+            # Eurasia arc's own fill, drawn below) - OCEAN at a higher
+            # zorder punches a hole through that land fill instead of
+            # being silently painted over by it.
+            ax.add_patch(
+                Polygon(
+                    coords,
+                    closed=True,
+                    facecolor=OCEAN if is_water_body else LAND,
+                    edgecolor=BORDER,
+                    linewidth=0.6,
+                    zorder=3 if is_water_body else 2,
+                )
+            )
             n_filled += 1
 
         world_edge_coords = _build_world_edge_polygon(refs)

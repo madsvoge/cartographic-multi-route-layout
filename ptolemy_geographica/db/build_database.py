@@ -116,6 +116,7 @@ _PAIR_NOTE_SOURCES = [
     ("_RIVER_LINE_NO_MERGE_REF_ID_PAIRS", "river", "no_merge"),
     ("_BOUNDARY_STITCH_REF_ID_PAIRS", "coastline", "force_stitch"),
     ("_NO_CLOSE_LOOP_TRAILS", "coastline", "no_close_loop"),
+    ("_FORCE_CLOSE_LOOP_TRAILS", "coastline", "force_close_loop"),
 ]
 
 

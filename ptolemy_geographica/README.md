@@ -2980,6 +2980,40 @@ three synthetic vertices; `_build_eurasia_edge_polygon()` and `_build_
 eurasia_edge_unconfirmed_lines()` both consume them, so the fillable
 shape and its dashed outline stay in sync.
 
+**A twenty-seventh round** fixed two problems the user found by looking
+closely at the rendered result. First: that "back west to Side*" leg
+turned out to be exactly what it sounds like - a dashed line cutting
+straight across the entire visible map at Side*'s latitude (~37°N),
+slicing through Anatolia, the Middle East, Persia and India. The user
+caught it immediately ("dashed line is running through the middle!") and
+asked for the east edge to keep going south instead, until it reaches the
+*drawn* coastline rather than looping back through the middle.
+`_eurasia_closure_corner_points()` now continues down the world bbox's
+east edge to Kattigara*'s own latitude and stops there - the same real
+point `_build_world_edge_polygon()` already uses, so the dashed line now
+visibly ends where it meets solid, real coastline. The polygon still
+closes back to Side* for fill purposes (Matplotlib requires a closed
+ring), but that stretch is no longer drawn as its own line - and since it
+runs south of essentially every point this catalogue places, only the
+Polygon patch's own faint edgecolor marks it, not a bold dashed stripe.
+
+Second: the user separately flagged that the Caspian/Hyrcanian Sea's own
+coastline - Aspabota* around to Grenzpunkt (Hyrkanien, Medien), one of
+the smaller previously-undocumented open fragments - needed to be closed
+too, since it's a landlocked sea in Ptolemy's own cosmology, not part of
+the connected ocean. Its two ends sit about 8.7° apart, past both
+`_CLOSE_LOOP_MAX_GAP_DEG` and `_CLOSE_LOOP_MAX_GAP_RATIO`, and neither
+end has topostext/Modern_location evidence pinning the missing eastern
+stretch - which is exactly why it was left alone in earlier rounds. A new
+`_FORCE_CLOSE_LOOP_TRAILS` set in `ptolemy_map.py` (the loop-closing
+counterpart to the existing `_NO_CLOSE_LOOP_TRAILS`) closes it anyway, on
+the same pragmatic-closure standard as the Side* corner hug. Once closed,
+though, the ordinary "any closed loop is land" fill rule would have
+painted the Caspian beige like an island - `_WATER_BODY_CLOSED_LOOP_
+REF_IDS` in `static_map.py` special-cases it to fill with OCEAN instead,
+at a higher zorder than the land polygon it sits inside of, so it reads
+as a hole in the surrounding fill rather than being silently painted over.
+
 ## GeoPackage export (for QGIS/ArcGIS)
 
 `export_geopackage.py` writes the same categories and constructed lines
