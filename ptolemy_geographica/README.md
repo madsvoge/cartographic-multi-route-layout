@@ -3014,6 +3014,43 @@ REF_IDS` in `static_map.py` special-cases it to fill with OCEAN instead,
 at a higher zorder than the land polygon it sits inside of, so it reads
 as a hole in the surrounding fill rather than being silently painted over.
 
+**A twenty-eighth round** fixed the twenty-seventh round's own Kattigara*
+closure, which the user immediately caught had two problems on a closer
+look. First, "went too far south": Kattigara* sits at roughly -8.5°, but
+this catalogue's own Persia/India coastal walk (book 5 Asia AS02 through
+book 7 Asia) already reaches much further toward the world bbox's east
+edge on its own, at the far more moderate latitude of its own named
+boundary marker, "Grenzpunkt (Indien jenseits des Ganges, Land der
+Sinen)" (17.3°N, matches `_BOUNDARY_NAME_RE`) - the frontier facing "the
+Land of the Sinae" (China), the same kind of explicit edge-of-the-known-
+world phrasing as Kap Rhapton/Chesinos-Mündung. Second, and more
+important: Matplotlib's own implicit closing edge (Kattigara* straight
+back to Side*) doesn't just sit there unseen - it changes which side of
+itself counts as the polygon's interior. That diagonal cut across the
+Levant, so the real, already-drawn Levant coast ended up *outside* the
+fill - a visible hole over genuinely mapped land, exactly what the user
+predicted before even seeing the render ("I expect there is a hole
+there").
+
+The real fix isn't just picking a better single closing point - it's not
+leaving an implicit closing edge to guess at all. Three previously-
+identified-but-unconfirmed short hand-offs (from the "not applied" list
+in this same section) turn out to chain the rest of the way for free:
+Side* -> [~1.8°] -> Anemurion -> *real* Cilicia/Levant coast -> Anthedon
+-> [~2.3°] -> Zipfel des Arabischen Golfes -> *real* Arabian coast ->
+Iokura -> [~2.3°] -> Tigris-Mündung (östliche) -> *real* Persia/India
+coast (already in use) -> Grenzpunkt. `_levant_arabia_persia_chain()`
+threads these three real trails and three short bridges together;
+`_build_eurasia_edge_polygon()` and `_build_eurasia_edge_unconfirmed_
+lines()` both consume it, so the polygon's boundary is now explicit and
+hugs real coastline almost the entire way around, with four short dashed
+hops (the corner hug plus the three hand-offs) standing in for what's
+still genuinely unstitched - instead of one long, unconfirmed diagonal
+silently deciding what counts as "inside." None of these three hand-offs
+are claimed as a settled stitch - the same evidence gaps that left them
+unconfirmed in earlier rounds still apply - only now they're used
+honestly, as a visibly pragmatic closure rather than an invisible one.
+
 ## GeoPackage export (for QGIS/ArcGIS)
 
 `export_geopackage.py` writes the same categories and constructed lines

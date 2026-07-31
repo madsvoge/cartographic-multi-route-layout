@@ -83,15 +83,35 @@ _CHESINOS_MUENDUNG = "3.05.02.05"
 # This same trail's *other* end, Side* (Pamphylia, south Anatolia) is NOT a
 # confirmed world edge - it's just this session's current unstitched
 # frontier (see README's "Filling Ptolemy's own coastline" section, the
-# Side/Phaselis/Anemurion ambiguity). Closing it to the box the same way as
-# a real world edge would misrepresent an unfinished stitch as settled
-# fact - but the user explicitly asked for it anyway, for a visually
-# complete fill, with the unconfirmed part drawn differently (dashed) so
-# it doesn't read as equally certain. Closes to the *northern* edge, same
-# as Chesinos-Mündung: at Side*'s own longitude that's real land the whole
-# way up (Anatolia -> Ukraine -> Russia), not a line cutting across sea the
-# way closing to the west/east edge would.
+# Side/Phaselis/Anemurion ambiguity).
 _SIDE_STAR = "5.05.02.10"
+
+# Rather than closing Side* straight to the world bbox (which either cuts
+# across real sea or, worse, leaves an unfilled gap over real mapped land -
+# see the README's twenty-eighth round), it turns out this catalogue
+# already has *almost* the entire rest of the way there as real, drawn
+# coastline - just broken into the same short, previously-identified-but-
+# unconfirmed gaps documented in the "not applied" list in README.md's
+# "Filling Ptolemy's own coastline" section. Chained together: Side* ->
+# [~1.8 deg] -> Anemurion -> [real, Cilicia/Levant coast] -> Anthedon ->
+# [~2.3 deg] -> Zipfel des Arabischen Golfes -> [real, Arabian coast] ->
+# Iokura -> [~2.3 deg] -> Tigris-Mündung (östliche) -> [real, Persia/India
+# coast, already used below] -> Grenzpunkt (Indien jenseits des Ganges,
+# Land der Sinen) - Asia's own named boundary marker facing "the Land of
+# the Sinae" (China), the far end of the world-bbox corner hug. Every one
+# of these three short hand-offs was previously left unconfirmed for lack
+# of topostext/Modern_location evidence pinning the exact path - still
+# true, so each is drawn dashed like the corner hug itself, not claimed as
+# a settled stitch. What's different from those earlier rounds is *why*
+# they're used here: not as a claim they're correct, but so the closure's
+# boundary hugs the real coastline (short unconfirmed gaps) instead of
+# cutting a single long unconfirmed diagonal straight across all of it.
+_ANEMURION = "5.08.03.02"
+_ANTHEDON = "5.16.02.11"
+_ZIPFEL_ARABISCHER_GOLF = "5.17.01.05"
+_IOKURA = "5.19.04.04"
+_TIGRIS_MUENDUNG_OESTLICHE = "5.20.01.08"
+_GRENZPUNKT_INDIEN_SINEN = "7.02.07.13"  # far-eastern end, the named boundary marker
 
 
 def _in_bbox(lon: float, lat: float, bbox: tuple[float, float, float, float]) -> bool:
@@ -212,71 +232,118 @@ def _eurasia_trail(refs):
     return trail
 
 
+def _trail_between(refs, start_ref_id: str, end_ref_id: str):
+    """A real coastline trail oriented start_ref_id -> ... -> end_ref_id,
+    or None if no trail has exactly these two ref_ids as its endpoints."""
+    coastlines = get_coastlines(refs)
+    trail, _ = _find_trail_by_endpoint(coastlines, start_ref_id)
+    if trail is None or not trail:
+        return None
+    if trail[0].ref_id != end_ref_id and trail[-1].ref_id != end_ref_id:
+        return None
+    if trail[0].ref_id != start_ref_id:
+        trail = list(reversed(trail))
+    return trail
+
+
+def _levant_arabia_persia_chain(refs):
+    """The real coastline trails plus short unconfirmed hand-offs chaining
+    Anemurion (near Side*) all the way to Grenzpunkt (Indien jenseits des
+    Ganges, Land der Sinen) - see the comment above _ANEMURION. Returns a
+    list of (kind, payload) steps in that order, kind one of "real" (a
+    trail, drawn already, included in the fill polygon only) or "bridge" (a
+    two-point unconfirmed hop, drawn dashed), or None if any of the three
+    trails can't be found by their expected endpoints."""
+    anemurion_anthedon = _trail_between(refs, _ANEMURION, _ANTHEDON)
+    zipfel_iokura = _trail_between(refs, _ZIPFEL_ARABISCHER_GOLF, _IOKURA)
+    persia_india = _trail_between(refs, _GRENZPUNKT_INDIEN_SINEN, _TIGRIS_MUENDUNG_OESTLICHE)
+    if anemurion_anthedon is None or zipfel_iokura is None or persia_india is None:
+        return None
+    persia_india = list(reversed(persia_india))  # Tigris-Mündung -> Grenzpunkt, built order
+    return [
+        ("real", anemurion_anthedon),
+        ("bridge", [anemurion_anthedon[-1], zipfel_iokura[0]]),
+        ("real", zipfel_iokura),
+        ("bridge", [zipfel_iokura[-1], persia_india[0]]),
+        ("real", persia_india),
+    ]
+
+
 def _eurasia_closure_corner_points(refs):
     """The synthetic vertices that close the Eurasia polygon beyond
     Chesinos-Mündung's own confirmed rise to the northern edge: across the
     top to the world bbox's own north-east corner - "as if there were a
     coastal point in the upper right corner" (the user's own framing) -
     then down that same edge until it reaches a *real* drawn coastline
-    again (Kattigara*, the far-eastern end of `_build_world_edge_
-    polygon()`'s own trail) rather than cutting back west across the
-    middle of the map at Side*'s own latitude. Returns (top_under_chesinos,
-    ne_corner, east_at_kattigara_lat, kattigara_point) or None."""
+    again. That's Persia/India's own coastal walk (see
+    _TIGRIS_MUENDUNG_OESTLICHE), not the small separate Kutiaris-Mündung/
+    Kattigara* fragment further south - the user caught that the first cut
+    at this went too far south, past where the real coastline already
+    reaches toward the edge. Returns (top_under_chesinos, ne_corner,
+    east_at_grenzpunkt_lat, grenzpunkt_point) or None."""
     trail = _eurasia_trail(refs)
-    if trail is None:
+    chain = _levant_arabia_persia_chain(refs)
+    if trail is None or chain is None:
         return None
-    coastlines = get_coastlines(refs)
-    kattigara_frag, _ = _find_trail_by_endpoint(coastlines, _KATTIGARA)
-    if kattigara_frag is None:
-        return None
-    kattigara = kattigara_frag[0] if kattigara_frag[0].ref_id == _KATTIGARA else kattigara_frag[-1]
+    grenzpunkt = chain[-1][1][-1]
     lon_min, lat_min, lon_max, lat_max = _WORLD_EDGE_BBOX
     chesinos = trail[-1]
     top_under_chesinos = (chesinos.lon_modern, lat_max)
     ne_corner = (lon_max, lat_max)
-    east_at_kattigara_lat = (lon_max, kattigara.lat_modern)
-    kattigara_point = (kattigara.lon_modern, kattigara.lat_modern)
-    return top_under_chesinos, ne_corner, east_at_kattigara_lat, kattigara_point
+    east_at_grenzpunkt_lat = (lon_max, grenzpunkt.lat_modern)
+    grenzpunkt_point = (grenzpunkt.lon_modern, grenzpunkt.lat_modern)
+    return top_under_chesinos, ne_corner, east_at_grenzpunkt_lat, grenzpunkt_point
 
 
 def _build_eurasia_edge_polygon(refs) -> list[tuple[float, float]] | None:
     """Fillable shape for the whole Scandinavia-to-Sarmatia arc: the real
     trail (Side* -> Chesinos-Mündung), the confirmed rise from Chesinos-
-    Mündung to the world bbox's northern edge, then a schematic hug of the
-    bbox's own north-east corner and east edge down to Kattigara* - the
-    same real point `_build_world_edge_polygon()` already uses, so this
-    shape's boundary meets an actual drawn coastline instead of just
-    another synthetic edge. The final leg, from Kattigara* back to Side*,
-    is *not* drawn as its own line (see `_build_eurasia_edge_unconfirmed_
-    lines()`) - Matplotlib still closes the polygon there for fill
-    purposes, but that stretch runs south of essentially every point this
-    catalogue places, so it reads as open ocean rather than a line cutting
-    across mapped territory. Unlike `_build_world_edge_polygon()`, only the
-    Chesinos-Mündung end is a confirmed world edge - the corner-hugging
-    closure is a user-approved pragmatic fill of an unfinished stitch, not
-    a textual claim. See the comment above _SIDE_STAR."""
+    Mündung to the world bbox's northern edge, a schematic hug of the
+    bbox's own north-east corner and east edge down to Grenzpunkt (Indien
+    jenseits des Ganges, Land der Sinen), then the Levant/Arabia/Persia
+    chain (see _levant_arabia_persia_chain()) back to Anemurion - close
+    enough to Side* (~1.8 deg) that the final leg back to Side* itself is
+    short, not a long diagonal cutting across real mapped territory the
+    way earlier attempts at this closure did (see the README's twenty-
+    eighth round). Unlike `_build_world_edge_polygon()`, only the Chesinos-
+    Mündung end is a confirmed world edge - everything else here is a
+    user-approved pragmatic fill of unfinished stitches, not a textual
+    claim. See the comment above _SIDE_STAR."""
     trail = _eurasia_trail(refs)
     corner_points = _eurasia_closure_corner_points(refs)
-    if trail is None or corner_points is None:
+    chain = _levant_arabia_persia_chain(refs)
+    if trail is None or corner_points is None or chain is None:
         return None
     coords = [(r.lon_modern, r.lat_modern) for r in trail]
     coords += list(corner_points)
+    for kind, payload in reversed(chain):
+        points = payload if kind == "real" else list(reversed(payload))
+        coords += [(r.lon_modern, r.lat_modern) for r in points[1:]]
     return coords
 
 
 def _build_eurasia_edge_unconfirmed_lines(refs) -> list[list[tuple[float, float]]]:
-    """The part of `_build_eurasia_edge_polygon()`'s boundary that has no
+    """The parts of `_build_eurasia_edge_polygon()`'s boundary that have no
     textual backing at all: the hug of the bbox's own north-east corner and
-    east edge, from Chesinos-Mündung's confirmed extension down to
-    Kattigara* - where it meets a real, already-drawn coastline and stops.
+    east edge, plus the three short hand-offs in the Levant/Arabia/Persia
+    chain (Anemurion-Anthedon's own two ends bridging to their neighbors).
     Kept visually distinct (dashed) from the confirmed Chesinos-Mündung
-    extension - both close the same shape, but only one of them is
-    Ptolemy's own claimed world edge."""
+    extension and from the real coastline trails in between - none of
+    these hand-offs are Ptolemy's own claimed world edge or a confirmed
+    stitch, just a pragmatic closure of what's still open."""
     trail = _eurasia_trail(refs)
     corner_points = _eurasia_closure_corner_points(refs)
-    if trail is None or corner_points is None:
+    chain = _levant_arabia_persia_chain(refs)
+    if trail is None or corner_points is None or chain is None:
         return []
-    return [list(corner_points)]
+    lines = [list(corner_points)]
+    for kind, payload in chain:
+        if kind == "bridge":
+            lines.append([(r.lon_modern, r.lat_modern) for r in payload])
+    side = trail[0]
+    anemurion = chain[0][1][0]
+    lines.append([(anemurion.lon_modern, anemurion.lat_modern), (side.lon_modern, side.lat_modern)])
+    return lines
 
 
 def render(
