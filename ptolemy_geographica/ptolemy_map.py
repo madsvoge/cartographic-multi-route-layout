@@ -1032,6 +1032,23 @@ _NONCOASTAL_POINT_OVERRIDES = {
 # here the way _MOUNTAIN_LOCATION_REF_RE guards the mountain tiers.
 _KAP_WORD_RE = re.compile(r"\bkap\b", re.IGNORECASE)
 
+# A point cited as a boundary marker between provinces/peoples ("Grenzpunkt
+# Baetica, Lusitania, Tarraconensis", "Baetica (Ostende am Baliarischen
+# Meer)", "Illyricum (südlicher Endpunkt an der Adria)") - this is an
+# *additional* tag alongside the point's own primary category (a boundary
+# point can just as easily be `river`, `city`, `coast` or `mountain`; see
+# _RIVER_POINT_OVERRIDES/_NONCOASTAL_POINT_OVERRIDES/_COASTLINE_SKIP_REF_IDS
+# throughout this file, every one of which turned out, on inspection, to be
+# exactly this kind of point), not a category of its own - the same
+# multi-category shape Defaux's Xi/OmegaStructure.json datasets tag directly
+# ("river mouth"+"boundary"). Checked catalogue-wide before adding (102
+# matches, spread sensibly across every category: 67 city, 26 coast, 4
+# river, 4 mountain, 1 lake) - not narrowed further, since every one of the
+# German phrasings found is a genuine "this is a limit/boundary citation"
+# marker, the same three shapes (Grenzpunkt/Grenze, Ostende, Endpunkt) this
+# project has been finding and hand-verifying individually all session.
+_BOUNDARY_NAME_RE = re.compile(r"grenzpunkt|grenze|ostende|endpunkt", re.IGNORECASE)
+
 
 def _classify_locality(
     name: str,
@@ -1153,6 +1170,8 @@ class Reference:
     modern_location: str = ""
     recension: str = ""
     category: str = ""  # "coast" | "harbor" | "river_mouth" | "city" | "river" | "mountain" | "island" | "lake" | "" (unclassified)
+    extra_categories: str = ""  # additional tags beyond `category`, semicolon-separated (currently just "boundary" - see _BOUNDARY_NAME_RE); the multi-category counterpart of Defaux's Xi/OmegaStructure.json `category` arrays
+    section_type: str = ""  # "coast section" | "inland" | "island" | "mountain" - this point's whole (book.map, section)'s own narrative type, the same signal as Defaux's `type_sec`, computed from the same force_*/section_is_coastal signals _classify_locality already uses per-point
     ref_id: str = ""  # catalogue ID (book.map.section.item), used to reconstruct coastlines
     naming_observation: str = ""  # why _classify_locality picked this category (audit trail)
     feature_id: str = ""  # which drawn coastline this point belongs to, once resolved (see annotate_dataset.py)
@@ -1225,6 +1244,8 @@ _ANNOTATED_CSV_FIELDS = [
     "ref_id",
     "name",
     "category",
+    "extra_categories",
+    "section_type",
     "book",
     "tabula",
     "modern_location",
@@ -1261,6 +1282,8 @@ def write_annotated_csv(refs: list[Reference], path: Path) -> None:
                     "ref_id": ref.ref_id,
                     "name": ref.name,
                     "category": ref.category,
+                    "extra_categories": ref.extra_categories,
+                    "section_type": ref.section_type,
                     "book": ref.book,
                     "tabula": ref.tabula,
                     "modern_location": ref.modern_location,
@@ -1302,6 +1325,8 @@ def load_annotated_csv(path: Path) -> list[Reference]:
                     modern_location=row.get("modern_location", ""),
                     recension=row.get("recension", ""),
                     category=row.get("category", ""),
+                    extra_categories=row.get("extra_categories", ""),
+                    section_type=row.get("section_type", ""),
                     ref_id=row.get("ref_id", ""),
                     naming_observation=row.get("naming_observation", ""),
                     feature_id=row.get("feature_id", ""),
@@ -1383,6 +1408,24 @@ def load_xlsx(path: Path) -> list[Reference]:
         force_mountain = book_map_section in _MOUNTAIN_APPENDIX_SECTIONS
         force_coastal = book_map_section in _COASTAL_APPENDIX_SECTIONS
 
+        # The section-level counterpart of _classify_locality's own category
+        # decision, in the same priority order (force_island first, etc.) -
+        # this project's equivalent of Defaux's `type_sec`. Only the four
+        # buckets this catalogue's own signals can actually distinguish;
+        # unlike Defaux's source text, ours never keeps a section that's
+        # pure prose with no locality rows at all (see _xlsx_has_coord), so
+        # "title"/"area presentation"/"borders description" aren't
+        # representable here - those sections simply produce no Reference
+        # rows to tag in the first place.
+        if force_island:
+            section_type = "island"
+        elif force_mountain:
+            section_type = "mountain"
+        elif (section_is_coastal or force_coastal) and not section_force_noncoastal:
+            section_type = "coast section"
+        else:
+            section_type = "inland"
+
         for row in section_rows:
             _id, id_map, locality, modern_location, lon_o, lat_o, lon_x, lat_x = row
             if isinstance(lon_o, (int, float)) and isinstance(lat_o, (int, float)):
@@ -1406,6 +1449,7 @@ def load_xlsx(path: Path) -> list[Reference]:
                 force_coastal=force_coastal,
                 force_river_point=str(_id) in _RIVER_POINT_OVERRIDES,
             )
+            extra_categories = "boundary" if _BOUNDARY_NAME_RE.search(name) else ""
             refs.append(
                 Reference(
                     name=name,
@@ -1417,6 +1461,8 @@ def load_xlsx(path: Path) -> list[Reference]:
                     modern_location=str(modern_location).strip() if modern_location else "",
                     recension=recension,
                     category=category,
+                    extra_categories=extra_categories,
+                    section_type=section_type,
                     naming_observation=observation,
                     ref_id=str(_id),
                 )

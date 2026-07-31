@@ -2276,6 +2276,55 @@ counterpart of `category_check.py`'s per-point question:
 $ python3 section_header_check.py
 ```
 
+### Section type & multi-category tags
+
+A nineteenth round, prompted by finding an independent, published dataset
+built on the same underlying critical edition: Olivier Defaux's
+Xi/OmegaStructure.json files (a digital companion to his 2017 monograph on
+Iberia, built with Gerd Graßhoff - one of the Handbuch der Geographie's own
+two editors). Those files tag every locality with a *list* of categories,
+not just one (a point can be `["river mouth", "boundary"]` at once), and
+tag every *section* with its own narrative type (`type_sec`:
+`"coast section"`, `"inland"`, `"island"`, `"mountain"`, ...) - both
+directly, as data, rather than left implicit in classifier logic the way
+this project had them until now.
+
+This project already computed both signals internally - `section_is_coastal`
+plus the `force_island`/`force_mountain`/`force_coastal`/
+`section_force_noncoastal` flags in `load_xlsx()` decide `section_type`
+exactly the same way they already decide `_classify_locality()`'s per-point
+category, and every point this project has ever hand-verified as a boundary
+citation (`_RIVER_POINT_OVERRIDES`, `_NONCOASTAL_POINT_OVERRIDES`, most of
+`_COASTLINE_SKIP_REF_IDS`) turned out, on inspection, to share one of three
+German phrasings - "Grenzpunkt"/"Grenze", "Ostende", "Endpunkt". Checked
+catalogue-wide before adding `_BOUNDARY_NAME_RE` (102 matches, spread
+sensibly across every category: 67 `city`, 26 `coast`, 4 `river`, 4
+`mountain`, 1 `lake` - not one nonsensical hit). Two new columns in the
+annotated CSV: `section_type` (1815 `coast section`, 4224 `inland`, 278
+`island`, 55 `mountain`) and `extra_categories` (currently just `boundary`,
+architecturally a semicolon-separated list so more tags can be added later
+without another schema change).
+
+`export_defaux_style_json.py` writes the annotated catalogue out in the
+same book -> chapters -> sections -> sec_part shape as Defaux's own files,
+using these two columns - `2.04.03.04` ("Anas (Grenzpunkt Baetica,
+Lusitania, Tarraconensis)") comes out `["river", "boundary"]`, `2.04.03.07`
+("Baetica (Ostende am Baliarischen Meer)") comes out `["city", "boundary"]`
+- the same two points, tagged the same way, this project found by hand and
+Defaux's team found independently through formal manuscript study. It is a
+structural analogue, not a byte-for-byte replica of Defaux's files: names
+are this catalogue's own German locality names (never Greek toponyms, since
+this project never digitized the Greek text itself), coordinates are plain
+decimal degrees (not Ptolemy's own degree-plus-unit-fraction notation), and
+there is no `people` field or "text string"/"title"/"area presentation"/
+"borders description" `sec_part` - this catalogue only ever carries
+locality rows with coordinates, never the connecting prose.
+
+```
+$ python3 export_geopackage.py               # section_type/extra_categories now in every layer's properties
+$ python3 export_defaux_style_json.py         # -> ptolemy_geographica_defaux_style.json
+```
+
 ### Coverage: how much of each catalogue is mapped to the other, and a fuzzy match score
 
 `crossref_topostext.py` flags category disagreements on individual
