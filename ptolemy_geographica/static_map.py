@@ -49,26 +49,55 @@ def _in_bbox(lon: float, lat: float, bbox: tuple[float, float, float, float]) ->
     return lon_min <= lon <= lon_max and lat_min <= lat <= lat_max
 
 
-def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False, show_feature_labels: bool = True) -> int:
+def render(
+    refs,
+    bbox,
+    output: Path,
+    title: str,
+    label_coastlines: bool = False,
+    show_feature_labels: bool = True,
+    fill_ptolemy_land: bool = False,
+) -> int:
     import geopandas
     import matplotlib.pyplot as plt
-    from matplotlib.patches import Circle
+    from matplotlib.patches import Circle, Polygon
     from matplotlib.patheffects import withStroke
 
     lon_min, lat_min, lon_max, lat_max = bbox
     in_view = [r for r in refs if r.is_plausible() and _in_bbox(r.lon_modern, r.lat_modern, bbox)]
 
-    world = geopandas.read_file(geopandas.datasets.get_path("naturalearth_lowres"))
-    pad = max((lon_max - lon_min), (lat_max - lat_min)) * 0.1
-    world = world.cx[lon_min - pad : lon_max + pad, lat_min - pad : lat_max + pad]
-
     fig, ax = plt.subplots(figsize=(14, 11), dpi=150)
     fig.patch.set_facecolor("#f9f9f7")
     ax.set_facecolor(OCEAN)
 
-    world.plot(ax=ax, color=LAND, edgecolor=BORDER, linewidth=0.6)
+    if not fill_ptolemy_land:
+        world = geopandas.read_file(geopandas.datasets.get_path("naturalearth_lowres"))
+        pad = max((lon_max - lon_min), (lat_max - lat_min)) * 0.1
+        world = world.cx[lon_min - pad : lon_max + pad, lat_min - pad : lat_max + pad]
+        world.plot(ax=ax, color=LAND, edgecolor=BORDER, linewidth=0.6)
 
     coastlines = get_coastlines(refs)
+
+    # --fill-ptolemy-land: fill *Ptolemy's own* closed loops as land, not
+    # the modern Natural Earth ones above - only the trails that already
+    # close back on their own starting point (an island, or the handful of
+    # mainland peninsulas whose whole loop happens to be described end to
+    # end) can be filled this way. Most of this catalogue's coastline
+    # trails are open arcs - one province's described stretch of a much
+    # larger, still-connected landmass - and stay outline-only until
+    # they're stitched together into a full ring across book/map
+    # boundaries, the same kind of work this project has done at a
+    # regional scale all session, just not yet attempted at continental
+    # scale. See README.md's "Filling Ptolemy's own coastline" section.
+    n_filled = 0
+    if fill_ptolemy_land:
+        for trail in coastlines + get_island_lines(refs):
+            if not trail or not (trail[0].feature_closes_loop or trail[0].island_feature_closes_loop):
+                continue
+            coords = [(r.lon_modern, r.lat_modern) for r in trail]
+            ax.add_patch(Polygon(coords, closed=True, facecolor=LAND, edgecolor=BORDER, linewidth=0.6, zorder=2))
+            n_filled += 1
+
     coastline_segments_drawn = 0
     for trail_idx, trail in enumerate(coastlines):
         line_in_view = [(r.lon_modern, r.lat_modern, i, r) for i, r in enumerate(trail) if _in_bbox(r.lon_modern, r.lat_modern, bbox)]
@@ -218,10 +247,16 @@ def render(refs, bbox, output: Path, title: str, label_coastlines: bool = False,
         color=TEXT_SECONDARY,
         ha="left",
     )
+    basemap_note = (
+        f"Land fill: {n_filled} of Ptolemy's own closed coastline/island loops - open coastal arcs "
+        "are outline-only, not yet stitched into closed regions."
+        if fill_ptolemy_land
+        else "Basemap: Natural Earth (public domain)."
+    )
     fig.text(
         0.06,
         0.02,
-        "Basemap: Natural Earth (public domain). Coordinates are Ptolemy's own claimed positions, "
+        f"{basemap_note} Coordinates are Ptolemy's own claimed positions, "
         "converted from his Ferro meridian to Greenwich - not modern surveyed locations.",
         fontsize=8.5,
         color=TEXT_SECONDARY,
@@ -263,6 +298,14 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help="Suppress the italic region/island-group/mountain-range text labels",
     )
+    parser.add_argument(
+        "--fill-ptolemy-land",
+        action="store_true",
+        help="Fill Ptolemy's own closed coastline/island loops as land, blue ocean everywhere else, "
+        "instead of the modern Natural Earth land fill - only trails that already close back on "
+        "their own start (islands, a few self-contained peninsulas) can be filled this way; open "
+        "coastal arcs stay outline-only. See README.md's 'Filling Ptolemy's own coastline' section.",
+    )
     return parser.parse_args(argv)
 
 
@@ -283,6 +326,7 @@ def main(argv: list[str] | None = None) -> int:
         title,
         label_coastlines=args.label_coastlines,
         show_feature_labels=not args.hide_feature_labels,
+        fill_ptolemy_land=args.fill_ptolemy_land,
     )
     return 0
 

@@ -353,7 +353,7 @@ def build(db_path: Path, csv_path: Path, xlsx_path: Path, force: bool) -> None:
             lines.setdefault(fid, []).append(row)
         for fid, members in lines.items():
             members.sort(key=lambda r: int(r[seq_col]))
-            closes_loop = bool(closes_col) and members[0].get(closes_col) == "True"
+            closes_loop = bool(closes_col) and members[0].get(closes_col) == "1"
             for i, r in enumerate(members):
                 next_row = members[i + 1] if i + 1 < len(members) else (members[0] if closes_loop else None)
                 membership_rows.append(

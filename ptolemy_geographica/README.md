@@ -2692,6 +2692,43 @@ python3 static_map.py --region europe --output europe.png
 Built-in `--region` choices: `world` (default), `europe`, `mediterranean`,
 `asia`, `africa`. Or pass a custom `--bbox LON_MIN LAT_MIN LON_MAX LAT_MAX`.
 
+### Filling Ptolemy's own coastline
+
+The map above fills land using the *modern* Natural Earth outlines, purely
+for visual context - Ptolemy's own coastlines are drawn as lines on top of
+that modern land/sea shape, not used to decide what's filled. The user
+asked whether the fill could be Ptolemy's own claimed coastline instead
+(white land, blue sea, the way a period cartographer's finished map would
+look) - technically trivial to draw (`--fill-ptolemy-land`, a matplotlib
+`Polygon` per closed trail), but it only works where the underlying data
+is actually a closed ring, which most of it isn't yet.
+
+Checked directly: of this catalogue's 55 constructed coastline trails plus
+5 island outlines, only **15 already close back on their own starting
+point** - islands, and a handful of self-contained peninsulas (Ireland,
+Britain's own sub-loops, Cyprus, Taprobane/Sri Lanka...). The other 44
+coastline trails (most of the 1,724 points on a constructed coastline) are
+open arcs: one province's described stretch of a single, much larger,
+still-physically-connected landmass (in Ptolemy's own cosmology, all of
+Europe/Libya/Asia is one continuous body of land ringed by ocean, plus
+several enclosed inner seas - the Mediterranean, Black Sea, Red Sea,
+Persian Gulf, and, in his model, the Indian Ocean too, which he believed
+was landlocked). Filling *those* as land requires stitching many regional
+trails end to end across book/map boundaries into one continuous ring per
+landmass/inner sea - the same kind of connection work this project has
+done all session at a provincial scale, not yet attempted at continental
+scale, and likely just as many rounds of finding real gaps and interaction
+bugs as any of the batches already documented above.
+
+`--fill-ptolemy-land` renders what's achievable today - the 15 closed
+loops filled as land, everything else outline-only on a blue background -
+both as a real (if partial) answer and as a visual map of exactly which
+regions would need stitching work next.
+
+```bash
+python3 static_map.py --region mediterranean --fill-ptolemy-land --output med_filled.png
+```
+
 ## GeoPackage export (for QGIS/ArcGIS)
 
 `export_geopackage.py` writes the same categories and constructed lines
