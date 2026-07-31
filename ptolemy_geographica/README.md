@@ -2325,6 +2325,81 @@ $ python3 export_geopackage.py               # section_type/extra_categories now
 $ python3 export_defaux_style_json.py         # -> ptolemy_geographica_defaux_style.json
 ```
 
+### The curated database (`db/`)
+
+A twentieth round, and a real change of direction rather than another
+check: after seeing Defaux's own structured files, the user proposed
+leaving behind the idea that everything should be *recomputed by running
+the pipeline* and instead constructing this project's own curated
+dataset - documented, queryable, with a real place for the "why" behind
+every correction, instead of that "why" living only in Python comments
+next to an exception-list entry.
+
+`db/schema.sql` defines four SQLite tables, replacing the flat
+one-row-per-point annotated CSV as the authoritative shape going forward:
+
+- **`section`** - one row per (book.map.section), not one per point: book
+  and map are Ptolemy's own numbers (kept alongside `tabula`'s continent-
+  code convention, not instead of it - the two answer different
+  questions), plus `short_title`, `description_catalogue` (the data
+  catalogue's own header row text - short, since the catalogue itself only
+  ever has that, not prose), `description_topos` (topostext's own lead-in
+  prose before the section's first coordinate), `section_type`, and
+  `note` (why this section's classification needed manual review, if it
+  did).
+- **`point`** - `category`/`extra_categories`/`name_catalogue`/
+  `name_topos`/`modern_location`/`recension`/`match_score`/`topos_id`/
+  `revision_notes`, plus `lon_ptolemy`/`lat_ptolemy` straight from the data
+  catalogue, **never edited** - every correction this project has ever
+  made was to a category, a section type, or a connection, never to a
+  coordinate value, and that stays true here (per the user's explicit
+  instruction this round: topostext's role stays limited to the match-
+  score comparison it already had, not a coordinate source).
+- **`line_membership`** - one row per (point, line) membership rather than
+  the four separate `feature_id`/`sequence_in_feature` column-sets the CSV
+  used - a river-mouth point sits on both a coastline and a river line at
+  once, which four flat columns on `point` could never cleanly represent.
+  `next_point_id` makes every line-adjacency explicit stored data: to
+  redraw a line now, follow `next_point_id` until NULL (or back to the
+  start, if `closes_loop`) - no separate exception-list mechanism is
+  needed any more for a boundary-citation skip (the point just has no
+  membership row for that feature_kind) or a hard break (`next_point_id`
+  already names the real neighbour). This subsumes what
+  `_COASTLINE_SKIP_REF_IDS`/`_COASTLINE_HARD_BREAKS` did in code.
+- **`connection_override`** - the one class of fact that's neither a
+  section's nor a single point's own property nor a simple next-point
+  link: pairwise guards like `_RIVER_LINE_NO_MERGE_REF_ID_PAIRS` ("these
+  two ref_ids, despite matching heuristics, are not the same physical
+  point").
+
+`db/build_database.py` is the *bootstrap* - it populates the database from
+everything the existing pipeline and its eighteen rounds of accumulated
+exception lists already know (reading the fully-resolved annotated CSV,
+the raw xlsx's own header rows, topostext's raw section prose, and
+`ptolemy_map.py`'s own source text for the trailing comment next to each
+exception-list entry, migrated into `note`/`revision_notes`). It is meant
+to run once, and again only when genuinely new source data arrives - from
+here on, a correction is an edit to the database with a note explaining
+why, not a new Python exception-list entry. Comment migration is
+best-effort and transparently incomplete: only a same-line trailing `#
+comment` is captured, not the longer prose that precedes a whole block of
+entries, so a first run reports realistic coverage (130/1291 sections,
+39/6372 points, 12 pairwise overrides got a migrated note) rather than
+100% - the rest can be filled in by hand, incrementally, straight in the
+database, same as any future correction.
+
+`db/export_csv_from_db.py` writes the database back out as four
+git-diffable CSV snapshots (`data/sections.csv`, `data/points.csv`,
+`data/line_membership.csv`, `data/connection_overrides.csv`) purely for
+human-readable history in git - the database file itself is gitignored
+(same reasoning as the `.gpkg`), the CSVs are the readable record of what
+changed and when, never read back in as a source themselves.
+
+```
+$ python3 db/build_database.py            # -> db/ptolemy.db (bootstrap/rebuild)
+$ python3 db/export_csv_from_db.py         # -> data/sections.csv, points.csv, line_membership.csv, connection_overrides.csv
+```
+
 ### Coverage: how much of each catalogue is mapped to the other, and a fuzzy match score
 
 `crossref_topostext.py` flags category disagreements on individual

@@ -1,0 +1,13 @@
+id,feature_kind,relation_type,point_a,point_b,note
+1,coastline,hard_break,3.11.02.10,3.11.03.05,
+2,coastline,hard_break,5.01.04.07,5.01.05.05,Panysus-Mündung correctly ends the coast heading *south* from the
+3,coastline,hard_break,3.10.08.10,3.10.14.02,The delta's own six mouths reorder correctly south-to-north (see
+4,coastline,hard_break,3.10.04.03,3.10.08.03,The seventeenth-round batch coastal fix (section 3.10.08's own
+5,coastline,hard_break,3.10.08.11,3.10.14.02,
+6,river,no_merge,2.03.02.06,2.03.05.12,Deva (Chester) vs. Deva (Aberdeen)
+7,river,no_merge,2.03.04.06,2.03.06.01,Alaunus (Hampshire) vs. Alaunus (Northumberland)
+8,river,no_merge,4.01.02.06,4.01.04.06,"Sala (Bou Regreg, Rabat) vs. Sala (Oued Tamrakt, ~7 degrees south) - both in book.map 4.01 (Mauretania Tingitana) but different modern rivers"
+9,river,no_merge,3.02.05.01,3.03.02.10,"Heiliger Fluss/""Sacred river"" (Corsica's Fium'Orbo, book.map 3.02) vs. Heiliger Fluss (Sardinia, book.map 3.03) - a descriptive name (""Hieros Potamos""), not a proper name, reused independently on each island"
+10,river,no_merge,3.13.18.11,3.16.06.03,"Peneios-Quelle, Thessaly (book.map 3.13, near Mt. Pindos) vs. Peneios-Mündung, the Peloponnese (book.map 3.16) - two real, still-named rivers (Pineios of Thessaly and Pineios of Elis), not one course; the Thessalian mouth+source pair (3.13.15.07/3.13.18.11) stays merged as one line"
+11,river,no_merge,3.15.13.09,3.16.03.04,"Asopos (confluence with Kephisos/Ismenos - Boiotian rivers, book.map 3.15) vs. Asopos-Mündung, the Peloponnese (book.map 3.16) - the Boiotian Asopos (of the Battle of Plataia) and the Peloponnesian Asopos near Sikyon are two different rivers sharing a name"
+12,river,no_merge,5.06.07.05,5.14.02.06,"Lykos-Quellen (Kelkit Çayı, Pontus, book.map 5.06) vs. Lykos-Mündung (Kuris, book.map 5.14, far south) - different modern rivers entirely"
