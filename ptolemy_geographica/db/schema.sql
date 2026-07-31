@@ -35,6 +35,7 @@ CREATE TABLE point (
     sequence_in_section      INTEGER,             -- position within the section (the ref_id's own 4th component, as an integer where parseable)
     category                 TEXT,                -- coast | harbor | river_mouth | city | river | mountain | island | lake
     extra_categories         TEXT,                -- semicolon-separated additional tags, e.g. "boundary"
+    naming_observation        TEXT,                -- why _classify_locality picked this category - which keyword matched, or which override applied (audit trail, not itself editable - see point_override for the actual rule)
     name_catalogue           TEXT,                -- the data catalogue's own (German) locality name
     name_topos               TEXT,                -- the matched topostext citation's own phrasing
     modern_location          TEXT,

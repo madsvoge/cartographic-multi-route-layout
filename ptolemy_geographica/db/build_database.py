@@ -55,7 +55,10 @@ ROOT_DIR = SCRIPT_DIR.parent
 sys.path.insert(0, str(ROOT_DIR))
 sys.path.insert(0, str(ROOT_DIR / "topostext"))
 
+sys.path.insert(0, str(SCRIPT_DIR))
+
 import ptolemy_map as pm  # noqa: E402 - the override collections' own live values (see _POINT_OVERRIDE_TYPES etc. below), not just their comments
+from recompute import recompute  # noqa: E402 - the one place category/section_type/line_membership get computed, see the point_rows comment below
 from section_header_check import (  # noqa: E402
     load_catalogue_headers,
     load_catalogue_print_sheets,
@@ -67,13 +70,6 @@ DEFAULT_DB = SCRIPT_DIR / "ptolemy.db"
 DEFAULT_CSV = ROOT_DIR / "data" / "ptolemy_catalogue_annotated.csv"
 DEFAULT_XLSX = ROOT_DIR / "data" / "ptolemy_catalogue_stueckelberger.xlsx"
 PTOLEMY_MAP_PY = ROOT_DIR / "ptolemy_map.py"
-
-_LINE_FEATURE_COLUMNS = {
-    "coastline": ("feature_id", "sequence_in_feature", "feature_closes_loop"),
-    "river": ("river_feature_id", "river_sequence_in_feature", None),
-    "island": ("island_feature_id", "island_sequence_in_feature", "island_feature_closes_loop"),
-    "mountain": ("mountain_feature_id", "mountain_sequence_in_feature", None),
-}
 
 # --- extracting the "why" already written in ptolemy_map.py's own source ---
 #
@@ -432,6 +428,18 @@ def build(db_path: Path, csv_path: Path, xlsx_path: Path, force: bool) -> None:
     with csv_path.open(newline="", encoding="utf-8") as fh:
         rows = [r for r in csv.DictReader(fh) if r["category"] != "label" and r["ref_id"]]
 
+    # Sorted by the same numeric ref_id key ptolemy_map.py's own row
+    # ordering uses (not a plain string sort - "3.04.16.10" would
+    # otherwise land before "3.04.16.2"), rather than trusting whatever
+    # physical row order the CSV happens to be in: the "first row seen for
+    # this section_id wins" logic below (short_title's fallback to a
+    # point's own name, when the section has no catalogue header text of
+    # its own) needs a row order that doesn't silently depend on which
+    # tool last wrote the CSV - `db/export_annotated_csv.py`'s own
+    # database-sourced row order isn't guaranteed to match a from-scratch
+    # xlsx pass's, and previously didn't need to.
+    rows.sort(key=lambda r: tuple(int(p) if p.isdigit() else p for p in r["ref_id"].split(".")))
+
     if db_path.exists() and not force:
         db_path.unlink()  # bootstrap always rebuilds fresh; --force is about overwriting reviewed *rows* going forward, not this file
     elif db_path.exists():
@@ -461,19 +469,29 @@ def build(db_path: Path, csv_path: Path, xlsx_path: Path, force: bool) -> None:
                 "short_title": _short_title(desc_cat, row["name"]),
                 "description_catalogue": desc_cat,
                 "description_topos": desc_topos,
-                "section_type": row["section_type"],
                 "note": section_notes.get((map_id, sec_num), ""),
             }
 
     conn.executemany(
         "INSERT INTO section (section_id, book, map, section_number, print_sheet, short_title, "
-        "description_catalogue, description_topos, section_type, note) "
+        "description_catalogue, description_topos, note) "
         "VALUES (:section_id, :book, :map, :section_number, :print_sheet, :short_title, "
-        ":description_catalogue, :description_topos, :section_type, :note)",
+        ":description_catalogue, :description_topos, :note)",
         sections.values(),
     )
 
     # --- points ---
+    # category/extra_categories/naming_observation are deliberately NOT
+    # populated here, even though the CSV already carries them - they, and
+    # section.section_type and every line_membership row below, are always
+    # computed by exactly one code path (db/recompute.py's recompute(),
+    # called at the end of this function), never duplicated between a
+    # CSV-derived value here and a database-derived one there. Two
+    # independent computations of the same classify+build-lines logic
+    # would only ever be *coincidentally* in sync, not guaranteed to be -
+    # recompute() is the one source of truth for these fields, both here
+    # (the bootstrap) and after a routine point_override/section_override/
+    # connection_override edit.
     point_rows = []
     for row in rows:
         parts = row["ref_id"].split(".")
@@ -489,8 +507,6 @@ def build(db_path: Path, csv_path: Path, xlsx_path: Path, force: bool) -> None:
                 "point_id": row["ref_id"],
                 "section_id": section_id,
                 "sequence_in_section": seq,
-                "category": row["category"],
-                "extra_categories": row["extra_categories"],
                 "name_catalogue": row["name"],
                 "name_topos": row["topostext_name"] if row.get("topostext_matched") == "yes" else "",
                 "modern_location": row["modern_location"],
@@ -504,45 +520,13 @@ def build(db_path: Path, csv_path: Path, xlsx_path: Path, force: bool) -> None:
         )
 
     conn.executemany(
-        "INSERT INTO point (point_id, section_id, sequence_in_section, category, extra_categories, "
+        "INSERT INTO point (point_id, section_id, sequence_in_section, "
         "name_catalogue, name_topos, modern_location, recension, lon_ptolemy, lat_ptolemy, "
         "match_score, topos_id, revision_notes) "
-        "VALUES (:point_id, :section_id, :sequence_in_section, :category, :extra_categories, "
+        "VALUES (:point_id, :section_id, :sequence_in_section, "
         ":name_catalogue, :name_topos, :modern_location, :recension, :lon_ptolemy, :lat_ptolemy, "
         ":match_score, :topos_id, :revision_notes)",
         point_rows,
-    )
-
-    # --- line_membership: one row per (point, line) membership, chained by next_point_id ---
-    membership_rows = []
-    for feature_kind, (id_col, seq_col, closes_col) in _LINE_FEATURE_COLUMNS.items():
-        lines: dict[str, list[dict]] = {}
-        for row in rows:
-            fid = row.get(id_col)
-            if not fid:
-                continue
-            lines.setdefault(fid, []).append(row)
-        for fid, members in lines.items():
-            members.sort(key=lambda r: int(r[seq_col]))
-            closes_loop = bool(closes_col) and members[0].get(closes_col) == "1"
-            for i, r in enumerate(members):
-                next_row = members[i + 1] if i + 1 < len(members) else (members[0] if closes_loop else None)
-                membership_rows.append(
-                    {
-                        "point_id": r["ref_id"],
-                        "feature_kind": feature_kind,
-                        "feature_id": fid,
-                        "sequence_in_feature": int(r[seq_col]),
-                        "next_point_id": next_row["ref_id"] if next_row else None,
-                        "closes_loop": 1 if closes_loop else 0,
-                    }
-                )
-
-    conn.executemany(
-        "INSERT INTO line_membership (point_id, feature_kind, feature_id, sequence_in_feature, "
-        "next_point_id, closes_loop) VALUES (:point_id, :feature_kind, :feature_id, "
-        ":sequence_in_feature, :next_point_id, :closes_loop)",
-        membership_rows,
     )
 
     # --- point_override / section_override / connection_override: the
@@ -575,6 +559,11 @@ def build(db_path: Path, csv_path: Path, xlsx_path: Path, force: bool) -> None:
 
     conn.commit()
 
+    # category/extra_categories/naming_observation, section_type, and
+    # line_membership are computed here, by the one code path that ever
+    # computes them (see the comment above the point_rows loop).
+    recompute_stats = recompute(conn)
+
     # --- coverage summary ---
     n_sections_with_note = sum(1 for s in sections.values() if s["note"])
     n_points_with_note = sum(1 for p in point_rows if p["revision_notes"])
@@ -583,7 +572,8 @@ def build(db_path: Path, csv_path: Path, xlsx_path: Path, force: bool) -> None:
     n_section_overrides_with_note = sum(1 for r in section_override_rows if r["note"])
     n_connection_overrides_with_note = sum(1 for r in connection_override_rows if r["note"])
     print(f"wrote {db_path}")
-    print(f"  {len(sections)} sections, {len(point_rows)} points, {len(membership_rows)} line memberships")
+    print(f"  {len(sections)} sections, {len(point_rows)} points, {recompute_stats['line_memberships']} line memberships")
+    print(f"  categories: {recompute_stats['categories']}")
     print(
         f"  {len(point_override_rows)} point overrides ({n_point_overrides_with_note} with a note), "
         f"{len(section_override_rows)} section overrides ({n_section_overrides_with_note} with a note), "

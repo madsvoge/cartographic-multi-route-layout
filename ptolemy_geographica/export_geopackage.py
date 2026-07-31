@@ -51,10 +51,12 @@ Usage
 from __future__ import annotations
 
 import argparse
+import sqlite3
 from pathlib import Path
 
 import fiona
 
+from overrides import OverrideBundle, load_overrides_from_db
 from ptolemy_map import (
     CATEGORIES,
     DEFAULT_INPUT,
@@ -69,6 +71,7 @@ from ptolemy_map import (
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 DEFAULT_OUTPUT = SCRIPT_DIR / "ptolemy_geographica.gpkg"
+DEFAULT_OVERRIDES_DB = SCRIPT_DIR / "db" / "ptolemy.db"
 CRS = "EPSG:4326"
 
 _POINT_PROPERTIES = {
@@ -263,14 +266,14 @@ _BRIDGE_PROPERTIES = {
 }
 
 
-def _write_manual_bridges_layer(gpkg: Path, layer: str, refs: list[Reference]) -> int:
+def _write_manual_bridges_layer(gpkg: Path, layer: str, refs: list[Reference], overrides: OverrideBundle | None) -> int:
     """A point where two or more separately catalogued coastal
     descriptions meet, but that get_coastlines()'s trail-stitching can't
-    fold into a single line (see ptolemy_map.py's _MANUAL_JUNCTION_REF_ID_
-    PAIRS) - exported as its own short 2-point LineString per pair, so the
-    connection is directly checkable in QGIS even though it never shows
-    up as part of the `coastlines` layer's own line geometry."""
-    junctions = get_manual_junctions(refs)
+    fold into a single line (a manual_junction connection_override row,
+    see db/schema.sql) - exported as its own short 2-point LineString per
+    pair, so the connection is directly checkable in QGIS even though it
+    never shows up as part of the `coastlines` layer's own line geometry."""
+    junctions = get_manual_junctions(refs, overrides)
     if not junctions:
         return 0
     schema = {"geometry": "LineString", "properties": _BRIDGE_PROPERTIES}
@@ -294,7 +297,7 @@ def _write_manual_bridges_layer(gpkg: Path, layer: str, refs: list[Reference]) -
     return len(junctions)
 
 
-def export(refs: list[Reference], output: Path) -> None:
+def export(refs: list[Reference], output: Path, overrides: OverrideBundle | None = None) -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
     if output.exists():
         output.unlink()
@@ -315,7 +318,7 @@ def export(refs: list[Reference], output: Path) -> None:
     counts["rivers"] = _write_combined_layer(output, "rivers", "river", get_river_lines(refs))
     counts["island_outlines"] = _write_combined_layer(output, "island_outlines", "island_outline", get_island_lines(refs))
     counts["mountain_ranges"] = _write_combined_layer(output, "mountain_ranges", "mountain_range", get_mountain_lines(refs))
-    counts["manual_bridges"] = _write_manual_bridges_layer(output, "manual_bridges", refs)
+    counts["manual_bridges"] = _write_manual_bridges_layer(output, "manual_bridges", refs, overrides)
 
     print(f"wrote {output}")
     for layer, n in counts.items():
@@ -327,6 +330,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--input", nargs="*", type=Path, default=[DEFAULT_INPUT], help="CSV/XLSX file(s) or directories")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument(
+        "--overrides-db",
+        type=Path,
+        default=DEFAULT_OVERRIDES_DB,
+        help="db/ptolemy.db to read the manual_bridges layer's connections from (falls back to ptolemy_map.py's own constants if missing)",
+    )
     return parser.parse_args(argv)
 
 
@@ -336,7 +345,12 @@ def main(argv: list[str] | None = None) -> int:
     if not refs:
         print("no geographical references loaded")
         return 1
-    export(refs, args.output)
+    overrides = None
+    if args.overrides_db.exists():
+        conn = sqlite3.connect(args.overrides_db)
+        overrides = load_overrides_from_db(conn)
+        conn.close()
+    export(refs, args.output, overrides)
     return 0
 
 
