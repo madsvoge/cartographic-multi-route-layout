@@ -317,12 +317,17 @@ def build_point_override_rows(source: str, valid_ids: set[str]) -> list[dict]:
     rows = []
     for block_name, override_type in _POINT_OVERRIDE_TYPES.items():
         notes = membership_notes[block_name]
-        for point_id in getattr(pm, block_name):
+        # sorted(): a plain `set`'s iteration order depends on Python's
+        # per-process string hash randomization, not insertion order - left
+        # unsorted, re-running this script with no actual data change would
+        # still reshuffle every row's `id` and the CSV export's row order,
+        # producing a spurious multi-hundred-line git diff each time.
+        for point_id in sorted(getattr(pm, block_name)):
             if point_id in valid_ids:
                 rows.append({"point_id": point_id, "override_type": override_type, "value": None, "note": notes.get(point_id, "")})
     for block_name, override_type in _POINT_OVERRIDE_VALUE_TYPES.items():
         notes = value_notes[block_name]
-        for point_id, value in getattr(pm, block_name).items():
+        for point_id, value in sorted(getattr(pm, block_name).items()):
             if point_id in valid_ids:
                 rows.append(
                     {
@@ -342,7 +347,7 @@ def build_section_override_rows(source: str, valid_sections: set[str]) -> list[d
     rows = []
     for block_name, override_type in _SECTION_OVERRIDE_TYPES.items():
         notes = membership_notes[block_name]
-        for book_map, section_num in getattr(pm, block_name):
+        for book_map, section_num in sorted(getattr(pm, block_name)):
             section_id = f"{book_map}.{section_num}"
             if section_id in valid_sections:
                 rows.append(
@@ -355,7 +360,7 @@ def build_section_override_rows(source: str, valid_sections: set[str]) -> list[d
                 )
     for block_name, override_type in _SECTION_OVERRIDE_VALUE_TYPES.items():
         notes = value_notes[block_name]
-        for (book_map, section_num), value in getattr(pm, block_name).items():
+        for (book_map, section_num), value in sorted(getattr(pm, block_name).items()):
             section_id = f"{book_map}.{section_num}"
             if section_id in valid_sections:
                 rows.append(
@@ -375,7 +380,7 @@ def build_connection_override_rows(source: str, valid_ids: set[str]) -> list[dic
     rows = []
     for block_name, (feature_kind, relation_type) in _CONNECTION_OVERRIDE_TYPES.items():
         notes = pair_note_blocks[block_name]
-        for point_a, point_b in getattr(pm, block_name):
+        for point_a, point_b in sorted(getattr(pm, block_name)):
             if point_a in valid_ids and point_b in valid_ids:
                 rows.append(
                     {
@@ -390,7 +395,7 @@ def build_connection_override_rows(source: str, valid_ids: set[str]) -> list[dic
     # _MANUAL_JUNCTION_REF_ID_PAIRS - see the comment on _PAIR_NOTE_SOURCES
     # above: its dict value *is* its own justification prose, so it doubles
     # as both `value` and `note` here rather than needing a scraped comment.
-    for (point_a, point_b), value in pm._MANUAL_JUNCTION_REF_ID_PAIRS.items():
+    for (point_a, point_b), value in sorted(pm._MANUAL_JUNCTION_REF_ID_PAIRS.items()):
         if point_a in valid_ids and point_b in valid_ids:
             rows.append(
                 {

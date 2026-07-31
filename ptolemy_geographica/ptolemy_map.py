@@ -76,6 +76,8 @@ from dataclasses import dataclass
 from itertools import groupby
 from pathlib import Path
 
+from overrides import OverrideBundle, load_overrides_from_code
+
 # Longitude (degrees) of the Ferro/El Hierro meridian west of Greenwich.
 # Ptolemy's longitudes count eastward from 0 there, so:
 #   modern_longitude = ptolemy_longitude - FERRO_OFFSET_DEG
@@ -1454,7 +1456,7 @@ def _xlsx_has_coord(row: tuple) -> bool:
     )
 
 
-def load_xlsx(path: Path) -> list[Reference]:
+def load_xlsx(path: Path, overrides: OverrideBundle | None = None) -> list[Reference]:
     """Load the Stueckelberger/Grasshoff-schema catalogue workbook.
 
     Columns: ID, ID_map, Locality, Modern_location,
@@ -1469,7 +1471,13 @@ def load_xlsx(path: Path) -> list[Reference]:
     name - Ptolemy lists coastal points as a running sequence along the
     shore), and keywords in the entry's own name (river mouth, cape,
     mountain range, island). See CATEGORIES and build_coastlines().
+
+    `overrides` defaults to `_DEFAULT_OVERRIDES` (ptolemy_map.py's own
+    eighteen Python collections) - pass one built from `db/ptolemy.db` via
+    `overrides.load_overrides_from_db()` to classify using the database's
+    override rows instead (see db/recompute.py).
     """
+    overrides = overrides if overrides is not None else _DEFAULT_OVERRIDES
     try:
         import openpyxl
     except ImportError as exc:  # pragma: no cover
@@ -1494,10 +1502,10 @@ def load_xlsx(path: Path) -> list[Reference]:
         section_is_coastal = any(_COASTAL_HDR_RE.search(str(h[2])) for h in headers)
         id_parts = str(section_rows[0][0]).split(".")
         book_map_section = (".".join(id_parts[:2]), id_parts[2] if len(id_parts) > 2 else "")
-        force_island = book_map_section in _ISLAND_APPENDIX_SECTIONS
-        section_force_noncoastal = book_map_section in _NONCOASTAL_EXCEPTION_SECTIONS
-        force_mountain = book_map_section in _MOUNTAIN_APPENDIX_SECTIONS
-        force_coastal = book_map_section in _COASTAL_APPENDIX_SECTIONS
+        force_island = book_map_section in overrides.island_appendix_sections
+        section_force_noncoastal = book_map_section in overrides.noncoastal_exception_sections
+        force_mountain = book_map_section in overrides.mountain_appendix_sections
+        force_coastal = book_map_section in overrides.coastal_appendix_sections
 
         # The section-level counterpart of _classify_locality's own category
         # decision, in the same priority order (force_island first, etc.) -
@@ -1533,12 +1541,12 @@ def load_xlsx(path: Path) -> list[Reference]:
                 name,
                 section_is_coastal,
                 force_island=force_island,
-                force_island_point=str(_id) in _ISLAND_POINT_OVERRIDES,
-                force_noncoastal=section_force_noncoastal or str(_id) in _NONCOASTAL_POINT_OVERRIDES,
+                force_island_point=str(_id) in overrides.island_point_overrides,
+                force_noncoastal=section_force_noncoastal or str(_id) in overrides.noncoastal_point_overrides,
                 force_mountain=force_mountain,
-                force_mountain_point=str(_id) in _MOUNTAIN_POINT_OVERRIDES,
+                force_mountain_point=str(_id) in overrides.mountain_point_overrides,
                 force_coastal=force_coastal,
-                force_river_point=str(_id) in _RIVER_POINT_OVERRIDES,
+                force_river_point=str(_id) in overrides.river_point_overrides,
             )
             extra_categories = "boundary" if _BOUNDARY_NAME_RE.search(name) else ""
             refs.append(
@@ -2027,14 +2035,17 @@ _MANUAL_JUNCTION_REF_ID_PAIRS: dict[tuple[str, str], str] = {
 }
 
 
-def get_manual_junctions(refs: list[Reference]) -> list[tuple[Reference, Reference, str]]:
-    """Resolve _MANUAL_JUNCTION_REF_ID_PAIRS against a loaded reference
-    list, for callers that want to draw/export them (static_map.py,
-    export_geopackage.py) without duplicating the ref_id lookup. Skips
-    any pair where either point isn't present in `refs`."""
+def get_manual_junctions(
+    refs: list[Reference], overrides: OverrideBundle | None = None
+) -> list[tuple[Reference, Reference, str]]:
+    """Resolve the manual_junction connection overrides against a loaded
+    reference list, for callers that want to draw/export them
+    (static_map.py, export_geopackage.py) without duplicating the ref_id
+    lookup. Skips any pair where either point isn't present in `refs`."""
+    overrides = overrides if overrides is not None else _DEFAULT_OVERRIDES
     by_id = {r.ref_id: r for r in refs}
     result = []
-    for (a, b), note in _MANUAL_JUNCTION_REF_ID_PAIRS.items():
+    for (a, b), note in overrides.manual_junction_ref_id_pairs.items():
         ref_a, ref_b = by_id.get(a), by_id.get(b)
         if ref_a is not None and ref_b is not None:
             result.append((ref_a, ref_b, note))
@@ -2185,7 +2196,7 @@ def _stitch_trails(
     return trails
 
 
-def build_coastlines(refs: list[Reference]) -> list[list[Reference]]:
+def build_coastlines(refs: list[Reference], overrides: OverrideBundle | None = None) -> list[list[Reference]]:
     """Reconstruct coastlines from category="coast" points.
 
     Returns a list of trails, each an ordered list of the Reference points
@@ -2222,10 +2233,11 @@ def build_coastlines(refs: list[Reference]) -> list[list[Reference]]:
     differently-classified point interrupts the sequence, or the gap
     between two points is implausibly large.
     """
+    overrides = overrides if overrides is not None else _DEFAULT_OVERRIDES
 
     def sort_key(ref: Reference) -> tuple:
-        if ref.ref_id in _COASTLINE_EXPLICIT_ORDER_OVERRIDES:
-            return _COASTLINE_EXPLICIT_ORDER_OVERRIDES[ref.ref_id]
+        if ref.ref_id in overrides.coastline_explicit_order_overrides:
+            return overrides.coastline_explicit_order_overrides[ref.ref_id]
         return tuple(int(p) if p.isdigit() else p for p in ref.ref_id.split("."))
 
     def book_map(ref: Reference) -> str:
@@ -2256,15 +2268,15 @@ def build_coastlines(refs: list[Reference]) -> list[list[Reference]]:
         for ref in items:
             if (
                 ref.category not in _COASTLINE_CATEGORIES
-                or ref.ref_id in _COASTLINE_SKIP_REF_IDS
+                or ref.ref_id in overrides.coastline_skip_ref_ids
                 or _RECAP_BACKREF_RE.search(ref.name)
             ):
                 continue
             if (
                 prev is not None
                 and _dist((prev.lat_modern, prev.lon_modern), (ref.lat_modern, ref.lon_modern)) <= _MAX_COASTAL_GAP_DEG
-                and (prev.ref_id, ref.ref_id) not in _COASTLINE_HARD_BREAKS
-                and (ref.ref_id, prev.ref_id) not in _COASTLINE_HARD_BREAKS
+                and (prev.ref_id, ref.ref_id) not in overrides.coastline_hard_breaks
+                and (ref.ref_id, prev.ref_id) not in overrides.coastline_hard_breaks
             ):
                 edges.append((prev, ref))
             prev = ref
@@ -2345,13 +2357,13 @@ def build_coastlines(refs: list[Reference]) -> list[list[Reference]]:
     # cross-region guessing - plus any pair manually verified to be a real
     # hand-off despite falling just outside that tolerance (see
     # _BOUNDARY_STITCH_REF_ID_PAIRS).
-    polylines = _stitch_trails(polylines, max_gap_deg=_SAME_POINT_TOL_DEG * 2, force_pairs=_BOUNDARY_STITCH_REF_ID_PAIRS)
+    polylines = _stitch_trails(polylines, max_gap_deg=_SAME_POINT_TOL_DEG * 2, force_pairs=overrides.boundary_stitch_ref_id_pairs)
 
     final: list[list[Reference]] = []
     for trail_refs in polylines:
         first, last = trail_refs[0], trail_refs[-1]
-        no_close = (first.ref_id, last.ref_id) in _NO_CLOSE_LOOP_TRAILS or (last.ref_id, first.ref_id) in _NO_CLOSE_LOOP_TRAILS
-        force_close = (first.ref_id, last.ref_id) in _FORCE_CLOSE_LOOP_TRAILS or (last.ref_id, first.ref_id) in _FORCE_CLOSE_LOOP_TRAILS
+        no_close = (first.ref_id, last.ref_id) in overrides.no_close_loop_trails or (last.ref_id, first.ref_id) in overrides.no_close_loop_trails
+        force_close = (first.ref_id, last.ref_id) in overrides.force_close_loop_trails or (last.ref_id, first.ref_id) in overrides.force_close_loop_trails
         if len(trail_refs) >= 4 and first is not last and force_close:
             trail_refs = trail_refs + [first]
         elif len(trail_refs) >= 4 and first is not last and not no_close:
@@ -2364,7 +2376,7 @@ def build_coastlines(refs: list[Reference]) -> list[list[Reference]]:
     return final
 
 
-def assign_coastline_features(refs: list[Reference]) -> None:
+def assign_coastline_features(refs: list[Reference], overrides: OverrideBundle | None = None) -> None:
     """Resolve every ambiguity build_coastlines has to reason about at
     runtime (which points connect, in what order, where a trail closes)
     into two plain data columns: `feature_id` and `sequence_in_feature`.
@@ -2376,7 +2388,7 @@ def assign_coastline_features(refs: list[Reference]) -> None:
     still does the actual reasoning; this just records its answer as data
     instead of re-deriving it on every run.
     """
-    trails = build_coastlines(refs)
+    trails = build_coastlines(refs, overrides)
     for trail_idx, trail in enumerate(trails):
         # A closed-loop trail repeats its first Reference as its last
         # (same object, so it can't hold two different sequence numbers).
@@ -2536,8 +2548,19 @@ _RIVER_LINE_NO_MERGE_REF_ID_PAIRS: set[tuple[str, str]] = {
     ("5.06.07.05", "5.14.02.06"),  # Lykos-Quellen (Kelkit Çayı, Pontus, book.map 5.06) vs. Lykos-Mündung (Kuris, book.map 5.14, far south) - different modern rivers entirely
 }
 
+# The eighteen collections above, as ptolemy_map.py's own code-sourced
+# OverrideBundle - the classifier/line-builders below all default to this
+# unless a caller passes its own `overrides=` (see db/recompute.py, which
+# passes one built from db/ptolemy.db's point_override/section_override/
+# connection_override tables instead - see README.md's "Reading overrides
+# from the database" section). Deliberately placed here, after the last of
+# the eighteen constants, not at module top: load_overrides_from_code()
+# reads them all by name off this module, so it can't run any earlier than
+# this in the file's own top-to-bottom execution.
+_DEFAULT_OVERRIDES: OverrideBundle = load_overrides_from_code()
 
-def build_river_lines(refs: list[Reference]) -> list[list[Reference]]:
+
+def build_river_lines(refs: list[Reference], overrides: OverrideBundle | None = None) -> list[list[Reference]]:
     """Connect river/river-mouth points that share a base name into a line
     tracing that river's course, in catalogue order - the same
     "categorization + sequence" approach as build_coastlines, just grouped
@@ -2548,6 +2571,7 @@ def build_river_lines(refs: list[Reference]) -> list[list[Reference]]:
     name isn't a safe key on its own (see _RIVER_LINE_MAX_GAP_DEG); split
     further wherever a gap is too large to be the same river.
     """
+    overrides = overrides if overrides is not None else _DEFAULT_OVERRIDES
 
     def sort_key(ref: Reference) -> tuple:
         return tuple(int(p) if p.isdigit() else p for p in ref.ref_id.split("."))
@@ -2557,7 +2581,7 @@ def build_river_lines(refs: list[Reference]) -> list[list[Reference]]:
         if (
             ref.category not in _RIVER_LINE_CATEGORIES
             or not ref.ref_id
-            or ref.ref_id in _RIVER_LINE_SKIP_REF_IDS
+            or ref.ref_id in overrides.river_line_skip_ref_ids
             or not ref.is_plausible()
             or _RECAP_BACKREF_RE.search(ref.name)
         ):
@@ -2594,10 +2618,10 @@ def build_river_lines(refs: list[Reference]) -> list[list[Reference]]:
             continue
         run = [items[0]]
         for prev, cur in zip(items, items[1:]):
-            no_merge = (prev.ref_id, cur.ref_id) in _RIVER_LINE_NO_MERGE_REF_ID_PAIRS or (
+            no_merge = (prev.ref_id, cur.ref_id) in overrides.river_line_no_merge_ref_id_pairs or (
                 cur.ref_id,
                 prev.ref_id,
-            ) in _RIVER_LINE_NO_MERGE_REF_ID_PAIRS
+            ) in overrides.river_line_no_merge_ref_id_pairs
             if no_merge or _ref_dist(prev, cur) > _RIVER_LINE_MAX_GAP_DEG:
                 if len(run) >= 2:
                     lines.append(run)
@@ -2609,13 +2633,13 @@ def build_river_lines(refs: list[Reference]) -> list[list[Reference]]:
     return lines
 
 
-def assign_river_features(refs: list[Reference]) -> None:
+def assign_river_features(refs: list[Reference], overrides: OverrideBundle | None = None) -> None:
     """Materialize build_river_lines()'s output as data, the same way
     assign_coastline_features() does for coastlines - into river_feature_id/
     river_sequence_in_feature rather than feature_id/sequence_in_feature, so
     a river-mouth point (part of both a coastline and a river line) can
     carry both memberships at once."""
-    lines = build_river_lines(refs)
+    lines = build_river_lines(refs, overrides)
     for line_idx, points in enumerate(lines):
         feature_id = f"river_{line_idx:03d}_{_river_base_name(points[0].name)}"
         for position, ref in enumerate(points):
@@ -2787,17 +2811,18 @@ def get_mountain_lines(refs: list[Reference]) -> list[list[Reference]]:
     return build_mountain_lines(refs)
 
 
-def _island_line_group(ref: Reference) -> str | None:
-    """Which _ISLAND_LINE_GROUPS island (if any) a point belongs to, by its
+def _island_line_group(ref: Reference, overrides: OverrideBundle | None = None) -> str | None:
+    """Which island_line_group island (if any) a point belongs to, by its
     (book.map, section) - or None if its section isn't one of the
     manually-verified single-island coastal walks."""
+    overrides = overrides if overrides is not None else _DEFAULT_OVERRIDES
     parts = ref.ref_id.split(".")
     if len(parts) < 3:
         return None
-    return _ISLAND_LINE_GROUPS.get((".".join(parts[:2]), parts[2]))
+    return overrides.island_line_groups.get((".".join(parts[:2]), parts[2]))
 
 
-def build_island_lines(refs: list[Reference]) -> list[list[Reference]]:
+def build_island_lines(refs: list[Reference], overrides: OverrideBundle | None = None) -> list[list[Reference]]:
     """Connect an island's own points into a line tracing its shore, in
     catalogue order - grouped by _ISLAND_LINE_GROUPS rather than a graph,
     since (unlike coastlines) there's no reliable distance-based way to
@@ -2817,6 +2842,7 @@ def build_island_lines(refs: list[Reference]) -> list[list[Reference]]:
     open: its closing gap (0.53 degrees) is small in absolute terms but
     more than 30% of its own very short 2-edge path length, exactly the
     kind of short-path false negative the ratio check can't avoid."""
+    overrides = overrides if overrides is not None else _DEFAULT_OVERRIDES
 
     def sort_key(ref: Reference) -> tuple:
         return tuple(int(p) if p.isdigit() else p for p in ref.ref_id.split("."))
@@ -2825,7 +2851,7 @@ def build_island_lines(refs: list[Reference]) -> list[list[Reference]]:
     for ref in refs:
         if ref.category != "island" or not ref.ref_id or not ref.is_plausible() or _RECAP_BACKREF_RE.search(ref.name):
             continue
-        island = _island_line_group(ref)
+        island = _island_line_group(ref, overrides)
         if island is None:
             continue
         groups.setdefault((ref.source, island), []).append(ref)
@@ -2839,14 +2865,15 @@ def build_island_lines(refs: list[Reference]) -> list[list[Reference]]:
     return lines
 
 
-def assign_island_features(refs: list[Reference]) -> None:
+def assign_island_features(refs: list[Reference], overrides: OverrideBundle | None = None) -> None:
     """Materialize build_island_lines()'s output as data, the same way
     assign_coastline_features()/assign_river_features() do."""
-    lines = build_island_lines(refs)
+    overrides = overrides if overrides is not None else _DEFAULT_OVERRIDES
+    lines = build_island_lines(refs, overrides)
     for line_idx, trail in enumerate(lines):
         closes_loop = len(trail) > 1 and trail[0] is trail[-1]
         points = trail[:-1] if closes_loop else trail
-        feature_id = f"island_{line_idx:03d}_{_island_line_group(points[0])}"
+        feature_id = f"island_{line_idx:03d}_{_island_line_group(points[0], overrides)}"
         for position, ref in enumerate(points):
             ref.island_feature_id = feature_id
             ref.island_sequence_in_feature = position
