@@ -2964,10 +2964,21 @@ leave it open. They chose (b). `_build_eurasia_edge_polygon()` closes
 that traverse happens to run up through real land (Anatolia, Ukraine,
 Russia) rather than across open sea the way closing to the west/east edge
 would have. `_build_eurasia_edge_unconfirmed_lines()` draws only Side*'s
-own share of that boundary (its drop to the edge, and the traverse back to
-Chesinos-Mündung's own meridian) as a **dashed** line - visually distinct
-from every solid confirmed-edge line elsewhere, so the one genuinely
+own share of that boundary as a **dashed** line - visually distinct from
+every solid confirmed-edge line elsewhere, so the one genuinely
 unconfirmed piece of this whole closure doesn't read as equally certain.
+
+The first version of this closure took the short way from Side*'s own
+rise back to Chesinos-Mündung's meridian, directly along the top edge.
+The user corrected this: instead of that direct hop, the dashed boundary
+should hug the world bbox's own north-east corner - "as if there were a
+coastal point in the upper right corner" - running from Chesinos-
+Mündung's confirmed extension east along the top to that corner, then
+south down the east edge until it reaches Side*'s own latitude, then back
+west to Side* itself. `_eurasia_closure_corner_points()` builds those
+three synthetic vertices; `_build_eurasia_edge_polygon()` and `_build_
+eurasia_edge_unconfirmed_lines()` both consume them, so the fillable
+shape and its dashed outline stay in sync.
 
 ## GeoPackage export (for QGIS/ArcGIS)
 

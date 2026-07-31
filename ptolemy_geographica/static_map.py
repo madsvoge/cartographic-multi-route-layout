@@ -202,40 +202,57 @@ def _eurasia_trail(refs):
     return trail
 
 
-def _build_eurasia_edge_polygon(refs) -> list[tuple[float, float]] | None:
-    """Fillable shape for the whole Scandinavia-to-Sarmatia arc: the real
-    trail (Side* -> Chesinos-Mündung) plus both ends closed against the
-    world bbox's *northern* edge. Unlike `_build_world_edge_polygon()`,
-    only one end (Chesinos-Mündung) is a confirmed world edge - the other
-    (Side*) is a user-approved pragmatic closure of an unfinished stitch,
-    not a textual claim. See the comment above _SIDE_STAR."""
+def _eurasia_closure_corner_points(refs):
+    """The three synthetic vertices that close the Eurasia polygon beyond
+    Chesinos-Mündung's own confirmed rise to the northern edge: across the
+    top to the world bbox's own north-east corner, down that edge to
+    Side*'s own latitude, then back to Side* itself - "as if there were a
+    coastal point in the upper right corner" (the user's own framing),
+    rather than a short direct hop between the two loose ends' meridians.
+    Returns (top_under_chesinos, ne_corner, east_at_side_lat) or None."""
     trail = _eurasia_trail(refs)
     if trail is None:
         return None
-    lat_max = _WORLD_EDGE_BBOX[3]
+    lon_min, lat_min, lon_max, lat_max = _WORLD_EDGE_BBOX
     side, chesinos = trail[0], trail[-1]
-    top_under_side = (side.lon_modern, lat_max)
     top_under_chesinos = (chesinos.lon_modern, lat_max)
+    ne_corner = (lon_max, lat_max)
+    east_at_side_lat = (lon_max, side.lat_modern)
+    return top_under_chesinos, ne_corner, east_at_side_lat
+
+
+def _build_eurasia_edge_polygon(refs) -> list[tuple[float, float]] | None:
+    """Fillable shape for the whole Scandinavia-to-Sarmatia arc: the real
+    trail (Side* -> Chesinos-Mündung), the confirmed rise from Chesinos-
+    Mündung to the world bbox's northern edge, then a schematic hug of the
+    bbox's own north-east corner and east edge back down to Side*'s own
+    latitude, closing back to Side* itself. Unlike `_build_world_edge_
+    polygon()`, only the Chesinos-Mündung end is a confirmed world edge -
+    the corner-hugging closure back to Side* is a user-approved pragmatic
+    fill of an unfinished stitch, not a textual claim. See the comment
+    above _SIDE_STAR."""
+    trail = _eurasia_trail(refs)
+    corner_points = _eurasia_closure_corner_points(refs)
+    if trail is None or corner_points is None:
+        return None
     coords = [(r.lon_modern, r.lat_modern) for r in trail]
-    coords += [top_under_chesinos, top_under_side]
+    coords += list(corner_points)
     return coords
 
 
 def _build_eurasia_edge_unconfirmed_lines(refs) -> list[list[tuple[float, float]]]:
     """The part of `_build_eurasia_edge_polygon()`'s boundary that has no
-    textual backing at all: Side*'s own drop to the northern edge, and the
-    traverse along that edge back to the Chesinos-Mündung extension. Kept
-    visually distinct (dashed) from the confirmed Chesinos-Mündung
-    extension - both close the same way, but only one of them is Ptolemy's
-    own claimed world edge."""
+    textual backing at all: the hug of the bbox's own north-east corner and
+    east edge, from Chesinos-Mündung's confirmed extension back down to
+    Side* itself. Kept visually distinct (dashed) from the confirmed
+    Chesinos-Mündung extension - both close the same shape, but only one
+    of them is Ptolemy's own claimed world edge."""
     trail = _eurasia_trail(refs)
-    if trail is None:
+    corner_points = _eurasia_closure_corner_points(refs)
+    if trail is None or corner_points is None:
         return []
-    lat_max = _WORLD_EDGE_BBOX[3]
-    side, chesinos = trail[0], trail[-1]
-    top_under_side = (side.lon_modern, lat_max)
-    top_under_chesinos = (chesinos.lon_modern, lat_max)
-    return [[(side.lon_modern, side.lat_modern), top_under_side, top_under_chesinos]]
+    side = trail[0]
+    return [[*corner_points, (side.lon_modern, side.lat_modern)]]
 
 
 def render(
