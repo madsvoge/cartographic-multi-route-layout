@@ -3091,6 +3091,49 @@ same longitude - exactly what the user spotted. Both added to
 (0.67°, a clean monotonic hand-off), and picks up one further real point
 (Ammaia) that a broken run had been silently excluding too.
 
+**A thirtieth round** found three more instances of the same bug class,
+after the user reported "cities in the water" near Egypt and a still-
+"broken coastline" at the Persian Gulf, pointing back at an earlier
+zoomed render (Levant zoom v3) that had all of them visible at once.
+
+Egypt's own coast jumped straight from the Nile delta's easternmost
+mouth (Pelusische Mündung) to the Sinai/Suez turning point, leaving five
+real coastal towns - Pelusion, Gerron, Kasion, Ostrakine, Rhinokorura,
+book.map "4.05" sections "11"/"12", headed "In Kassiotis" (a district
+name, not a sea-word) - stranded as `city` dots north of the rendered
+shore. Topostext (4.5.11/4.5.12) confirms the walk regardless ("Gerron
+*border*", Kassion = Mt. Kasios, the outlet of Lake Sirbonis, Ostrakine,
+Rhinokoroura, ending at Anthedon - the same real place, same coordinates,
+as Judaea's own "Anthedon", 5.16.02.11). Added to `_COASTAL_APPENDIX_
+SECTIONS`; Egypt's own "Anthedon" duplicate (4.05.12.06) skipped via
+`_COASTLINE_SKIP_REF_IDS` so the walk runs straight through to the
+Grenzpunkt/Zipfel continuation instead of stopping one point early. The
+same section also has "Argaiu" (4.05.76.03), sitting in the sea with a
+weak, low-confidence topostext match (a fallback to an unrelated river-
+mouth citation) - its own section is otherwise entirely "islands lying
+near Libya and Egypt" (topostext §4.5.75-76), so reclassified `island`
+via `_ISLAND_POINT_OVERRIDES` on section-context grounds, alongside
+Pharos/Didymai already there.
+
+The Persian Gulf's "broken coastline" was the same bug appearing twice
+more, both confirmed by topostext: Susiana's own coastal description
+(§6.3.2) explicitly says "this coast is described as follows: the
+western mouth of the Tigris river *is in the description of Babylonia*"
+- i.e. its own two Tigris-mouth citations (6.03.02.01/.03) are restating
+Babylonia's own points (5.20.05.03/5.20.01.08) purely as orientation, not
+new walk data. Excluding them exposed a third, previously-masked
+duplicate at the same book.map: "Oroatis-Mündung" cited once as Susiana's
+own eastern boundary marker (6.03.01.10, topostext §6.3.1) and once for
+real, in sequence, at the walk's actual end (6.03.02.14) - sorting first
+in raw catalogue order, it pulled the walk's very first edge across to
+its own far end, a *new* self-intersection this round's earlier fix
+exposed rather than caused. All three added to `_COASTLINE_SKIP_REF_IDS`.
+The existing `_BOUNDARY_STITCH_REF_ID_PAIRS` entry pairing Teredon to the
+now-excluded "Tigris-Mündung (westliche)" duplicate was stale as a result
+- retargeted to Charax des Pasines, the walk's real next point, the same
+stale-pair maintenance this project has needed every time an excluded
+point turns out to have been someone's stitch target.
+
 ## GeoPackage export (for QGIS/ArcGIS)
 
 `export_geopackage.py` writes the same categories and constructed lines

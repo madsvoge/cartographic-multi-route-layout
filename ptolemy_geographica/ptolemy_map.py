@@ -378,7 +378,8 @@ _ISLAND_POINT_OVERRIDES = {
     "4.03.47.02",  # Kossura (Pantelleria) - one of three real islands in a section (4.03.47) that also names Melite's own peninsula/shrines, not islands themselves
     "4.03.47.03",  # Gaulos (Gozo)
     "4.03.47.05",  # Melite (Malta)
-    "4.05.76.02",  # Pharos - the island of the Alexandria lighthouse; its section (4.05.76) also names "Argaiu", an unrelated point not confirmed as an island
+    "4.05.76.02",  # Pharos - the island of the Alexandria lighthouse
+    "4.05.76.03",  # Argaiu - the section's third and last point (after Didymai/Pharos above), continuing the same "islands lying near Libya and Egypt" list topostext's own header states once for section "75" and carries through "76" without repeating it; its own topostext match is weak (a low-confidence fallback to the unrelated "Sebennytic mouth" citation, no real match for this specific name) and it was left `city` pending that - but sitting well out in the sea north of the Nile delta's own coastline (a user-reported "city in the water"), section context is the stronger signal here.
     "5.02.28.03",  # Tenedos - a single citation covering both the island and "a city of the same name" (topostext), the same shared-name shape as Iulia Caesarea
     "6.09.08.02",  # Talka - "a sea island off it [Hyrkania] called Talka" (topostext), a lone island citation amid an otherwise mainland-coastal book.map
     "7.01.94.03",  # Barake - "Islands lying near the part of India which projects into the ocean in the Gulf of Kanthi: Barake" (topostext), a single-island section
@@ -902,6 +903,26 @@ _COASTAL_APPENDIX_SECTIONS = {
     # ("inmost point of the Syrtis by the line running south...to the end
     # point at") and correctly stays `city`.
     ("4.03", "14"),
+    # Found the same way (user-reported "cities in the water" on a rendered
+    # map): the Kasiotis coast, between the Nile delta and Gaza (book.map
+    # "4.05", sections "11"/"12"). Headed "In Kassiotis" (a district name,
+    # not a sea-word) - topostext (4.5.11/4.5.12) confirms it's a coastal
+    # walk regardless: "Gerron *border*" (Kasiotis's own end marker), then
+    # Kassion (Mt. Kasios, the coastal dune/promontory on the Egypt-Judaea
+    # road), the outlet of Lake Sirbonis (already `lake` via _LAKE_RE,
+    # unaffected), Ostrakine, Rhinokoroura, ending at Anthedon - the same
+    # real place, same coordinates, as Judaea's own "Anthedon" (5.16.02.11,
+    # the end of that book's own coastal walk - see _ANTHEDON in
+    # static_map.py). Left as `city`, this whole stretch fell between
+    # Egypt's own coastline (which jumped straight from the Nile delta to
+    # the Sinai/Suez turning point) and Judaea's, leaving five real coastal
+    # towns stranded north of the rendered shore. Egypt's own "Anthedon"
+    # citation (4.05.12.06) is a bit-identical duplicate of Judaea's -
+    # skipped via _COASTLINE_SKIP_REF_IDS so this section's edges still run
+    # straight through to the Grenzpunkt/Zipfel des Arabischen Golfes
+    # continuation instead of stopping a point early.
+    ("4.05", "11"),
+    ("4.05", "12"),
     ("4.04", "04"),
     ("4.06", "05"),
     ("4.06", "06"),
@@ -1614,6 +1635,10 @@ _COASTLINE_SKIP_REF_IDS = {
     # that set's own comment.
     "5.19.01.11",  # Grenzpunkt (Arabia Deserta, Babylonien)/Maisanitischer Golf - topostext (5.19.1) is explicit these are Arabia Deserta's own two *territorial* limit points ("bounded...on the east by Babylonia...to the inner recess of the Maisanites Gulf at 79.30d10' and by the nearer part of the Persian Gulf to a limit point at 79.29d00'"), not a coastal walk - and this one is a bit-identical coordinate duplicate of book 6.07's own "Maisanitischer Golf" (6.07.19.05, already the correct northern end of that long Arabian-coast walk). Left in, catalogue order zigzagged 30.17 -> 29.00 -> 30.17 -> 29.50 -> 29.25 (both Grenzpunkt entries, then the real walk) - the "coast facing the wrong way" the user spotted at the head of the Persian Gulf. Excluding both lets 6.07.19.05 stitch straight to Idikara (5.19.04.03, 0.67 degrees, a clean monotonic hand-off) instead.
     "5.19.01.13",  # Grenzpunkt (Arabia Deserta, Arabia Felix) - Arabia Deserta's own *other* territorial limit point from the same topostext passage (5.19.1) - not a coastal walk point either, see 5.19.01.11 above.
+    "4.05.12.06",  # Anthedon (Egypt's own Kasiotis-list citation) - a bit-identical coordinate duplicate of Judaea's own "Anthedon" (5.16.02.11, the real end of that book's coastal walk - see _COASTAL_APPENDIX_SECTIONS' "4.05","12" entry above). Skipped so Egypt's own walk runs straight through from Rhinokorura to the Grenzpunkt/Zipfel des Arabischen Golfes continuation, rather than stopping one point early at a duplicate of a place already correctly drawn from the other side.
+    "6.03.02.01",  # Tigris-Mündung (westliche) - topostext (6.3.2) is explicit this is a re-citation, not new data: "this coast is described as follows: the western mouth of the Tigris river *is in the description of Babylonia*" - i.e. the same point as 5.20.05.03, restated only as Susiane's own orientation marker for where its coast picks up. Left in, catalogue order zigzagged both Tigris-mouth citations back and forth (Babylonia's 5.20.01.08/5.20.05.03 pair, then Teredon, then Susiane's own re-citation of the same two mouths again) - the "broken coastline" at the Persian Gulf's head the user spotted, a second instance of the same bug class as 5.19.01.11/.13 above.
+    "6.03.02.03",  # Tigris-Mündung (östliche) - Susiane's own re-citation of the *other* Tigris mouth (5.20.01.08), same topostext passage (6.3.2), see 6.03.02.01 above. Excluding both lets Susiane's own walk start cleanly at Charax des Pasines (6.03.02.04), 1.68 degrees from Babylonia's own last point (Teredon, 5.20.05.04) - a clean hand-off instead of a zigzag.
+    "6.03.01.10",  # Oroatis-Mündung - a third duplicate in the same book.map, found only after excluding the two above (it had been quietly absorbed into a non-crossing edge until then, then started self-intersecting once that edge changed). Topostext (6.3.1) confirms it too is an introductory boundary mention, not a walk point: Susiane "is bounded...on the east by Persis along the line linking the limit point of Assyrians and Media to the mouth of the Oroatis river" - a bit-identical coordinate duplicate of the walk's own real, correctly-sequenced last point (6.03.02.14, right before its own Oroatis-Quellen). Sorting first in raw catalogue order (section "01" before "02"), left in it pulled the walk's very first edge straight across to its own far end and back.
 }
 
 # A narrower tool than _COASTLINE_SKIP_REF_IDS: that one drops a point from
@@ -1837,7 +1862,7 @@ _BOUNDARY_STITCH_REF_ID_PAIRS = {
     ("6.21.02.11", "7.01.02.03"),  # Grenzpunkt (Gedrosien, Indien) -> Naustathmos (Gedrosia/India border reaching the sea into India's own Gulf of Kanthi/Kutch)
     ("5.17.01.12", "6.07.02.04"),  # Elana/Elanitischer Golf (Winkel) -> Onne (Gulf of Aqaba; topostext: "border of the Arabian Gulf in the inmost part of the Elanite gulf, Onne")
     ("2.05.04.09", "2.06.01.05"),  # Vacua-Mündung -> Avus-Mündung (NW Iberia's own coast continuing north, real Vouga/Ave river mouths in Portugal)
-    ("5.20.05.04", "6.03.02.01"),  # Teredon -> Tigris-Mündung (westliche) (head of the Persian Gulf; topostext explicitly continues "this coast is described as follows: the western mouth of the Tigris river..." - the closest of three candidate neighbours found for this same target point, see the round's own note on Iokura/Tigris-östliche below)
+    ("5.20.05.04", "6.03.02.04"),  # Teredon -> Charax des Pasines (head of the Persian Gulf; topostext (6.3.2) explicitly continues Babylonia's own coast: "this coast is described as follows: the western mouth of the Tigris river is in the description of Babylonia...Charax Pasinou..." - originally paired to "Tigris-Mündung (westliche)" (6.03.02.01), a bit-identical duplicate re-citation of that same continuity statement, since excluded (_COASTLINE_SKIP_REF_IDS) as its own zigzag bug; re-pointed to the walk's real next point once that duplicate stopped being an endpoint)
     ("6.03.02.14", "6.04.02.02"),  # Oroatis-Mündung -> Kap Taoke (Persis coast; topostext matches both to "mouth of the Oroatis river Taoke promontory")
     ("3.05.14.02", "5.09.02.02"),  # Tanaïs (östlicher Mündungsarm) -> Paniardis (Sea of Azov/Sarmatia coast; topostext: "mouth of the Tanais river Paniardis")
     ("6.04.02.10", "6.08.04.01"),  # Bagradas-Mündung -> Daras-Mündung (Persian Gulf coast, both citations use explicit boundary/limit-point language)
