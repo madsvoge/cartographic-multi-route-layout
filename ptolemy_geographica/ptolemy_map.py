@@ -2733,9 +2733,21 @@ def build_island_lines(refs: list[Reference]) -> list[list[Reference]]:
     catalogue order - grouped by _ISLAND_LINE_GROUPS rather than a graph,
     since (unlike coastlines) there's no reliable distance-based way to
     tell one island's own coastal walk apart from a list of several
-    different islands (see _ISLAND_LINE_GROUPS). Closes into a loop if the
-    trail's two ends land close enough relative to its own length - the
-    same check build_coastlines uses (_CLOSE_LOOP_MAX_GAP_DEG/_RATIO)."""
+    different islands (see _ISLAND_LINE_GROUPS). Always closes into a
+    loop - unlike build_coastlines()'s mainland trails, which might
+    legitimately be an open arc of a much bigger not-yet-stitched
+    landmass, every _ISLAND_LINE_GROUPS entry is a *manually confirmed*
+    single island's own complete coastal walk, and a real island's
+    coastline is inherently a closed shape. build_coastlines()'s
+    _CLOSE_LOOP_MAX_GAP_DEG/_RATIO gap-vs-length heuristic doesn't apply
+    here for the same reason: it exists to tell a genuine loop closure
+    apart from two nearby-but-unconnected points on an open trail, which
+    isn't a live question once the island itself is already confirmed.
+    Left unconditional, that heuristic wrongly left Karpathos (5.02.33,
+    just 3 points/2 edges - Kap Thoanteion, Kap Ephialtion, Potidaion)
+    open: its closing gap (0.53 degrees) is small in absolute terms but
+    more than 30% of its own very short 2-edge path length, exactly the
+    kind of short-path false negative the ratio check can't avoid."""
 
     def sort_key(ref: Reference) -> tuple:
         return tuple(int(p) if p.isdigit() else p for p in ref.ref_id.split("."))
@@ -2754,12 +2766,7 @@ def build_island_lines(refs: list[Reference]) -> list[list[Reference]]:
         if len(items) < 2:
             continue
         items.sort(key=sort_key)
-        first, last = items[0], items[-1]
-        closing_gap = _ref_dist(first, last)
-        path_length = sum(_ref_dist(items[i], items[i + 1]) for i in range(len(items) - 1))
-        if closing_gap <= _CLOSE_LOOP_MAX_GAP_DEG and closing_gap <= _CLOSE_LOOP_MAX_GAP_RATIO * path_length:
-            items = items + [first]
-        lines.append(items)
+        lines.append(items + [items[0]])
     return lines
 
 

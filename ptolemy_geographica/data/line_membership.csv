@@ -1768,9 +1768,9 @@ id,point_id,feature_kind,feature_id,sequence_in_feature,next_point_id,closes_loo
 2036,5.02.29.08,island,island_002_Lesbos,5,5.02.29.09,1
 2037,5.02.29.09,island,island_002_Lesbos,6,5.02.29.10,1
 2038,5.02.29.10,island,island_002_Lesbos,7,5.02.29.03,1
-2039,5.02.33.02,island,island_003_Karpathos,0,5.02.33.03,0
-2040,5.02.33.03,island,island_003_Karpathos,1,5.02.33.04,0
-2041,5.02.33.04,island,island_003_Karpathos,2,,0
+2039,5.02.33.02,island,island_003_Karpathos,0,5.02.33.03,1
+2040,5.02.33.03,island,island_003_Karpathos,1,5.02.33.04,1
+2041,5.02.33.04,island,island_003_Karpathos,2,5.02.33.02,1
 2042,5.02.34.02,island,island_004_Rhodes,0,5.02.34.03,1
 2043,5.02.34.03,island,island_004_Rhodes,1,5.02.34.04,1
 2044,5.02.34.04,island,island_004_Rhodes,2,5.02.34.05,1
