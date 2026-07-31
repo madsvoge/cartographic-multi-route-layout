@@ -9,7 +9,12 @@ diffs badly in git - this writes plain, git-diffable CSV snapshots of it
 on every commit, purely for human-readable history, never read back in as
 a source themselves.
 
-Writes three files: sections.csv, points.csv, line_membership.csv.
+Writes six files: sections.csv, points.csv, line_membership.csv,
+connection_overrides.csv, point_overrides.csv, section_overrides.csv - the
+last two are the git-diffable record of the override *rules* themselves
+(see README.md's "The curated database" section): editing one of those
+tables and re-running this script turns the correction into a readable
+git diff, the same way editing a Python exception list used to.
 
 Usage
 -----
@@ -45,11 +50,15 @@ def export(db_path: Path, outdir: Path) -> None:
     n_points = _dump_table(conn, "point", "point_id", outdir / "points.csv")
     n_membership = _dump_table(conn, "line_membership", "feature_id, sequence_in_feature", outdir / "line_membership.csv")
     n_overrides = _dump_table(conn, "connection_override", "feature_kind, id", outdir / "connection_overrides.csv")
+    n_point_overrides = _dump_table(conn, "point_override", "point_id, override_type", outdir / "point_overrides.csv")
+    n_section_overrides = _dump_table(conn, "section_override", "section_id, override_type", outdir / "section_overrides.csv")
     conn.close()
     print(f"wrote {outdir}/sections.csv ({n_sections} rows)")
     print(f"wrote {outdir}/points.csv ({n_points} rows)")
     print(f"wrote {outdir}/line_membership.csv ({n_membership} rows)")
     print(f"wrote {outdir}/connection_overrides.csv ({n_overrides} rows)")
+    print(f"wrote {outdir}/point_overrides.csv ({n_point_overrides} rows)")
+    print(f"wrote {outdir}/section_overrides.csv ({n_section_overrides} rows)")
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:

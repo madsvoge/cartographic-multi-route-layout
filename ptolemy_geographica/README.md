@@ -2335,18 +2335,20 @@ dataset - documented, queryable, with a real place for the "why" behind
 every correction, instead of that "why" living only in Python comments
 next to an exception-list entry.
 
-`db/schema.sql` defines four SQLite tables, replacing the flat
-one-row-per-point annotated CSV as the authoritative shape going forward:
+`db/schema.sql` defines six SQLite tables, replacing both the flat
+one-row-per-point annotated CSV *and* `ptolemy_map.py`'s eighteen Python
+exception-list literals as the authoritative shape going forward:
 
 - **`section`** - one row per (book.map.section), not one per point: book
   and map are Ptolemy's own numbers (kept alongside `tabula`'s continent-
   code convention, not instead of it - the two answer different
-  questions), plus `short_title`, `description_catalogue` (the data
-  catalogue's own header row text - short, since the catalogue itself only
-  ever has that, not prose), `description_topos` (topostext's own lead-in
-  prose before the section's first coordinate), `section_type`, and
-  `note` (why this section's classification needed manual review, if it
-  did).
+  questions), `print_sheet` (the xlsx's own `ID_map`/tabula code, "EU09" -
+  what `feature_id` strings like `coastline_003_EU09` are built from),
+  `short_title`, `description_catalogue` (the data catalogue's own header
+  row text - short, since the catalogue itself only ever has that, not
+  prose), `description_topos` (topostext's own lead-in prose before the
+  section's first coordinate), `section_type`, and `note` (why this
+  section's classification needed manual review, if it did).
 - **`point`** - `category`/`extra_categories`/`name_catalogue`/
   `name_topos`/`modern_location`/`recension`/`match_score`/`topos_id`/
   `revision_notes`, plus `lon_ptolemy`/`lat_ptolemy` straight from the data
@@ -2361,57 +2363,82 @@ one-row-per-point annotated CSV as the authoritative shape going forward:
   once, which four flat columns on `point` could never cleanly represent.
   `next_point_id` makes every line-adjacency explicit stored data: to
   redraw a line now, follow `next_point_id` until NULL (or back to the
-  start, if `closes_loop`) - no separate exception-list mechanism is
-  needed any more for a boundary-citation skip (the point just has no
-  membership row for that feature_kind) or a hard break (`next_point_id`
-  already names the real neighbour). This subsumes what
-  `_COASTLINE_SKIP_REF_IDS`/`_COASTLINE_HARD_BREAKS` did in code.
-- **`connection_override`** - the one class of fact that's neither a
+  start, if `closes_loop`).
+- **`point_override`** / **`section_override`** - the override *rules*
+  themselves, one row per (point_id or section_id, override_type):
+  `force_island_point`/`force_mountain_point`/`force_river_point`/
+  `force_noncoastal_point`/`coastline_skip`/`river_line_skip`/
+  `coastline_explicit_order` on `point_override` (what used to be
+  `_ISLAND_POINT_OVERRIDES`, `_MOUNTAIN_POINT_OVERRIDES`,
+  `_RIVER_POINT_OVERRIDES`, `_NONCOASTAL_POINT_OVERRIDES`,
+  `_COASTLINE_SKIP_REF_IDS`, `_RIVER_LINE_SKIP_REF_IDS`, and
+  `_COASTLINE_EXPLICIT_ORDER_OVERRIDES` respectively), and
+  `force_island_section`/`force_mountain_section`/`force_coastal_section`/
+  `force_noncoastal_section`/`island_line_group` on `section_override`
+  (what used to be `_ISLAND_APPENDIX_SECTIONS`,
+  `_MOUNTAIN_APPENDIX_SECTIONS`, `_COASTAL_APPENDIX_SECTIONS`,
+  `_NONCOASTAL_EXCEPTION_SECTIONS`, and `_ISLAND_LINE_GROUPS`). `value`
+  carries the one piece of structured data a handful of these need (the
+  explicit ref_id ordering, as a JSON array; the island's own name) - NULL
+  for a plain membership override. `note` is the "why", the same role
+  ptolemy_map.py's code comments used to play. A unique index on
+  `(point_id/section_id, override_type)` means a contradictory duplicate
+  entry fails loudly at write time instead of silently picking one, the
+  way a Python dict's last-write-wins used to.
+- **`connection_override`** - the pairwise facts that are neither a
   section's nor a single point's own property nor a simple next-point
-  link: pairwise guards like `_RIVER_LINE_NO_MERGE_REF_ID_PAIRS` ("these
-  two ref_ids, despite matching heuristics, are not the same physical
-  point").
+  link, widened from its original sole `no_merge` use to cover all six
+  pair-scoped collections: `no_merge` (was
+  `_RIVER_LINE_NO_MERGE_REF_ID_PAIRS`, "these two ref_ids, despite
+  matching heuristics, are not the same physical point"), `hard_break`
+  (was `_COASTLINE_HARD_BREAKS`), `force_stitch` (was
+  `_BOUNDARY_STITCH_REF_ID_PAIRS`), `no_close_loop`/`force_close_loop`
+  (was `_NO_CLOSE_LOOP_TRAILS`/`_FORCE_CLOSE_LOOP_TRAILS`), and
+  `manual_junction` (was `_MANUAL_JUNCTION_REF_ID_PAIRS` - the one
+  `relation_type` where `value` and `note` legitimately hold the same
+  text, since its dict value always *was* its own justification prose,
+  with no separate code comment to distinguish them).
+
+A correction is now a row insert/edit in `point_override`, `section_override`,
+or `connection_override` (with a `note` explaining why), not a new entry in
+one of `ptolemy_map.py`'s eighteen Python exception lists.
 
 `db/build_database.py` is the *bootstrap* - it populates the database from
-everything the existing pipeline and its eighteen rounds of accumulated
-exception lists already know (reading the fully-resolved annotated CSV,
-the raw xlsx's own header rows, topostext's raw section prose, and
-`ptolemy_map.py`'s own source text for every trailing/preceding comment
-next to an exception-list entry, migrated into `note`/`revision_notes`).
-It is meant to run once, and again only when genuinely new source data
-arrives - from here on, a correction is an edit to the database with a
-note explaining why, not a new Python exception-list entry.
+everything the existing pipeline already knows: the fully-resolved
+annotated CSV, the raw xlsx's own header rows and `ID_map`/print_sheet
+codes, topostext's raw section prose, and - for the override tables
+specifically - `ptolemy_map.py`'s eighteen collections themselves, read as
+live Python objects (`import ptolemy_map as pm`, not re-parsed out of
+source text - simpler and immune to edge cases like a multi-line comment
+or a value that happens to look like a tuple) for *what* each rule is,
+paired with a walk of `ptolemy_map.py`'s own source text for *why* (the
+trailing/preceding comment next to each entry, migrated into `note`). It
+is meant to run once, and again only when genuinely new source data
+arrives (or to re-verify history against an old revision) - from here on,
+the eighteen Python collections are a frozen historical record, not a live
+input to the pipeline (see "Reading overrides from the database" below).
 
-The first version of the comment extractor undercounted badly (130/1291
-sections, 39/6372 points) because it only ever looked for a same-line
-trailing `# comment`, missing this file's other, equally common authoring
-style: a whole paragraph *preceding* the entry (or entries) it explains,
-sometimes one entry, sometimes a shared rationale for a long run of bare
-ones (the 109-section round-17 batch has no per-entry comments at all -
-just one paragraph above the whole list). The rewritten extractor walks
-line by line instead of matching the whole block at once, handling three
-shapes: a same-line comment (attaches to that entry alone), a comment
-block directly above one entry (attaches to *that* entry, fixing a
-subtler original bug where a lazy regex quantifier crossed the newline
-and attached the *next* entry's explanation, truncated at its own first
-line break, to the *previous* one instead), and a comment block above a
-run of otherwise-bare entries (propagated to all of them, and combined
-with each entry's own extra same-line label where both exist, e.g. the
-Danube delta's explicit mouth-ordering: one shared paragraph plus each of
-its five entries' own river-mouth name). It also now covers two more
-source collections with real reasoning in them
-(`_BOUNDARY_STITCH_REF_ID_PAIRS`, `_NO_CLOSE_LOOP_TRAILS`, both feeding
-`connection_override`) and folds in a collection's own intro comment
-(the paragraph immediately above its `= {` line, previously outside the
-extracted block entirely). Coverage now: **276/276 section-level
-exception entries** (every one - `_COASTAL_APPENDIX_SECTIONS` and its
-three siblings, matched exactly) and **47/49 point-level exception
-entries** have a migrated note; the remaining two are genuinely
-undocumented in the source (no comment at all, same-line or block) and
-would need a fresh look, not a better parser. Comment migration is
-still necessarily best-effort - a human reading the source could still
-draw finer distinctions than a line-based heuristic - but it is no longer
-leaving whole categories of documented reasoning on the floor.
+The comment extractor walks each collection's source block line by line,
+handling three shapes: a same-line comment (attaches to that entry alone),
+a comment block directly above one entry (attaches to *that* entry), and a
+comment block above a run of otherwise-bare entries (propagated to all of
+them, combined with each entry's own extra same-line label where both
+exist - e.g. the Danube delta's explicit mouth-ordering: one shared
+paragraph plus each of its five entries' own river-mouth name). It also
+folds in a collection's own intro comment (the paragraph immediately above
+its `= {` line). Coverage, migrating all eighteen collections into the
+three override tables: **all 409 entries** round-trip exactly (63 into
+`point_override`, 288 into `section_override`, 58 into
+`connection_override`, matching the live Python collections' own counts
+one-for-one), and **every one of the 409 carries a migrated note** -
+`_ISLAND_LINE_GROUPS` and `_MANUAL_JUNCTION_REF_ID_PAIRS` reach the
+database for the first time here (previously absent from the extractor's
+own source lists entirely). This is a separate, dedicated-per-override
+coverage figure from the older `section.note`/`point.revision_notes`
+catch-all columns (which merge notes across *all* collections touching a
+given section/point into one field, last-collection-wins, and still show
+gaps - not every section/point needed a *general* review note, only the
+one specific override that applies to it needs its own).
 
 `export_defaux_style_json.py` now reads from the database rather than the
 annotated CSV, so its output carries `note`/`revision_notes` and each
@@ -2423,14 +2450,20 @@ a constructed line at all.
 `db/export_csv_from_db.py` writes the database back out as four
 git-diffable CSV snapshots (`data/sections.csv`, `data/points.csv`,
 `data/line_membership.csv`, `data/connection_overrides.csv`) purely for
-human-readable history in git - the database file itself is gitignored
-(same reasoning as the `.gpkg`), the CSVs are the readable record of what
-changed and when, never read back in as a source themselves.
+human-readable history in git - `db/ptolemy.db` itself is also git-tracked
+(unlike the `.gpkg`/`.html`/`.png`/Defaux JSON outputs, which really are
+generated-and-gitignored), since it now holds `point_override`/
+`section_override`/`connection_override` rows that are themselves
+authored data - the actual override rules, not just their recomputed
+results - and would otherwise have no durable home at all. The CSVs stay
+useful as a readable diff of *what* changed and when; the database is
+what's actually read back in.
 
 ```
-$ python3 db/build_database.py            # -> db/ptolemy.db (bootstrap/rebuild)
-$ python3 db/export_csv_from_db.py         # -> data/sections.csv, points.csv, line_membership.csv, connection_overrides.csv
-$ python3 export_defaux_style_json.py      # -> ptolemy_geographica_defaux_style.json, now read from db/ptolemy.db
+$ python3 db/build_database.py            # -> db/ptolemy.db (bootstrap/rebuild, rare)
+$ python3 db/export_csv_from_db.py         # -> data/sections.csv, points.csv, line_membership.csv,
+                                            #    connection_overrides.csv, point_overrides.csv, section_overrides.csv
+$ python3 export_defaux_style_json.py      # -> ptolemy_geographica_defaux_style.json, read from db/ptolemy.db
 ```
 
 ### Coverage: how much of each catalogue is mapped to the other, and a fuzzy match score

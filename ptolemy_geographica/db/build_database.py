@@ -44,6 +44,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 import re
 import sqlite3
 import sys
@@ -54,7 +55,13 @@ ROOT_DIR = SCRIPT_DIR.parent
 sys.path.insert(0, str(ROOT_DIR))
 sys.path.insert(0, str(ROOT_DIR / "topostext"))
 
-from section_header_check import load_catalogue_headers, load_topostext_headers, RAW_TOPOSTEXT_FILES  # noqa: E402
+import ptolemy_map as pm  # noqa: E402 - the override collections' own live values (see _POINT_OVERRIDE_TYPES etc. below), not just their comments
+from section_header_check import (  # noqa: E402
+    load_catalogue_headers,
+    load_catalogue_print_sheets,
+    load_topostext_headers,
+    RAW_TOPOSTEXT_FILES,
+)
 
 DEFAULT_DB = SCRIPT_DIR / "ptolemy.db"
 DEFAULT_CSV = ROOT_DIR / "data" / "ptolemy_catalogue_annotated.csv"
@@ -92,15 +99,23 @@ _LINE_FEATURE_COLUMNS = {
 # the top (`_COASTLINE_EXPLICIT_ORDER_OVERRIDES`'s Danube-delta paragraph)
 # reaches every entry under it rather than none.
 
-_SECTION_ENTRY_RE = re.compile(r'\(\s*"(\d+\.\d+)"\s*,\s*"(\d+)"\s*\)\s*,')
+# Trailing separator is `[,:]`, not just `,` - a plain set entry ("x",) and
+# a dict entry ("x": value) both need to match here. _POINT_ENTRY_RE already
+# needed this for _COASTLINE_EXPLICIT_ORDER_OVERRIDES's "ref_id": (...)
+# shape; _SECTION_ENTRY_RE/_PAIR_ENTRY_RE didn't until _ISLAND_LINE_GROUPS/
+# _MANUAL_JUNCTION_REF_ID_PAIRS (both dict-valued) needed the same widening
+# to have their own reasoning reach the database (see point_override.py's
+# and connection_override's `value` column).
+_SECTION_ENTRY_RE = re.compile(r'\(\s*"(\d+\.\d+)"\s*,\s*"(\d+)"\s*\)\s*[,:]')
 _POINT_ENTRY_RE = re.compile(r'"(\d+\.\d+\.\d+\.\d+)"\s*[,:]')
-_PAIR_ENTRY_RE = re.compile(r'\(\s*"(\d+\.\d+\.\d+\.\d+)"\s*,\s*"(\d+\.\d+\.\d+\.\d+)"\s*\)\s*,')
+_PAIR_ENTRY_RE = re.compile(r'\(\s*"(\d+\.\d+\.\d+\.\d+)"\s*,\s*"(\d+\.\d+\.\d+\.\d+)"\s*\)\s*[,:]')
 
 _SECTION_NOTE_SOURCES = [
     "_COASTAL_APPENDIX_SECTIONS",
     "_NONCOASTAL_EXCEPTION_SECTIONS",
     "_ISLAND_APPENDIX_SECTIONS",
     "_MOUNTAIN_APPENDIX_SECTIONS",
+    "_ISLAND_LINE_GROUPS",
 ]
 _POINT_NOTE_SOURCES = [
     "_RIVER_POINT_OVERRIDES",
@@ -111,13 +126,17 @@ _POINT_NOTE_SOURCES = [
     "_RIVER_LINE_SKIP_REF_IDS",
     "_COASTLINE_EXPLICIT_ORDER_OVERRIDES",
 ]
-_PAIR_NOTE_SOURCES = [
-    ("_COASTLINE_HARD_BREAKS", "coastline", "hard_break"),
-    ("_RIVER_LINE_NO_MERGE_REF_ID_PAIRS", "river", "no_merge"),
-    ("_BOUNDARY_STITCH_REF_ID_PAIRS", "coastline", "force_stitch"),
-    ("_NO_CLOSE_LOOP_TRAILS", "coastline", "no_close_loop"),
-    ("_FORCE_CLOSE_LOOP_TRAILS", "coastline", "force_close_loop"),
-]
+# The pair-scoped collections' own note sources are declared as part of
+# _CONNECTION_OVERRIDE_TYPES further below (it needs the same five names
+# anyway, to pull each collection's *value* straight off `pm`, so there's
+# no separate list here the way _SECTION_NOTE_SOURCES/_POINT_NOTE_SOURCES
+# stand apart from their *_OVERRIDE_TYPES counterparts).
+# _MANUAL_JUNCTION_REF_ID_PAIRS is handled separately, in
+# build_connection_override_rows() below: its one entry's value is itself
+# a multi-line parenthesized string (its own justification prose, not a
+# short label with a separate trailing/preceding comment), a shape
+# _iter_entries_with_notes' line-by-line walk isn't built for - with
+# exactly one entry, not worth generalizing the walker for.
 
 
 def _extract_block(source: str, name: str) -> str:
@@ -211,34 +230,179 @@ def _iter_entries_with_notes(block: str, entry_re: re.Pattern) -> list[tuple[re.
     return results
 
 
-def extract_section_notes(source: str) -> dict[tuple[str, str], str]:
-    notes: dict[tuple[str, str], str] = {}
-    for block_name in _SECTION_NOTE_SOURCES:
+def _notes_by_block(source: str, block_names: list[str], entry_re: re.Pattern, key_fn) -> dict[str, dict]:
+    """Walk each of `block_names`'s own source block and collect its
+    entries' notes, kept separate *per block* rather than merged into one
+    dict - so a point_override/section_override/connection_override row
+    can be given the note that actually came from *its own* collection,
+    even where the same key happens to also appear (with a different note)
+    in a different collection covered by the same walk. `extract_section_
+    notes()`/`extract_point_notes()` below merge these per-block dicts
+    into one (last-block-wins) for the general-purpose `section.note`/
+    `point.revision_notes` catch-all columns; the
+    `build_*_override_rows()` functions use the per-block version instead,
+    since a row's `note` must trace back to the specific override it
+    documents, not whichever collection happened to be walked last."""
+    result: dict[str, dict] = {}
+    for block_name in block_names:
         block = _extract_block(source, block_name)
-        for m, note in _iter_entries_with_notes(block, _SECTION_ENTRY_RE):
+        notes = {}
+        for m, note in _iter_entries_with_notes(block, entry_re):
             if note:
-                notes[(m.group(1), m.group(2))] = note
-    return notes
+                notes[key_fn(m)] = note
+        result[block_name] = notes
+    return result
+
+
+def extract_section_notes(source: str) -> dict[tuple[str, str], str]:
+    merged: dict[tuple[str, str], str] = {}
+    per_block = _notes_by_block(source, _SECTION_NOTE_SOURCES, _SECTION_ENTRY_RE, lambda m: (m.group(1), m.group(2)))
+    for notes in per_block.values():
+        merged.update(notes)
+    return merged
 
 
 def extract_point_notes(source: str) -> dict[str, str]:
-    notes: dict[str, str] = {}
-    for block_name in _POINT_NOTE_SOURCES:
-        block = _extract_block(source, block_name)
-        for m, note in _iter_entries_with_notes(block, _POINT_ENTRY_RE):
-            if note:
-                notes[m.group(1)] = note
-    return notes
+    merged: dict[str, str] = {}
+    per_block = _notes_by_block(source, _POINT_NOTE_SOURCES, _POINT_ENTRY_RE, lambda m: m.group(1))
+    for notes in per_block.values():
+        merged.update(notes)
+    return merged
 
 
-def extract_pair_notes(source: str) -> list[tuple[str, str, str, str, str]]:
-    """(feature_kind, relation_type, point_a, point_b, note)."""
-    pairs = []
-    for block_name, feature_kind, relation_type in _PAIR_NOTE_SOURCES:
-        block = _extract_block(source, block_name)
-        for m, note in _iter_entries_with_notes(block, _PAIR_ENTRY_RE):
-            pairs.append((feature_kind, relation_type, m.group(1), m.group(2), note))
-    return pairs
+# --- override rules themselves, not just their notes ---
+#
+# Each collection's *value* (which ref_ids it contains, or what value it
+# maps a key to) is read straight off the live `ptolemy_map` module
+# (imported as `pm` above), not re-parsed out of source text: simpler and
+# safer than teaching the regex walker above to also `ast.literal_eval`
+# arbitrary values, and immune to shapes it was never built for (see
+# _MANUAL_JUNCTION_REF_ID_PAIRS's multi-line string, handled separately
+# below). The regex walker's job stays exactly what it's already good at:
+# pairing a key with its human-written justification - `_notes_by_block()`
+# above supplies that half.
+
+_POINT_OVERRIDE_TYPES = {
+    "_ISLAND_POINT_OVERRIDES": "force_island_point",
+    "_MOUNTAIN_POINT_OVERRIDES": "force_mountain_point",
+    "_RIVER_POINT_OVERRIDES": "force_river_point",
+    "_NONCOASTAL_POINT_OVERRIDES": "force_noncoastal_point",
+    "_COASTLINE_SKIP_REF_IDS": "coastline_skip",
+    "_RIVER_LINE_SKIP_REF_IDS": "river_line_skip",
+}
+_POINT_OVERRIDE_VALUE_TYPES = {
+    "_COASTLINE_EXPLICIT_ORDER_OVERRIDES": "coastline_explicit_order",
+}
+_SECTION_OVERRIDE_TYPES = {
+    "_ISLAND_APPENDIX_SECTIONS": "force_island_section",
+    "_NONCOASTAL_EXCEPTION_SECTIONS": "force_noncoastal_section",
+    "_MOUNTAIN_APPENDIX_SECTIONS": "force_mountain_section",
+    "_COASTAL_APPENDIX_SECTIONS": "force_coastal_section",
+}
+_SECTION_OVERRIDE_VALUE_TYPES = {
+    "_ISLAND_LINE_GROUPS": "island_line_group",
+}
+_CONNECTION_OVERRIDE_TYPES = {
+    "_COASTLINE_HARD_BREAKS": ("coastline", "hard_break"),
+    "_RIVER_LINE_NO_MERGE_REF_ID_PAIRS": ("river", "no_merge"),
+    "_BOUNDARY_STITCH_REF_ID_PAIRS": ("coastline", "force_stitch"),
+    "_NO_CLOSE_LOOP_TRAILS": ("coastline", "no_close_loop"),
+    "_FORCE_CLOSE_LOOP_TRAILS": ("coastline", "force_close_loop"),
+}
+
+
+def build_point_override_rows(source: str, valid_ids: set[str]) -> list[dict]:
+    membership_notes = _notes_by_block(source, list(_POINT_OVERRIDE_TYPES), _POINT_ENTRY_RE, lambda m: m.group(1))
+    value_notes = _notes_by_block(source, list(_POINT_OVERRIDE_VALUE_TYPES), _POINT_ENTRY_RE, lambda m: m.group(1))
+    rows = []
+    for block_name, override_type in _POINT_OVERRIDE_TYPES.items():
+        notes = membership_notes[block_name]
+        for point_id in getattr(pm, block_name):
+            if point_id in valid_ids:
+                rows.append({"point_id": point_id, "override_type": override_type, "value": None, "note": notes.get(point_id, "")})
+    for block_name, override_type in _POINT_OVERRIDE_VALUE_TYPES.items():
+        notes = value_notes[block_name]
+        for point_id, value in getattr(pm, block_name).items():
+            if point_id in valid_ids:
+                rows.append(
+                    {
+                        "point_id": point_id,
+                        "override_type": override_type,
+                        "value": json.dumps(list(value)),
+                        "note": notes.get(point_id, ""),
+                    }
+                )
+    return rows
+
+
+def build_section_override_rows(source: str, valid_sections: set[str]) -> list[dict]:
+    key_fn = lambda m: (m.group(1), m.group(2))  # noqa: E731
+    membership_notes = _notes_by_block(source, list(_SECTION_OVERRIDE_TYPES), _SECTION_ENTRY_RE, key_fn)
+    value_notes = _notes_by_block(source, list(_SECTION_OVERRIDE_VALUE_TYPES), _SECTION_ENTRY_RE, key_fn)
+    rows = []
+    for block_name, override_type in _SECTION_OVERRIDE_TYPES.items():
+        notes = membership_notes[block_name]
+        for book_map, section_num in getattr(pm, block_name):
+            section_id = f"{book_map}.{section_num}"
+            if section_id in valid_sections:
+                rows.append(
+                    {
+                        "section_id": section_id,
+                        "override_type": override_type,
+                        "value": None,
+                        "note": notes.get((book_map, section_num), ""),
+                    }
+                )
+    for block_name, override_type in _SECTION_OVERRIDE_VALUE_TYPES.items():
+        notes = value_notes[block_name]
+        for (book_map, section_num), value in getattr(pm, block_name).items():
+            section_id = f"{book_map}.{section_num}"
+            if section_id in valid_sections:
+                rows.append(
+                    {
+                        "section_id": section_id,
+                        "override_type": override_type,
+                        "value": value,
+                        "note": notes.get((book_map, section_num), ""),
+                    }
+                )
+    return rows
+
+
+def build_connection_override_rows(source: str, valid_ids: set[str]) -> list[dict]:
+    key_fn = lambda m: (m.group(1), m.group(2))  # noqa: E731
+    pair_note_blocks = _notes_by_block(source, list(_CONNECTION_OVERRIDE_TYPES), _PAIR_ENTRY_RE, key_fn)
+    rows = []
+    for block_name, (feature_kind, relation_type) in _CONNECTION_OVERRIDE_TYPES.items():
+        notes = pair_note_blocks[block_name]
+        for point_a, point_b in getattr(pm, block_name):
+            if point_a in valid_ids and point_b in valid_ids:
+                rows.append(
+                    {
+                        "feature_kind": feature_kind,
+                        "relation_type": relation_type,
+                        "point_a": point_a,
+                        "point_b": point_b,
+                        "value": None,
+                        "note": notes.get((point_a, point_b), ""),
+                    }
+                )
+    # _MANUAL_JUNCTION_REF_ID_PAIRS - see the comment on _PAIR_NOTE_SOURCES
+    # above: its dict value *is* its own justification prose, so it doubles
+    # as both `value` and `note` here rather than needing a scraped comment.
+    for (point_a, point_b), value in pm._MANUAL_JUNCTION_REF_ID_PAIRS.items():
+        if point_a in valid_ids and point_b in valid_ids:
+            rows.append(
+                {
+                    "feature_kind": "coastline",
+                    "relation_type": "manual_junction",
+                    "point_a": point_a,
+                    "point_b": point_b,
+                    "value": value,
+                    "note": value,
+                }
+            )
+    return rows
 
 
 # --- section short_title (best-effort, from whatever we have) ---
@@ -255,9 +419,9 @@ def build(db_path: Path, csv_path: Path, xlsx_path: Path, force: bool) -> None:
     source = PTOLEMY_MAP_PY.read_text(encoding="utf-8")
     section_notes = extract_section_notes(source)
     point_notes = extract_point_notes(source)
-    pair_notes = extract_pair_notes(source)
 
     catalogue_headers = load_catalogue_headers(xlsx_path)
+    print_sheets = load_catalogue_print_sheets(xlsx_path)
     topos_headers = load_topostext_headers(RAW_TOPOSTEXT_FILES)
 
     with csv_path.open(newline="", encoding="utf-8") as fh:
@@ -288,6 +452,7 @@ def build(db_path: Path, csv_path: Path, xlsx_path: Path, force: bool) -> None:
                 "book": book,
                 "map": map_id,
                 "section_number": sec_num,
+                "print_sheet": print_sheets.get((map_id, sec_num), ""),
                 "short_title": _short_title(desc_cat, row["name"]),
                 "description_catalogue": desc_cat,
                 "description_topos": desc_topos,
@@ -296,9 +461,9 @@ def build(db_path: Path, csv_path: Path, xlsx_path: Path, force: bool) -> None:
             }
 
     conn.executemany(
-        "INSERT INTO section (section_id, book, map, section_number, short_title, "
+        "INSERT INTO section (section_id, book, map, section_number, print_sheet, short_title, "
         "description_catalogue, description_topos, section_type, note) "
-        "VALUES (:section_id, :book, :map, :section_number, :short_title, "
+        "VALUES (:section_id, :book, :map, :section_number, :print_sheet, :short_title, "
         ":description_catalogue, :description_topos, :section_type, :note)",
         sections.values(),
     )
@@ -375,17 +540,32 @@ def build(db_path: Path, csv_path: Path, xlsx_path: Path, force: bool) -> None:
         membership_rows,
     )
 
-    # --- connection_override: pairwise facts (no-merge guards, hard breaks) ---
+    # --- point_override / section_override / connection_override: the
+    # override RULES themselves, not just their scraped comment text - see
+    # the module comment above build_point_override_rows(). From here on,
+    # correcting a point/section/connection is an edit to one of these
+    # three tables (with a `note` explaining why), not a new entry in one
+    # of ptolemy_map.py's 18 Python collections.
     valid_ids = {r["ref_id"] for r in rows}
-    override_rows = [
-        {"feature_kind": fk, "relation_type": rt, "point_a": a, "point_b": b, "note": note}
-        for fk, rt, a, b, note in pair_notes
-        if a in valid_ids and b in valid_ids
-    ]
+    valid_sections = set(sections)
+    point_override_rows = build_point_override_rows(source, valid_ids)
+    section_override_rows = build_section_override_rows(source, valid_sections)
+    connection_override_rows = build_connection_override_rows(source, valid_ids)
+
     conn.executemany(
-        "INSERT INTO connection_override (feature_kind, relation_type, point_a, point_b, note) "
-        "VALUES (:feature_kind, :relation_type, :point_a, :point_b, :note)",
-        override_rows,
+        "INSERT INTO point_override (point_id, override_type, value, note) "
+        "VALUES (:point_id, :override_type, :value, :note)",
+        point_override_rows,
+    )
+    conn.executemany(
+        "INSERT INTO section_override (section_id, override_type, value, note) "
+        "VALUES (:section_id, :override_type, :value, :note)",
+        section_override_rows,
+    )
+    conn.executemany(
+        "INSERT INTO connection_override (feature_kind, relation_type, point_a, point_b, value, note) "
+        "VALUES (:feature_kind, :relation_type, :point_a, :point_b, :value, :note)",
+        connection_override_rows,
     )
 
     conn.commit()
@@ -394,8 +574,16 @@ def build(db_path: Path, csv_path: Path, xlsx_path: Path, force: bool) -> None:
     n_sections_with_note = sum(1 for s in sections.values() if s["note"])
     n_points_with_note = sum(1 for p in point_rows if p["revision_notes"])
     n_sections_with_topos_desc = sum(1 for s in sections.values() if s["description_topos"])
+    n_point_overrides_with_note = sum(1 for r in point_override_rows if r["note"])
+    n_section_overrides_with_note = sum(1 for r in section_override_rows if r["note"])
+    n_connection_overrides_with_note = sum(1 for r in connection_override_rows if r["note"])
     print(f"wrote {db_path}")
-    print(f"  {len(sections)} sections, {len(point_rows)} points, {len(membership_rows)} line memberships, {len(override_rows)} connection overrides")
+    print(f"  {len(sections)} sections, {len(point_rows)} points, {len(membership_rows)} line memberships")
+    print(
+        f"  {len(point_override_rows)} point overrides ({n_point_overrides_with_note} with a note), "
+        f"{len(section_override_rows)} section overrides ({n_section_overrides_with_note} with a note), "
+        f"{len(connection_override_rows)} connection overrides ({n_connection_overrides_with_note} with a note)"
+    )
     print(f"  {n_sections_with_note}/{len(sections)} sections have a migrated note (same-line code comments only)")
     print(f"  {n_points_with_note}/{len(point_rows)} points have a migrated revision note")
     print(f"  {n_sections_with_topos_desc}/{len(sections)} sections have topostext lead-in prose")

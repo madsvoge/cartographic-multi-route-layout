@@ -128,6 +128,41 @@ def load_catalogue_headers(path: Path) -> dict[tuple[str, str], str]:
     return headers
 
 
+def load_catalogue_print_sheets(path: Path) -> dict[tuple[str, str], str]:
+    """(book.map, section) -> the xlsx's own ID_map/tabula code ("EU09") -
+    every row in a section shares the same ID_map, so this is just the
+    first row's value per section. Used by db/build_database.py to
+    populate `section.print_sheet`, which feature_id strings are built
+    from (see ptolemy_map.py's build_coastlines) - kept out of
+    load_catalogue_headers() above since that function's existing callers
+    don't need it and its return shape is already relied on elsewhere."""
+    import openpyxl
+
+    wb = openpyxl.load_workbook(str(path), read_only=True, data_only=True)
+    ws = wb[wb.sheetnames[0]]
+    rows = [
+        tuple(row) + (None,) * (8 - len(row))
+        for row in ws.iter_rows(min_row=2, max_col=8, values_only=True)
+        if row[0] and row[2]
+    ]
+    wb.close()
+
+    def section_key(row: tuple) -> tuple:
+        parts = str(row[0]).split(".")
+        return (row[1], parts[2] if len(parts) > 2 else None)
+
+    sheets: dict[tuple[str, str], str] = {}
+    for _key, section_rows in groupby(rows, key=section_key):
+        section_rows = list(section_rows)
+        id_parts = str(section_rows[0][0]).split(".")
+        book_map = ".".join(id_parts[:2])
+        section = id_parts[2] if len(id_parts) > 2 else ""
+        id_map = (section_rows[0][1] or "").strip()
+        if id_map:
+            sheets[(book_map, section)] = id_map
+    return sheets
+
+
 # --- topostext section headers (raw pasted text, prose before the first coordinate) ---
 
 _SECTION_RE = re.compile(r"§\s*(\d+)\.(\d+)\.(\d+)\.?\s+")
