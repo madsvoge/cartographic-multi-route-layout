@@ -469,6 +469,11 @@ fresh ones, so it's safe to re-run any number of times. `river_mentions.py`
 synthetic label rows pick up a (blank) `river_mentions` column instead of
 the CSV ending up with mismatched columns across row types.
 
+This is the *full* chain, needed only when the raw xlsx/topostext source
+itself changes - a correction to an existing point/section/connection
+doesn't need any of this any more, see "Making a correction (and cutting
+the pipeline down to what changed)" further below.
+
 ## Cross-checking against topostext.org (`topostext/`)
 
 Every classification and stitching decision so far has been verified
@@ -2465,6 +2470,90 @@ $ python3 db/export_csv_from_db.py         # -> data/sections.csv, points.csv, l
                                             #    connection_overrides.csv, point_overrides.csv, section_overrides.csv
 $ python3 export_defaux_style_json.py      # -> ptolemy_geographica_defaux_style.json, read from db/ptolemy.db
 ```
+
+### Making a correction (and cutting the pipeline down to what changed)
+
+The old advice, still true for a genuinely new source (a newly digitized
+book, a newly pasted topostext chunk), was "run every stage, in order":
+
+```
+annotate_dataset.py -> topostext/link_matches.py -> topostext/river_mentions.py ->
+topostext/build_labels.py -> db/build_database.py -> db/export_csv_from_db.py ->
+export_geopackage.py / export_defaux_style_json.py
+```
+
+That's wasteful for the far more common case - fixing one point's
+category, or a coastline connection - since `topostext/link_matches.py`
+alone is ~50 seconds (a fuzzy distance+name score over every catalogue
+point against every topostext citation) and doesn't even depend on
+overrides (see "Reading overrides from the database" below). A correction
+is now:
+
+1. **Edit a row** in `point_override`, `section_override`, or
+   `connection_override` (see `db/schema.sql`'s comments for the full
+   `override_type`/`relation_type` vocabulary, or `db/build_database.py`'s
+   module comment for how each maps back to what used to be a Python
+   exception-list entry) - an `INSERT`/`UPDATE`/`DELETE` against
+   `db/ptolemy.db` directly, with a `note` explaining why, the same role
+   a code comment used to play.
+2. **Run `python3 db/pipeline.py run`.** This recomputes `category`/
+   `extra_categories`/`section_type`/`line_membership` from the database
+   alone (`db/recompute.py` - no xlsx or topostext file access at all,
+   ~0.4 seconds on the full ~6,400-point catalogue instead of ~50+
+   seconds), then refreshes `data/ptolemy_catalogue_annotated.csv` (for
+   the map renderers, which stay untouched - see "Keeping the map
+   renderers working" below), the CSV snapshots, the Defaux JSON, and the
+   GeoPackage. `python3 db/pipeline.py status` reports whether a
+   recompute is even needed without doing one.
+
+Only the rare "new source data arrived" case still needs the full chain
+above, run by hand - `db/pipeline.py` deliberately doesn't try to
+auto-detect that, since it's a judgment call about new data having
+arrived, not something derivable from the database alone.
+
+#### Reading overrides from the database
+
+`ptolemy_map.py`'s classifier (`_classify_locality`) and its four
+graph/grouping algorithms (`build_coastlines`, `build_river_lines`,
+`build_island_lines`, plus `get_manual_junctions`) all take an optional
+`overrides: OverrideBundle` parameter (`overrides.py`) instead of reaching
+for the eighteen module-level constants directly - every call site
+defaults to `_DEFAULT_OVERRIDES` (`load_overrides_from_code()`, i.e.
+those constants themselves, frozen as of the last time
+`db/build_database.py`'s bootstrap ran) unless a caller passes
+`load_overrides_from_db(conn)` instead. `annotate_dataset.py` and
+`db/recompute.py` both pass the database-sourced bundle by default
+(`annotate_dataset.py --overrides code` falls back to the frozen
+constants, only meaningful for the one-time bootstrap before
+`db/ptolemy.db` exists at all). This is why editing `ptolemy_map.py`'s
+own constants no longer does anything for the running pipeline - they're
+historical record from here on, not live input.
+
+The one documented exception: `topostext/link_matches.py`'s match score
+reads a point's `category` for an 8-point tie-break bonus, so an
+override-driven category change *can*, rarely, flip a borderline
+topostext match. `db/pipeline.py run` doesn't chase this (it would mean
+re-running the ~50-second matching step on every correction, defeating
+the point of the fast path) - `db/pipeline.py status` is where that
+trade-off would get a visible advisory if it's ever worth adding one.
+
+#### Keeping the map renderers working
+
+`ptolemy_map.py`'s own interactive HTML map and `static_map.py`'s PNG
+renderer both still read `data/ptolemy_catalogue_annotated.csv` as a
+plain file, with no database awareness - out of scope to change (see the
+top of this file). `db/export_annotated_csv.py` inverts the direction
+instead: a pure `SELECT`-and-pivot from `point`/`section`/
+`line_membership` back into the exact CSV shape those two renderers
+already read, so they keep working unchanged while the database is
+upstream now. Label rows (`topostext/build_labels.py`'s synthetic
+province/island-group/mountain-range text, `category == "label"`) and the
+`topostext_matched`/`topostext_ref`/`topostext_name`/
+`topostext_match_score`/`river_mentions` columns aren't stored in the
+database at all (labels don't reach the Defaux JSON export either - see
+above), so `db/pipeline.py run` merges the previous CSV's own topostext
+columns back in and re-runs `build_labels.py` (cheap, no fuzzy matching)
+rather than silently dropping them on every regeneration.
 
 ### Coverage: how much of each catalogue is mapped to the other, and a fuzzy match score
 
