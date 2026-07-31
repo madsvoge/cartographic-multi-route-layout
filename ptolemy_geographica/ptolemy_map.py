@@ -1971,6 +1971,60 @@ _BOUNDARY_STITCH_REF_ID_PAIRS = {
     # topostext evidence and weren't confirmed either way.
 }
 
+# Real three-way (or more) coastal junctions - a single real-world point
+# where two or more *separately catalogued* provincial coastal
+# descriptions all meet - can't be represented by
+# _BOUNDARY_STITCH_REF_ID_PAIRS at all: _stitch_trails() only
+# concatenates trail *endpoints* into a longer trail, so a node can end
+# up with at most two neighbours in the result; a genuine third
+# connection at that same point has nowhere to go once the first two
+# have already claimed it (see the Ammaia/Maisanitischer-Golf note
+# above). These pairs are never fed to _stitch_trails() - get_coastlines()'s
+# trail geometry is unaffected by this dict - they exist purely as an
+# auditable, exported fact: static_map.py draws each one as its own short
+# solid bridge line (both entries here are well-evidenced, not schematic
+# guesses), and export_geopackage.py writes them into their own
+# "manual_bridges" layer, so the connection is visible in QGIS even
+# though get_coastlines() itself can't fold it into a single trail. Added
+# after the user pointed out that a `--fill-ptolemy-land` PNG showing
+# these connections isn't the same as them being checkable in the
+# GeoPackage they actually audit ref_ids against.
+_MANUAL_JUNCTION_REF_ID_PAIRS: dict[tuple[str, str], str] = {
+    ("4.05.12.05", "5.16.02.11"): (
+        "Rhinokorura (El-Arisch, Egypt's own Kasiotis-list citation) to Anthedon "
+        "(Gaza, Judaea's own coastal end) - 0.23 degrees apart along the real "
+        "Sinai coast (the Suez Canal did not exist to make this a water route, "
+        "but the two provinces' coastal descriptions do meet here on dry land). "
+        "Rhinokorura is an interior point of Africa's own huge coastal trail "
+        "(Egypt's coast continues past it toward the Gulf of Suez), so it can't "
+        "be reached with an ordinary stitch pair the way every other hand-off "
+        "on this coast can."
+    ),
+    ("5.20.05.03", "5.19.04.02"): (
+        "Tigris-Mündung (westliche) - Babylonia's own citation of the Persian "
+        "Gulf's head - to \"Ammaia\" - Susiana/Persis/Arabia's own citation of "
+        "the same real place (coordinate-identical to a third citation, "
+        "\"Maisanitischer Golf\", 6.07.19.05, already auto-stitched to Ammaia) "
+        "- 0.51 degrees apart. Ammaia is already interior to the merged "
+        "Susiana/Persis/Arabia trail, so a normal stitch pair targeting either "
+        "it or Maisanitischer Golf silently has no effect."
+    ),
+}
+
+
+def get_manual_junctions(refs: list[Reference]) -> list[tuple[Reference, Reference, str]]:
+    """Resolve _MANUAL_JUNCTION_REF_ID_PAIRS against a loaded reference
+    list, for callers that want to draw/export them (static_map.py,
+    export_geopackage.py) without duplicating the ref_id lookup. Skips
+    any pair where either point isn't present in `refs`."""
+    by_id = {r.ref_id: r for r in refs}
+    result = []
+    for (a, b), note in _MANUAL_JUNCTION_REF_ID_PAIRS.items():
+        ref_a, ref_b = by_id.get(a), by_id.get(b)
+        if ref_a is not None and ref_b is not None:
+            result.append((ref_a, ref_b, note))
+    return result
+
 # Two catalogue points are treated as "the same physical spot" (a shared
 # corner where two separate coastal walks both start/end) if within this
 # many degrees of each other.

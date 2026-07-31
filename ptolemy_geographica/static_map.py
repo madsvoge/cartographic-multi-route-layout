@@ -317,29 +317,33 @@ def _find_ref(refs, ref_id: str):
 
 def _build_eurasia_edge_polygon(refs) -> list[tuple[float, float]] | None:
     """Fillable shape for the whole Anthedon-to-Sarmatia arc: the real
-    trail itself, plus a single closing edge straight back from Chesinos-
-    Mündung to Rhinokorura - the coastal neighbour Anthedon itself bridges
-    to (see the comment above _RHINOKORURA) - completing the ring back to
-    the trail's own start. This closing edge has no textual backing (there
-    is no coastal description of Sarmatia/Scythia's own landward/eastern
-    side), and necessarily crosses real mapped interior territory (there's
-    nowhere near the map's own edges to route it through instead, unlike
-    the World polygon's south-edge closure - Rhinokorura sits at a middle
-    latitude, not near any edge) - but it's the *shortest* honest closure
-    available, not a detour via the world bbox's own edges. An earlier
-    version of this routed up to the bbox's northern edge and back down
-    first, doubling back right next to Chesinos-Mündung's own confirmed
-    rise to that edge - visually indistinguishable from a rendering bug.
-    See the comment above _build_north_edge_extension() for that separate,
-    genuinely confirmed extension, which is unaffected by this change."""
+    trail itself, then a closure that hugs the world bbox's own edges -
+    up from Chesinos-Mündung to the northern edge, across to the north-
+    east corner, down the eastern edge, then back west along the southern
+    edge to a point under Rhinokorura, then up to Rhinokorura itself - the
+    coastal neighbour Anthedon bridges to (see the comment above
+    _RHINOKORURA), completing the ring back to the trail's own start. This
+    mirrors `_build_world_edge_polygon()`'s own south-edge closure design
+    rather than cutting a diagonal through the mapped interior: a plain
+    background/"unknown land" fill reads better hugging the box's own
+    edges, well clear of real coastline and cities, than as a line
+    crossing directly over them - even though, same as that polygon, only
+    the Chesinos-Mündung end is a confirmed world edge; the rest is a
+    pragmatic closure with no textual backing."""
     trail = _eurasia_trail(refs)
     if trail is None:
         return None
     rhinokorura = _find_ref(refs, _RHINOKORURA)
     if rhinokorura is None:
         return None
+    lon_min, lat_min, lon_max, lat_max = _WORLD_EDGE_BBOX
+    chesinos = trail[-1]
+    top_under_chesinos = (chesinos.lon_modern, lat_max)
+    ne_corner = (lon_max, lat_max)
+    se_corner = (lon_max, lat_min)
+    south_under_rhinokorura = (rhinokorura.lon_modern, lat_min)
     coords = [(r.lon_modern, r.lat_modern) for r in trail]
-    coords += [(rhinokorura.lon_modern, rhinokorura.lat_modern)]
+    coords += [top_under_chesinos, ne_corner, se_corner, south_under_rhinokorura, (rhinokorura.lon_modern, rhinokorura.lat_modern)]
     return coords
 
 
@@ -348,7 +352,7 @@ def _build_eurasia_confirmed_bridge(refs) -> list[tuple[float, float]] | None:
     well-evidenced (see the comment above _RHINOKORURA): Anthedon (Gaza) to
     Rhinokorura (El-Arisch), 0.23 degrees apart along Egypt's own coast.
     Drawn solid, alongside the other confirmed lines - not the dashed,
-    genuinely-unconfirmed Chesinos-Rhinokorura closing edge."""
+    genuinely-unconfirmed bbox-edge closure."""
     trail = _eurasia_trail(refs)
     if trail is None:
         return None
@@ -360,22 +364,28 @@ def _build_eurasia_confirmed_bridge(refs) -> list[tuple[float, float]] | None:
 
 
 def _build_eurasia_edge_unconfirmed_lines(refs) -> list[list[tuple[float, float]]]:
-    """The one part of `_build_eurasia_edge_polygon()`'s boundary that has
-    no textual backing at all: the direct closing edge from Chesinos-
-    Mündung to Rhinokorura. Kept visually distinct (dashed) from the
+    """The part of `_build_eurasia_edge_polygon()`'s boundary that has no
+    textual backing at all: the hug of the world bbox's own north-east
+    corner and eastern/southern edges, from above Chesinos-Mündung round
+    to under Rhinokorura. Kept visually distinct (dashed) from the
     confirmed Chesinos-Mündung extension (drawn separately, solid, by
     `_build_north_edge_extension()`), the real coastline trail, and the
     confirmed Anthedon-Rhinokorura bridge (`_build_eurasia_confirmed_bridge()`,
-    also solid) - this edge alone is a pragmatic closure of what's still
-    open, not a confirmed stitch."""
+    also solid) - this traverse alone is a pragmatic closure of what's
+    still open, not a confirmed stitch."""
     trail = _eurasia_trail(refs)
     if trail is None:
         return []
     rhinokorura = _find_ref(refs, _RHINOKORURA)
     if rhinokorura is None:
         return []
+    lon_min, lat_min, lon_max, lat_max = _WORLD_EDGE_BBOX
     chesinos = trail[-1]
-    return [[(chesinos.lon_modern, chesinos.lat_modern), (rhinokorura.lon_modern, rhinokorura.lat_modern)]]
+    top_under_chesinos = (chesinos.lon_modern, lat_max)
+    ne_corner = (lon_max, lat_max)
+    se_corner = (lon_max, lat_min)
+    south_under_rhinokorura = (rhinokorura.lon_modern, lat_min)
+    return [[top_under_chesinos, ne_corner, se_corner, south_under_rhinokorura, (rhinokorura.lon_modern, rhinokorura.lat_modern)]]
 
 
 def render(

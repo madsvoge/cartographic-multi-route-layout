@@ -3305,6 +3305,52 @@ out, both caught by the user looking at the actual output:
   identical-looking setup, those two must **not** be bridged the way
   Ammaia and Maisanitischer Golf legitimately can be.
 
+A third round of follow-up, after the user checked the two fixes above
+against the GeoPackage in QGIS and found no trace of either connection:
+
+- Both bridges above (`_build_eurasia_confirmed_bridge()`,
+  `_build_arabian_confirmed_bridge()`) only ever existed in
+  `static_map.py`'s own rendering code - they affect what the
+  `--fill-ptolemy-land` PNG draws, but `get_coastlines()` itself (the
+  function `export_geopackage.py`, the interactive Leaflet map, *and*
+  `static_map.py` all otherwise share) never learns about them, so they
+  were invisible to exactly the kind of GeoPackage/QGIS audit this whole
+  session has run on. Both connections are real three-way junctions
+  (Rhinokorura sits between Egypt's own coast and Judaea's; Ammaia/
+  Maisanitischer Golf sits where Susiana/Persis/Arabia's coast meets
+  Babylonia's own Tigris-mouth citation) - `_stitch_trails()` fundamentally
+  can't fold a third connection into a trail that already has two
+  neighbours, so there's no way to make `get_coastlines()`'s own line
+  geometry represent them either. Instead of leaving them PNG-only,
+  they're now recorded as data: `ptolemy_map.py`'s new
+  `_MANUAL_JUNCTION_REF_ID_PAIRS` (with `get_manual_junctions()` to
+  resolve it against a loaded reference list) is the single source of
+  truth, and `export_geopackage.py` writes a new `manual_bridges` layer
+  from it - two short LineStrings, each carrying both ref_ids, both
+  names, and the same explanatory note documented in the code, directly
+  checkable in QGIS instead of only visible in a rendered PNG.
+- Separately, the Eurasia polygon's Chesinos-Rhinokorura closing edge
+  (the previous bullet's "single clean diagonal") was itself wrong per
+  the user's explicit correction: a diagonal cutting through the mapped
+  interior was never the goal - the closure should hug the world bbox's
+  own edges the same way `_build_world_edge_polygon()`'s south-edge
+  closure does, specifically *so that* the enclosed area reads as a
+  plain, uninterrupted background fill rather than a line crossing
+  directly over real coastline and cities. `_build_eurasia_edge_polygon()`
+  and `_build_eurasia_edge_unconfirmed_lines()` now route Chesinos-
+  Mündung up to the northern edge, across to the north-east corner, down
+  the eastern edge, and back west along the southern edge to a point
+  under Rhinokorura before rising to meet it - filling in the entire
+  eastern portion of the map as background, not just a thin sliver along
+  the real coast. This is deliberately coarse (it doesn't independently
+  distinguish the Persian Gulf, Red Sea, or Black Sea from the
+  surrounding "unknown land" background the way the Caspian's own
+  dedicated OCEAN punch-through does - only the Mediterranean stays
+  correctly blue, because it's the one sea bounded by two *real*
+  coastline trails on both sides, needing no schematic closure at all)
+  - exactly the background-fill purpose the user asked for, not a
+  refined per-sea representation.
+
 Verified via `check_self_intersections.py` after every change in this
 round: still exactly the two pre-existing, deliberately-unfixed
 intersections (Campania's own coordinate imprecision around Cumae/

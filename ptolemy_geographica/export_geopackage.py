@@ -61,6 +61,7 @@ from ptolemy_map import (
     Reference,
     get_coastlines,
     get_island_lines,
+    get_manual_junctions,
     get_mountain_lines,
     get_river_lines,
     load_inputs,
@@ -253,6 +254,46 @@ def _write_combined_layer(gpkg: Path, layer: str, feature_type: str, lines: list
     return written
 
 
+_BRIDGE_PROPERTIES = {
+    "ref_id_a": "str",
+    "name_a": "str",
+    "ref_id_b": "str",
+    "name_b": "str",
+    "note": "str",
+}
+
+
+def _write_manual_bridges_layer(gpkg: Path, layer: str, refs: list[Reference]) -> int:
+    """A point where two or more separately catalogued coastal
+    descriptions meet, but that get_coastlines()'s trail-stitching can't
+    fold into a single line (see ptolemy_map.py's _MANUAL_JUNCTION_REF_ID_
+    PAIRS) - exported as its own short 2-point LineString per pair, so the
+    connection is directly checkable in QGIS even though it never shows
+    up as part of the `coastlines` layer's own line geometry."""
+    junctions = get_manual_junctions(refs)
+    if not junctions:
+        return 0
+    schema = {"geometry": "LineString", "properties": _BRIDGE_PROPERTIES}
+    with fiona.open(gpkg, "w", driver="GPKG", crs=CRS, schema=schema, layer=layer) as dst:
+        for ref_a, ref_b, note in junctions:
+            dst.write(
+                {
+                    "geometry": {
+                        "type": "LineString",
+                        "coordinates": [(ref_a.lon_modern, ref_a.lat_modern), (ref_b.lon_modern, ref_b.lat_modern)],
+                    },
+                    "properties": {
+                        "ref_id_a": ref_a.ref_id,
+                        "name_a": ref_a.name,
+                        "ref_id_b": ref_b.ref_id,
+                        "name_b": ref_b.name,
+                        "note": note,
+                    },
+                }
+            )
+    return len(junctions)
+
+
 def export(refs: list[Reference], output: Path) -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
     if output.exists():
@@ -274,6 +315,7 @@ def export(refs: list[Reference], output: Path) -> None:
     counts["rivers"] = _write_combined_layer(output, "rivers", "river", get_river_lines(refs))
     counts["island_outlines"] = _write_combined_layer(output, "island_outlines", "island_outline", get_island_lines(refs))
     counts["mountain_ranges"] = _write_combined_layer(output, "mountain_ranges", "mountain_range", get_mountain_lines(refs))
+    counts["manual_bridges"] = _write_manual_bridges_layer(output, "manual_bridges", refs)
 
     print(f"wrote {output}")
     for layer, n in counts.items():
