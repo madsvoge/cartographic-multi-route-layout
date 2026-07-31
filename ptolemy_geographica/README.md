@@ -2376,17 +2376,49 @@ one-row-per-point annotated CSV as the authoritative shape going forward:
 everything the existing pipeline and its eighteen rounds of accumulated
 exception lists already know (reading the fully-resolved annotated CSV,
 the raw xlsx's own header rows, topostext's raw section prose, and
-`ptolemy_map.py`'s own source text for the trailing comment next to each
-exception-list entry, migrated into `note`/`revision_notes`). It is meant
-to run once, and again only when genuinely new source data arrives - from
-here on, a correction is an edit to the database with a note explaining
-why, not a new Python exception-list entry. Comment migration is
-best-effort and transparently incomplete: only a same-line trailing `#
-comment` is captured, not the longer prose that precedes a whole block of
-entries, so a first run reports realistic coverage (130/1291 sections,
-39/6372 points, 12 pairwise overrides got a migrated note) rather than
-100% - the rest can be filled in by hand, incrementally, straight in the
-database, same as any future correction.
+`ptolemy_map.py`'s own source text for every trailing/preceding comment
+next to an exception-list entry, migrated into `note`/`revision_notes`).
+It is meant to run once, and again only when genuinely new source data
+arrives - from here on, a correction is an edit to the database with a
+note explaining why, not a new Python exception-list entry.
+
+The first version of the comment extractor undercounted badly (130/1291
+sections, 39/6372 points) because it only ever looked for a same-line
+trailing `# comment`, missing this file's other, equally common authoring
+style: a whole paragraph *preceding* the entry (or entries) it explains,
+sometimes one entry, sometimes a shared rationale for a long run of bare
+ones (the 109-section round-17 batch has no per-entry comments at all -
+just one paragraph above the whole list). The rewritten extractor walks
+line by line instead of matching the whole block at once, handling three
+shapes: a same-line comment (attaches to that entry alone), a comment
+block directly above one entry (attaches to *that* entry, fixing a
+subtler original bug where a lazy regex quantifier crossed the newline
+and attached the *next* entry's explanation, truncated at its own first
+line break, to the *previous* one instead), and a comment block above a
+run of otherwise-bare entries (propagated to all of them, and combined
+with each entry's own extra same-line label where both exist, e.g. the
+Danube delta's explicit mouth-ordering: one shared paragraph plus each of
+its five entries' own river-mouth name). It also now covers two more
+source collections with real reasoning in them
+(`_BOUNDARY_STITCH_REF_ID_PAIRS`, `_NO_CLOSE_LOOP_TRAILS`, both feeding
+`connection_override`) and folds in a collection's own intro comment
+(the paragraph immediately above its `= {` line, previously outside the
+extracted block entirely). Coverage now: **276/276 section-level
+exception entries** (every one - `_COASTAL_APPENDIX_SECTIONS` and its
+three siblings, matched exactly) and **47/49 point-level exception
+entries** have a migrated note; the remaining two are genuinely
+undocumented in the source (no comment at all, same-line or block) and
+would need a fresh look, not a better parser. Comment migration is
+still necessarily best-effort - a human reading the source could still
+draw finer distinctions than a line-based heuristic - but it is no longer
+leaving whole categories of documented reasoning on the floor.
+
+`export_defaux_style_json.py` now reads from the database rather than the
+annotated CSV, so its output carries `note`/`revision_notes` and each
+point's `line_memberships` (including `next_point_id`) alongside the
+category/section_type data it already had - genuinely richer than
+Defaux's own files in this one respect, since his were never used to draw
+a constructed line at all.
 
 `db/export_csv_from_db.py` writes the database back out as four
 git-diffable CSV snapshots (`data/sections.csv`, `data/points.csv`,
@@ -2398,6 +2430,7 @@ changed and when, never read back in as a source themselves.
 ```
 $ python3 db/build_database.py            # -> db/ptolemy.db (bootstrap/rebuild)
 $ python3 db/export_csv_from_db.py         # -> data/sections.csv, points.csv, line_membership.csv, connection_overrides.csv
+$ python3 export_defaux_style_json.py      # -> ptolemy_geographica_defaux_style.json, now read from db/ptolemy.db
 ```
 
 ### Coverage: how much of each catalogue is mapped to the other, and a fuzzy match score

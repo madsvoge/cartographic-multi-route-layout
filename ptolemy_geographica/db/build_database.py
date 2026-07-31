@@ -69,13 +69,32 @@ _LINE_FEATURE_COLUMNS = {
 }
 
 # --- extracting the "why" already written in ptolemy_map.py's own source ---
+#
+# Three real comment shapes coexist in this file, and a first version of
+# this extractor (which matched "entry ,(?:\s*#\s*(.*))?" as one regex
+# across the whole block) got this wrong: `\s*` before `#` happily crosses
+# a newline, so it was capturing the *next* entry's leading comment block
+# as if it trailed the *previous* entry, truncated at that comment's own
+# first line break. Fixed by walking line by line instead:
+#
+#   1. A same-line trailing comment ("2.04.03.04",  # Anas (Grenzpunkt...))
+#      belongs to that entry alone.
+#   2. A comment block sitting directly above an entry, with no blank line
+#      between them, explains *that* entry (`_COASTLINE_HARD_BREAKS`'s own
+#      style: a paragraph, then the one tuple it justifies).
+#   3. A comment block above a whole *run* of otherwise bare entries (the
+#      109-section round-17 batch) is a shared rationale - propagated to
+#      every consecutive bare entry until a blank line or a new comment
+#      block breaks the run.
+#
+# A block's own preceding intro comment (right above "NAME = {", still
+# outside the brace) is folded in too, so a mechanism explained once at
+# the top (`_COASTLINE_EXPLICIT_ORDER_OVERRIDES`'s Danube-delta paragraph)
+# reaches every entry under it rather than none.
 
-# A section-appendix entry: ("2.05", "04"),  # comment...
-_SECTION_ENTRY_RE = re.compile(r'\(\s*"(\d+\.\d+)"\s*,\s*"(\d+)"\s*\)\s*,(?:\s*#\s*(.*))?')
-# A point-override entry: "2.04.03.04",  # comment...
-_POINT_ENTRY_RE = re.compile(r'"(\d+\.\d+\.\d+\.\d+)"\s*,(?:\s*#\s*(.*))?')
-# A pair entry (hard breaks / no-merge pairs): ("2.05.04.11", "2.05.04.10"),  # comment...
-_PAIR_ENTRY_RE = re.compile(r'\(\s*"(\d+\.\d+\.\d+\.\d+)"\s*,\s*"(\d+\.\d+\.\d+\.\d+)"\s*\)\s*,(?:\s*#\s*(.*))?')
+_SECTION_ENTRY_RE = re.compile(r'\(\s*"(\d+\.\d+)"\s*,\s*"(\d+)"\s*\)\s*,')
+_POINT_ENTRY_RE = re.compile(r'"(\d+\.\d+\.\d+\.\d+)"\s*[,:]')
+_PAIR_ENTRY_RE = re.compile(r'\(\s*"(\d+\.\d+\.\d+\.\d+)"\s*,\s*"(\d+\.\d+\.\d+\.\d+)"\s*\)\s*,')
 
 _SECTION_NOTE_SOURCES = [
     "_COASTAL_APPENDIX_SECTIONS",
@@ -90,17 +109,22 @@ _POINT_NOTE_SOURCES = [
     "_MOUNTAIN_POINT_OVERRIDES",
     "_COASTLINE_SKIP_REF_IDS",
     "_RIVER_LINE_SKIP_REF_IDS",
+    "_COASTLINE_EXPLICIT_ORDER_OVERRIDES",
 ]
 _PAIR_NOTE_SOURCES = [
     ("_COASTLINE_HARD_BREAKS", "coastline", "hard_break"),
     ("_RIVER_LINE_NO_MERGE_REF_ID_PAIRS", "river", "no_merge"),
+    ("_BOUNDARY_STITCH_REF_ID_PAIRS", "coastline", "force_stitch"),
+    ("_NO_CLOSE_LOOP_TRAILS", "coastline", "no_close_loop"),
 ]
 
 
 def _extract_block(source: str, name: str) -> str:
-    """Return the source text between "NAME = {"/"NAME = (" and its
-    matching closing bracket - a naive but sufficient brace counter, since
-    these blocks never nest anything but the tuples themselves."""
+    """Return the source text of NAME's own preceding intro comment (if
+    directly adjacent, no blank line) plus everything between "NAME = {"/
+    "NAME: ... = {" and its matching closing bracket - a naive but
+    sufficient brace counter, since these blocks never nest anything but
+    the tuples themselves."""
     start = source.find(f"{name} = ")
     if start == -1:
         start = source.find(f"{name}: ")  # a couple are annotated ("...: set[...] = {")
@@ -110,24 +134,89 @@ def _extract_block(source: str, name: str) -> str:
     if open_pos == -1:
         return ""
     depth = 0
+    end = None
     for i in range(open_pos, len(source)):
         if source[i] == "{":
             depth += 1
         elif source[i] == "}":
             depth -= 1
             if depth == 0:
-                return source[open_pos : i + 1]
-    return ""
+                end = i + 1
+                break
+    if end is None:
+        return ""
+
+    # Walk backwards from the "NAME = " line, collecting a contiguous
+    # preceding comment block (stopping at the first blank or non-comment
+    # line), then prepend it in forward order.
+    preceding_lines = source[:start].splitlines()
+    intro: list[str] = []
+    for line in reversed(preceding_lines):
+        stripped = line.strip()
+        if stripped.startswith("#"):
+            intro.append(line)
+        else:
+            break
+    intro.reverse()
+
+    return "\n".join(intro) + "\n" + source[open_pos:end]
+
+
+def _iter_entries_with_notes(block: str, entry_re: re.Pattern) -> list[tuple[re.Match, str]]:
+    """Walk `block` line by line, pairing each regex match with its note -
+    see the module-level comment above for the three shapes handled."""
+    results: list[tuple[re.Match, str]] = []
+    pending: list[str] = []
+    shared: str | None = None
+    for line in block.splitlines():
+        stripped = line.strip()
+        if not stripped:
+            pending = []
+            shared = None
+            continue
+        if stripped.startswith("#"):
+            pending.append(stripped.lstrip("#").strip())
+            continue
+        matches = list(entry_re.finditer(line))
+        if not matches:
+            continue  # the "NAME = {" line itself, a closing "}", etc.
+        block_note = " ".join(pending) if pending else None
+        for i, m in enumerate(matches):
+            is_last = i == len(matches) - 1
+            same_line = None
+            if is_last:
+                hash_pos = line.find("#", m.end())
+                if hash_pos != -1:
+                    same_line = line[hash_pos + 1 :].strip()
+            if i == 0 and block_note:
+                shared = block_note  # a fresh comment block establishes (or replaces) the running shared context
+            # `shared`, once established, keeps applying to every entry until a
+            # blank line resets it - even one with its own extra same-line
+            # label (the Danube-delta explicit-order overrides: one shared
+            # paragraph, then five entries each *also* carrying its own
+            # river-mouth name) - losing the shared context there just
+            # because an entry has one more word of its own would mean only
+            # the first of the five ever kept the actual explanation.
+            if shared and same_line:
+                note = f"{shared} [{same_line}]"
+            elif shared:
+                note = shared
+            elif same_line:
+                note = same_line
+            else:
+                note = ""
+            results.append((m, note))
+        pending = []
+    return results
 
 
 def extract_section_notes(source: str) -> dict[tuple[str, str], str]:
     notes: dict[tuple[str, str], str] = {}
     for block_name in _SECTION_NOTE_SOURCES:
         block = _extract_block(source, block_name)
-        for m in _SECTION_ENTRY_RE.finditer(block):
-            book_map, section, comment = m.group(1), m.group(2), m.group(3)
-            if comment:
-                notes[(book_map, section)] = comment.strip()
+        for m, note in _iter_entries_with_notes(block, _SECTION_ENTRY_RE):
+            if note:
+                notes[(m.group(1), m.group(2))] = note
     return notes
 
 
@@ -135,10 +224,9 @@ def extract_point_notes(source: str) -> dict[str, str]:
     notes: dict[str, str] = {}
     for block_name in _POINT_NOTE_SOURCES:
         block = _extract_block(source, block_name)
-        for m in _POINT_ENTRY_RE.finditer(block):
-            ref_id, comment = m.group(1), m.group(2)
-            if comment:
-                notes[ref_id] = comment.strip()
+        for m, note in _iter_entries_with_notes(block, _POINT_ENTRY_RE):
+            if note:
+                notes[m.group(1)] = note
     return notes
 
 
@@ -147,9 +235,8 @@ def extract_pair_notes(source: str) -> list[tuple[str, str, str, str, str]]:
     pairs = []
     for block_name, feature_kind, relation_type in _PAIR_NOTE_SOURCES:
         block = _extract_block(source, block_name)
-        for m in _PAIR_ENTRY_RE.finditer(block):
-            a, b, comment = m.group(1), m.group(2), m.group(3)
-            pairs.append((feature_kind, relation_type, a, b, (comment or "").strip()))
+        for m, note in _iter_entries_with_notes(block, _PAIR_ENTRY_RE):
+            pairs.append((feature_kind, relation_type, m.group(1), m.group(2), note))
     return pairs
 
 
