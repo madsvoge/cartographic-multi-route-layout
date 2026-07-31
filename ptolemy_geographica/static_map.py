@@ -43,10 +43,70 @@ TEXT_PRIMARY = "#0b0b0b"
 TEXT_SECONDARY = "#52514e"
 MOUNTAIN_LINE_COLOR = "#6b4226"
 
+# --fill-ptolemy-land's world-edge closure: the same bounding box
+# --region world already renders with. Two of this catalogue's confirmed
+# world-edge points (see README.md's "Filling Ptolemy's own coastline")
+# close against its southern edge specifically, not just "nearest edge" -
+# Ptolemy's own claimed cosmology has an unknown southern landmass below
+# the known world, enclosing the Indian Ocean, which is exactly what
+# projecting straight down represents. A third pair, Kap Rhapton and
+# Kattigara, closes directly against *each other* instead of the box -
+# the one closure with actual textual backing (Ptolemy explicitly
+# believed and stated the Indian Ocean was landlocked), the same "Terra
+# Incognita" land bridge the 1482/1486 Ulm editions themselves drew.
+_WORLD_EDGE_BBOX = REGIONS["world"]
+_HYPODROMOS_AITHIOPIAS = "4.06.07.08"  # Africa's own Atlantic-coast world edge
+_KAP_RHAPTON = "4.07.12.04"  # Africa's own Indian-Ocean-side world edge
+_KUTIARIS_MUENDUNG = "7.03.03.03"  # start of the small fragment leading to Kattigara
+_KATTIGARA = "7.03.03.07"  # Asia's own far-eastern world edge, the "Land of the Sinai"
+
 
 def _in_bbox(lon: float, lat: float, bbox: tuple[float, float, float, float]) -> bool:
     lon_min, lat_min, lon_max, lat_max = bbox
     return lon_min <= lon <= lon_max and lat_min <= lat <= lat_max
+
+
+def _find_trail_by_endpoint(trails: list, ref_id: str):
+    """Return (trail, index_within_trail) for the trail whose first or last
+    point has this ref_id, or (None, None)."""
+    for trail in trails:
+        if trail and trail[0].ref_id == ref_id:
+            return trail, 0
+        if trail and trail[-1].ref_id == ref_id:
+            return trail, -1
+    return None, None
+
+
+def _build_world_edge_polygon(refs) -> list[tuple[float, float]] | None:
+    """The one combined, fillable shape this catalogue's own world-edge
+    points support today: Africa's own coast (Hypodromos Aithiopias ->
+    Kap Rhapton), a schematic land-bridge to the small Kattigara fragment
+    (Kutiaris-Mündung -> Kattigara), and both loose ends closed against
+    the southern edge of the world bounding box - see the module-level
+    comment above _WORLD_EDGE_BBOX. Returns None if the expected trails
+    aren't found (e.g. a future round merges or renames them)."""
+    coastlines = get_coastlines(refs)
+    africa, africa_end = _find_trail_by_endpoint(coastlines, _KAP_RHAPTON)
+    kattigara_frag, _ = _find_trail_by_endpoint(coastlines, _KUTIARIS_MUENDUNG)
+    if africa is None or kattigara_frag is None:
+        return None
+    if africa[0].ref_id != _HYPODROMOS_AITHIOPIAS:
+        africa = list(reversed(africa))
+    if kattigara_frag[0].ref_id != _KUTIARIS_MUENDUNG:
+        kattigara_frag = list(reversed(kattigara_frag))
+    if kattigara_frag[-1].ref_id != _KATTIGARA:
+        return None  # shape assumption no longer holds - skip rather than draw something wrong
+
+    lon_min, lat_min, lon_max, lat_max = _WORLD_EDGE_BBOX
+    hypodromos = africa[0]
+    kattigara = kattigara_frag[-1]
+    south_under_hypodromos = (hypodromos.lon_modern, lat_min)
+    south_under_kattigara = (kattigara.lon_modern, lat_min)
+
+    coords = [(r.lon_modern, r.lat_modern) for r in africa]
+    coords += [(r.lon_modern, r.lat_modern) for r in kattigara_frag]
+    coords += [south_under_kattigara, south_under_hypodromos]
+    return coords
 
 
 def render(
@@ -96,6 +156,11 @@ def render(
                 continue
             coords = [(r.lon_modern, r.lat_modern) for r in trail]
             ax.add_patch(Polygon(coords, closed=True, facecolor=LAND, edgecolor=BORDER, linewidth=0.6, zorder=2))
+            n_filled += 1
+
+        world_edge_coords = _build_world_edge_polygon(refs)
+        if world_edge_coords is not None:
+            ax.add_patch(Polygon(world_edge_coords, closed=True, facecolor=LAND, edgecolor=BORDER, linewidth=0.6, zorder=2))
             n_filled += 1
 
     coastline_segments_drawn = 0

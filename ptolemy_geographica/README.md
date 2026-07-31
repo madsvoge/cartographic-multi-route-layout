@@ -2874,7 +2874,42 @@ individually checked).
 
 Coastline features: 55 -> 20. `db/build_database.py` re-run; see the
 `_BOUNDARY_STITCH_REF_ID_PAIRS` code comments for the full list with
-evidence.
+evidence. Also fixed a real gap the user found directly in a rendered
+map: book.map section 4.03.14 ("Grosse Syrte", the Gulf of Sidra) had
+topostext's own explicit confirmation ("Of Syrtis Major: Makomala or
+Kaloumakouma village") and point names that scream coastal ("Ras
+Bergavad" - ras = cape; "Hippu Akra" - akra = headland; "Arae
+Philaenorum", the historically-attested altar on the Gulf of Sidra
+shore) but had defaulted to `city`, since "Syrte"/"Syrtis" isn't one of
+`_COASTAL_HDR_RE`'s recognized German sea-words. Added to
+`_COASTAL_APPENDIX_SECTIONS` (not the regex - "Syrte" also labels
+4.03.41, a section of genuinely inland cities that would have been
+wrongly swept in too).
+
+**A twenty-third round** implemented the closure itself, in
+`static_map.py`'s `--fill-ptolemy-land`, per the design discussed above:
+Kap Rhapton and Kattigara* (the two confirmed world-edge points closest
+to each other, at opposite ends of the Indian Ocean) close directly
+against each other - a straight schematic line standing in for the
+"Terra Incognita" land bridge the 1482/1486 Ulm editions themselves drew,
+the one closure with actual textual backing in Ptolemy's own claim that
+the Indian Ocean was landlocked. Hypodromos Aithiopias and Kattigara* -
+the two remaining loose ends of the resulting combined Africa-plus-bridge
+shape - close against the *southern* edge of the world bounding box
+specifically (a straight line down to `lat_min`, not just "nearest
+edge"), matching the same cosmology: Ptolemy's own unknown southern
+continent, below the whole known world, enclosing the Indian Ocean from
+underneath. `_build_world_edge_polygon()` builds this one combined
+polygon by ref_id (Africa's own trail + the small Kutiaris-
+Mündung/Kattigara* fragment + the two box-edge points), rather than a
+generic "close every loose end to the box" rule - the Eurasian arc's own
+remaining loose end (Side*) isn't a confirmed world edge, just the
+current unstitched frontier, and closing it the same way would have
+misrepresented an unfinished stitch as settled fact. At `--region world`
+scale the result reads as one continuous known-world landmass from West
+Africa to the Kattigara/Land-of-the-Sinai region, blue ocean everywhere
+else - visually the same shape the Ulm editions themselves drew, arrived
+at from this catalogue's own data rather than copied from them.
 
 ## GeoPackage export (for QGIS/ArcGIS)
 
