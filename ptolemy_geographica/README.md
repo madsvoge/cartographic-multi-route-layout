@@ -3051,6 +3051,46 @@ are claimed as a settled stitch - the same evidence gaps that left them
 unconfirmed in earlier rounds still apply - only now they're used
 honestly, as a visibly pragmatic closure rather than an invisible one.
 
+**A twenty-ninth round** turned two of those dashed hand-offs into real
+data fixes, after the user looked at the rendered result and correctly
+read both as genuine coastline bugs rather than acceptable schematic
+gaps: "that's an error in the coast."
+
+The Anthedon<->Zipfel des Arabischen Golfes hop (Gaza to the top of
+Sinai) turned out to be masking an actual dropped point.
+"Grenzpunkt (Ägypten, Judäa)" (5.16.01.05) - Judaea's own citation of the
+Egypt border, a bit-identical coordinate duplicate of Egypt's own
+"Grenzpunkt (Ägypten, Arabia Petraea, Judäa)" (4.05.13.03, already
+correctly part of Egypt's own coastline) - had been in
+`_COASTLINE_SKIP_REF_IDS` since an earlier round, because in raw
+catalogue order its edge ran to Kaisareia (the walk's *northern* end,
+skipping straight past Anthedon and cutting across the walk's own middle
+segments). Dropping it entirely, rather than fixing *where* it
+attaches, left the walk ending at Anthedon with a real gap down to
+Egypt's border - the same one the earlier round's dashed bridge quietly
+papered over. `_COASTLINE_EXPLICIT_ORDER_OVERRIDES` now sorts it to land
+right after Anthedon instead, so the edge runs the short, real way
+(0.94°) instead of the long wrong-direction one. The Judaea walk now
+ends at this point for real, effectively at Egypt's own border marker;
+`static_map.py`'s chain replaces the old single ~2.3° schematic hop with
+two near-zero cross-reference bridges around one short *real* Egyptian-
+coast segment (Grenzpunkt -> Zipfel des Arabischen Golfes, Egypt's own
+citation, 4.05.13.05) - genuine data, not a wider guess.
+
+The "coast facing the wrong way" at the bottom of the Persian Gulf was a
+different bug in the same family: topostext (§5.19.1) confirms "Grenzpunkt
+(Arabia Deserta, Babylonien)/Maisanitischer Golf" (5.19.01.11) and
+"Grenzpunkt (Arabia Deserta, Arabia Felix)" (5.19.01.13) are Arabia
+Deserta's own two *territorial* limit points from an introductory
+boundary statement, not coastal walk points - and the first is itself a
+bit-identical duplicate of book 6.07's own "Maisanitischer Golf"
+(6.07.19.05). Left in, catalogue order produced a real zigzag - latitude
+running 30.17 -> 29.00 -> 30.17 -> 29.50 -> 29.25, all at essentially the
+same longitude - exactly what the user spotted. Both added to
+`_COASTLINE_SKIP_REF_IDS`; 6.07.19.05 now stitches straight to Idikara
+(0.67°, a clean monotonic hand-off), and picks up one further real point
+(Ammaia) that a broken run had been silently excluding too.
+
 ## GeoPackage export (for QGIS/ArcGIS)
 
 `export_geopackage.py` writes the same categories and constructed lines

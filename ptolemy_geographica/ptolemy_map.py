@@ -1604,8 +1604,16 @@ _COASTLINE_SKIP_REF_IDS = {
     # west-coast return leg three times.
     "2.05.01.04",
     "2.05.04.10",  # Durius-Mündung - a bit-identical re-citation of 2.05.01.04 (same coordinate, same topostext text), sitting right after Vacua-Mündung where the section-04 walk was force-made coastal by the seventeenth-round batch fix - closes the same loop a second time, at the same node, the same "would just re-close the loop again" reasoning as Kallipolis above
-    "5.16.01.05",  # Grenzpunkt (Ägypten, Judäa) - a bit-identical coordinate duplicate of Egypt's own "Grenzpunkt (Ägypten, Arabia Petraea, Judäa)" (4.05.13.03, already correctly part of Egypt's own coastline between the Nile delta and the Gulf of Suez) - re-cited here as Judaea's own introductory boundary point (topostext: "eastern limit of Syria to the limit of Egypt, the location of which limit is") before the seventeenth-round batch fix made the rest of 5.16.02 coastal. Left in, its edge to Kaisareia (the walk's *northern* end) skipped straight past Anthedon (5.16.02.11, 0.94 degrees away - the walk's real *southern* end, matching real geography: Gaza/Anthedon sits right next to the Egyptian border, Caesarea is far to the north) and cut across the walk's own middle segments.
     "6.21.01.07",  # Grenzpunkt (Arachosien, Gedrosien, Indien) - a bit-identical coordinate duplicate of "Grenzpunkt (Gedrosien, Indien)" (6.21.02.11, the walk's own correctly-positioned last point - Arbis-Mündung -> Rhagiraua -> Hafen der Frauen -> Koiamba -> Rhizana -> this Grenzpunkt is a clean, monotonic west-to-east progression). Re-cited earlier, before the walk itself, as an introductory boundary statement (same topostext text as 6.21.02.11: "boundary towards Arachosia to its termination at the sea in") - left in, its edge from Arbis-Mündung (the walk's *first* point) skipped straight to this duplicate at the *far* end, cutting across the whole real walk in between.
+    # NOTE: "5.16.01.05" (Grenzpunkt Ägypten/Judäa) used to be skipped here
+    # too, for the same "bit-identical duplicate, wrong-direction edge"
+    # reason - but the user spotted the resulting gap (Gaza to Egypt, the
+    # top of Sinai) and asked for the real coast, not a schematic bridge
+    # over it. Restored via _COASTLINE_EXPLICIT_ORDER_OVERRIDES instead,
+    # which fixes the wrong-direction edge without dropping the point - see
+    # that set's own comment.
+    "5.19.01.11",  # Grenzpunkt (Arabia Deserta, Babylonien)/Maisanitischer Golf - topostext (5.19.1) is explicit these are Arabia Deserta's own two *territorial* limit points ("bounded...on the east by Babylonia...to the inner recess of the Maisanites Gulf at 79.30d10' and by the nearer part of the Persian Gulf to a limit point at 79.29d00'"), not a coastal walk - and this one is a bit-identical coordinate duplicate of book 6.07's own "Maisanitischer Golf" (6.07.19.05, already the correct northern end of that long Arabian-coast walk). Left in, catalogue order zigzagged 30.17 -> 29.00 -> 30.17 -> 29.50 -> 29.25 (both Grenzpunkt entries, then the real walk) - the "coast facing the wrong way" the user spotted at the head of the Persian Gulf. Excluding both lets 6.07.19.05 stitch straight to Idikara (5.19.04.03, 0.67 degrees, a clean monotonic hand-off) instead.
+    "5.19.01.13",  # Grenzpunkt (Arabia Deserta, Arabia Felix) - Arabia Deserta's own *other* territorial limit point from the same topostext passage (5.19.1) - not a coastal walk point either, see 5.19.01.11 above.
 }
 
 # A narrower tool than _COASTLINE_SKIP_REF_IDS: that one drops a point from
@@ -1718,6 +1726,17 @@ _COASTLINE_EXPLICIT_ORDER_OVERRIDES: dict[str, tuple] = {
     "3.10.06.02": (3, 10, 2, 5, 3),  # Pseudostomon (Mündung)
     "3.10.05.03": (3, 10, 2, 5, 4),  # Nördliche Mündung (Boreios)
     "3.10.04.03": (3, 10, 2, 5, 5),  # Psilon bzw. Thiagola (Mündung)
+    # Grenzpunkt (Ägypten, Judäa) (5.16.01.05) is section 5.16.01's own
+    # single entry, sorting (by ref_id alone) right before 5.16.02's own
+    # walk - Kaisareia (its *northern* end). Geographically it's the walk's
+    # real *southern* end instead (a bit-identical coordinate duplicate of
+    # Egypt's own "Grenzpunkt (Ägypten, Arabia Petraea, Judäa)", 4.05.13.03
+    # - Gaza/Anthedon sits right next to the Egyptian border, Caesarea is
+    # far to the north). Sorted to land right after Anthedon (5.16.02.11,
+    # the walk's last point) instead, so the edge runs the short, real way
+    # (0.94 degrees) rather than skipping past Anthedon and cutting across
+    # the walk's own middle segments the way natural order would.
+    "5.16.01.05": (5, 16, 2, 12),  # Grenzpunkt (Ägypten, Judäa)
 }
 
 # A different, self-marking version of the same "same point re-cited"

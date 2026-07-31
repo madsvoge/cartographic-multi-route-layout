@@ -90,24 +90,29 @@ _SIDE_STAR = "5.05.02.10"
 # across real sea or, worse, leaves an unfilled gap over real mapped land -
 # see the README's twenty-eighth round), it turns out this catalogue
 # already has *almost* the entire rest of the way there as real, drawn
-# coastline - just broken into the same short, previously-identified-but-
-# unconfirmed gaps documented in the "not applied" list in README.md's
-# "Filling Ptolemy's own coastline" section. Chained together: Side* ->
-# [~1.8 deg] -> Anemurion -> [real, Cilicia/Levant coast] -> Anthedon ->
-# [~2.3 deg] -> Zipfel des Arabischen Golfes -> [real, Arabian coast] ->
-# Iokura -> [~2.3 deg] -> Tigris-Mündung (östliche) -> [real, Persia/India
-# coast, already used below] -> Grenzpunkt (Indien jenseits des Ganges,
-# Land der Sinen) - Asia's own named boundary marker facing "the Land of
-# the Sinae" (China), the far end of the world-bbox corner hug. Every one
-# of these three short hand-offs was previously left unconfirmed for lack
-# of topostext/Modern_location evidence pinning the exact path - still
-# true, so each is drawn dashed like the corner hug itself, not claimed as
-# a settled stitch. What's different from those earlier rounds is *why*
-# they're used here: not as a claim they're correct, but so the closure's
-# boundary hugs the real coastline (short unconfirmed gaps) instead of
-# cutting a single long unconfirmed diagonal straight across all of it.
+# coastline - just broken into a few short gaps. Chained together: Side* ->
+# [~1.8 deg, unconfirmed] -> Anemurion -> [real, Cilicia/Levant coast] ->
+# Grenzpunkt (Ägypten, Judäa) - Judaea's own citation of the Egypt border,
+# now correctly the walk's southern end (see _COASTLINE_EXPLICIT_ORDER_
+# OVERRIDES in ptolemy_map.py, a genuine data fix, not a schematic bridge -
+# the user caught this as a real missing-coast bug, not just a gap to paper
+# over) -> [near-zero, same point cited from Egypt's own side] ->
+# Grenzpunkt (Ägypten, Arabia Petraea, Judäa) -> [real, Egypt's own coast,
+# the Sinai/Suez stretch] -> Zipfel des Arabischen Golfes (Egypt's own
+# citation) -> [near-zero, same point cited from Arabia's own side] ->
+# Zipfel des Arabischen Golfes (Arabia's own citation) -> [real, Arabian
+# coast] -> Iokura -> [~2.3 deg, unconfirmed] -> Tigris-Mündung (östliche)
+# -> [real, Persia/India coast, already used below] -> Grenzpunkt (Indien
+# jenseits des Ganges, Land der Sinen) - Asia's own named boundary marker
+# facing "the Land of the Sinae" (China), the far end of the world-bbox
+# corner hug. The three remaining short hops (Side*<->Anemurion and Iokura
+# <->Tigris-Mündung, plus the corner hug itself) are still unconfirmed -
+# drawn dashed, not claimed as a settled stitch - but the Gaza/Sinai gap
+# is now real data, not a bridge over a data bug.
 _ANEMURION = "5.08.03.02"
-_ANTHEDON = "5.16.02.11"
+_GRENZPUNKT_AEGYPTEN_JUDAEA_JUDAEA_SIDE = "5.16.01.05"
+_GRENZPUNKT_AEGYPTEN_JUDAEA_EGYPT_SIDE = "4.05.13.03"
+_ZIPFEL_ARABISCHER_GOLF_EGYPT_SIDE = "4.05.13.05"
 _ZIPFEL_ARABISCHER_GOLF = "5.17.01.05"
 _IOKURA = "5.19.04.04"
 _TIGRIS_MUENDUNG_OESTLICHE = "5.20.01.08"
@@ -246,23 +251,38 @@ def _trail_between(refs, start_ref_id: str, end_ref_id: str):
     return trail
 
 
+def _find_ref(refs, ref_id: str):
+    return next((r for r in refs if r.ref_id == ref_id), None)
+
+
 def _levant_arabia_persia_chain(refs):
-    """The real coastline trails plus short unconfirmed hand-offs chaining
-    Anemurion (near Side*) all the way to Grenzpunkt (Indien jenseits des
-    Ganges, Land der Sinen) - see the comment above _ANEMURION. Returns a
-    list of (kind, payload) steps in that order, kind one of "real" (a
-    trail, drawn already, included in the fill polygon only) or "bridge" (a
-    two-point unconfirmed hop, drawn dashed), or None if any of the three
-    trails can't be found by their expected endpoints."""
-    anemurion_anthedon = _trail_between(refs, _ANEMURION, _ANTHEDON)
+    """The real coastline trails plus short hand-offs chaining Anemurion
+    (near Side*) all the way to Grenzpunkt (Indien jenseits des Ganges,
+    Land der Sinen) - see the comment above _ANEMURION. Returns a list of
+    (kind, payload) steps in that order, kind one of "real" (a trail or
+    short real segment, drawn already, included in the fill polygon only)
+    or "bridge" (a two-point hop, drawn dashed - near-zero for the two
+    Egypt/Arabia cross-references, genuinely unconfirmed for the other
+    two), or None if any piece can't be found."""
+    anemurion_grenzpunkt = _trail_between(refs, _ANEMURION, _GRENZPUNKT_AEGYPTEN_JUDAEA_JUDAEA_SIDE)
+    grenzpunkt_egypt = _find_ref(refs, _GRENZPUNKT_AEGYPTEN_JUDAEA_EGYPT_SIDE)
+    zipfel_egypt = _find_ref(refs, _ZIPFEL_ARABISCHER_GOLF_EGYPT_SIDE)
     zipfel_iokura = _trail_between(refs, _ZIPFEL_ARABISCHER_GOLF, _IOKURA)
     persia_india = _trail_between(refs, _GRENZPUNKT_INDIEN_SINEN, _TIGRIS_MUENDUNG_OESTLICHE)
-    if anemurion_anthedon is None or zipfel_iokura is None or persia_india is None:
+    if (
+        anemurion_grenzpunkt is None
+        or grenzpunkt_egypt is None
+        or zipfel_egypt is None
+        or zipfel_iokura is None
+        or persia_india is None
+    ):
         return None
     persia_india = list(reversed(persia_india))  # Tigris-Mündung -> Grenzpunkt, built order
     return [
-        ("real", anemurion_anthedon),
-        ("bridge", [anemurion_anthedon[-1], zipfel_iokura[0]]),
+        ("real", anemurion_grenzpunkt),
+        ("bridge", [anemurion_grenzpunkt[-1], grenzpunkt_egypt]),
+        ("real", [grenzpunkt_egypt, zipfel_egypt]),
+        ("bridge", [zipfel_egypt, zipfel_iokura[0]]),
         ("real", zipfel_iokura),
         ("bridge", [zipfel_iokura[-1], persia_india[0]]),
         ("real", persia_india),
