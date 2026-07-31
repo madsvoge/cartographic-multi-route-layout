@@ -72,30 +72,25 @@ _WATER_BODY_CLOSED_LOOP_REF_IDS = {
 _WORLD_EDGE_BBOX = REGIONS["world"]
 _HYPODROMOS_AITHIOPIAS = "4.06.07.08"  # Africa's own Atlantic-coast world edge
 _KAP_RHAPTON = "4.07.12.04"  # Africa's own Indian-Ocean-side world edge
-_KATTIGARA = "7.03.03.07"  # Asia's own far-eastern world edge, the "Land of the Sinai" - as of the thirty-first round, the real end of a single trail reaching all the way back to the Persian Gulf (see below), not a small separate fragment
-_TIGRIS_MUENDUNG_WESTLICHE = "5.20.05.03"  # current loose end of that same trail, at the Persian Gulf's own head
+_KATTIGARA = "7.03.03.07"  # Asia's own far-eastern world edge, the "Land of the Sinai" - the real end of a single trail reaching all the way back to Arabia (see below), not a small separate fragment
 
-# Tigris-Mündung (westliche)'s own onward neighbour at the Persian Gulf's
-# head is "Ammaia" (5.19.04.02, ~0.5 degrees away) - Arabia Deserta's own
-# boundary description (topostext §5.19.1.2, "Euphrates limit point to the
-# inner recess of the [Persian] Maisanites Gulf") re-cited as a real point
-# in Susiana/Persis's own coastal list. The *same* real place is cited a
-# third time, as "Maisanitischer Golf" (6.07.19.05, topostext §6.7.19.3,
-# the identical boundary statement from Susiana's own side), which is
-# coordinate-identical to Ammaia and already its neighbour in the
-# catalogue's own coastal graph - so Ammaia is an *interior* point of the
-# Susiana/Persis/Arabia coastal trail (the same "can't reach an interior
-# point with an ordinary stitch pair" limitation as _RHINOKORURA, not a
-# missing pair). Unlike the Egypt/Arabia "Zipfel des Arabischen Golfes"
-# pair (4.05.13.05 / 5.17.01.05, also coordinate-identical) - which sit on
-# *opposite* sides of the Sinai peninsula (Gulf of Suez vs. Gulf of Aqaba,
-# separated by land the Suez Canal wouldn't exist for another eighteen
-# centuries) and must NOT be bridged - Ammaia and Maisanitischer Golf
-# really are the same body of water described from two adjoining
-# provinces, so bridging Tigris-Mündung (westliche) to Ammaia is genuine,
-# not a repeat of that mistake. Fetched and spliced in directly, the same
-# technique as _RHINOKORURA - see _build_arabian_detour().
-_AMMAIA = "5.19.04.02"
+# This same trail's other end used to be Tigris-Mündung (westliche), the
+# Persian Gulf's own head - until a thirty-second round found that
+# "Maisanitischer Golf" (6.07.19.05, topostext §6.7.19.3) is a fourth
+# citation of the same Arabia-Deserta boundary statement as two already-
+# excluded duplicates (5.19.01.11/.13, topostext §5.19.1.2) - Susiana/
+# Persis's own side of it. Left in, it auto-stitched (coordinate-
+# identical) to "Ammaia" (5.19.04.02, itself citing that same passage)
+# before Ammaia could ever be reached as a stitch target - the same
+# "interior point, not an endpoint" limitation _RHINOKORURA still has.
+# Excluding it (see ptolemy_map.py's _COASTLINE_SKIP_REF_IDS) freed
+# Ammaia back up as its own group's genuine endpoint, so a normal stitch
+# pair (_BOUNDARY_STITCH_REF_ID_PAIRS) now joins Tigris-Mündung
+# (westliche) straight through Ammaia to Idikara and Iokura as one real
+# trail - no manual bridge needed any more; an earlier round's
+# `_build_arabian_confirmed_bridge()`/`manual_bridges` GeoPackage entry
+# for this specific connection is gone, superseded by the real join.
+_IOKURA = "5.19.04.04"  # current loose end of that same (now longer) trail
 
 # Sarmatia's own Baltic/Arctic-coast world edge: the big Eurasian arc runs
 # through Scandinavia (book 2.11) and on into Sarmatia (book 3.05), ending
@@ -146,58 +141,23 @@ def _find_trail_by_endpoint(trails: list, ref_id: str):
     return None, None
 
 
-def _find_trail_containing(trails: list, ref_id: str):
-    """Return (trail, index) for the trail that has this ref_id *anywhere*
-    in it, endpoint or interior, or (None, None). Unlike
-    `_find_trail_by_endpoint()`, this also finds points a merge has buried
-    in the middle of a bigger trail - see _AMMAIA."""
-    for trail in trails:
-        for i, r in enumerate(trail):
-            if r.ref_id == ref_id:
-                return trail, i
-    return None, None
-
-
-def _build_arabian_detour(refs) -> list | None:
-    """The Susiana/Persis/Arabia coastal trail (currently Zipfel des
-    Arabischen Golfes <-> Iokura, ~94 points), as a there-and-back detour
-    starting and ending at Ammaia - see the comment above _AMMAIA. Ammaia
-    sits deep inside this trail (not at either end), so it can't be
-    spliced into the World polygon's own ring as a simple sub-sequence the
-    way a real trail normally is: instead this walks *out* to one of
-    Ammaia's own two neighbouring branches and back, then out to the other
-    and back, tracing every point twice (once each direction) but
-    enclosing no extra area - a standard trick for grafting a dangling
-    branch onto a simple polygon at a single shared point. The retraced
-    lines aren't drawn separately (they exactly overlap the trail's own
-    normal rendering in the main coastline loop), so this only affects the
-    fill polygon's shape, not what's visibly drawn. Returns None if the
-    trail or Ammaia itself can't be found."""
-    coastlines = get_coastlines(refs)
-    trail, idx = _find_trail_containing(coastlines, _AMMAIA)
-    if trail is None:
-        return None
-    out1 = trail[idx:]
-    back1 = list(reversed(out1))
-    out2 = list(reversed(trail[: idx + 1]))
-    back2 = list(reversed(out2))
-    return out1 + back1[1:] + out2[1:] + back2[1:]
-
-
-def _build_arabian_confirmed_bridge(refs) -> list[tuple[float, float]] | None:
-    """The Tigris-Mündung (westliche) <-> Ammaia hand-off - see the comment
-    above _AMMAIA. Drawn solid, alongside the other confirmed lines."""
-    coastlines = get_coastlines(refs)
-    asia, _ = _find_trail_by_endpoint(coastlines, _KATTIGARA)
-    ammaia = _find_ref(refs, _AMMAIA)
-    if asia is None or ammaia is None:
-        return None
-    if asia[0].ref_id != _KATTIGARA:
-        asia = list(reversed(asia))
-    if asia[-1].ref_id != _TIGRIS_MUENDUNG_WESTLICHE:
-        return None
-    tigris_west = asia[-1]
-    return [(tigris_west.lon_modern, tigris_west.lat_modern), (ammaia.lon_modern, ammaia.lat_modern)]
+def _safe_asia_drop(asia_end, lat_min: float, lon_max: float) -> tuple[tuple[float, float], tuple[float, float]]:
+    """Where `_build_world_edge_polygon()`'s south-edge closure drops from
+    the Asia trail's own loose end down to the world bbox's southern edge.
+    Dropping straight down at that point's *own* longitude isn't safe:
+    the Rhapton-Kattigara "Terra Incognita" bridge is one long, roughly
+    horizontal edge spanning Rhapton's own longitude (56.17) all the way
+    to Kattigara's (159.33) - *any* vertical line landing inside that
+    whole span crosses it, and Africa's own trail (which peaks at 65.33,
+    near the Horn of Africa, well past Kap Rhapton's own 56.17) rules out
+    jogging west to dodge it too. Both were confirmed with shapely - the
+    actual cause of the "Africa gained height" / "Indian Ocean isn't
+    coloured" reports, not the Eurasia closure suspected at the time.
+    Jogging all the way east to the world bbox's own edge - past
+    Kattigara, the same edge the Eurasia polygon's own closure already
+    hugs - is the only direction guaranteed clear of both. Returns
+    (jog_point, south_of_jog_point)."""
+    return (lon_max, asia_end.lat_modern), (lon_max, lat_min)
 
 
 def _build_world_edge_polygon(refs) -> list[tuple[float, float]] | None:
@@ -205,13 +165,12 @@ def _build_world_edge_polygon(refs) -> list[tuple[float, float]] | None:
     points support today: Africa's own coast (Hypodromos Aithiopias ->
     Kap Rhapton), a schematic land-bridge (the "Terra Incognita" the 1482/
     1486 Ulm editions themselves drew) to Asia's own huge coastal trail -
-    now reaching all the way from Kattigara back to the Persian Gulf's own
-    head (Tigris-Mündung westliche, see the thirty-first round) - a
-    detour out along the Susiana/Persis/Arabia coastal trail and back (see
-    _build_arabian_detour()), and both loose ends closed against the
-    southern edge of the world bounding box. See the module-level comment
-    above _WORLD_EDGE_BBOX. Returns None if the expected trails aren't
-    found (e.g. a future round merges or renames them)."""
+    reaching from Kattigara all the way back through the Persian Gulf to
+    Arabia's own Idikara/Iokura citations (see the comment above _IOKURA)
+    - and both loose ends closed against the southern edge of the world
+    bounding box. See the module-level comment above _WORLD_EDGE_BBOX.
+    Returns None if the expected trails aren't found (e.g. a future round
+    merges or renames them)."""
     coastlines = get_coastlines(refs)
     africa, _ = _find_trail_by_endpoint(coastlines, _KAP_RHAPTON)
     asia, _ = _find_trail_by_endpoint(coastlines, _KATTIGARA)
@@ -221,21 +180,18 @@ def _build_world_edge_polygon(refs) -> list[tuple[float, float]] | None:
         africa = list(reversed(africa))
     if asia[0].ref_id != _KATTIGARA:
         asia = list(reversed(asia))
-    if asia[-1].ref_id != _TIGRIS_MUENDUNG_WESTLICHE:
+    if asia[-1].ref_id != _IOKURA:
         return None  # shape assumption no longer holds - skip rather than draw something wrong
 
     lon_min, lat_min, lon_max, lat_max = _WORLD_EDGE_BBOX
     hypodromos = africa[0]
-    tigris_west = asia[-1]
+    asia_end = asia[-1]
     south_under_hypodromos = (hypodromos.lon_modern, lat_min)
-    south_under_tigris_west = (tigris_west.lon_modern, lat_min)
+    east_of_africa, south_under_east_of_africa = _safe_asia_drop(asia_end, lat_min, lon_max)
 
     coords = [(r.lon_modern, r.lat_modern) for r in africa]
     coords += [(r.lon_modern, r.lat_modern) for r in asia]
-    arabian_detour = _build_arabian_detour(refs)
-    if arabian_detour is not None:
-        coords += [(r.lon_modern, r.lat_modern) for r in arabian_detour]
-    coords += [south_under_tigris_west, south_under_hypodromos]
+    coords += [east_of_africa, south_under_east_of_africa, south_under_hypodromos]
     return coords
 
 
@@ -258,21 +214,22 @@ def _build_world_edge_synthetic_lines(refs) -> list[list[tuple[float, float]]]:
         africa = list(reversed(africa))
     if asia[0].ref_id != _KATTIGARA:
         asia = list(reversed(asia))
-    if asia[-1].ref_id != _TIGRIS_MUENDUNG_WESTLICHE:
+    if asia[-1].ref_id != _IOKURA:
         return []
 
     lon_min, lat_min, lon_max, lat_max = _WORLD_EDGE_BBOX
     hypodromos = africa[0]
     rhapton = africa[-1]
     kattigara = asia[0]
-    tigris_west = asia[-1]
+    asia_end = asia[-1]
     south_under_hypodromos = (hypodromos.lon_modern, lat_min)
-    south_under_tigris_west = (tigris_west.lon_modern, lat_min)
+    east_of_africa, south_under_east_of_africa = _safe_asia_drop(asia_end, lat_min, lon_max)
 
     bridge = [(rhapton.lon_modern, rhapton.lat_modern), (kattigara.lon_modern, kattigara.lat_modern)]
     southern_closure = [
-        (tigris_west.lon_modern, tigris_west.lat_modern),
-        south_under_tigris_west,
+        (asia_end.lon_modern, asia_end.lat_modern),
+        east_of_africa,
+        south_under_east_of_africa,
         south_under_hypodromos,
         (hypodromos.lon_modern, hypodromos.lat_modern),
     ]
@@ -388,6 +345,31 @@ def _build_eurasia_edge_unconfirmed_lines(refs) -> list[list[tuple[float, float]
     return [[top_under_chesinos, ne_corner, se_corner, south_under_rhinokorura, (rhinokorura.lon_modern, rhinokorura.lat_modern)]]
 
 
+def _valid_polygon_rings(coords: list[tuple[float, float]]) -> list[list[tuple[float, float]]]:
+    """Validate `coords` as a simple polygon ring via shapely, repairing
+    it with the standard buffer(0) trick if it self-intersects, and
+    return each resulting polygon's own exterior ring (usually one, but a
+    bad enough self-intersection can split it into several disjoint
+    pieces). matplotlib's own Polygon patch does not detect or warn about
+    self-intersecting input - it just silently fills the wrong area,
+    which is what produced this round's "the dashed line jumped back",
+    "Africa gained height", and "the Indian Ocean isn't coloured" reports:
+    every one of those was a self-intersecting `_build_..._polygon()`
+    coordinate list that had never actually been checked, only eyeballed
+    in a rendered PNG. Every fillable ring this module builds must be
+    routed through this before being handed to matplotlib."""
+    from shapely.geometry import MultiPolygon
+    from shapely.geometry import Polygon as ShapelyPolygon
+
+    poly = ShapelyPolygon(coords)
+    if not poly.is_valid:
+        poly = poly.buffer(0)
+    if poly.is_empty:
+        return []
+    polys = list(poly.geoms) if isinstance(poly, MultiPolygon) else [poly]
+    return [list(p.exterior.coords) for p in polys if not p.is_empty]
+
+
 def render(
     refs,
     bbox,
@@ -440,27 +422,30 @@ def render(
             # Eurasia arc's own fill, drawn below) - OCEAN at a higher
             # zorder punches a hole through that land fill instead of
             # being silently painted over by it.
-            ax.add_patch(
-                Polygon(
-                    coords,
-                    closed=True,
-                    facecolor=OCEAN if is_water_body else LAND,
-                    edgecolor=BORDER,
-                    linewidth=0.6,
-                    zorder=3 if is_water_body else 2,
+            for ring in _valid_polygon_rings(coords):
+                ax.add_patch(
+                    Polygon(
+                        ring,
+                        closed=True,
+                        facecolor=OCEAN if is_water_body else LAND,
+                        edgecolor=BORDER,
+                        linewidth=0.6,
+                        zorder=3 if is_water_body else 2,
+                    )
                 )
-            )
-            n_filled += 1
+                n_filled += 1
 
         world_edge_coords = _build_world_edge_polygon(refs)
         if world_edge_coords is not None:
-            ax.add_patch(Polygon(world_edge_coords, closed=True, facecolor=LAND, edgecolor=BORDER, linewidth=0.6, zorder=2))
-            n_filled += 1
+            for ring in _valid_polygon_rings(world_edge_coords):
+                ax.add_patch(Polygon(ring, closed=True, facecolor=LAND, edgecolor=BORDER, linewidth=0.6, zorder=2))
+                n_filled += 1
 
         eurasia_edge_coords = _build_eurasia_edge_polygon(refs)
         if eurasia_edge_coords is not None:
-            ax.add_patch(Polygon(eurasia_edge_coords, closed=True, facecolor=LAND, edgecolor=BORDER, linewidth=0.6, zorder=2))
-            n_filled += 1
+            for ring in _valid_polygon_rings(eurasia_edge_coords):
+                ax.add_patch(Polygon(ring, closed=True, facecolor=LAND, edgecolor=BORDER, linewidth=0.6, zorder=2))
+                n_filled += 1
 
     coastline_segments_drawn = 0
     north_edge_line = _build_north_edge_extension(refs) if fill_ptolemy_land else None
@@ -476,11 +461,6 @@ def render(
         eurasia_bridge = _build_eurasia_confirmed_bridge(refs)
         if eurasia_bridge is not None:
             xs, ys = zip(*eurasia_bridge)
-            ax.plot(xs, ys, color=CATEGORIES["coast"]["color"], linewidth=2.2, alpha=0.9, zorder=4)
-
-        arabian_bridge = _build_arabian_confirmed_bridge(refs)
-        if arabian_bridge is not None:
-            xs, ys = zip(*arabian_bridge)
             ax.plot(xs, ys, color=CATEGORIES["coast"]["color"], linewidth=2.2, alpha=0.9, zorder=4)
 
         # The top-edge traverse has no textual backing (see the comment

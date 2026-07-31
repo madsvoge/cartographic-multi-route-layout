@@ -1663,6 +1663,30 @@ _COASTLINE_SKIP_REF_IDS = {
     "6.03.02.01",  # Tigris-Mündung (westliche) - topostext (6.3.2) is explicit this is a re-citation, not new data: "this coast is described as follows: the western mouth of the Tigris river *is in the description of Babylonia*" - i.e. the same point as 5.20.05.03, restated only as Susiane's own orientation marker for where its coast picks up. Left in, catalogue order zigzagged both Tigris-mouth citations back and forth (Babylonia's 5.20.01.08/5.20.05.03 pair, then Teredon, then Susiane's own re-citation of the same two mouths again) - the "broken coastline" at the Persian Gulf's head the user spotted, a second instance of the same bug class as 5.19.01.11/.13 above.
     "6.03.02.03",  # Tigris-Mündung (östliche) - Susiane's own re-citation of the *other* Tigris mouth (5.20.01.08), same topostext passage (6.3.2), see 6.03.02.01 above. Excluding both lets Susiane's own walk start cleanly at Charax des Pasines (6.03.02.04), 1.68 degrees from Babylonia's own last point (Teredon, 5.20.05.04) - a clean hand-off instead of a zigzag.
     "6.03.01.10",  # Oroatis-Mündung - a third duplicate in the same book.map, found only after excluding the two above (it had been quietly absorbed into a non-crossing edge until then, then started self-intersecting once that edge changed). Topostext (6.3.1) confirms it too is an introductory boundary mention, not a walk point: Susiane "is bounded...on the east by Persis along the line linking the limit point of Assyrians and Media to the mouth of the Oroatis river" - a bit-identical coordinate duplicate of the walk's own real, correctly-sequenced last point (6.03.02.14, right before its own Oroatis-Quellen). Sorting first in raw catalogue order (section "01" before "02"), left in it pulled the walk's very first edge straight across to its own far end and back.
+    #
+    # A thirty-second round (2026-07-31): "Maisanitischer Golf" (6.07.19.05,
+    # topostext 6.7.19.3, "which the limit point of Desert Arabia and the
+    # Maisanites gulf at") is a *fourth* citation of the same Persian-Gulf-
+    # head boundary statement as 5.19.01.11/.13 above - Susiana/Persis's own
+    # side of it this time, not Arabia Deserta's. Left in, it auto-stitched
+    # (coordinate-identical, 0.0 degrees) to "Ammaia" (5.19.04.02, itself
+    # citing the *same* boundary passage as 5.19.01.11 - topostext 5.19.1.2,
+    # word for word) before Ammaia could ever be reached as a stitch target -
+    # the structural "can't reach an interior point" limitation static_map.py
+    # worked around all last round with a schematic bridge, rather than a
+    # real fix. Excluding it frees Ammaia back up as its own group's genuine
+    # trail endpoint, letting a normal stitch pair (see
+    # _BOUNDARY_STITCH_REF_ID_PAIRS below) join Tigris-Mündung (westliche)
+    # straight through to Idikara/Iokura instead - one real ~190-point
+    # trail (Iokura -> ... -> Kattigara*) rather than a documented-but-
+    # disconnected annotation. The Susiana/Persis coastal walk itself
+    # (Heiliger Golf, Koromanis, ...) loses its own accidental link to
+    # Idikara/Iokura as a result and becomes its own separate ~90-point
+    # trail (Zipfel des Arabischen Golfes -> Koromanis) - which matches the
+    # user's own stated Persian Gulf sequence (Charax des Pasines -> Tigris
+    # east -> Teredon -> Tigris west -> Maisanitischer Golf) ending there,
+    # not continuing on into Arabia's own Idikara/Iokura citations.
+    "6.07.19.05",
 }
 
 # A narrower tool than _COASTLINE_SKIP_REF_IDS: that one drops a point from
@@ -1931,25 +1955,17 @@ _BOUNDARY_STITCH_REF_ID_PAIRS = {
     # A thirty-first round (2026-07-31), all found by the user auditing
     # specific ref_ids directly against their own topostext citations:
     ("5.20.01.08", "6.03.02.04"),  # Tigris-Mündung (östliche) -> Charax des Pasines (head of the Persian Gulf; topostext §5.20.1 names this exact point - "on the east by Susiana...to its outflows into the Persian Gulf at 80d30',31d00'" - as Babylonia's own border *with Susiana*, i.e. Charax des Pasines' own province; Teredon sits *between* the Tigris' two mouths per topostext §5.20.5, not at either end - see _COASTLINE_EXPLICIT_ORDER_OVERRIDES)
-    # NOTE: a matching ("5.20.05.03", "6.07.19.05") pair - Tigris-Mündung
-    # (westliche) -> Maisanitischer Golf, the Arabian-side hand-off the
-    # user asked for to complete the same reordering - is *not* listed
-    # here even though it's a reasonable-looking connection: Maisanitischer
-    # Golf (6.07.19.05) is coordinate-identical to "Ammaia" (5.19.04.02,
-    # already the real, tight-matched start of the Idikara/Iokura
-    # continuation). _stitch_trails() only concatenates trails end-to-end,
-    # it can't represent a real three-way junction, so only one of the two
-    # equally-real connections at that shared point can ever "win" a given
-    # run - and the existing Ammaia link (an exact coordinate match, not
-    # just a plausible guess) is the stronger claim. Tigris-Mündung
-    # (westliche)'s own trail (Teredon -> Tigris-östliche -> Susiana ->
-    # Persia -> India -> the Sinai -> Kattigara*) stays open on this end
-    # rather than silently overriding it.
     ("5.05.03.04", "5.08.02.03"),  # Syedra -> Iotape (Kilikia Tracheia's own coast, book.map "5.05" -> "5.08" - the two newly-coastal sections' own local runs are only 0.17 degrees apart, well under _STITCH_MAX_GAP_DEG, but different book.map groups only auto-merge at the much tighter cross-group tolerance (_SAME_POINT_TOL_DEG*2), so this needs stating explicitly like every other cross-book.map hand-off)
     ("6.14.02.08", "6.09.02.05"),  # Aspabota* -> Oxos-Mündung (topostext §6.14.2 states it directly: "...mouth of the river Polytimetos...Aspabota, a town...*after which comes the mouth of the Oxus*" - Scythia's own coastal walk continuing past Aspabota to the Oxus, not a schematic gap)
     ("6.09.02.01", "6.02.02.12"),  # Saramanne -> Grenzpunkt (Hyrkanien, Medien) (topostext §6.9.1/§6.9.3: Hyrkania "is bordered on the north by the part of the Hyrkanian Sea from the limit toward Media" and Saramanne is named as the point "in which part of Media is Saramanne" - Hyrkania's own coastal walk starting where Media's border reaches the sea; completes the Caspian/Hyrcanian Sea's own closed loop with real data instead of the schematic Aspabota<->Grenzpunkt closure used since the twenty-seventh round, see the now-empty _FORCE_CLOSE_LOOP_TRAILS)
     ("7.02.07.13", "7.03.02.03"),  # Grenzpunkt (Indien jenseits des Ganges, Land der Sinen) -> Aspitharas-Mündung (topostext §7.2.7 names this point "the end of the Great Gulf towards the Sinai"; §7.3.2 continues directly: "*After the boundary of the Gulf* on the side of India the mouth of the river Aspithra" - the Sinai's own coastal walk picking up exactly where India's leaves off)
     ("7.03.02.13", "7.03.03.03"),  # Kap der Satyrn -> Kutiaris-Mündung (topostext §7.3.2 ends at "The Cape of Satyrs...Gulf of the Sinai"; §7.3.3 continues "Around the Gulf of the Sinai...mouth of the river Kottiaris...Kattigara" - completing the Sinai's own coast to Kattigara*, already this catalogue's own confirmed Asian world-edge point)
+    #
+    # A thirty-second round (2026-07-31): now works as a normal stitch pair
+    # after excluding "Maisanitischer Golf" (6.07.19.05, see
+    # _COASTLINE_SKIP_REF_IDS above) freed Ammaia back up as its own
+    # group's real trail endpoint.
+    ("5.20.05.03", "5.19.04.02"),  # Tigris-Mündung (westliche) -> Ammaia (topostext §5.19.4/§6.7.19: the same Persian-Gulf-head real place Susiana/Persis's own coastal citation "Ammaia" and Babylonia's own "Tigris-Mündung (westliche)" both describe - see the note above _COASTLINE_SKIP_REF_IDS' "6.07.19.05" entry)
     #
     # Not applied this round, left for individual follow-up rather than
     # guessed at from distance alone: Anas-Mündung(westliche)/Balsa (2.04.03.01/
@@ -2000,15 +2016,14 @@ _MANUAL_JUNCTION_REF_ID_PAIRS: dict[tuple[str, str], str] = {
         "be reached with an ordinary stitch pair the way every other hand-off "
         "on this coast can."
     ),
-    ("5.20.05.03", "5.19.04.02"): (
-        "Tigris-Mündung (westliche) - Babylonia's own citation of the Persian "
-        "Gulf's head - to \"Ammaia\" - Susiana/Persis/Arabia's own citation of "
-        "the same real place (coordinate-identical to a third citation, "
-        "\"Maisanitischer Golf\", 6.07.19.05, already auto-stitched to Ammaia) "
-        "- 0.51 degrees apart. Ammaia is already interior to the merged "
-        "Susiana/Persis/Arabia trail, so a normal stitch pair targeting either "
-        "it or Maisanitischer Golf silently has no effect."
-    ),
+    # NOTE: Tigris-Mündung (westliche) <-> Ammaia used to be listed here
+    # too, but a thirty-second round found a real fix instead: excluding
+    # "Maisanitischer Golf" (6.07.19.05, itself a fourth citation of the
+    # same Arabia-Deserta boundary statement as 5.19.01.11/.13) freed
+    # Ammaia back up as its own group's genuine trail endpoint, so this
+    # connection is now a normal, working entry in
+    # _BOUNDARY_STITCH_REF_ID_PAIRS instead of a manual, unmerged
+    # annotation - see that dict's own "thirty-second round" note.
 }
 
 

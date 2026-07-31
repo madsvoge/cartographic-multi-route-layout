@@ -3366,6 +3366,109 @@ imprecision for four closely-spaced points on a short stretch of coast -
 the same already-documented distortion class as the Kaystros/Thermodon/Po
 cases noted elsewhere in this document, left untouched on purpose.)
 
+**A fourth round of follow-up** landed after the user reported the very
+"background check" render meant to validate the box-hugging fix instead
+showed Africa with implausible extra height, two stray vertical lines
+cutting through the map, and an uncoloured Indian Ocean - and, sharply,
+asked whether repeated patching without actually checking the result was
+turning into circular guesswork.
+
+It was: every `_build_..._polygon()` coordinate list in `static_map.py`
+had only ever been "verified" by eyeballing a rendered PNG, never by
+actually checking whether the polygon was a valid (non-self-intersecting)
+shape. matplotlib's own `Polygon` patch doesn't detect or warn about
+self-intersecting input - it silently fills whatever the nonzero winding
+rule computes, which for a self-crossing path is *not* what the vertex
+list visually suggests. Loading each constructed ring into shapely and
+checking `.is_valid` immediately turned up two real, confirmed bugs:
+
+- `_build_world_edge_polygon()`'s Arabian detour (the round-31 "there and
+  back" splice grafting the Susiana/Persis/Arabia trail onto the fill via
+  Ammaia) had a genuine coordinate bug: after the detour returned to
+  Ammaia's own position, the very next coordinate in the list was the
+  south-edge closure point computed from Tigris-Mündung (westliche)'s
+  *different* coordinates (~0.5 degrees away) - tearing a diagonal across
+  the Persian Gulf and self-intersecting badly (`Polygon(coords).is_valid`
+  was `False`; the same construction without the detour was `True`).
+  Rather than patch the jump, the whole detour was reverted: it was
+  already suspect for a second reason - retracing the Susiana trail out
+  to its own far end reached Arabia's own "Zipfel des Arabischen Golfes"
+  (5.17.01.05), risking exactly the forbidden visual merge with Egypt's
+  coordinate-identical-but-physically-separate "Zipfel" across the Sinai
+  the user had already warned about for a different reason.
+- Separately, `_build_world_edge_polygon()`'s own south-edge closure -
+  present since long before this session, never checked with shapely
+  before now - dropped straight down from Tigris-Mündung (westliche)'s
+  own longitude (61.83°). That's not safe: Africa's own trail doesn't
+  reach its maximum longitude at Kap Rhapton itself, it peaks further
+  east first (Aromata*, 65.33°, near the Horn of Africa) and only curves
+  back to Rhapton's own 56.17° afterward - so *any* straight vertical
+  closure line landing in that range cuts back through Africa's own real
+  coast a second time. This existed independent of the detour bug and
+  was the actual, sole cause of the "Africa gained height" / "Indian
+  Ocean isn't coloured" reports (the Eurasia closure, initially
+  suspected, turned out to be unrelated).
+
+Once the user separately pointed out that the Ammaia/Tigris-Mündung
+connection was worth revisiting properly rather than accepting a
+disconnected "manual bridge" annotation ("we've done this everywhere
+else and points aren't linked anywhere else - is this the only place
+that isn't the last point in a section?") - a real, structural fix
+turned out to exist after all: "Maisanitischer Golf" (6.07.19.05,
+topostext §6.7.19.3) is a *fourth* citation of the same Arabia-Deserta
+boundary statement as the already-excluded 5.19.01.11/.13 (topostext
+§5.19.1.2) - Susiana/Persis's own side of it. Left in, it auto-stitched
+(coordinate-identical) to "Ammaia" before Ammaia could ever be reached as
+a stitch target, which is *why* the manual-bridge workaround existed at
+all. Excluding it (added to `_COASTLINE_SKIP_REF_IDS`, the same duplicate-
+citation bug class as five other fixes this session) freed Ammaia back up
+as its own group's genuine trail endpoint, so `("5.20.05.03",
+"5.19.04.02")` now works as an ordinary `_BOUNDARY_STITCH_REF_ID_PAIRS`
+entry - joining Tigris-Mündung (westliche) straight through Ammaia to
+Idikara and Iokura as one real ~190-point trail, reaching all the way to
+Kattigara*. The Susiana/Persis coastal walk itself (Heiliger Golf,
+Koromanis, ...) loses its own accidental link to Idikara/Iokura as a
+result and becomes its own separate ~90-point trail - which actually
+matches the user's own stated Persian Gulf sequence (Charax des Pasines
+-> Tigris east -> Teredon -> Tigris west -> Maisanitischer Golf) ending
+there, not continuing into Arabia's own Idikara/Iokura citations. The
+`_build_arabian_confirmed_bridge()`/`manual_bridges`-layer workaround for
+this specific pair is gone, superseded by the real join;
+`_MANUAL_JUNCTION_REF_ID_PAIRS` now holds only the Rhinokorura-Anthedon
+entry.
+
+Rhinokorura *stays* a manual bridge, and the user's question deserves a
+direct answer: yes, it is genuinely different, not an inconsistency.
+Ammaia's fix worked because there was a *duplicate citation* to exclude,
+freeing the real point back up as a natural endpoint. Rhinokorura has no
+such duplicate - Egypt's own coastal description continues *past* it
+(toward the Gulf of Suez) as one single, real, non-duplicated sequence
+all the way to Kap Rhapton, 53 points later. The only way to make
+Rhinokorura a genuine trail endpoint the same way would be to hard-break
+Africa's own ~287-point trail immediately after it and re-stitch the
+western piece to Anthedon - technically possible
+(`_COASTLINE_HARD_BREAKS` already exists for exactly this), but it would
+split Africa's own coastal trail in two, breaking `_build_world_edge_
+polygon()`'s own assumption that Kap Rhapton's trail also reaches all the
+way back to Hypodromos Aithiopias, with knock-on effects on the world
+edge closure and north-edge extension. Left as a manual bridge rather
+than risking that cascade without being asked to take it on.
+
+With both bugs above fixed, `_build_world_edge_polygon()`'s south-edge
+closure now jogs east to the world bbox's own edge (`lon_max`) before
+dropping south - the same edge the Eurasia polygon's own closure already
+hugs, guaranteed clear of both Africa's own trail and the Rhapton-
+Kattigara bridge (which itself spans nearly the entire width of the map
+at a roughly constant low latitude, ruling out *any* vertical closure
+line landing between the two). A new `_valid_polygon_rings()` helper
+loads every constructed ring into shapely before handing it to
+matplotlib, repairing any residual self-intersection with the standard
+`buffer(0)` trick rather than trusting hand-verification again - both
+polygons now pass `.is_valid` (or repair cleanly into one single ring)
+as of this round, confirmed by direct inspection of the Indian Ocean,
+Persian Gulf, and Mediterranean at bbox zoom, not just a whole-world
+thumbnail.
+
 ## GeoPackage export (for QGIS/ArcGIS)
 
 `export_geopackage.py` writes the same categories and constructed lines
