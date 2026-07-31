@@ -2911,6 +2911,22 @@ Africa to the Kattigara/Land-of-the-Sinai region, blue ocean everywhere
 else - visually the same shape the Ulm editions themselves drew, arrived
 at from this catalogue's own data rather than copied from them.
 
+**A twenty-fourth round** closed the Eurasian arc's own northern end the
+same principled way, after the user spotted it looking at a rendered
+Eurasia view: the 645-point trail that runs through Scandinavia (book
+2.11) and on into Sarmatia (book 3.05) ends at Chesinos-Mündung
+(3.05.02.05, ~59.5°N) - and topostext's own text at §3.5.1 names this
+exact spot as a world edge, the same kind of phrasing that identifies Kap
+Rhapton/Hypodromos Aithiopias in the south: "...Chesinos river mouth
+58°30'.59°30' *The position of the shore at the latitude of Thule, i.e.,
+the end of the known sea* 62°00'.63°00'...". `_build_north_edge_extension()`
+extends this one confirmed endpoint straight up to the world bounding
+box's northern edge (`lat_max`), at the same longitude - a line, not a
+filled polygon, since the trail's *other* end (Side*, in Anatolia) still
+isn't a confirmed world edge and stays open, same reasoning as the
+Eurasian loose end in the twenty-third round. Drawn only under
+`--fill-ptolemy-land`, alongside the southern closure.
+
 ## GeoPackage export (for QGIS/ArcGIS)
 
 `export_geopackage.py` writes the same categories and constructed lines

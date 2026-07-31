@@ -60,6 +60,18 @@ _KAP_RHAPTON = "4.07.12.04"  # Africa's own Indian-Ocean-side world edge
 _KUTIARIS_MUENDUNG = "7.03.03.03"  # start of the small fragment leading to Kattigara
 _KATTIGARA = "7.03.03.07"  # Asia's own far-eastern world edge, the "Land of the Sinai"
 
+# Sarmatia's own Baltic/Arctic-coast world edge: the big 645-point Eurasian
+# arc runs through Scandinavia (book 2.11) and on into Sarmatia (book 3.05),
+# ending at Chesinos-Mündung. Ptolemy's own text (topostext §3.5.1) names
+# this exact stretch: "...Chesinos river mouth 58deg30'.59deg30' The position
+# of the shore at the latitude of Thule, i.e., the end of the known sea
+# 62deg00'.63deg00'..." - the same kind of explicit "last known point before
+# the Unknown Land" phrasing that identifies Kap Rhapton/Hypodromos
+# Aithiopias in the south. This trail's other end (Side*, in Anatolia) is
+# NOT a confirmed world edge and is deliberately left open - only this
+# northern end gets extended, straight up to the world bbox's own edge.
+_CHESINOS_MUENDUNG = "3.05.02.05"
+
 
 def _in_bbox(lon: float, lat: float, bbox: tuple[float, float, float, float]) -> bool:
     lon_min, lat_min, lon_max, lat_max = bbox
@@ -107,6 +119,21 @@ def _build_world_edge_polygon(refs) -> list[tuple[float, float]] | None:
     coords += [(r.lon_modern, r.lat_modern) for r in kattigara_frag]
     coords += [south_under_kattigara, south_under_hypodromos]
     return coords
+
+
+def _build_north_edge_extension(refs) -> list[tuple[float, float]] | None:
+    """A short schematic line from Chesinos-Mündung straight up to the
+    world bounding box's northern edge - see the comment above
+    _CHESINOS_MUENDUNG. Not a filled polygon: the trail's other end (Side*)
+    isn't a confirmed world edge, so this can't close into a loop yet, only
+    extend to show the coastline reaching the edge instead of dangling."""
+    coastlines = get_coastlines(refs)
+    trail, _ = _find_trail_by_endpoint(coastlines, _CHESINOS_MUENDUNG)
+    if trail is None:
+        return None
+    chesinos = trail[0] if trail[0].ref_id == _CHESINOS_MUENDUNG else trail[-1]
+    lat_max = _WORLD_EDGE_BBOX[3]
+    return [(chesinos.lon_modern, chesinos.lat_modern), (chesinos.lon_modern, lat_max)]
 
 
 def render(
@@ -164,6 +191,10 @@ def render(
             n_filled += 1
 
     coastline_segments_drawn = 0
+    north_edge_line = _build_north_edge_extension(refs) if fill_ptolemy_land else None
+    if north_edge_line is not None:
+        xs, ys = zip(*north_edge_line)
+        ax.plot(xs, ys, color=CATEGORIES["coast"]["color"], linewidth=2.2, alpha=0.9, zorder=4)
     for trail_idx, trail in enumerate(coastlines):
         line_in_view = [(r.lon_modern, r.lat_modern, i, r) for i, r in enumerate(trail) if _in_bbox(r.lon_modern, r.lat_modern, bbox)]
         if len(line_in_view) < 2:
