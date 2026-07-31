@@ -923,6 +923,24 @@ _COASTAL_APPENDIX_SECTIONS = {
     # continuation instead of stopping a point early.
     ("4.05", "11"),
     ("4.05", "12"),
+    # Found the same way again, this time by the user directly (asked for a
+    # side-by-side table of book.map "5.05.02"/"5.05.03"/"5.08.02" to see
+    # why they weren't coastal): Kilikia Tracheia's own western coast,
+    # between Side (the Eurasian arc's own long-unconfirmed loose end) and
+    # Anemurion. Section "5.05.03" is headed "Coast of Kilikia Tracheia"
+    # (topostext §5.5.3) - literally "coast", just naming a district instead
+    # of a sea. Section "5.08.02" is headed "In Selinitis of Kilikia
+    # Tracheia" (topostext §5.8.2), a sub-district within the same coast -
+    # confirmed by §5.8.1's own transition line: "with the following
+    # description: from Syedra, a city of Pamphylia, along the *coast*:".
+    # Longitude rises monotonically the whole way - Side 63.42 -> Korakesion
+    # 63.58 -> Syedra 63.83 -> Iotape 64.00 -> Selinus 64.33 -> Antiocheia
+    # 64.67 -> Nephelis 64.83 -> Anemurion 65.17 - a real coastal walk, not
+    # a coincidence. This closes the Side<->Anemurion gap with genuine data
+    # instead of the dashed schematic bridge used since the twenty-eighth
+    # round (see static_map.py's own now-removed _ANEMURION bridge logic).
+    ("5.05", "03"),
+    ("5.08", "02"),
     ("4.04", "04"),
     ("4.06", "05"),
     ("4.06", "06"),
@@ -1085,6 +1103,12 @@ _NONCOASTAL_POINT_OVERRIDES = {
     # same shape as the Deva/Alaunus/Sala rivers, just found on a coastline
     # instead of a river this time.
     "5.06.07.06",
+    # Four more found by the user auditing specific ref_ids directly, all
+    # the same "boundary/limit statement, not a coastal walk point" shape:
+    "5.16.01.05",  # Grenzpunkt (Ägypten, Judäa) - topostext (§4.5.13, matched from Egypt's side) confirms this is a land-boundary hand-off between Judaea and Arabia Petraea, stated *before* the coastal description resumes further on - see the long comment above _COASTLINE_EXPLICIT_ORDER_OVERRIDES' now-reverted entry for this ref_id.
+    "4.05.13.03",  # Grenzpunkt (Ägypten, Arabia Petraea, Judäa) - Egypt's own citation of the same boundary point as 5.16.01.05 above; same fix, same reasoning.
+    "2.09.14.06",  # Batavodurum (Nijmegen) - topostext (§2.9.8) is explicit: "the cities are on the west bank, of the Batavians *in the interior*: Batavodurum..." - an inland Rhine-valley city listed alongside genuinely coastal river-mouth points in the same section, not itself on the coast. Previously force-stitched to Rhenus-Mündung (östliche) on a name-proximity guess alone (round 21/22) - that pair removed from _BOUNDARY_STITCH_REF_ID_PAIRS.
+    "5.09.10.05",  # Grenzpunkt (Asiatisches Sarmatien, Iberien, Kolchis) - topostext (§5.9.10) is explicit: "...mouth of the Korax river...*The limit on the side of Kolchis is at* 75d00',47d30'" - a territorial limit statement, not a coastal walk point, despite the exact coordinate match. Previously force-stitched to Korax-Mündung on a "no topostext match, but the names align" guess alone (round 22) - that pair removed from _BOUNDARY_STITCH_REF_ID_PAIRS, now that a real (contradicting) match exists.
 }
 
 
@@ -1751,17 +1775,30 @@ _COASTLINE_EXPLICIT_ORDER_OVERRIDES: dict[str, tuple] = {
     "3.10.06.02": (3, 10, 2, 5, 3),  # Pseudostomon (Mündung)
     "3.10.05.03": (3, 10, 2, 5, 4),  # Nördliche Mündung (Boreios)
     "3.10.04.03": (3, 10, 2, 5, 5),  # Psilon bzw. Thiagola (Mündung)
-    # Grenzpunkt (Ägypten, Judäa) (5.16.01.05) is section 5.16.01's own
-    # single entry, sorting (by ref_id alone) right before 5.16.02's own
-    # walk - Kaisareia (its *northern* end). Geographically it's the walk's
-    # real *southern* end instead (a bit-identical coordinate duplicate of
-    # Egypt's own "Grenzpunkt (Ägypten, Arabia Petraea, Judäa)", 4.05.13.03
-    # - Gaza/Anthedon sits right next to the Egyptian border, Caesarea is
-    # far to the north). Sorted to land right after Anthedon (5.16.02.11,
-    # the walk's last point) instead, so the edge runs the short, real way
-    # (0.94 degrees) rather than skipping past Anthedon and cutting across
-    # the walk's own middle segments the way natural order would.
-    "5.16.01.05": (5, 16, 2, 12),  # Grenzpunkt (Ägypten, Judäa)
+    # NOTE: "5.16.01.05" (Grenzpunkt Ägypten/Judäa) briefly had an override
+    # here (sorted right after Anthedon, so it became the walk's own last
+    # point) - reverted. The user asked directly whether its Egypt-side
+    # duplicate (4.05.13.03) was really coastal; topostext (§4.5.13)
+    # settles it for both: "bounded on the east by part of Judaea which
+    # runs from Anthedon city to the *end point* at [64°15',30°40'] and
+    # *thence* by Arabia Petraia as far as the inmost point in the Arabian
+    # Gulf at Heroon polis" - a land-boundary hand-off between two inland
+    # provinces, stated *before* the coastal description resumes at Heroon
+    # polis (= Zipfel des Arabischen Golfes, 4.05.13.05 - its own topostext
+    # match is that exact phrase). Neither citation of this point belongs
+    # in the coastal walk - see _COASTLINE_SKIP_REF_IDS/_NONCOASTAL_POINT_
+    # OVERRIDES for both.
+    #
+    # Teredon (5.20.05.04) sorts (by ref_id alone) *after* both of the
+    # Tigris river's own mouths (5.20.01.08, 5.20.05.03) - but topostext
+    # (§5.20.5) places it explicitly "between the mouths of the Tigris
+    # river", and the user confirmed the real geography (Teredon = near
+    # Basra, between the two mouths, not past both of them). Sorted here to
+    # land between them, so Babylonia's own short trail runs Tigris-east ->
+    # Teredon -> Tigris-west, each mouth free to be its own trail endpoint
+    # for the two boundary stitches to Susiana/Arabia (see
+    # _BOUNDARY_STITCH_REF_ID_PAIRS' "thirty-first round" entries).
+    "5.20.05.04": (5, 20, 3, 0),  # Teredon*
 }
 
 # A different, self-marking version of the same "same point re-cited"
@@ -1862,12 +1899,16 @@ _BOUNDARY_STITCH_REF_ID_PAIRS = {
     ("6.21.02.11", "7.01.02.03"),  # Grenzpunkt (Gedrosien, Indien) -> Naustathmos (Gedrosia/India border reaching the sea into India's own Gulf of Kanthi/Kutch)
     ("5.17.01.12", "6.07.02.04"),  # Elana/Elanitischer Golf (Winkel) -> Onne (Gulf of Aqaba; topostext: "border of the Arabian Gulf in the inmost part of the Elanite gulf, Onne")
     ("2.05.04.09", "2.06.01.05"),  # Vacua-Mündung -> Avus-Mündung (NW Iberia's own coast continuing north, real Vouga/Ave river mouths in Portugal)
-    ("5.20.05.04", "6.03.02.04"),  # Teredon -> Charax des Pasines (head of the Persian Gulf; topostext (6.3.2) explicitly continues Babylonia's own coast: "this coast is described as follows: the western mouth of the Tigris river is in the description of Babylonia...Charax Pasinou..." - originally paired to "Tigris-Mündung (westliche)" (6.03.02.01), a bit-identical duplicate re-citation of that same continuity statement, since excluded (_COASTLINE_SKIP_REF_IDS) as its own zigzag bug; re-pointed to the walk's real next point once that duplicate stopped being an endpoint)
     ("6.03.02.14", "6.04.02.02"),  # Oroatis-Mündung -> Kap Taoke (Persis coast; topostext matches both to "mouth of the Oroatis river Taoke promontory")
     ("3.05.14.02", "5.09.02.02"),  # Tanaïs (östlicher Mündungsarm) -> Paniardis (Sea of Azov/Sarmatia coast; topostext: "mouth of the Tanais river Paniardis")
     ("6.04.02.10", "6.08.04.01"),  # Bagradas-Mündung -> Daras-Mündung (Persian Gulf coast, both citations use explicit boundary/limit-point language)
     ("7.01.18.07", "7.02.02.04"),  # Ganges-Mündung (Antibole-Mündung) -> Pentapolis (India's own coast handing off toward Indochina; topostext: "In the Gangetic Gulf beyond the Mouth of the Ganges called Antibolei...Pentapolis")
-    ("2.11.01.04", "2.09.14.06"),  # Rhenus-Mündung (östliche) -> Batavodurum (the Rhine delta, real Dutch geography)
+    # NOTE: ("2.11.01.04", "2.09.14.06") - Rhenus-Mündung (östliche) ->
+    # Batavodurum - removed. The user found topostext (§2.9.8) explicitly
+    # calls Batavodurum an inland city ("of the Batavians in the
+    # interior"); the pair was only ever a name-proximity guess (round
+    # 21/22) and didn't survive checking. See Batavodurum's own entry in
+    # _NONCOASTAL_POINT_OVERRIDES.
     #
     # A twenty-second round (still 2026-07-31), tracing which of the 28
     # coastline features chain into one another - see README.md's "Closing
@@ -1878,8 +1919,37 @@ _BOUNDARY_STITCH_REF_ID_PAIRS = {
     ("2.04.03.01", "2.05.03.04"),  # Anas-Mündung (westliche) -> Balsa (Baetica's own coastal walk and Lusitania's own coastal walk both start from the shared Anas/Guadiana border mouth, walking opposite ways - Modern_location confirms real adjacency, Guadiana-Mündung to Tavira, right next to each other on the Algarve/Andalusia coast; distinct from the up-river "Anas (Biegung)"/"Anas (Grenzpunkt)" boundary citations already excluded elsewhere - this is the river's own real western mouth, correctly `river_mouth`)
     ("4.03.14.09", "4.04.03.02"),  # was ("4.03.13.06","4.04.03.02") - Philainu -> Festung Automala (section 4.03.14, "Grosse Syrte"/the Gulf of Sidra, was found and fixed afterward - see _COASTAL_APPENDIX_SECTIONS - which extended this trail nine points further and made Kap Kephalai an interior point, not the end)
     ("4.07.11.10", "4.07.11.11"),  # Essina -> Sarapion (Barbaria/Somalia coast; Modern_location confirms real-world adjacency - Wasin and Warsheik sit right next to each other on the Somali coast - despite the larger Ptolemaic-coordinate gap, the same growing-distortion-with-distance-from-the-Mediterranean pattern noted elsewhere this session)
-    ("5.09.10.05", "5.10.02.01"),  # Grenzpunkt (Asiatisches Sarmatien, Iberien, Kolchis) -> Korax-Mündung (no topostext match for either this far into the corpus, but the names align directly - a Kolchis boundary point next to the Korax/Bzyb river, which *is* in Kolchis - and this is the only candidate at all for either endpoint)
+    # NOTE: ("5.09.10.05", "5.10.02.01") - Grenzpunkt (Asiatisches
+    # Sarmatien, Iberien, Kolchis) -> Korax-Mündung - removed. The user
+    # found a real topostext match for 5.09.10.05 after all (§5.9.10: "The
+    # limit on the side of Kolchis is at 75d00',47d30'"), and it contradicts
+    # the original "names align" guess (round 22): this is Asian Sarmatia's
+    # own territorial limit statement, not a coastal walk point. See
+    # _NONCOASTAL_POINT_OVERRIDES.
     ("6.08.10.01", "6.21.02.03"),  # Grenzpunkt (Gedrosien, Karmanien) -> Arbis-Mündung (both citations name Karmania explicitly as the shared boundary - "the earlier mentioned limit of the Indian sea" / "extremity towards Karmania the mouth of the River Arabis")
+    #
+    # A thirty-first round (2026-07-31), all found by the user auditing
+    # specific ref_ids directly against their own topostext citations:
+    ("5.20.01.08", "6.03.02.04"),  # Tigris-Mündung (östliche) -> Charax des Pasines (head of the Persian Gulf; topostext §5.20.1 names this exact point - "on the east by Susiana...to its outflows into the Persian Gulf at 80d30',31d00'" - as Babylonia's own border *with Susiana*, i.e. Charax des Pasines' own province; Teredon sits *between* the Tigris' two mouths per topostext §5.20.5, not at either end - see _COASTLINE_EXPLICIT_ORDER_OVERRIDES)
+    # NOTE: a matching ("5.20.05.03", "6.07.19.05") pair - Tigris-Mündung
+    # (westliche) -> Maisanitischer Golf, the Arabian-side hand-off the
+    # user asked for to complete the same reordering - is *not* listed
+    # here even though it's a reasonable-looking connection: Maisanitischer
+    # Golf (6.07.19.05) is coordinate-identical to "Ammaia" (5.19.04.02,
+    # already the real, tight-matched start of the Idikara/Iokura
+    # continuation). _stitch_trails() only concatenates trails end-to-end,
+    # it can't represent a real three-way junction, so only one of the two
+    # equally-real connections at that shared point can ever "win" a given
+    # run - and the existing Ammaia link (an exact coordinate match, not
+    # just a plausible guess) is the stronger claim. Tigris-Mündung
+    # (westliche)'s own trail (Teredon -> Tigris-östliche -> Susiana ->
+    # Persia -> India -> the Sinai -> Kattigara*) stays open on this end
+    # rather than silently overriding it.
+    ("5.05.03.04", "5.08.02.03"),  # Syedra -> Iotape (Kilikia Tracheia's own coast, book.map "5.05" -> "5.08" - the two newly-coastal sections' own local runs are only 0.17 degrees apart, well under _STITCH_MAX_GAP_DEG, but different book.map groups only auto-merge at the much tighter cross-group tolerance (_SAME_POINT_TOL_DEG*2), so this needs stating explicitly like every other cross-book.map hand-off)
+    ("6.14.02.08", "6.09.02.05"),  # Aspabota* -> Oxos-Mündung (topostext §6.14.2 states it directly: "...mouth of the river Polytimetos...Aspabota, a town...*after which comes the mouth of the Oxus*" - Scythia's own coastal walk continuing past Aspabota to the Oxus, not a schematic gap)
+    ("6.09.02.01", "6.02.02.12"),  # Saramanne -> Grenzpunkt (Hyrkanien, Medien) (topostext §6.9.1/§6.9.3: Hyrkania "is bordered on the north by the part of the Hyrkanian Sea from the limit toward Media" and Saramanne is named as the point "in which part of Media is Saramanne" - Hyrkania's own coastal walk starting where Media's border reaches the sea; completes the Caspian/Hyrcanian Sea's own closed loop with real data instead of the schematic Aspabota<->Grenzpunkt closure used since the twenty-seventh round, see the now-empty _FORCE_CLOSE_LOOP_TRAILS)
+    ("7.02.07.13", "7.03.02.03"),  # Grenzpunkt (Indien jenseits des Ganges, Land der Sinen) -> Aspitharas-Mündung (topostext §7.2.7 names this point "the end of the Great Gulf towards the Sinai"; §7.3.2 continues directly: "*After the boundary of the Gulf* on the side of India the mouth of the river Aspithra" - the Sinai's own coastal walk picking up exactly where India's leaves off)
+    ("7.03.02.13", "7.03.03.03"),  # Kap der Satyrn -> Kutiaris-Mündung (topostext §7.3.2 ends at "The Cape of Satyrs...Gulf of the Sinai"; §7.3.3 continues "Around the Gulf of the Sinai...mouth of the river Kottiaris...Kattigara" - completing the Sinai's own coast to Kattigara*, already this catalogue's own confirmed Asian world-edge point)
     #
     # Not applied this round, left for individual follow-up rather than
     # guessed at from distance alone: Anas-Mündung(westliche)/Balsa (2.04.03.01/
@@ -1973,18 +2043,15 @@ _NO_CLOSE_LOOP_TRAILS = {
 # static_map.py's _SIDE_STAR) - a straight line standing in for an
 # undescribed stretch of real shore, not a claim Ptolemy drew this exact
 # path.
-_FORCE_CLOSE_LOOP_TRAILS = {
-    # Aspabota* -> Grenzpunkt (Hyrkanien, Medien): the Caspian/Hyrcanian
-    # Sea's own coastal walk (book 5 Asia AS02/AS03/AS05, book 6 AS07),
-    # already tracing the north and west shore in order - missing only the
-    # east shore between the Jaxartes-mouth area and the Hyrcania/Media
-    # border, which this catalogue doesn't separately describe. Ptolemy's
-    # own text treats the Caspian as a landlocked sea (unlike the ocean-
-    # connected coasts elsewhere in this catalogue), so a closed loop here
-    # is the right shape even without a specific citation for this one
-    # stretch.
-    ("6.14.02.08", "6.02.02.12"),
-}
+_FORCE_CLOSE_LOOP_TRAILS: set[tuple[str, str]] = set()
+# NOTE: this used to force-close the Caspian/Hyrcanian Sea's loop directly,
+# Aspabota* (6.14.02.08) straight to Grenzpunkt (Hyrkanien, Medien)
+# (6.02.02.12) - a schematic guess at the missing east shore. The user
+# found the catalogue actually describes that whole stretch, just under
+# two more book.map sections (Scythia's own "6.14" and Hyrkania's own
+# "6.9") this project hadn't traced yet - see the two new pairs in
+# _BOUNDARY_STITCH_REF_ID_PAIRS (Aspabota<->Oxos-Mündung, Saramanne<->
+# Grenzpunkt) that now close the same loop with real data instead.
 
 # Separate trails within the same book.map region are stitched together if
 # their nearest endpoints are closer than this - a run breaks whenever a

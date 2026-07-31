@@ -48,75 +48,64 @@ MOUNTAIN_LINE_COLOR = "#6b4226"
 # beige like an island. Filled with OCEAN instead, at a higher zorder than
 # any land polygon underneath, so it reads as a hole in whatever land fill
 # happens to reach this far (e.g. the Eurasia arc's own interior, which the
-# Caspian sits well within).
+# Caspian sits well within). Checked by membership anywhere in the trail,
+# not just its first point - which specific point the trail-tracer picks
+# as a closed loop's own "start" isn't stable across edits (see the
+# thirty-first round, which re-routed the Caspian's own closure through
+# real data and changed its start from Aspabota* to Saramanne).
 _WATER_BODY_CLOSED_LOOP_REF_IDS = {
-    "6.14.02.08",  # Aspabota* - start of the Caspian/Hyrcanian Sea's own closed loop (see _FORCE_CLOSE_LOOP_TRAILS in ptolemy_map.py)
+    "6.14.02.08",  # Aspabota* - part of the Caspian/Hyrcanian Sea's own closed loop (see _BOUNDARY_STITCH_REF_ID_PAIRS in ptolemy_map.py)
 }
 
 # --fill-ptolemy-land's world-edge closure: the same bounding box
-# --region world already renders with. Two of this catalogue's confirmed
+# --region world already renders with. This catalogue's confirmed
 # world-edge points (see README.md's "Filling Ptolemy's own coastline")
-# close against its southern edge specifically, not just "nearest edge" -
-# Ptolemy's own claimed cosmology has an unknown southern landmass below
-# the known world, enclosing the Indian Ocean, which is exactly what
-# projecting straight down represents. A third pair, Kap Rhapton and
-# Kattigara, closes directly against *each other* instead of the box -
-# the one closure with actual textual backing (Ptolemy explicitly
+# close against its southern/northern edge specifically, not just "nearest
+# edge" - Ptolemy's own claimed cosmology has an unknown southern landmass
+# below the known world, enclosing the Indian Ocean, which is exactly what
+# projecting straight down represents; the far north is the same idea
+# facing the other way (Chesinos-Mündung's own "end of the known sea").
+# Kap Rhapton and Kattigara close directly against *each other* instead of
+# the box - the one closure with actual textual backing (Ptolemy explicitly
 # believed and stated the Indian Ocean was landlocked), the same "Terra
 # Incognita" land bridge the 1482/1486 Ulm editions themselves drew.
 _WORLD_EDGE_BBOX = REGIONS["world"]
 _HYPODROMOS_AITHIOPIAS = "4.06.07.08"  # Africa's own Atlantic-coast world edge
 _KAP_RHAPTON = "4.07.12.04"  # Africa's own Indian-Ocean-side world edge
-_KUTIARIS_MUENDUNG = "7.03.03.03"  # start of the small fragment leading to Kattigara
-_KATTIGARA = "7.03.03.07"  # Asia's own far-eastern world edge, the "Land of the Sinai"
+_KATTIGARA = "7.03.03.07"  # Asia's own far-eastern world edge, the "Land of the Sinai" - as of the thirty-first round, the real end of a single trail reaching all the way back to the Persian Gulf (see below), not a small separate fragment
+_TIGRIS_MUENDUNG_WESTLICHE = "5.20.05.03"  # current loose end of that same trail, at the Persian Gulf's own head
 
-# Sarmatia's own Baltic/Arctic-coast world edge: the big 645-point Eurasian
-# arc runs through Scandinavia (book 2.11) and on into Sarmatia (book 3.05),
-# ending at Chesinos-Mündung. Ptolemy's own text (topostext §3.5.1) names
-# this exact stretch: "...Chesinos river mouth 58deg30'.59deg30' The position
-# of the shore at the latitude of Thule, i.e., the end of the known sea
-# 62deg00'.63deg00'..." - the same kind of explicit "last known point before
-# the Unknown Land" phrasing that identifies Kap Rhapton/Hypodromos
+# Sarmatia's own Baltic/Arctic-coast world edge: the big Eurasian arc runs
+# through Scandinavia (book 2.11) and on into Sarmatia (book 3.05), ending
+# at Chesinos-Mündung. Ptolemy's own text (topostext §3.5.1) names this
+# exact stretch: "...Chesinos river mouth 58deg30'.59deg30' The position of
+# the shore at the latitude of Thule, i.e., the end of the known sea
+# 62deg00'.63deg00'..." - the same kind of explicit "last known point
+# before the Unknown Land" phrasing that identifies Kap Rhapton/Hypodromos
 # Aithiopias in the south.
 _CHESINOS_MUENDUNG = "3.05.02.05"
 
-# This same trail's *other* end, Side* (Pamphylia, south Anatolia) is NOT a
-# confirmed world edge - it's just this session's current unstitched
-# frontier (see README's "Filling Ptolemy's own coastline" section, the
-# Side/Phaselis/Anemurion ambiguity).
-_SIDE_STAR = "5.05.02.10"
+# This same trail's *other* end used to be Side* (Pamphylia) - an
+# unconfirmed frontier needing its own dashed closure (rounds 26-30). The
+# user then found the real missing links: Kilikia Tracheia's own coast
+# (book.map "5.05.03"/"5.08.02", headed by district names rather than sea
+# words - the same "_COASTAL_HDR_RE misses a district header" bug as
+# Sinai's Kasiotis) connects Side* straight through to Anemurion and on to
+# Anthedon (Gaza), all real data (see _COASTAL_APPENDIX_SECTIONS and the
+# "thirty-first round" stitch pairs in ptolemy_map.py). Anthedon is now
+# this trail's own real end.
+_ANTHEDON = "5.16.02.11"
 
-# Rather than closing Side* straight to the world bbox (which either cuts
-# across real sea or, worse, leaves an unfilled gap over real mapped land -
-# see the README's twenty-eighth round), it turns out this catalogue
-# already has *almost* the entire rest of the way there as real, drawn
-# coastline - just broken into a few short gaps. Chained together: Side* ->
-# [~1.8 deg, unconfirmed] -> Anemurion -> [real, Cilicia/Levant coast] ->
-# Grenzpunkt (Ägypten, Judäa) - Judaea's own citation of the Egypt border,
-# now correctly the walk's southern end (see _COASTLINE_EXPLICIT_ORDER_
-# OVERRIDES in ptolemy_map.py, a genuine data fix, not a schematic bridge -
-# the user caught this as a real missing-coast bug, not just a gap to paper
-# over) -> [near-zero, same point cited from Egypt's own side] ->
-# Grenzpunkt (Ägypten, Arabia Petraea, Judäa) -> [real, Egypt's own coast,
-# the Sinai/Suez stretch] -> Zipfel des Arabischen Golfes (Egypt's own
-# citation) -> [near-zero, same point cited from Arabia's own side] ->
-# Zipfel des Arabischen Golfes (Arabia's own citation) -> [real, Arabian
-# coast] -> Iokura -> [~2.3 deg, unconfirmed] -> Tigris-Mündung (östliche)
-# -> [real, Persia/India coast, already used below] -> Grenzpunkt (Indien
-# jenseits des Ganges, Land der Sinen) - Asia's own named boundary marker
-# facing "the Land of the Sinae" (China), the far end of the world-bbox
-# corner hug. The three remaining short hops (Side*<->Anemurion and Iokura
-# <->Tigris-Mündung, plus the corner hug itself) are still unconfirmed -
-# drawn dashed, not claimed as a settled stitch - but the Gaza/Sinai gap
-# is now real data, not a bridge over a data bug.
-_ANEMURION = "5.08.03.02"
-_GRENZPUNKT_AEGYPTEN_JUDAEA_JUDAEA_SIDE = "5.16.01.05"
-_GRENZPUNKT_AEGYPTEN_JUDAEA_EGYPT_SIDE = "4.05.13.03"
-_ZIPFEL_ARABISCHER_GOLF_EGYPT_SIDE = "4.05.13.05"
-_ZIPFEL_ARABISCHER_GOLF = "5.17.01.05"
-_IOKURA = "5.19.04.04"
-_TIGRIS_MUENDUNG_OESTLICHE = "5.20.01.08"
-_GRENZPUNKT_INDIEN_SINEN = "7.02.07.13"  # far-eastern end, the named boundary marker
+# Anthedon's own onward neighbour, Rhinokorura (El-Arisch, Egypt's own
+# Kasiotis-list citation, 4.05.12.05), is real too - but it's an *interior*
+# point of Africa's own huge coastline trail (Egypt's coast continues past
+# it toward the Gulf of Suez and the Red Sea), not a trail endpoint, so it
+# can't be reached with an ordinary boundary-stitch pair the way every
+# other hand-off on this coast can. Fetched directly and bridged here
+# instead - solid, not dashed, since the real-world adjacency (Gaza to
+# El-Arisch, 0.23 degrees) isn't actually in question, just the mechanics
+# of representing a T-junction in a simple polygon ring.
+_RHINOKORURA = "4.05.12.05"
 
 
 def _in_bbox(lon: float, lat: float, bbox: tuple[float, float, float, float]) -> bool:
@@ -138,38 +127,41 @@ def _find_trail_by_endpoint(trails: list, ref_id: str):
 def _build_world_edge_polygon(refs) -> list[tuple[float, float]] | None:
     """The one combined, fillable shape this catalogue's own world-edge
     points support today: Africa's own coast (Hypodromos Aithiopias ->
-    Kap Rhapton), a schematic land-bridge to the small Kattigara fragment
-    (Kutiaris-Mündung -> Kattigara), and both loose ends closed against
-    the southern edge of the world bounding box - see the module-level
-    comment above _WORLD_EDGE_BBOX. Returns None if the expected trails
-    aren't found (e.g. a future round merges or renames them)."""
+    Kap Rhapton), a schematic land-bridge (the "Terra Incognita" the 1482/
+    1486 Ulm editions themselves drew) to Asia's own huge coastal trail -
+    now reaching all the way from Kattigara back to the Persian Gulf's own
+    head (Tigris-Mündung westliche, see the thirty-first round) - and both
+    loose ends closed against the southern edge of the world bounding box.
+    See the module-level comment above _WORLD_EDGE_BBOX. Returns None if
+    the expected trails aren't found (e.g. a future round merges or
+    renames them)."""
     coastlines = get_coastlines(refs)
-    africa, africa_end = _find_trail_by_endpoint(coastlines, _KAP_RHAPTON)
-    kattigara_frag, _ = _find_trail_by_endpoint(coastlines, _KUTIARIS_MUENDUNG)
-    if africa is None or kattigara_frag is None:
+    africa, _ = _find_trail_by_endpoint(coastlines, _KAP_RHAPTON)
+    asia, _ = _find_trail_by_endpoint(coastlines, _KATTIGARA)
+    if africa is None or asia is None:
         return None
     if africa[0].ref_id != _HYPODROMOS_AITHIOPIAS:
         africa = list(reversed(africa))
-    if kattigara_frag[0].ref_id != _KUTIARIS_MUENDUNG:
-        kattigara_frag = list(reversed(kattigara_frag))
-    if kattigara_frag[-1].ref_id != _KATTIGARA:
+    if asia[0].ref_id != _KATTIGARA:
+        asia = list(reversed(asia))
+    if asia[-1].ref_id != _TIGRIS_MUENDUNG_WESTLICHE:
         return None  # shape assumption no longer holds - skip rather than draw something wrong
 
     lon_min, lat_min, lon_max, lat_max = _WORLD_EDGE_BBOX
     hypodromos = africa[0]
-    kattigara = kattigara_frag[-1]
+    tigris_west = asia[-1]
     south_under_hypodromos = (hypodromos.lon_modern, lat_min)
-    south_under_kattigara = (kattigara.lon_modern, lat_min)
+    south_under_tigris_west = (tigris_west.lon_modern, lat_min)
 
     coords = [(r.lon_modern, r.lat_modern) for r in africa]
-    coords += [(r.lon_modern, r.lat_modern) for r in kattigara_frag]
-    coords += [south_under_kattigara, south_under_hypodromos]
+    coords += [(r.lon_modern, r.lat_modern) for r in asia]
+    coords += [south_under_tigris_west, south_under_hypodromos]
     return coords
 
 
 def _build_world_edge_synthetic_lines(refs) -> list[list[tuple[float, float]]]:
     """The parts of `_build_world_edge_polygon()`'s boundary that aren't a
-    real catalogued trail: the Rhapton-Kutiaris land bridge, and the drop
+    real catalogued trail: the Rhapton-Kattigara land bridge, and the drop
     down to/along/back up from the world bbox's southern edge. Without
     this, only the polygon's own thin fill-edge marks these stretches -
     visibly different from the thick coastline style used everywhere a
@@ -179,28 +171,28 @@ def _build_world_edge_synthetic_lines(refs) -> list[list[tuple[float, float]]]:
     claim that Ptolemy described this exact path."""
     coastlines = get_coastlines(refs)
     africa, _ = _find_trail_by_endpoint(coastlines, _KAP_RHAPTON)
-    kattigara_frag, _ = _find_trail_by_endpoint(coastlines, _KUTIARIS_MUENDUNG)
-    if africa is None or kattigara_frag is None:
+    asia, _ = _find_trail_by_endpoint(coastlines, _KATTIGARA)
+    if africa is None or asia is None:
         return []
     if africa[0].ref_id != _HYPODROMOS_AITHIOPIAS:
         africa = list(reversed(africa))
-    if kattigara_frag[0].ref_id != _KUTIARIS_MUENDUNG:
-        kattigara_frag = list(reversed(kattigara_frag))
-    if kattigara_frag[-1].ref_id != _KATTIGARA:
+    if asia[0].ref_id != _KATTIGARA:
+        asia = list(reversed(asia))
+    if asia[-1].ref_id != _TIGRIS_MUENDUNG_WESTLICHE:
         return []
 
     lon_min, lat_min, lon_max, lat_max = _WORLD_EDGE_BBOX
     hypodromos = africa[0]
     rhapton = africa[-1]
-    kutiaris = kattigara_frag[0]
-    kattigara = kattigara_frag[-1]
+    kattigara = asia[0]
+    tigris_west = asia[-1]
     south_under_hypodromos = (hypodromos.lon_modern, lat_min)
-    south_under_kattigara = (kattigara.lon_modern, lat_min)
+    south_under_tigris_west = (tigris_west.lon_modern, lat_min)
 
-    bridge = [(rhapton.lon_modern, rhapton.lat_modern), (kutiaris.lon_modern, kutiaris.lat_modern)]
+    bridge = [(rhapton.lon_modern, rhapton.lat_modern), (kattigara.lon_modern, kattigara.lat_modern)]
     southern_closure = [
-        (kattigara.lon_modern, kattigara.lat_modern),
-        south_under_kattigara,
+        (tigris_west.lon_modern, tigris_west.lat_modern),
+        south_under_tigris_west,
         south_under_hypodromos,
         (hypodromos.lon_modern, hypodromos.lat_modern),
     ]
@@ -223,30 +215,18 @@ def _build_north_edge_extension(refs) -> list[tuple[float, float]] | None:
 
 
 def _eurasia_trail(refs):
-    """The big Scandinavia-to-Sarmatia trail, oriented Side* -> Chesinos-
-    Mündung, or None if it can't be found by both endpoints (e.g. a future
-    round finally stitches it into something bigger, or splits it)."""
+    """The big Scandinavia-to-Sarmatia arc, now stretching all the way down
+    through Kilikia Tracheia and the Levant to Anthedon (see the comment
+    above _ANTHEDON) - oriented Anthedon -> Chesinos-Mündung, or None if it
+    can't be found by both endpoints (e.g. a future round finally stitches
+    it into something bigger, or splits it)."""
     coastlines = get_coastlines(refs)
     trail, _ = _find_trail_by_endpoint(coastlines, _CHESINOS_MUENDUNG)
     if trail is None or not trail:
         return None
-    if trail[0].ref_id != _SIDE_STAR and trail[-1].ref_id != _SIDE_STAR:
+    if trail[0].ref_id != _ANTHEDON and trail[-1].ref_id != _ANTHEDON:
         return None
-    if trail[0].ref_id != _SIDE_STAR:
-        trail = list(reversed(trail))
-    return trail
-
-
-def _trail_between(refs, start_ref_id: str, end_ref_id: str):
-    """A real coastline trail oriented start_ref_id -> ... -> end_ref_id,
-    or None if no trail has exactly these two ref_ids as its endpoints."""
-    coastlines = get_coastlines(refs)
-    trail, _ = _find_trail_by_endpoint(coastlines, start_ref_id)
-    if trail is None or not trail:
-        return None
-    if trail[0].ref_id != end_ref_id and trail[-1].ref_id != end_ref_id:
-        return None
-    if trail[0].ref_id != start_ref_id:
+    if trail[0].ref_id != _ANTHEDON:
         trail = list(reversed(trail))
     return trail
 
@@ -255,115 +235,69 @@ def _find_ref(refs, ref_id: str):
     return next((r for r in refs if r.ref_id == ref_id), None)
 
 
-def _levant_arabia_persia_chain(refs):
-    """The real coastline trails plus short hand-offs chaining Anemurion
-    (near Side*) all the way to Grenzpunkt (Indien jenseits des Ganges,
-    Land der Sinen) - see the comment above _ANEMURION. Returns a list of
-    (kind, payload) steps in that order, kind one of "real" (a trail or
-    short real segment, drawn already, included in the fill polygon only)
-    or "bridge" (a two-point hop, drawn dashed - near-zero for the two
-    Egypt/Arabia cross-references, genuinely unconfirmed for the other
-    two), or None if any piece can't be found."""
-    anemurion_grenzpunkt = _trail_between(refs, _ANEMURION, _GRENZPUNKT_AEGYPTEN_JUDAEA_JUDAEA_SIDE)
-    grenzpunkt_egypt = _find_ref(refs, _GRENZPUNKT_AEGYPTEN_JUDAEA_EGYPT_SIDE)
-    zipfel_egypt = _find_ref(refs, _ZIPFEL_ARABISCHER_GOLF_EGYPT_SIDE)
-    zipfel_iokura = _trail_between(refs, _ZIPFEL_ARABISCHER_GOLF, _IOKURA)
-    persia_india = _trail_between(refs, _GRENZPUNKT_INDIEN_SINEN, _TIGRIS_MUENDUNG_OESTLICHE)
-    if (
-        anemurion_grenzpunkt is None
-        or grenzpunkt_egypt is None
-        or zipfel_egypt is None
-        or zipfel_iokura is None
-        or persia_india is None
-    ):
-        return None
-    persia_india = list(reversed(persia_india))  # Tigris-Mündung -> Grenzpunkt, built order
-    return [
-        ("real", anemurion_grenzpunkt),
-        ("bridge", [anemurion_grenzpunkt[-1], grenzpunkt_egypt]),
-        ("real", [grenzpunkt_egypt, zipfel_egypt]),
-        ("bridge", [zipfel_egypt, zipfel_iokura[0]]),
-        ("real", zipfel_iokura),
-        ("bridge", [zipfel_iokura[-1], persia_india[0]]),
-        ("real", persia_india),
-    ]
-
-
-def _eurasia_closure_corner_points(refs):
-    """The synthetic vertices that close the Eurasia polygon beyond
-    Chesinos-Mündung's own confirmed rise to the northern edge: across the
-    top to the world bbox's own north-east corner - "as if there were a
-    coastal point in the upper right corner" (the user's own framing) -
-    then down that same edge until it reaches a *real* drawn coastline
-    again. That's Persia/India's own coastal walk (see
-    _TIGRIS_MUENDUNG_OESTLICHE), not the small separate Kutiaris-Mündung/
-    Kattigara* fragment further south - the user caught that the first cut
-    at this went too far south, past where the real coastline already
-    reaches toward the edge. Returns (top_under_chesinos, ne_corner,
-    east_at_grenzpunkt_lat, grenzpunkt_point) or None."""
+def _build_eurasia_edge_polygon(refs) -> list[tuple[float, float]] | None:
+    """Fillable shape for the whole Anthedon-to-Sarmatia arc: the real
+    trail itself, the confirmed rise from Chesinos-Mündung to the world
+    bbox's northern edge, a schematic traverse of that same edge across to
+    a point above Rhinokorura, then straight down to Rhinokorura - the
+    coastal neighbour Anthedon itself bridges to (see the comment above
+    _RHINOKORURA), closing the ring back to the trail's own start. Unlike
+    `_build_world_edge_polygon()`, only the Chesinos-Mündung end is a
+    confirmed world edge - the top-edge traverse is a pragmatic fill of
+    what's still open, not a textual claim, even though the Anthedon-
+    Rhinokorura hand-off itself is well-evidenced."""
     trail = _eurasia_trail(refs)
-    chain = _levant_arabia_persia_chain(refs)
-    if trail is None or chain is None:
+    if trail is None:
         return None
-    grenzpunkt = chain[-1][1][-1]
-    lon_min, lat_min, lon_max, lat_max = _WORLD_EDGE_BBOX
+    rhinokorura = _find_ref(refs, _RHINOKORURA)
+    if rhinokorura is None:
+        return None
+    lat_max = _WORLD_EDGE_BBOX[3]
     chesinos = trail[-1]
     top_under_chesinos = (chesinos.lon_modern, lat_max)
-    ne_corner = (lon_max, lat_max)
-    east_at_grenzpunkt_lat = (lon_max, grenzpunkt.lat_modern)
-    grenzpunkt_point = (grenzpunkt.lon_modern, grenzpunkt.lat_modern)
-    return top_under_chesinos, ne_corner, east_at_grenzpunkt_lat, grenzpunkt_point
-
-
-def _build_eurasia_edge_polygon(refs) -> list[tuple[float, float]] | None:
-    """Fillable shape for the whole Scandinavia-to-Sarmatia arc: the real
-    trail (Side* -> Chesinos-Mündung), the confirmed rise from Chesinos-
-    Mündung to the world bbox's northern edge, a schematic hug of the
-    bbox's own north-east corner and east edge down to Grenzpunkt (Indien
-    jenseits des Ganges, Land der Sinen), then the Levant/Arabia/Persia
-    chain (see _levant_arabia_persia_chain()) back to Anemurion - close
-    enough to Side* (~1.8 deg) that the final leg back to Side* itself is
-    short, not a long diagonal cutting across real mapped territory the
-    way earlier attempts at this closure did (see the README's twenty-
-    eighth round). Unlike `_build_world_edge_polygon()`, only the Chesinos-
-    Mündung end is a confirmed world edge - everything else here is a
-    user-approved pragmatic fill of unfinished stitches, not a textual
-    claim. See the comment above _SIDE_STAR."""
-    trail = _eurasia_trail(refs)
-    corner_points = _eurasia_closure_corner_points(refs)
-    chain = _levant_arabia_persia_chain(refs)
-    if trail is None or corner_points is None or chain is None:
-        return None
+    top_under_rhinokorura = (rhinokorura.lon_modern, lat_max)
     coords = [(r.lon_modern, r.lat_modern) for r in trail]
-    coords += list(corner_points)
-    for kind, payload in reversed(chain):
-        points = payload if kind == "real" else list(reversed(payload))
-        coords += [(r.lon_modern, r.lat_modern) for r in points[1:]]
+    coords += [top_under_chesinos, top_under_rhinokorura, (rhinokorura.lon_modern, rhinokorura.lat_modern)]
     return coords
 
 
-def _build_eurasia_edge_unconfirmed_lines(refs) -> list[list[tuple[float, float]]]:
-    """The parts of `_build_eurasia_edge_polygon()`'s boundary that have no
-    textual backing at all: the hug of the bbox's own north-east corner and
-    east edge, plus the three short hand-offs in the Levant/Arabia/Persia
-    chain (Anemurion-Anthedon's own two ends bridging to their neighbors).
-    Kept visually distinct (dashed) from the confirmed Chesinos-Mündung
-    extension and from the real coastline trails in between - none of
-    these hand-offs are Ptolemy's own claimed world edge or a confirmed
-    stitch, just a pragmatic closure of what's still open."""
+def _build_eurasia_confirmed_bridge(refs) -> list[tuple[float, float]] | None:
+    """The one non-trail hand-off in the Eurasia closure that *is*
+    well-evidenced (see the comment above _RHINOKORURA): Anthedon (Gaza) to
+    Rhinokorura (El-Arisch), 0.23 degrees apart along Egypt's own coast.
+    Drawn solid, alongside the other confirmed lines - not part of the
+    dashed, genuinely-unconfirmed top-edge traverse."""
     trail = _eurasia_trail(refs)
-    corner_points = _eurasia_closure_corner_points(refs)
-    chain = _levant_arabia_persia_chain(refs)
-    if trail is None or corner_points is None or chain is None:
+    if trail is None:
+        return None
+    rhinokorura = _find_ref(refs, _RHINOKORURA)
+    if rhinokorura is None:
+        return None
+    anthedon = trail[0]
+    return [(anthedon.lon_modern, anthedon.lat_modern), (rhinokorura.lon_modern, rhinokorura.lat_modern)]
+
+
+def _build_eurasia_edge_unconfirmed_lines(refs) -> list[list[tuple[float, float]]]:
+    """The one part of `_build_eurasia_edge_polygon()`'s boundary that has
+    no textual backing at all: the traverse across the world bbox's own
+    northern edge from above Chesinos-Mündung to above Rhinokorura, then
+    down to Rhinokorura itself. Kept visually distinct (dashed) from the
+    confirmed Chesinos-Mündung extension (drawn separately, solid, by
+    `_build_north_edge_extension()`), the real coastline trail, and the
+    confirmed Anthedon-Rhinokorura bridge (`_build_eurasia_confirmed_bridge()`,
+    also solid) - this traverse alone is a pragmatic closure of what's
+    still open, not a confirmed stitch."""
+    trail = _eurasia_trail(refs)
+    if trail is None:
         return []
-    lines = [list(corner_points)]
-    for kind, payload in chain:
-        if kind == "bridge":
-            lines.append([(r.lon_modern, r.lat_modern) for r in payload])
-    side = trail[0]
-    anemurion = chain[0][1][0]
-    lines.append([(anemurion.lon_modern, anemurion.lat_modern), (side.lon_modern, side.lat_modern)])
-    return lines
+    rhinokorura = _find_ref(refs, _RHINOKORURA)
+    if rhinokorura is None:
+        return []
+    lat_max = _WORLD_EDGE_BBOX[3]
+    chesinos = trail[-1]
+    top_under_chesinos = (chesinos.lon_modern, lat_max)
+    top_under_rhinokorura = (rhinokorura.lon_modern, lat_max)
+    return [[top_under_chesinos, top_under_rhinokorura, (rhinokorura.lon_modern, rhinokorura.lat_modern)]]
 
 
 def render(
@@ -412,7 +346,7 @@ def render(
             if not trail or not (trail[0].feature_closes_loop or trail[0].island_feature_closes_loop):
                 continue
             coords = [(r.lon_modern, r.lat_modern) for r in trail]
-            is_water_body = trail[0].ref_id in _WATER_BODY_CLOSED_LOOP_REF_IDS
+            is_water_body = any(r.ref_id in _WATER_BODY_CLOSED_LOOP_REF_IDS for r in trail)
             # A landlocked sea's own closed loop still needs painting
             # *after* any land polygon it happens to sit inside of (the
             # Eurasia arc's own fill, drawn below) - OCEAN at a higher
@@ -451,9 +385,14 @@ def render(
             xs, ys = zip(*synthetic_line)
             ax.plot(xs, ys, color=CATEGORIES["coast"]["color"], linewidth=2.2, alpha=0.9, zorder=4)
 
-        # Side*'s own closure has no textual backing (see _SIDE_STAR) -
-        # dashed, so it doesn't read as equally certain as the solid lines
-        # above it.
+        eurasia_bridge = _build_eurasia_confirmed_bridge(refs)
+        if eurasia_bridge is not None:
+            xs, ys = zip(*eurasia_bridge)
+            ax.plot(xs, ys, color=CATEGORIES["coast"]["color"], linewidth=2.2, alpha=0.9, zorder=4)
+
+        # The top-edge traverse has no textual backing (see the comment
+        # above _build_eurasia_edge_unconfirmed_lines) - dashed, so it
+        # doesn't read as equally certain as the solid lines above it.
         for unconfirmed_line in _build_eurasia_edge_unconfirmed_lines(refs):
             xs, ys = zip(*unconfirmed_line)
             ax.plot(xs, ys, color=CATEGORIES["coast"]["color"], linewidth=2.2, alpha=0.9, zorder=4, linestyle="--")

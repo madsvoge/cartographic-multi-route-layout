@@ -3134,6 +3134,149 @@ now-excluded "Tigris-Mündung (westliche)" duplicate was stale as a result
 stale-pair maintenance this project has needed every time an excluded
 point turns out to have been someone's stitch target.
 
+**A thirty-first round** was driven entirely by the user's own audit of a
+delivered GeoPackage and a Turkey-to-Sinai Excel export (see "GeoPackage
+export" and the coastal-section review below) - a shift from top-down
+investigation to the user directly finding bugs via the exported data and
+handing back precise ref_ids.
+
+Kilikia Tracheia's own coast (book.map "5.05.03"/"5.08.02": Korakesion,
+Syedra, Iotape, Selinus, Antiocheia ad Cragum, Nephelis, Anemurion -
+topostext §5.5.3/§5.8.1/§5.8.2) had the same `_COASTAL_HDR_RE` miss as
+Sinai's Kasiotis in the round before: its own section header names a
+*district* ("Coast of Kilikia Tracheia" - literally "coast", but the
+recognizable word is buried after a district name the regex doesn't
+match), so every point in it sat in the water as a stranded `city`. Added
+to `_COASTAL_APPENDIX_SECTIONS`; longitude runs cleanly monotonic through
+the whole stretch (Side 63.42 -> Korakesion 63.58 -> Syedra 63.83 ->
+Iotape 64.00 -> Selinus 64.33 -> Antiocheia 64.67 -> Nephelis 64.83 ->
+Anemurion 65.17), confirming the fix connects Side* straight through to
+Anemurion. The two new book.map sections don't auto-stitch to each other
+at the standard 0.1° cross-group tolerance (their real gap is 0.167°), so
+`("5.05.03.04", "5.08.02.03")` (Syedra -> Iotape) was added to
+`_BOUNDARY_STITCH_REF_ID_PAIRS`. This single fix turned out to make most
+of the rest of this round's dashed schematic Levant/Arabia/Persia bridge
+chain (rounds 26-30) obsolete: the trail's old open end, Side*, now
+connects through real data past Anemurion to Anthedon (Judaea's own
+Gaza), which was already this catalogue's own genuine endpoint on the
+other side of the Sinai fix from round thirty. `static_map.py`'s whole
+closure architecture was simplified accordingly - see below.
+
+Two more "introductory boundary/limit statement" duplicates, both flagged
+directly by the user as "not actually at the coast": "Grenzpunkt (Ägypten,
+Judäa)", cited once on Judaea's side (5.16.01.05) and once on Egypt's
+side (4.05.13.03) - topostext §4.5.13 confirms it's a land-boundary
+marker between the two provinces' *interiors*, not a coastal point at
+all. An earlier round (29) had mistakenly restored the Judaea-side
+citation as the walk's own endpoint via an order-override; both citations
+are now excluded from the coastal graph *and* recategorized away from
+`coast` via `_NONCOASTAL_POINT_OVERRIDES`, and the Eurasian arc's real
+endpoint moved back to Anthedon - exactly where the Kilikia Tracheia fix
+above independently needed it to be anyway.
+
+Three more flagged points, each verified against topostext before fixing:
+Batavodurum (2.09.14.06, "Nijmegen" in `modern_location`) was topostext's
+own "of the Batavians *in the interior*" (§2.9.8) - a river town wrongly
+picked up by the coastal walk, not a coastal point; excluded and
+recategorized via `_NONCOASTAL_POINT_OVERRIDES`, and the stale
+`_BOUNDARY_STITCH_REF_ID_PAIRS` entry that had bridged it to Rhenus-
+Mündung was removed. The Kolchis/Asiatic-Sarmatia/Iberia boundary marker
+(5.09.10.05) was topostext's own "the limit on the side of Kolchis is
+at..." (§5.9.10) - the same pattern, same fix, and its own stale stitch
+pair (to Korax-Mündung) removed too.
+
+The user also supplied the correct sequence for the Persian Gulf's own
+head, closing the last gap round thirty had left open: Charax des
+Pasines -> Tigris-Mündung (östliche) -> Teredon ("Basra") -> Tigris-
+Mündung (westliche) -> Maisanitischer Golf. Teredon (5.20.05.04) had been
+sorting to the wrong place in catalogue order; `_COASTLINE_EXPLICIT_
+ORDER_OVERRIDES` now places it between the Tigris' two mouths, matching
+topostext §5.20.5 ("between the mouths of the Tigris river... Teredon")
+and the user's own modern-location identification. The Charax-Tigris
+(östliche) hand-off is now a real stitch pair; the last leg, Tigris-
+Mündung (westliche) to Maisanitischer Golf, turned out to be a genuine
+structural limitation rather than a simple missing pair - see below.
+
+Three more East-Asia/Caspian connections, each confirmed against
+topostext before being added to `_BOUNDARY_STITCH_REF_ID_PAIRS`:
+
+- The Caspian/Hyrcanian Sea's own closure (previously a single direct,
+  schematic Aspabota*-to-Grenzpunkt bridge, `_FORCE_CLOSE_LOOP_TRAILS`)
+  is now routed through two real intermediate points the user named -
+  Saramanne and the Oxos river mouth (topostext §6.9.1/§6.9.3/§6.14.2):
+  `("6.14.02.08", "6.09.02.05")` and `("6.09.02.01", "6.02.02.12")`. The
+  old direct pair is gone from `_FORCE_CLOSE_LOOP_TRAILS`, which is now
+  empty - the loop closes on real data alone.
+- Grenzpunkt (Indien jenseits des Ganges, Land der Sinen) to Aspitharas-
+  Mündung (topostext §7.2.7/§7.3.2): `("7.02.07.13", "7.03.02.03")`.
+  This is also what turned the old small Kutiaris-Mündung/Kattigara
+  fragment into a single continuous trail reaching all the way back
+  to the Persian Gulf - see the `static_map.py` changes below.
+- Kap der Satyrn to Kutiaris-Mündung (topostext §7.3.2/§7.3.3):
+  `("7.03.02.13", "7.03.03.03")`, the user's own "last pair needed to
+  avoid breaking the coastline in East Asia."
+
+One connection was investigated and deliberately left unmade: the user's
+suggested Tigris-Mündung (westliche) -> Maisanitischer Golf pair doesn't
+take effect, because Maisanitischer Golf (6.07.19.05) is coordinate-
+identical to "Ammaia" (5.19.04.02, added back in round twenty-nine) - the
+tight (0.1°) automatic cross-book.map stitch already claims that node for
+the Zipfel des Arabischen Golfes/Iokura trail before any forced pair is
+applied. `_stitch_trails()` only concatenates trail *endpoints*; it can't
+represent a true three-way junction, and which of two zero-distance
+candidates wins is iteration-order-dependent, not something a second
+force pair can arbitrate. Overriding it would mean breaking the equally
+real Ammaia connection to get the user's pair instead, not a net
+improvement - left unestablished rather than forced, and documented in
+`ptolemy_map.py`. The 94-point Arabian trail (Zipfel des Arabischen
+Golfes -> Iokura) remains fully isolated from the rest of the world as a
+result.
+
+All of the above collapsed `static_map.py`'s `--fill-ptolemy-land`
+closure architecture (built up piecemeal across rounds 26-30) into
+something much simpler, because the underlying trails are now mostly
+connected by real data instead of schematic bridges:
+
+- The world edge's eastern side used to close via a small, separate
+  Kutiaris-Mündung/Kattigara fragment. That fragment is now the far end
+  of a single 186-point trail reaching all the way back to the Persian
+  Gulf's own head (Tigris-Mündung westliche) - `_build_world_edge_polygon()`
+  and `_build_world_edge_synthetic_lines()` now bridge Kap Rhapton straight
+  to Kattigara (the "Terra Incognita" land bridge, same as before) and
+  close the *other* end, Tigris-Mündung (westliche), against the world
+  bbox's southern edge instead.
+- The Eurasian arc's old open end, Side* - previously closed with a long
+  multi-hop dashed chain across the Levant, Arabia, and Persia
+  (`_levant_arabia_persia_chain()`, `_eurasia_closure_corner_points()`,
+  now deleted) - is gone. The arc's real end is now Anthedon, reached via
+  real coastal data the whole way (see the Kilikia Tracheia fix above).
+  Its only remaining unconfirmed link is Anthedon to Rhinokorura
+  (El-Arisch, 4.05.12.05) - an *interior* point of Africa's own huge
+  trail (Egypt's coast continues past it toward the Gulf of Suez), so it
+  can't be reached with an ordinary stitch pair the way every other
+  hand-off on this coast can. `_build_eurasia_edge_polygon()` fetches it
+  directly and bridges to it - drawn *solid*, not dashed, since the
+  real-world adjacency (Gaza to El-Arisch, 0.23°) isn't actually in
+  question, only the mechanics of representing a T-junction in a simple
+  polygon ring. The polygon's remaining closure - a schematic traverse of
+  the world bbox's own northern edge between Chesinos-Mündung and
+  Rhinokorura - is still dashed, still without textual backing.
+
+Verified via `check_self_intersections.py` after every change in this
+round: still exactly the two pre-existing, deliberately-unfixed
+intersections (Campania's own coordinate imprecision around Cumae/
+Liternum/Misenum, and the Gulf of Aqaba's Kap-bei-Pharan/Elana pair) -
+no new ones introduced despite the scale of these changes.
+
+(The Campania "self-intersection" the user separately asked about -
+whether Cumae and Liternum should swap catalogue order - was checked
+against `modern_location`: Mondragone -> Castel Volturno -> Literno/Lago
+di Patria -> Cuma -> Miseno -> Pozzuoli reads correctly in the catalogue's
+own order already. It's not a data error, just Ptolemy's own coordinate
+imprecision for four closely-spaced points on a short stretch of coast -
+the same already-documented distortion class as the Kaystros/Thermodon/Po
+cases noted elsewhere in this document, left untouched on purpose.)
+
 ## GeoPackage export (for QGIS/ArcGIS)
 
 `export_geopackage.py` writes the same categories and constructed lines
