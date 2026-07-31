@@ -3216,21 +3216,24 @@ topostext before being added to `_BOUNDARY_STITCH_REF_ID_PAIRS`:
   `("7.03.02.13", "7.03.03.03")`, the user's own "last pair needed to
   avoid breaking the coastline in East Asia."
 
-One connection was investigated and deliberately left unmade: the user's
-suggested Tigris-Mündung (westliche) -> Maisanitischer Golf pair doesn't
-take effect, because Maisanitischer Golf (6.07.19.05) is coordinate-
-identical to "Ammaia" (5.19.04.02, added back in round twenty-nine) - the
-tight (0.1°) automatic cross-book.map stitch already claims that node for
-the Zipfel des Arabischen Golfes/Iokura trail before any forced pair is
-applied. `_stitch_trails()` only concatenates trail *endpoints*; it can't
-represent a true three-way junction, and which of two zero-distance
-candidates wins is iteration-order-dependent, not something a second
-force pair can arbitrate. Overriding it would mean breaking the equally
-real Ammaia connection to get the user's pair instead, not a net
-improvement - left unestablished rather than forced, and documented in
-`ptolemy_map.py`. The 94-point Arabian trail (Zipfel des Arabischen
-Golfes -> Iokura) remains fully isolated from the rest of the world as a
-result.
+One connection was investigated and initially left unmade at the
+`ptolemy_map.py` graph level: the user's suggested Tigris-Mündung
+(westliche) -> Maisanitischer Golf pair doesn't take effect there,
+because Maisanitischer Golf (6.07.19.05) is coordinate-identical to
+"Ammaia" (5.19.04.02, added back in round twenty-nine) - the tight
+(0.1°) automatic cross-book.map stitch already claims that node for the
+Zipfel des Arabischen Golfes/Iokura trail before any forced pair is
+applied. `_stitch_trails()` only concatenates trail *endpoints*; it
+can't represent a true three-way junction there, and which of two
+zero-distance candidates wins is iteration-order-dependent, not
+something a second force pair can arbitrate. Overriding it would mean
+breaking the equally real Ammaia connection to get the user's pair
+instead, not a net improvement - so `get_coastlines()` itself (and
+hence the interactive Leaflet map) still keeps these as two separate
+trails. `static_map.py`'s own `--fill-ptolemy-land` fill, however,
+*does* connect them now, using the same "interior point, not an
+endpoint" technique already built for Rhinokorura - see the follow-up
+fixes below.
 
 All of the above collapsed `static_map.py`'s `--fill-ptolemy-land`
 closure architecture (built up piecemeal across rounds 26-30) into
@@ -3258,9 +3261,49 @@ connected by real data instead of schematic bridges:
   directly and bridges to it - drawn *solid*, not dashed, since the
   real-world adjacency (Gaza to El-Arisch, 0.23°) isn't actually in
   question, only the mechanics of representing a T-junction in a simple
-  polygon ring. The polygon's remaining closure - a schematic traverse of
-  the world bbox's own northern edge between Chesinos-Mündung and
-  Rhinokorura - is still dashed, still without textual backing.
+  polygon ring. The polygon's remaining closure - a direct edge from
+  Chesinos-Mündung to Rhinokorura - is still dashed, still without
+  textual backing.
+
+Two follow-up fixes landed right after this round's first render went
+out, both caught by the user looking at the actual output:
+
+- That direct Chesinos-Rhinokorura edge originally detoured up to the
+  world bbox's own northern edge and back down first (mirroring the
+  World polygon's south-edge closure), landing right next to Chesinos-
+  Mündung's own separate, confirmed rise to that same edge - two nearly
+  parallel lines a few degrees apart, one solid and one dashed, reading
+  as a rendering bug ("the dashed line has jumped back and doesn't run
+  down the east edge any more"). Unlike the World polygon's two loose
+  ends (both genuinely near the map's southern extreme), Rhinokorura
+  sits at a middle latitude, nowhere near any edge - so hugging the bbox
+  edge here was never actually representing anything, just adding an
+  unnecessary detour. `_build_eurasia_edge_polygon()` and
+  `_build_eurasia_edge_unconfirmed_lines()` now close directly from
+  Chesinos-Mündung to Rhinokorura instead - a single clean diagonal.
+- The user's own Persian Gulf sequence (Charax des Pasines -> Tigris
+  east -> Teredon -> Tigris west -> Maisanitischer Golf) turned out to
+  be fixable after all. Checking why the earlier attempt silently had no
+  effect turned up a third citation of the same real place: "Ammaia"
+  (5.19.04.02, topostext §5.19.1.2, "Euphrates limit point to the inner
+  recess of the [Persian] Maisanites Gulf") sits inside the Susiana/
+  Persis/Arabia coastal trail already, coordinate-identical to and
+  already auto-stitched to "Maisanitischer Golf" (6.07.19.05, topostext
+  §6.7.19.3 - the *same* boundary statement, cited from Susiana's own
+  side) - which is why targeting 6.07.19.05 directly found nothing: it's
+  interior to that merged trail now, not an endpoint, the same limitation
+  as Rhinokorura. `_build_arabian_detour()` grafts that whole ~94-point
+  trail onto the World polygon at Tigris-Mündung (westliche) using the
+  same "there and back" technique used for Rhinokorura's own T-junction,
+  via a new solid, well-evidenced bridge (`_build_arabian_confirmed_
+  bridge()`, ~0.5 degrees). Checked against a similar-looking pair before
+  committing to this: Egypt's and Arabia's own "Zipfel des Arabischen
+  Golfes" citations (4.05.13.05 / 5.17.01.05) are *also* coordinate-
+  identical, but sit on opposite sides of the Sinai peninsula - the Gulf
+  of Suez and the Gulf of Aqaba, separated by land the Suez Canal
+  wouldn't exist for another eighteen centuries - so despite the
+  identical-looking setup, those two must **not** be bridged the way
+  Ammaia and Maisanitischer Golf legitimately can be.
 
 Verified via `check_self_intersections.py` after every change in this
 round: still exactly the two pre-existing, deliberately-unfixed
