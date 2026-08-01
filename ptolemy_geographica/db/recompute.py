@@ -101,7 +101,19 @@ def _build_references(conn: sqlite3.Connection, overrides) -> list[Reference]:
     the two happen to agree everywhere this catalogue's data actually
     needs them to (see the "Reading overrides from the database" section
     of README.md)."""
-    sections = {row["section_id"]: row for row in conn.execute("SELECT * FROM section")}
+    # ORDER BY section_id: without it, SQLite returns rows in whatever
+    # order they happen to be stored (insertion order today, but not a
+    # guarantee - a VACUUM or a future insert order could change it), and
+    # this loop's own iteration order feeds refs' order, which in turn
+    # determines *_features()'s "first group encountered" numbering for
+    # feature_id strings (coastline_000_..., coastline_001_..., ...) - an
+    # unordered read here would make feature_id assignment silently
+    # depend on physical row layout instead of being a pure function of
+    # the data, undermining the reproducibility this table's rewrite (see
+    # the point query just below, and the ref_id sort added to
+    # db/build_database.py/db/export_annotated_csv.py for the same reason)
+    # was meant to guarantee.
+    sections = {row["section_id"]: row for row in conn.execute("SELECT * FROM section ORDER BY section_id")}
     points_by_section: dict[str, list[sqlite3.Row]] = {}
     for row in conn.execute("SELECT * FROM point ORDER BY section_id, sequence_in_section"):
         points_by_section.setdefault(row["section_id"], []).append(row)
