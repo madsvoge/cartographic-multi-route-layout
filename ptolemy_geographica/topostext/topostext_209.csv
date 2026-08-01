@@ -831,12 +831,12 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 2,10,4,2,the headwaters of the Druentia,28°00',43°45',28.0,43.75,yes,2.10.06.06,Druentia (Quellgebiet),100.0
 2,10,4,3,"Again, the confluence of the Isar with the Rhodanus",22°40',44°30',22.6667,44.5,yes,2.10.07.01,Isar (Einmündung in den Rhodanus),57.8
 2,10,4,4,that of the Druentia,22°40',43°50',22.6667,43.8333,yes,2.10.07.02,Druentia (Einmündung in den Rhodanus),100.0
-2,10,5,1,"Rhodanus on the sea, of the Avatici, Maritima city, a colonia",23°30',43°05',23.5,43.0833,yes,2.10.08.03,Maritima,92.7
+2,10,5,1,"Rhodanus on the sea, of the Avatici, Maritima city, a colonia",23°30',43°05',23.5,43.0833,yes,2.10.08.03,Maritima,84.7
 2,10,5,2,the Caenus river mouth,23°45',43°00',23.75,43.0,yes,2.10.08.04,Caenus-Mündung (Cenua-Mündung),100.0
 2,10,5,3,"of the Comani, Massalia city",24°30',43°05',24.5,43.0833,yes,2.10.08.06,Massilia*,100.0
 2,10,5,4,Tauroentium,24°50',42°50',24.8333,42.8333,yes,2.10.08.07,Tauroentium,100.0
 2,10,5,5,Kitharistes promontory,25°00',42°30',25.0,42.5,yes,2.10.08.08,Kap Citharistes,100.0
-2,10,5,6,Olbia city,25°10',42°45',25.1667,42.75,yes,2.10.08.09,Olbia,95.8
+2,10,5,6,Olbia city,25°10',42°45',25.1667,42.75,yes,2.10.08.09,Olbia,87.8
 2,10,5,7,Argentios river mouth,25°40',42°45',25.6667,42.75,yes,2.10.08.10,Argenteus-Mündung,100.0
 2,10,5,8,Forum Julii colonia,26°30',42°50',26.5,42.8333,yes,2.10.08.11,Forum Iulii,100.0
 2,10,5,9,"of the Deciatians, Antipolis",27°00',43°00',27.0,43.0,yes,2.10.08.13,Antipolis,100.0
@@ -1521,7 +1521,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 3,2,4,3,Marianum promontory and city,31°00',39°10',31.0,39.1667,yes,3.02.03.15,Kap Marianum und Stadt,86.9
 3,2,5,1,Description of the east coast: Palla city,31°20',39°20',31.3333,39.3333,yes,3.02.04.01,Palla,100.0
 3,2,5,2,Syracusan harbor,31°20',39°25',31.3333,39.4167,yes,3.02.04.02,Syrakusanischer Hafen,97.4
-3,2,5,3,Rubra city,31°20',39°30',31.3333,39.5,yes,3.02.04.03,Rubra,100.0
+3,2,5,3,Rubra city,31°20',39°30',31.3333,39.5,yes,3.02.04.03,Rubra,93.9
 3,2,5,4,Granianum promontory,31°30',39°40',31.5,39.6667,yes,3.02.04.04,Kap Granianum,100.0
 3,2,5,5,Alista city,31°20',39°45',31.3333,39.75,yes,3.02.04.05,Alista,100.0
 3,2,5,6,Philonii harbor,31°30',39°55',31.5,39.9167,yes,3.02.04.06,Philonius-Hafen,94.9
@@ -1531,13 +1531,13 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 3,2,5,10,Diana harbor,31°20',40°20',31.3333,40.3333,yes,3.02.05.04,Diana-Hafen,100.0
 3,2,5,11,Tutela altar,31°30',40°30',31.5,40.5,yes,3.02.05.05,Altar der Tutela,100.0
 3,2,5,12,mouth of the Guola river,31°30',40°35',31.5,40.5833,yes,3.02.05.06,Tuola-Mündung (Tavola-Mündung),100.0
-3,2,5,13,Mariane city,31°40',40°40',31.6667,40.6667,yes,3.02.05.07,Mariana*,89.3
+3,2,5,13,Mariane city,31°40',40°40',31.6667,40.6667,yes,3.02.05.07,Mariana*,81.3
 3,2,5,14,Vagum promontory,31°30',40°45',31.5,40.75,yes,3.02.05.08,Kap Vagum (Kap Avagum),100.0
 3,2,5,15,Mantinon city,31°20',41°00',31.3333,41.0,yes,3.02.05.09,Mantinum,100.0
 3,2,5,16,Clunium city,31°20',41°10',31.3333,41.1667,yes,3.02.05.10,Clunium,100.0
 3,2,6,1,Description of the north side: Sacred promontory,31°30',41°35',31.5,41.5833,yes,3.02.05.11,Heiliges Kap,79.4
 3,2,6,2,Centurinum city,31°15',41°30',31.25,41.5,yes,3.02.05.12,Centurinum,100.0
-3,2,6,3,Canelata city,31°00',41°20',31.0,41.3333,yes,3.02.05.13,Canelata (Cenelata),76.3
+3,2,6,3,Canelata city,31°00',41°20',31.0,41.3333,yes,3.02.05.13,Canelata (Cenelata),68.3
 3,2,7,1,"The following peoples, settled in villages, possess the island: the Cervini, occupying the western side beneath Golden mountain, located",30°45',40°45',30.75,40.75,yes,3.02.06.02,Goldener Berg,100.0
 3,2,8,1,The towns in the interior are Ropicum,30°15',41°00',30.25,41.0,yes,3.02.07.01,Ropicum,100.0
 3,2,8,2,Cersunum,30°30',41°00',30.5,41.0,yes,3.02.07.02,Cersunum,100.0
@@ -1568,20 +1568,20 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 3,3,2,13,Neapolis,30°40',36°30',30.6667,36.5,yes,3.03.02.13,Neapolis,100.0
 3,3,2,14,Pacheia promontory,30°40',36°00',30.6667,36.0,yes,3.03.02.14,Breites Kap,100.0
 3,3,3,1,Description of the southern side: Pupulum city,30°50',35°40',30.8333,35.6667,yes,3.03.03.01,Pupulum,100.0
-3,3,3,2,Solci city,31°10',35°50',31.1667,35.8333,yes,3.03.03.03,Sulci,95.9
+3,3,3,2,Solci city,31°10',35°50',31.1667,35.8333,yes,3.03.03.03,Sulci,87.9
 3,3,3,3,Solci harbor,31°15',35°50',31.25,35.8333,yes,3.03.03.03,Sulci,100.0
 3,3,3,4,Chersonesos,31°30',35°45',31.5,35.75,yes,3.03.03.04,Chersonesos,100.0
 3,3,3,5,Bithia harbor,31°40',35°50',31.6667,35.8333,yes,3.03.03.05,Bithia,100.0
-3,3,3,6,Bithia city,31°45',35°50',31.75,35.8333,yes,3.03.03.05,Bithia,100.0
+3,3,3,6,Bithia city,31°45',35°50',31.75,35.8333,yes,3.03.03.06,Bithia,100.0
 3,3,3,7,Harbor of Herakles,32°00',35°50',32.0,35.8333,yes,3.03.03.07,Hercules-Hafen,100.0
-3,3,3,8,Nora city,32°00',35°55',32.0,35.9167,yes,3.03.03.08,Nora,89.7
+3,3,3,8,Nora city,32°00',35°55',32.0,35.9167,yes,3.03.03.08,Nora,81.7
 3,3,3,9,Sounding Shore,32°05',35°55',32.0833,35.9167,yes,3.03.03.10,Echo-Küste,100.0
 3,3,3,10,Kounioucharion promontory,32°15',35°55',32.25,35.9167,yes,3.03.03.09,Kap Cuniucharium,88.9
 3,3,4,1,Description of the eastern side: Karalis city and headland,32°30',36°00',32.5,36.0,yes,3.03.04.01,Kap Carales,100.0
 3,3,4,2,Karalitanos bay,32°10',36°20',32.1667,36.3333,yes,3.03.04.02,Golf von Carales,100.0
 3,3,4,3,Sousaleos village,31°55',36°40',31.9167,36.6667,yes,3.03.04.03,Susaleus*,100.0
 3,3,4,4,mouth of the Saipros river,32°00',37°00',32.0,37.0,yes,3.03.04.04,Saeprus-Mündung,100.0
-3,3,4,5,Sulpicius harbor,31°50',37°30',31.8333,37.5,yes,3.03.04.05,Sypicius (Solpicius),62.8
+3,3,4,5,Sulpicius harbor,31°50',37°30',31.8333,37.5,yes,3.03.04.05,Sypicius (Solpicius),70.8
 3,3,4,6,mouth of the Kaidris river,32°00',38°00',32.0,38.0,yes,3.03.04.06,Caedris-Mündung,100.0
 3,3,4,7,Feronia city,31°45',38°10',31.75,38.1667,yes,3.03.04.07,Feronia,100.0
 3,3,4,8,Olbia city,31°40',38°30',31.6667,38.5,yes,3.03.04.08,Olbia,100.0
@@ -1959,7 +1959,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 3,10,6,2,Tibiska,55°00',46°20',55.0,46.3333,yes,3.10.12.02,Tibisca,100.0
 3,10,7,1,"northernmost mouth of the Istros until the mouth of the Borysthenes river and the hinterland as far as the Hierasos river, while the Britolagai have the part beyond the Peukinoi. The shore is as follows: after the mouth of the Borysthenes",57°30',48°30',57.5,48.5,yes,3.05.07.01,Borysthenes-Mündung,100.0
 3,10,7,2,Axiakos river mouth,57°00',48°00',57.0,48.0,yes,3.10.14.02,Axiakes-Mündung,100.0
-3,10,7,3,Physke city,56°40',47°40',56.6667,47.6667,yes,3.10.14.03,Physke,83.6
+3,10,7,3,Physke city,56°40',47°40',56.6667,47.6667,yes,3.10.14.03,Physke,75.6
 3,10,7,4,Tyras river mouth,56°20',47°40',56.3333,47.6667,yes,3.10.14.04,Tyras-Mündung,100.0
 3,10,7,5,Hermonaktos village,56°15',47°30',56.25,47.5,yes,3.10.14.05,Dorf des Hermonax,100.0
 3,10,7,6,Arpis city,56°00',47°15',56.0,47.25,yes,3.10.14.06,Harpis,100.0
@@ -2215,7 +2215,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 3,13,2,5,Kassiope harbor,45°30',38°25',45.5,38.4167,yes,3.14.02.06,Kassiope,100.0
 3,13,2,6,"there to the Acheloos river on the Adriatic sea, as follows: Thesprotians Poseidion promontory",45°45',38°10',45.75,38.1667,yes,3.14.04.02,Kap Poseidion,83.8
 3,13,2,7,Bouthroton gulf,45°45',38°20',45.75,38.3333,yes,3.14.04.03,Buthroton,82.4
-3,13,2,8,Pelodes harbor,46°10',38°20',46.1667,38.3333,yes,3.14.04.04,Schlammhafen,71.4
+3,13,2,8,Pelodes harbor,46°10',38°20',46.1667,38.3333,yes,3.14.04.04,Schlammhafen,79.4
 3,13,2,9,Thyamis headland Almines,46°10',38°00',46.1667,38.0,yes,3.14.04.05,Kap Thyamis,100.0
 3,13,2,10,Thyamios river outlet,46°15',38°05',46.25,38.0833,yes,3.14.05.02,Thyamis-Mündung,66.8
 3,13,2,11,Sybota harbor,46°45',38°00',46.75,38.0,yes,3.14.05.03,Torone,100.0
@@ -2269,7 +2269,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 3,14,7,1,In Attike: Eleusis,52°20',37°15',52.3333,37.25,yes,3.15.07.02,Eleusis,100.0
 3,14,7,2,Peiraieus,52°45',37°10',52.75,37.1667,yes,3.15.07.03,Peiraieus,100.0
 3,14,7,3,Ilissos river outlet,52°50',37°05',52.8333,37.0833,yes,3.15.07.04,Ilissos-Mündung,74.4
-3,14,7,4,Mounychias harbor,53°10',37°00',53.1667,37.0,yes,3.15.07.05,Munychia,91.9
+3,14,7,4,Mounychias harbor,53°10',37°00',53.1667,37.0,yes,3.15.07.05,Munychia,99.9
 3,14,7,5,Hyphormos harbor,53°30',36°50',53.5,36.8333,yes,3.15.07.06,Hyphormos,100.0
 3,14,7,6,Sounion promontory,53°35',36°45',53.5833,36.75,yes,3.15.07.07,Kap Sunion,100.0
 3,14,7,7,in the Aegean on the eastern side Panormos harbor,53°40',37°00',53.6667,37.0,yes,3.15.08.02,Panormos,100.0
@@ -2378,7 +2378,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 3,14,24,17,Sikinos,54°50',36°35',54.8333,36.5833,yes,3.15.31.03,Sikinos,100.0
 3,14,26,1,"Pegai in the Megarid, which is in the Corinthian gulf off Achaia, at degrees",51°25',37°25',51.4167,37.4167,yes,3.15.06.02,Pegai,100.0
 3,14,27,1,Of the Korinthia: Sanctuary of Hera of Corinth,51°15',37°15',51.25,37.25,yes,3.16.03.02,Hera-Heiligtum in der Korinthia,100.0
-3,14,27,2,Lechaion port,51°20',37°00',51.3333,37.0,yes,3.16.13.03,Schoinus,100.0
+3,14,27,2,Lechaion port,51°20',37°00',51.3333,37.0,yes,3.16.03.03,Lechaion,100.0
 3,14,27,3,Asopos river outlet,51°05',37°05',51.0833,37.0833,yes,3.16.03.04,Asopos-Mündung,100.0
 3,14,27,4,Sikyonia Syos river outlet,50°40',37°00',50.6667,37.0,yes,3.16.04.02,Sys-Mündung,100.0
 3,14,29,1,In Achaia proper: Aigeira . 50°15' . 36'55' Aigion,49°45',36°55',49.75,36.9167,yes,3.16.05.03,Aigion,100.0
@@ -2436,7 +2436,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 3,14,33,1,In Argeia: Astron,51°30',35°45',51.5,35.75,yes,3.16.11.02,Astron,100.0
 3,14,33,2,Inachos river outlet,51°30',35°50',51.5,35.8333,yes,3.16.11.03,Inachos-Mündung,100.0
 3,14,33,3,Head of the river,51°00',36°30',51.0,36.5,yes,3.16.22.08,Thalame,63.7
-3,14,33,4,Nauplia port,51°35',36°00',51.5833,36.0,yes,3.16.11.05,Nauplia,96.9
+3,14,33,4,Nauplia port,51°35',36°00',51.5833,36.0,yes,3.16.11.05,Nauplia,100.0
 3,14,33,5,Phlious,51°45',35°55',51.75,35.9167,yes,3.16.11.06,Phlius,100.0
 3,14,33,6,Hermione,52°00',36°00',52.0,36.0,yes,3.16.11.07,Hermione,100.0
 3,14,33,7,Skyllaion promontory,52°30',36°05',52.5,36.0833,yes,3.16.11.08,Kap Skyllaion,100.0
@@ -2447,7 +2447,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 3,14,33,12,Athenaion harbor,51°30',36°35',51.5,36.5833,yes,3.16.12.07,Hafen der Athener,100.0
 3,14,33,13,Boukephalos harbor,51°25',36°45',51.4167,36.75,yes,3.16.12.08,Bukephalon,100.0
 3,14,33,14,In the Korinthia: Kenchreai port,51°25',36°55',51.4167,36.9167,yes,3.16.13.02,Kenchreai,100.0
-3,14,33,15,Schoinous harbor,51°40',37°00',51.6667,37.0,yes,3.16.13.03,Schoinus,85.1
+3,14,33,15,Schoinous harbor,51°40',37°00',51.6667,37.0,yes,3.16.13.03,Schoinus,93.1
 3,14,35,1,Mountains in the Peloponnese Pholoe,49°15',36°40',49.25,36.6667,yes,3.16.14.02,Pholoe,100.0
 3,14,35,2,Stymphalos,50°10',36°30',50.1667,36.5,yes,3.16.14.03,Stymphalos,100.0
 3,14,35,3,Minthe,49°00',35°30',49.0,35.5,yes,3.16.14.04,Minthe,100.0
@@ -2514,7 +2514,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 3,15,3,3,Poikilasion,53°00',34°30',53.0,34.5,yes,3.17.03.03,Poikilasion,100.0
 3,15,3,4,Hermaia headland,53°15',34°25',53.25,34.4167,yes,3.17.03.04,Kap Hermaia,100.0
 3,15,3,5,Phoinikous harbor,53°45',34°50',53.75,34.8333,yes,3.17.03.06,Hafen von Phoinix,83.1
-3,15,3,6,Phoinix city,53°35',34°45',53.5833,34.75,yes,3.17.03.05,Phoinix,86.6
+3,15,3,6,Phoinix city,53°35',34°45',53.5833,34.75,yes,3.17.03.05,Phoinix,78.6
 3,15,3,7,Messalia river outlet,53°45',34°40',53.75,34.6667,yes,3.17.10.06,Subrita,51.9
 3,15,4,1,Psychion,54°00',34°45',54.0,34.75,yes,3.17.04.01,Psychion,78.6
 3,15,4,2,Elektra river outlet,54°10',34°45',54.1667,34.75,yes,3.17.04.02,Elektras-Mündung,66.8
@@ -2523,15 +2523,15 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 3,15,4,5,Lebena,54°35',34°50',54.5833,34.8333,yes,3.17.04.05,Lebena,100.0
 3,15,4,6,Katarrhaktes river outlet,54°45',34°50',54.75,34.8333,yes,3.17.04.06,Katarrhaktos-Mündung,100.0
 3,15,4,7,Lethaios river outlet,54°50',34°55',54.8333,34.9167,yes,3.17.04.07,Lethaios-Mündung,71.4
-3,15,4,8,Inatos city,55°00',34°55',55.0,34.9167,yes,3.17.04.08,Inatos,100.0
+3,15,4,8,Inatos city,55°00',34°55',55.0,34.9167,yes,3.17.04.08,Inatos,96.9
 3,15,4,9,Hieron mountain,55°10',35°00',55.1667,35.0,yes,3.17.04.09,Heiliger Berg,100.0
 3,15,4,10,Hierapytna,55°15',35°05',55.25,35.0833,yes,3.17.04.10,Hiera Petra,100.0
 3,15,4,11,Erythraion promontory,55°20',35°05',55.3333,35.0833,yes,3.17.04.11,Erythräisches Kap,98.1
 3,15,4,12,Ampelos headland,55°30',35°10',55.5,35.1667,yes,3.17.04.12,Kap Ampelos,71.4
 3,15,4,13,Itanos city,55°40',35°15',55.6667,35.25,yes,3.17.04.13,Itanos,100.0
 3,15,5,1,Description of the east side: Sammonion promontory,55°50',35°25',55.8333,35.4167,yes,3.17.05.01,Kap Samonion,100.0
-3,15,5,2,Minoa harbor,55°20',35°15',55.3333,35.25,yes,3.17.05.02,Minoa,96.9
-3,15,5,3,Kamara city,55°10',35°20',55.1667,35.3333,yes,3.17.05.03,Kamara,100.0
+3,15,5,2,Minoa harbor,55°20',35°15',55.3333,35.25,yes,3.17.05.02,Minoa,100.0
+3,15,5,3,Kamara city,55°10',35°20',55.1667,35.3333,yes,3.17.05.03,Kamara,96.9
 3,15,5,4,Olous,55°00',35°20',55.0,35.3333,yes,3.17.05.04,Olus,91.9
 3,15,5,5,Cheronesos,54°55',35°20',54.9167,35.3333,yes,3.17.05.05,Chersonesos,100.0
 3,15,5,6,Zephyrion promontory,54°45',35°30',54.75,35.5,yes,3.17.05.06,Kap Zephyrion,100.0
@@ -2550,7 +2550,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 3,15,8,3,Kisamon promontory,52°30',35°00',52.5,35.0,yes,3.17.08.03,Kap Kisamon,100.0
 3,15,8,4,Diktamnon (or Diktamon),52°25',34°55',52.4167,34.9167,yes,3.17.08.04,Diktamnon,100.0
 3,15,8,5,Psakon promontory,52°20',34°50',52.3333,34.8333,yes,3.17.08.05,Kap Psakon,100.0
-3,15,8,6,Kisamos city,52°25',34°45',52.4167,34.75,yes,3.17.08.06,Kisamos,98.8
+3,15,8,6,Kisamos city,52°25',34°45',52.4167,34.75,yes,3.17.08.06,Kisamos,90.8
 3,15,9,1,Famous mountains in Crete The so-called White (Leuke) mountains,52°40',34°40',52.6667,34.6667,yes,3.17.09.02,Weisse Berge,100.0
 3,15,9,2,Mt. Ide,54°00',35°00',54.0,35.0,yes,3.17.09.03,Ida,100.0
 3,15,9,3,Mt. Dikte,55°30',35°15',55.5,35.25,yes,3.17.09.04,Dikte,100.0
@@ -2932,7 +2932,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 4,3,36,5,Tichasa,36°00',28°40',36.0,28.6667,yes,4.03.36.05,Tichasa,100.0
 4,3,36,6,Negenta,36°00',27°50',36.0,27.8333,yes,4.03.36.06,Netata (Netega),100.0
 4,3,36,7,Bunthum,36°15',27°20',36.25,27.3333,no,4.03.36.07,Bunthon,32.1
-4,3,37,1,Below Adrumetum city: Almaena,35°15',33°00',35.25,33.0,yes,4.03.07.03,Maxula,62.4
+4,3,37,1,Below Adrumetum city: Almaena,35°15',33°00',35.25,33.0,yes,4.03.07.03,Maxula,54.4
 4,3,37,2,Uticna,35°40',32°45',35.6667,32.75,yes,4.03.37.03,Utikna,83.3
 4,3,37,3,Chrausa,36°00',32°40',36.0,32.6667,yes,4.03.37.04,Chrabasa (Chrausa),87.8
 4,3,37,4,Turza,35°40',31°50',35.6667,31.8333,yes,4.03.37.05,Gurza,100.0
@@ -3058,7 +3058,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 4,5,2,4,Paliouros,52°15',31°15',52.25,31.25,yes,4.05.02.06,Paliuros,100.0
 4,5,2,5,Batrachos harbor,52°30',31°15',52.5,31.25,yes,4.05.02.07,Batrachos,100.0
 4,5,2,6,Little Petras harbor,52°45',31°15',52.75,31.25,yes,4.05.02.08,Petra Mikra,100.0
-4,5,3,1,Antipyrgos harbor,53°20',31°15',53.3333,31.25,yes,4.05.03.01,Antipyrgos,93.9
+4,5,3,1,Antipyrgos harbor,53°20',31°15',53.3333,31.25,yes,4.05.03.01,Antipyrgos,100.0
 4,5,3,2,Skythranios harbor,53°30',31°10',53.5,31.1667,yes,4.05.03.02,Skythranios,100.0
 4,5,3,3,Kataionion promontory,53°45',31°15',53.75,31.25,yes,4.05.03.03,Kap Kataionion,100.0
 4,5,3,4,Ardanis promontory,54°00',31°15',54.0,31.25,yes,4.05.03.04,Kap Ardanis,100.0
@@ -3074,7 +3074,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 4,5,5,3,Apis,56°40',31°05',56.6667,31.0833,yes,4.05.05.03,Apis-Heiligtum,100.0
 4,5,6,1,Paraitonion,57°00',31°10',57.0,31.1667,yes,4.05.06.01,Paraitonion*,100.0
 4,5,6,2,Pythis promontory,57°10',31°10',57.1667,31.1667,yes,4.05.06.02,Kap Pythis (Pythias),100.0
-4,5,6,3,"Graias Gony, harbor",57°10',31°05',57.1667,31.0833,yes,4.05.06.03,Graias Gony,93.9
+4,5,6,3,"Graias Gony, harbor",57°10',31°05',57.1667,31.0833,yes,4.05.06.03,Graias Gony,100.0
 4,5,6,4,Kallias promontory,57°30',31°10',57.5,31.1667,yes,4.05.06.04,Kap Kallias,100.0
 4,5,6,5,Gyzis or Zygis harbor,57°40',31°05',57.6667,31.0833,yes,4.05.06.05,Zygis (Gyzis),100.0
 4,5,6,6,Leuke Akte,57°50',31°10',57.8333,31.1667,yes,4.05.06.06,Leuke Akte,100.0
@@ -3112,7 +3112,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 4,5,14,3,Klysma castle,63°20',28°50',63.3333,28.8333,yes,4.05.14.03,Klysma,100.0
 4,5,14,4,Drepanon promontory,64°00',27°50',64.0,27.8333,yes,4.05.14.04,Kap Drepanon,100.0
 4,5,14,5,Myos hormos,64°15',26°45',64.25,26.75,yes,4.05.14.06,Philoteras,100.0
-4,5,14,6,Philoteras harbor,64°05',27°50',64.0833,27.8333,yes,4.05.14.04,Kap Drepanon,59.9
+4,5,14,6,Philoteras harbor,64°05',27°50',64.0833,27.8333,yes,4.05.14.06,Philoteras,62.2
 4,5,14,7,Mt. Aias,64°20',26°10',64.3333,26.1667,yes,4.05.14.07,Aias-Berg,65.3
 4,5,15,1,Leukos harbor,64°30',26°00',64.5,26.0,yes,4.05.15.01,Leukos Limen,100.0
 4,5,15,2,Mt. Akabe,64°30',25°45',64.5,25.75,yes,4.05.15.02,Akabe-Berg,100.0
@@ -3406,7 +3406,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 4,7,5,4,Ision mountain,65°30',21°20',65.5,21.3333,yes,4.07.05.05,Ision-Berg,100.0
 4,7,5,5,Deep harbor,65°00',21°10',65.0,21.1667,yes,4.07.05.06,Tiefer Hafen,79.4
 4,7,5,6,Dioskoroi harbor,65°00',21°00',65.0,21.0,yes,4.07.05.06,Tiefer Hafen,100.0
-4,7,5,7,Lookout of Demeter promontory,65°20',20°15',65.3333,20.25,yes,4.07.05.08,Warte der Demeter,66.8
+4,7,5,7,Lookout of Demeter promontory,65°20',20°15',65.3333,20.25,yes,4.07.05.08,Warte der Demeter,74.8
 4,7,6,1,Aspis promontory,65°30',19°45',65.5,19.75,yes,4.07.06.01,Kap Aspis,100.0
 4,7,6,2,Diogenes promontory,65°40',19°40',65.6667,19.6667,yes,4.07.06.02,Kap Diogenes,100.0
 4,7,6,3,Satyron mountains,65°40',19°00',65.6667,19.0,yes,4.07.06.03,Satyron-Berg,100.0
@@ -3417,7 +3417,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 4,7,7,1,Ptolemais Therai (hunts),66°00',16°25',66.0,16.4167,yes,4.07.07.01,Ptolemais Theron*,100.0
 4,7,7,2,Sabastikon mouth,67°00',15°00',67.0,15.0,yes,4.07.07.03,Altar des Eros,100.0
 4,7,7,3,Great coast,66°00',14°15',66.0,14.25,yes,4.07.07.04,Grosser Strand,100.0
-4,7,7,4,Altar of Eros promontory,66°30',16°00',66.5,16.0,no,4.07.07.01,Ptolemais Theron*,34.9
+4,7,7,4,Altar of Eros promontory,66°30',16°00',66.5,16.0,no,4.07.07.01,Ptolemais Theron*,42.9
 4,7,7,5,"Colobon mountain, promontory",68°00',13°40',68.0,13.6667,yes,4.07.07.05,Kolobon-Berg,100.0
 4,7,8,1,"in the Adulitic Bay, Sabat city",68°00',12°30',68.0,12.5,yes,4.07.08.02,Sabat,95.8
 4,7,8,2,Mountainous peninsula,68°00',12°10',68.0,12.1667,yes,4.07.08.03,Bergige Chersonesos,100.0
@@ -3524,7 +3524,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 4,9,6,5,"Mount Barditon, the centre of which is",45°,6° S,45.0,-6.0,yes,4.08.06.05,Barditon-Gebirge (Mitte),100.0
 4,9,6,6,Mount Selene,57°,12°20' S,57.0,-12.3333,yes,4.08.03.05,Mondgebirge (W-Ende),74.2
 4,9,6,7,,67°,12°20' S,67.0,-12.3333,yes,4.08.03.06,Mondgebirge (O-Ende),48.9
-5,1,2,1,"The promontory of Bithynia at the mouth of the Pontos, on which are: Hieron of Artemis",56°25',43°20',56.4167,43.3333,yes,5.01.02.02,Spitze Bithyniens mit Artemis-Heiligtum,62.7
+5,1,2,1,"The promontory of Bithynia at the mouth of the Pontos, on which are: Hieron of Artemis",56°25',43°20',56.4167,43.3333,yes,5.01.05.05,Artake,66.3
 5,1,2,2,Chalkedon,56°05',43°05',56.0833,43.0833,yes,5.01.02.03,Chalkedon*,100.0
 5,1,2,3,Akritas promontory,56°30',42°55',56.5,42.9167,yes,5.01.02.04,Kap Akritas,100.0
 5,1,2,4,Trarion,56°50',42°45',56.8333,42.75,yes,5.01.02.05,Trarion,96.9
@@ -3800,7 +3800,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 5,3,3,4,mouth of the Limyros river,61°00',36°20',61.0,36.3333,yes,5.03.03.04,Limyros-Mündung,100.0
 5,3,3,5,Apirai or Aperrai,61°10',36°25',61.1667,36.4167,yes,5.03.03.06,Aperlai,100.0
 5,3,3,6,Hiera promontory,61°30',36°15',61.5,36.25,yes,5.03.03.07,Heiliges Kap,100.0
-5,3,3,7,Olympos city,61°40',36°15',61.6667,36.25,yes,5.03.03.08,Olympos,100.0
+5,3,3,7,Olympos city,61°40',36°15',61.6667,36.25,yes,5.03.03.08,Olympos,96.9
 5,3,3,8,Phaselis,61°50',36°25',61.8333,36.4167,yes,5.03.03.09,Phaselis,100.0
 5,3,4,1,Kragos mountain midpoint,60°00',36°40',60.0,36.6667,yes,5.03.04.01,Kragos (Mitte),100.0
 5,3,5,1,"The inland cities in Lykia, near Kragosmountain: Kydna",59°30',37°10',59.5,37.1667,yes,5.03.05.03,Kydna,100.0
@@ -3913,7 +3913,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 5,4,12,4,Among these the Orondikoi people and cities: Misthion,63°00',39°15',63.0,39.25,yes,5.04.12.06,Misthion,100.0
 5,4,12,5,Pappa,63°20',38°55',63.3333,38.9167,yes,5.04.12.07,Pappa,100.0
 5,5,1,1,"limit point near Galatia to the Pamphylian sea, the limit point of this line at the sea is",63°50',36°45',63.8333,36.75,yes,5.05.01.09,"Grenzpunkt (Kilikien, Pamphylien)",100.0
-5,5,2,1,"Phaselis, city of Lykia, the shores of Pamphylia: Olbia",62°00',36°55',62.0,36.9167,yes,5.05.02.04,Olbia,95.8
+5,5,2,1,"Phaselis, city of Lykia, the shores of Pamphylia: Olbia",62°00',36°55',62.0,36.9167,yes,5.05.02.04,Olbia,87.8
 5,5,2,2,Attaleia,62°15',36°30',62.25,36.5,yes,5.05.02.05,Attaleia,100.0
 5,5,2,3,mouth of the river Katarraktes,62°15',36°35',62.25,36.5833,yes,5.05.02.06,Katarraktes-Mündung,98.8
 5,5,2,4,Magydos,62°40',36°30',62.6667,36.5,yes,5.05.02.08,Magydos,87.8
@@ -4308,7 +4308,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 5,12,2,1,mouth of the Soana river at,86°00',47°00',86.0,47.0,yes,5.09.11.05,Soanas-Mündung,100.0
 5,12,2,2,Telaiba city,85°00',46°40',85.0,46.6667,yes,5.12.02.02,Telaiba (Teleba),100.0
 5,12,2,3,mouth of the Gerros river,84°30',46°30',84.5,46.5,yes,5.12.02.03,Gerrhos-Mündung,100.0
-5,12,2,4,Gelda city,83°00',46°30',83.0,46.5,yes,5.12.02.04,Gelda,95.8
+5,12,2,4,Gelda city,83°00',46°30',83.0,46.5,yes,5.12.02.04,Gelda,87.8
 5,12,2,5,mouth of the Kaisios river,82°30',46°00',82.5,46.0,yes,5.12.02.05,Kasios-Mündung,100.0
 5,12,2,6,Albana city,81°40',45°50',81.6667,45.8333,yes,5.12.02.06,Albana*,100.0
 5,12,2,7,mouth of the Albanos river,80°30',45°30',80.5,45.5,yes,5.12.02.07,Albanos-Mündung,100.0
@@ -4471,8 +4471,8 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 5,14,4,3,Aphrodision,66°30',35°40',66.5,35.6667,yes,5.14.04.04,Aphrodision,100.0
 5,14,4,4,Makaria,66°00',35°45',66.0,35.75,yes,5.14.04.05,Makaria,100.0
 5,14,4,5,Keronia or Keraunia,65°40',35°45',65.6667,35.75,yes,5.14.04.06,Keraunia,100.0
-5,14,4,6,Mouth of River Lapethos,65°30',35°55',65.5,35.9167,yes,5.14.04.08,Lapethos-Mündung,95.8
-5,14,4,7,Lapethos city,65°20',35°55',65.3333,35.9167,yes,5.14.04.09,Lapethos,100.0
+5,14,4,6,Mouth of River Lapethos,65°30',35°55',65.5,35.9167,yes,5.14.04.09,Lapethos,98.8
+5,14,4,7,Lapethos city,65°20',35°55',65.3333,35.9167,yes,5.14.04.09,Lapethos,96.9
 5,14,4,8,Cape Krommyon,65°10',36°10',65.1667,36.1667,yes,5.14.04.10,Kap Krommyon,100.0
 5,14,4,9,Soloi,65°00',36°00',65.0,36.0,yes,5.14.04.11,Soloi,100.0
 5,14,4,10,Cape Kallinousa,64°40',35°50',64.6667,35.8333,yes,5.14.04.12,Kap Kallinusa,100.0
@@ -4480,7 +4480,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 5,14,6,1,The cities of the interior: Chytros,66°30',36°30',66.5,36.5,yes,5.14.06.01,Chytros,66.4
 5,14,6,2,Tremethus,66°25',35°25',66.4167,35.4167,yes,5.14.06.02,Tremithus (Treminthus),100.0
 5,14,6,3,Tamassos,66°20',35°45',66.3333,35.75,yes,5.14.06.03,Tamassos,75.6
-5,14,7,1,"The islands on its coast are those called Cleides, their midpoint",67°20',35°45',67.3333,35.75,yes,5.14.07.02,Kleiden,68.8
+5,14,7,1,"The islands on its coast are those called Cleides, their midpoint",67°20',35°45',67.3333,35.75,yes,5.14.07.02,Kleiden,76.8
 5,14,7,2,the Karpasian islands,64°05',35°45',64.0833,35.75,yes,5.14.07.03,Karpasische Inseln,86.0
 5,15,2,1,Issos and the Kilikian Gates Alexandreia on the Issos,69°30',36°10',69.5,36.1667,yes,5.08.04.15,Issos,84.7
 5,15,2,2,Myriandros,69°30',35°50',69.5,35.8333,yes,5.15.02.06,Myriandros,100.0
@@ -5163,7 +5163,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 6,7,8,2,Sanina city,75°30',11°45',75.5,11.75,yes,6.07.08.04,Sanina,90.8
 6,7,8,3,Kaboubathra mountain,76°15',11°15',76.25,11.25,yes,6.07.08.05,Kabubathra,100.0
 6,7,9,1,Country of the Homerites: Madoke city,77°00',11°45',77.0,11.75,yes,6.07.09.02,Madoke (Makode),100.0
-6,7,9,2,Mardache city,78°00',11°00',78.0,11.0,yes,6.07.09.03,Mardache (Marache),58.0
+6,7,9,2,Mardache city,78°00',11°00',78.0,11.0,yes,6.07.09.03,Mardache (Marache),50.0
 6,7,9,3,Lees kome,78°40',11°30',78.6667,11.5,yes,6.07.09.04,Lees (Leis),100.0
 6,7,9,4,Ammonion promontory,79°20',11°10',79.3333,11.1667,yes,6.07.09.05,Kap des Ammonios,93.0
 6,7,9,5,Arabias trading post,80°00',11°30',80.0,11.5,yes,6.07.09.06,Arabia* (Arabias* ),100.0
@@ -5174,7 +5174,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 6,7,10,3,Mada kome,83°00',11°30',83.0,11.5,yes,6.07.10.04,Mada (Ada),100.0
 6,7,10,4,Eristhe city,83°30',11°45',83.5,11.75,yes,6.07.10.05,Eristhe (Etisthe),100.0
 6,7,10,5,Mikros Aigialos (Small Shore),83°40',11°30',83.6667,11.5,yes,6.07.10.06,Kleiner Strand,100.0
-6,7,10,6,Kane trading post and promontory,84°00',11°30',84.0,11.5,yes,6.07.10.07,Kane*,63.3
+6,7,10,6,Kane trading post and promontory,84°00',11°30',84.0,11.5,yes,6.07.10.07,Kane*,71.3
 6,7,10,7,Troulla harbor,84°00',12°40',84.0,12.6667,yes,6.07.10.08,Trulla,100.0
 6,7,10,8,Maithath kome,84°20',13°00',84.3333,13.0,yes,6.07.10.09,Maithath (Maphath),100.0
 6,7,10,9,Prionoton mountain,84°40',13°00',84.6667,13.0,yes,6.07.10.10,Prionoton,100.0
@@ -5199,7 +5199,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 6,7,12,1,In the narrows of the Persian Gulf Kryptos harbor,92°40',21°30',92.6667,21.5,yes,6.07.12.02,Kryptos,100.0
 6,7,12,2,[Coastal mountains of Eudaimon Arabia: Hippos Mountain,76°50',27°30',76.8333,27.5,no,6.07.29.04,Lugana (Zutana),33.6
 6,7,12,3,Kaboubathra Mountain,76°15',11°15',76.25,11.25,yes,6.07.08.05,Kabubathra,100.0
-6,7,12,4,Melan Mountain,81°30',11°30',81.5,11.5,yes,6.07.09.08,Schwarzer Berg,76.3
+6,7,12,4,Melan Mountain,81°30',11°30',81.5,11.5,yes,6.07.09.08,Schwarzer Berg,68.3
 6,7,12,5,Prionoton Mountain,84°40',13°00',84.6667,13.0,yes,6.07.10.10,Prionoton,100.0
 6,7,12,6,Didyma Mountains,90°15',19°20',90.25,19.3333,yes,6.07.11.09,Didyma-Berge,100.0
 6,7,12,7,"the so-called Melana mountains of the Asabans, midpoint on the sea at",93°00',22°20',93.0,22.3333,yes,6.07.12.04,Asabon (Asabo)-Berge (Endpunkt am Meer),60.2
@@ -5230,7 +5230,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 6,7,18,1,of the Leanitai: Mallaba city,80°10',26°10',80.1667,26.1667,yes,6.07.18.02,Mallada,100.0
 6,7,18,2,Chersonesos promontory,80°20',26°30',80.3333,26.5,yes,6.07.18.03,Kap Chersonesos,100.0
 6,7,18,3,Leanites gulf,79°15',27°00',79.25,27.0,yes,6.07.18.04,Golf Laianites,77.7
-6,7,18,4,Itamos harbor,79°40',27°30',79.6667,27.5,yes,6.07.18.05,Itamos,93.9
+6,7,18,4,Itamos harbor,79°40',27°30',79.6667,27.5,yes,6.07.18.05,Itamos,100.0
 6,7,18,5,Adaroupolis,79°15',27°40',79.25,27.6667,yes,6.07.18.06,Stadt des Adaros,100.0
 6,7,19,1,of the Aboukaians: Hieros gulf,78°15',28°15',78.25,28.25,no,6.07.19.02,Heiliger Golf,40.8
 6,7,19,2,Koromanis city,79°00',28°45',79.0,28.75,yes,6.07.19.03,Koromanis,100.0
@@ -5771,7 +5771,7 @@ book,map,section,position,name_phrase,lon_dms,lat_dms,lon_decimal,lat_decimal,ca
 7,1,18,2,"Poloura, a town",145°00',18°30',145.0,18.5,yes,7.01.18.02,Palura,100.0
 7,1,18,3,"The second mouth, called Mega",145°45',18°50',145.75,18.8333,yes,7.01.18.03,Ganges-Mündung bzw. Große Mundung,48.7
 7,1,18,4,The third called Kamberichon,146°30',18°40',146.5,18.6667,yes,7.01.18.04,Ganges-Mündung bzw. Kamberichon-Mündung,100.0
-7,1,18,5,"Tilogrammon, a town",147°20',18°00',147.3333,18.0,yes,7.01.18.05,Tilogrammon,77.4
+7,1,18,5,"Tilogrammon, a town",147°20',18°00',147.3333,18.0,yes,7.01.18.05,Tilogrammon,69.4
 7,1,18,6,"The fourth mouth, Pseudostomon",147°40',18°30',147.6667,18.5,yes,7.01.18.06,Ganges-Mündung bzw. Pseudostomon-Mündung (Ganges),100.0
 7,1,18,7,The fifth mouth. Antibole,148°30',18°15',148.5,18.25,yes,7.01.18.07,Ganges-Mündung bzw. Antibole-Mündung,100.0
 7,1,26,1,Mount Imaos into the Indus are arranged as follows:— Sources of the River Koa,120°00',37°00',120.0,37.0,yes,7.01.26.03,Koas-Quellen,100.0
@@ -6081,9 +6081,9 @@ Uxenton-Gebirge her)",100.0
 7,2,5,3,Mouth of the River Chrysoanas,159°00',1°00',159.0,1.0,yes,7.02.05.04,Chrysoanas-Mündung,100.0
 7,2,5,4,"Sabana, trading post",160°00',3°,160.0,3.0,no,7.02.25.03,Kokkonagara (Konkonagara),18.3
 7,2,5,5,S. Mouth of the River Palandos,161°00',2°,161.0,2.0,no,7.02.12.05,Namenloser Fluss (Aufteilung in den Chrysoanas),30.6
-7,2,5,6,S. Cape Maleou Kolon,163°00',2°,163.0,2.0,no,7.02.05.10,Perimula,21.4
+7,2,5,6,S. Cape Maleou Kolon,163°00',2°,163.0,2.0,no,7.02.05.10,Perimula,29.4
 7,2,5,7,S. Mouth of the River Attaba,164°00',1°,164.0,1.0,yes,7.02.05.08,Attabas-Mündung,51.3
-7,2,5,8,"S. Koli, a city . 164°20' . on the equator Perimoula",163°15',2°20',163.25,2.3333,yes,7.02.05.10,Perimula,93.1
+7,2,5,8,"S. Koli, a city . 164°20' . on the equator Perimoula",163°15',2°20',163.25,2.3333,yes,7.02.05.10,Perimula,85.1
 7,2,5,9,Perimoulic Gulf,168°30',4°15',168.5,4.25,yes,7.02.07.02,Grosses Kap am Anfang des Golfes,59.2
 7,2,6,1,Country the Lestai (Robbers). Samarade,163°00',4°50',163.0,4.8333,yes,7.02.06.02,Samarade (Smarade),100.0
 7,2,6,2,Pagrasa,165°00',4°50',165.0,4.8333,yes,7.02.06.03,Pagrasa (Patrasa),100.0
@@ -6183,7 +6183,7 @@ Uxenton-Gebirge her)",38.1
 7,2,30,1,"The Islands of the Satyrs, three in number, of which the centre is in",171°00',2°30' S,171.0,-2.5,yes,7.02.30.01,Satyrn-Inseln (3),100.0
 7,3,2,1,boundary of the Gulf on the side of India the mouth of the river Aspithra,170°00',16°00',170.0,16.0,no,7.02.07.10,Dorias-Mündung,30.5
 7,3,2,2,Sources of the river on the eastern side of the Semanthinos range,180°00',26°00',180.0,26.0,yes,7.02.08.08,Semanthinon-Gebirge (O-Ende),100.0
-7,3,2,3,"Bramma, a town",177°00',12°30',177.0,12.5,yes,7.03.02.06,Bramma,95.8
+7,3,2,3,"Bramma, a town",177°00',12°30',177.0,12.5,yes,7.03.02.06,Bramma,87.8
 7,3,2,4,The mouth of the river Ambastes,176°00',10°00',176.0,10.0,no,7.03.02.07,Gebirge,32.6
 7,3,2,5,The sources of the river,179°30',15°00',179.5,15.0,yes,7.03.02.08,Ambastes-Quellen,67.2
 7,3,2,6,"Rhabana, a town",177°00',8°30',177.0,8.5,yes,7.03.02.09,Rhabana,100.0
@@ -6214,10 +6214,10 @@ Uxenton-Gebirge her)",38.1
 7,4,4,3,Prasodes Bay,121°00',2°00',121.0,2.0,yes,7.04.04.02,Prasodes-Golf,100.0
 7,4,4,4,"Noubartha, a city . 121°40' . on the Equator. Mouth of the river Azanos",123°20',1°,123.3333,1.0,yes,7.04.04.05,Azanos-Mündung,53.0
 7,4,4,5,S. The sources of the river,126°00',1°,126.0,1.0,yes,7.04.04.06,Azanos-Quellen,100.0
-7,4,4,6,"N. Odoka, a city",123°00',2°,123.0,2.0,no,7.04.04.01,Anubingara,8.0
+7,4,4,6,"N. Odoka, a city",123°00',2°,123.0,2.0,no,7.04.10.04,Poduke (Peduke),8.0
 7,4,4,7,"S. Orneon, (Birds' Point) a headland",125°00',2°30' S,125.0,-2.5,yes,7.04.04.08,Kap der Vögel,100.0
 7,4,5,1,"Dagana, a city sacred to the Moon",126°00',2°,126.0,2.0,no,7.04.04.06,Azanos-Quellen,18.3
-7,4,5,2,"S. Korkobara, a city",127°20',2°20' S,127.3333,-2.3333,yes,7.04.05.02,Korkobara (Krokobara),93.3
+7,4,5,2,"S. Korkobara, a city",127°20',2°20' S,127.3333,-2.3333,yes,7.04.05.02,Korkobara (Krokobara),85.3
 7,4,5,3,Cape of Dionysos,130°00',1°30' S,130.0,-1.5,yes,7.04.05.03,Stadt des Dionysos,100.0
 7,4,5,4,Ketaion Cape,132°30',2°20' S,132.5,-2.3333,yes,7.04.05.04,Kap Ketaion,53.0
 7,4,5,5,Mouth of the river Barakes,131°30',1°,131.5,1.0,yes,7.04.05.05,Barakes-Mündung,100.0
@@ -6227,7 +6227,7 @@ Uxenton-Gebirge her)",38.1
 7,4,6,1,"Abaratha, a city",131°00',3°15',131.0,3.25,yes,7.04.06.01,Abaraththa (Amaraththa),100.0
 7,4,6,2,N. Haven of the Sun (Heliou limen),130°00',4°00',130.0,4.0,yes,7.04.06.02,Helios-Hafen,100.0
 7,4,6,3,Great Coast (Aigialos Megas),130°00',4°20',130.0,4.3333,no,7.04.06.02,Helios-Hafen,42.8
-7,4,6,4,"Prokouri, a city",131°00',5°20',131.0,5.3333,yes,7.04.06.04,Prokuri,92.8
+7,4,6,4,"Prokouri, a city",131°00',5°20',131.0,5.3333,yes,7.04.06.04,Prokuri,84.8
 7,4,6,5,The haven of Rizala,130°20',6°30',130.3333,6.5,yes,7.04.06.05,Rhizala (Bizala),82.3
 7,4,6,6,"Oxeia, a headland",130°00',7°30',130.0,7.5,yes,7.04.06.06,Kap Oxeia,100.0
 7,4,6,7,Mouth of the river Ganges,129°00',7°20',129.0,7.3333,yes,7.04.06.07,Ganges-Mündung,100.0
@@ -6235,7 +6235,7 @@ Uxenton-Gebirge her)",38.1
 7,4,6,9,Spatana Haven,129°00',8°00',129.0,8.0,yes,7.04.06.09,Spatana,100.0
 7,4,7,1,"Nagadiba or Nagadina, a city",129°00',8°30',129.0,8.5,yes,7.04.07.01,Nagadiba*,100.0
 7,4,7,2,Pati Bay,128°30',9°30',128.5,9.5,yes,7.04.07.02,Pati-Golf (Pausi-Golf),89.7
-7,4,7,3,"Anoubingara, a city",128°20',9°40',128.3333,9.6667,yes,7.04.07.03,Anubingara,93.6
+7,4,7,3,"Anoubingara, a city",128°20',9°40',128.3333,9.6667,yes,7.04.07.03,Anubingara,85.6
 7,4,7,4,"Modouttou, trading post",128°00',11°20',128.0,11.3333,yes,7.04.07.04,Moduttu (Modunto),79.3
 7,4,7,5,Mouth of the river Phasis,127°00',11°20',127.0,11.3333,yes,7.04.07.05,Phasis-Mündung,100.0
 7,4,7,6,The sources of the river,126°00',8°00',126.0,8.0,yes,7.04.07.06,Phasis-Quellen,100.0

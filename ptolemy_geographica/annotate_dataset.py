@@ -35,18 +35,29 @@ feature in sequence. See build_coastlines_from_features() and
 build_river_lines_from_features() in ptolemy_map.py - no graph, no
 distance thresholds, no stitching needed against this file.
 
+Overrides (which point/section gets force-classified, which trails
+force-stitch, ...) are read from `db/ptolemy.db`'s `point_override`/
+`section_override`/`connection_override` tables by default - that's what
+a correction actually edits now (see README.md's "The curated database"
+section). Pass `--overrides code` to fall back to ptolemy_map.py's own
+frozen Python constants instead (only meaningful before `db/ptolemy.db`
+exists at all, i.e. the one-time bootstrap - see db/build_database.py).
+
 Usage
 -----
     python3 annotate_dataset.py
     python3 annotate_dataset.py --input data/ptolemy_catalogue_stueckelberger.xlsx --output data/ptolemy_catalogue_annotated.csv
+    python3 annotate_dataset.py --overrides code   # bootstrap only, before db/ptolemy.db exists
 """
 
 from __future__ import annotations
 
 import argparse
+import sqlite3
 from collections import Counter
 from pathlib import Path
 
+from overrides import load_overrides_from_code, load_overrides_from_db
 from ptolemy_map import (
     assign_coastline_features,
     assign_island_features,
@@ -59,27 +70,45 @@ from ptolemy_map import (
 SCRIPT_DIR = Path(__file__).resolve().parent
 DEFAULT_SOURCE = SCRIPT_DIR / "data" / "ptolemy_catalogue_stueckelberger.xlsx"
 DEFAULT_OUTPUT = SCRIPT_DIR / "data" / "ptolemy_catalogue_annotated.csv"
+DEFAULT_OVERRIDES_DB = SCRIPT_DIR / "db" / "ptolemy.db"
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--input", type=Path, default=DEFAULT_SOURCE, help="Raw xlsx catalogue to resolve")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT, help="Annotated CSV to write")
+    parser.add_argument("--overrides-db", type=Path, default=DEFAULT_OVERRIDES_DB, help="Database to read overrides from (--overrides db)")
+    parser.add_argument(
+        "--overrides",
+        choices=("db", "code"),
+        default="db",
+        help="Read override rules from db/ptolemy.db (default) or from ptolemy_map.py's own frozen Python constants",
+    )
     return parser.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
 
-    refs = load_xlsx(args.input)
+    if args.overrides == "db":
+        if not args.overrides_db.exists():
+            print(f"{args.overrides_db} not found - run db/build_database.py first, or pass --overrides code")
+            return 1
+        conn = sqlite3.connect(args.overrides_db)
+        overrides = load_overrides_from_db(conn)
+        conn.close()
+    else:
+        overrides = load_overrides_from_code()
+
+    refs = load_xlsx(args.input, overrides)
     plausible = [r for r in refs if r.is_plausible()]
     dropped = len(refs) - len(plausible)
     if dropped:
         print(f"dropped {dropped} reference(s) with out-of-range coordinates")
 
-    assign_coastline_features(plausible)
-    assign_river_features(plausible)
-    assign_island_features(plausible)
+    assign_coastline_features(plausible, overrides)
+    assign_river_features(plausible, overrides)
+    assign_island_features(plausible, overrides)
     assign_mountain_features(plausible)
     write_annotated_csv(plausible, args.output)
 

@@ -76,6 +76,8 @@ from dataclasses import dataclass
 from itertools import groupby
 from pathlib import Path
 
+from overrides import OverrideBundle, load_overrides_from_code
+
 # Longitude (degrees) of the Ferro/El Hierro meridian west of Greenwich.
 # Ptolemy's longitudes count eastward from 0 there, so:
 #   modern_longitude = ptolemy_longitude - FERRO_OFFSET_DEG
@@ -94,13 +96,13 @@ _CONTINENT_NAMES = {"EU": "Europe", "AS": "Asia", "AF": "Africa"}
 # color each gets on the map (dataviz reference palette, fixed hue order).
 CATEGORIES = {
     "coast": {"label": "Coastal point / coastline", "color": "#123f7a"},
-    "harbor": {"label": "Harbor town", "color": "#86b6ef"},
-    "river_mouth": {"label": "River mouth", "color": "#98df8a"},
+    "harbor": {"label": "Harbor town", "color": "#2ca02c"},
+    "river_mouth": {"label": "River mouth", "color": "#6ec6ff"},
     "city": {"label": "City / inland settlement", "color": "#eb6834"},
-    "river": {"label": "River source / confluence / bend", "color": "#2ca02c"},
+    "river": {"label": "River source / confluence / bend", "color": "#6ec6ff"},
     "mountain": {"label": "Mountain", "color": "#eda100"},
     "island": {"label": "Island", "color": "#e87ba4"},
-    "lake": {"label": "Lake / inland water", "color": "#008300"},
+    "lake": {"label": "Lake / inland water", "color": "#6ec6ff"},
     "": {"label": "Unclassified", "color": "#898781"},
 }
 
@@ -127,8 +129,13 @@ _COASTAL_HDR_RE = re.compile(r"ozean|meer(?!wärts)|golf|meerbusen|kanal|bucht",
 # is the same kind of river-origin point, just phrased for a river that
 # starts by draining a lake rather than rising from a spring - "Padus
 # (Ausfluss aus Lacus Larius)" (topostext: "the head of the river at
-# Lario lake").
-_RIVERFEAT_RE = re.compile(r"quell|einmündung|ursprung|zusammenfluss|ausfluss", re.IGNORECASE)
+# Lario lake"). "zufluss" (inflow/tributary) is the same shape again,
+# phrased for an unnamed tributary joining a named river - "Arbis
+# (Namenloser Zufluss aus Drangiane)" fell through to `coast` once its
+# section (6.21.02) was correctly made coastal for its other points by
+# the seventeenth-round batch fix; checked the whole catalogue first,
+# all four "Zufluss" hits are the same unnamed-tributary shape.
+_RIVERFEAT_RE = re.compile(r"quell|einmündung|ursprung|zusammenfluss|ausfluss|zufluss", re.IGNORECASE)
 # Landmarks *along* a river's course - a bend, its midpoint, its upper/lower
 # reach, or a delta fork/split - as opposed to "Mündung" (river mouth, i.e.
 # actually on the coast). These are inland, but nothing in the word itself
@@ -138,7 +145,32 @@ _RIVERFEAT_RE = re.compile(r"quell|einmündung|ursprung|zusammenfluss|ausfluss",
 # spliced into the middle of that coastal walk out of geographic order.
 # One legitimate exception: a bend *in a gulf's own coastline* ("Elanitischer
 # Golf (Biegung)") isn't a river feature, hence the golf/bay guard.
-_RIVER_COURSE_RE = re.compile(r"\(mitte\)|biegung|abzweigung|aufteilung|oberlauf|unterlauf", re.IGNORECASE)
+# "teilung" (bare, not just "-aufteilung") catches four more delta-fork
+# citations along the Danube's own branching mouths ("Ister (Teilung des
+# nördlichsten Armes)", "Ister (Teilung)" x2, "Ister (1. Teilung bei
+# Noviodunum)") that had fallen through to the default `city` - checked
+# against the whole catalogue first: every other "teilung" hit is already
+# an "-aufteilung" delta-fork citation elsewhere (the Nile's own five
+# delta divisions, four more river forks in India), so broadening to the
+# bare word introduces no false positives.
+# "Krümmung" ("bend/curve", a synonym of "Biegung" not previously
+# recognized) catches three Sangarios river-bend points ("Sangarios
+# (erste/zweite/dritte Krümmung)") that fell through to `coast` once
+# their section (5.01.06) was correctly made coastal for its *other*
+# points - checked the whole catalogue first: of six "Krümmung" hits,
+# five are genuine river-course bends (these three, plus two already-
+# `city` "Danuvius (Krümmung bei Curta)" re-citations from the earlier
+# Danube-delta round, now correctly `river` too) and one is a plain
+# administrative boundary bend ("Grenze...Galatien (Krümmung nach O)" -
+# "the border...which bulges to the east", no river involved at all) -
+# distinguished by requiring an ordinal ("erste/zweite/dritte") before
+# the word or "bei <place>" after it, the shape every genuine river-bend
+# citation uses and the boundary one doesn't.
+_RIVER_COURSE_RE = re.compile(
+    r"\(mitte\)|biegung|abzweigung|aufteilung|teilung|oberlauf|unterlauf|"
+    r"(?:erste|zweite|dritte)\s+krümmung|krümmung\s+bei",
+    re.IGNORECASE,
+)
 _GULF_RE = re.compile(r"golf|meerbusen|bucht", re.IGNORECASE)
 _MOUTH_RE = re.compile(r"mündung", re.IGNORECASE)
 _CAPE_RE = re.compile(r"^kap\b|spitze|vorgebirge|promont", re.IGNORECASE)
@@ -259,6 +291,19 @@ _ISLAND_APPENDIX_SECTIONS = {
     ("3.11", "14"),  # Kyaneen/Proikonesos/Thasos/Samothrake
     ("3.13", "47"),  # Saso/Skiathos/Peparethos/Skopelos (Sporades)
     ("3.14", "11"),  # Kassiope/Ptychia/Korkyra + Kap Leukimma/Amphipagos/Phalakron - Corfu
+    # Found by the systematic topostext-disagreement review (2026-07-30):
+    # the *other* Ionian islands, each cited once (not a coastal walk of
+    # any single one, so no _ISLAND_LINE_GROUPS entry - just the "list of
+    # several different islands" shape _ISLAND_APPENDIX_SECTIONS exists
+    # for). Section "12": Kephallenia ("Kephallenia island, with a city of
+    # the same name...its northernmost promontory" / "the southern
+    # promontory" - both capes stay `island` too, the same as Corfu's own
+    # capes above), Erikusa, Skopelos, Leukas ("Leukas island"). Section
+    # "13": Echinaden ("the Echinades islands"), Ithake ("in which a city
+    # of that name"), Lotoa ("Letoa island"), Zakynthos ("in which a city
+    # of the same name"). All were sitting in `city`.
+    ("3.14", "12"),
+    ("3.14", "13"),
     ("3.15", "23"),  # Kap Kenaion/Atalante/Aidepsos - Euboea (NW coast)
     ("3.15", "24"),  # Chalkis/Eretria/Amarynthos/Karystos/Geraistos - Euboea (cities)
     ("3.15", "25"),  # Kap Kaphereus/Budoros-Mündung/Kerinthos/Kap Phalassia/Kap Dion - Euboea (S/E coast)
@@ -310,6 +355,7 @@ _ISLAND_APPENDIX_SECTIONS = {
     ("4.07", "40"),  # Amiku/Myrsiake (+ already-island Menan) - the islands next to Aromata
     ("5.01", "15"),  # Thynias bzw. Daphnusa/Klippen Erythinoi (+ already-island Kyaneen) - islands off Bithynia
     ("5.05", "10"),  # Krambusa/Attelebusa - the two islands lying off Pamphylia
+    ("5.14", "07"),  # Kleiden/Karpasische Inseln - the two island groups off Cyprus's own coast (topostext: "The islands on its coast are those called Cleides..." then "the Karpasian islands") - "Karpasische Inseln" already matched `_ISLAND_RE` on its own name ("Inseln"), but "Kleiden" (Cleides), a bare proper name, fell through to `city`
     ("5.15", "27"),  # Arados/Tyros - the islands off Syria (topostext: "Islands off Syria: Arados...and Tyros just offshore") - this "Tyros" is the offshore islet citation, distinct from the mainland coastal city of the same name already catalogued at 5.15.05
     ("6.04", "08"),  # Tabiana/Sophtha + already-island "Insel des Alexander bzw. Arakia" - the islands adjacent to Persis (topostext: "Islands adjacent to Persis: Tabiana...Sophtha...Alexandrou or Arakia")
     ("6.08", "15"),  # Sagdana/Vorochtha - the islands lying off Karmania in the Persian Gulf (topostext: "The islands lying off Karmania are, in the Persian Gulf, Sagdana...Vorochtha") - both had been wrongly strung onto the *start* of coastline_045_AS06 by the coastline graph (the real coastal walk begins at the next section, 6.08.04's river mouths), the same spurious-tail pattern as Paena/Erythia earlier
@@ -334,7 +380,8 @@ _ISLAND_POINT_OVERRIDES = {
     "4.03.47.02",  # Kossura (Pantelleria) - one of three real islands in a section (4.03.47) that also names Melite's own peninsula/shrines, not islands themselves
     "4.03.47.03",  # Gaulos (Gozo)
     "4.03.47.05",  # Melite (Malta)
-    "4.05.76.02",  # Pharos - the island of the Alexandria lighthouse; its section (4.05.76) also names "Argaiu", an unrelated point not confirmed as an island
+    "4.05.76.02",  # Pharos - the island of the Alexandria lighthouse
+    "4.05.76.03",  # Argaiu - the section's third and last point (after Didymai/Pharos above), continuing the same "islands lying near Libya and Egypt" list topostext's own header states once for section "75" and carries through "76" without repeating it; its own topostext match is weak (a low-confidence fallback to the unrelated "Sebennytic mouth" citation, no real match for this specific name) and it was left `city` pending that - but sitting well out in the sea north of the Nile delta's own coastline (a user-reported "city in the water"), section context is the stronger signal here.
     "5.02.28.03",  # Tenedos - a single citation covering both the island and "a city of the same name" (topostext), the same shared-name shape as Iulia Caesarea
     "6.09.08.02",  # Talka - "a sea island off it [Hyrkania] called Talka" (topostext), a lone island citation amid an otherwise mainland-coastal book.map
     "7.01.94.03",  # Barake - "Islands lying near the part of India which projects into the ocean in the Gulf of Kanthi: Barake" (topostext), a single-island section
@@ -378,6 +425,36 @@ _ISLAND_LINE_GROUPS: dict[tuple[str, str], str] = {
 _NONCOASTAL_EXCEPTION_SECTIONS = {
     ("2.03", "17"),  # Eboracum/Camulodunum/Petuaria - York/Colchester/Brough
     ("4.01", "10"),  # Pyrrhon-Ebene - an inland plain embedded in a tribal-boundary description (topostext: "...below whom are the Nectiberes; and next is the Pyrrhon Plain...Below these are the Zegrenses..."), not a coastal point
+    # Found in the same edge-by-edge Black Sea sweep as the newest
+    # _COASTAL_APPENDIX_SECTIONS entries, but the opposite problem: section
+    # "5.09.11"'s own header happens to include "Hyrkanisches Meer" (the
+    # Caspian) as the far end of a *boundary-line* description ("Thence it
+    # extends along Iberia, with the Sarmatian Gates...thence along Albania
+    # to the limit on the Hyrkanian sea" - topostext) - Sarmatia-in-Asia's
+    # inland border with Iberia/Albania, not a continuation of its Black Sea
+    # coast, which topostext explicitly ends one section earlier ("The limit
+    # on the side of Kolchis is at", 5.09.10 - left alone, correctly coastal).
+    # "Sarmatische Pforten" (the Sarmatian/Caucasian Gates, a mountain pass)
+    # had been swept into `coast` by the header match and strung onto the
+    # real coastline via catalogue-order adjacency, a spurious ~2 degree
+    # detour east from the Kolchis boundary point that had nothing to do
+    # with the shore.
+    ("5.09", "11"),
+    # Found by the systematic whole-catalogue self-intersection review
+    # (2026-07-30): three sections in the Maritime Alps (book.map "3.01",
+    # sections 41-43) are each headed "Meeralpen" ("Maritime Alps") -
+    # matching `_COASTAL_HDR_RE`'s bare "meer" the same way "Hyrkanisches
+    # Meer" did above, even though their content is inland Alpine tribal
+    # cities (topostext: "Of the Nerusi in the Maritime Alps Vintium", "Of
+    # the Suetri in the Maritime Alps Salinae", "Of the Vedianti in the
+    # Maritime Alps Cemenelum"), not points on the actual coast - the real
+    # Ligurian-sea coastal walk runs through the separate, correctly-headed
+    # sections "3.01.01"/"3.01.02" (Varus-Mündung, Nicaea, Hercules-Hafen,
+    # ...). Left as coastal, these four points' edges cut back across the
+    # real coastline near Nicaea.
+    ("3.01", "41"),
+    ("3.01", "42"),
+    ("3.01", "43"),
 }
 
 # The mountain-side counterpart of _ISLAND_APPENDIX_SECTIONS: a section
@@ -404,6 +481,517 @@ _MOUNTAIN_APPENDIX_SECTIONS = {
     ("6.02", "04"),  # Zagros(Mitte)/Orontes(Mitte)/Iasonion(Mitte) + already-"-Gebirge" Koronos(W/O-Ende) - Media's named mountains (topostext: "The most important mountains of Media are the Zagros, midpoint...the Orontes, midpoint...the Iasonion, midpoint...and the western part of Korono...")
 }
 
+# The coastal-walk counterpart of _NONCOASTAL_EXCEPTION_SECTIONS' mirror
+# image: sections manually verified to be a genuine continuation of a
+# coastal walk despite a section header that names a *tribe*, not a sea -
+# so _COASTAL_HDR_RE never fires for them and every plain-named point falls
+# through to the default "city". Found by inspection of a rendered map: the
+# whole Arabian side of the Red Sea (book.map "6.07", Arabia Felix) was
+# missing its coastline entirely, replaced by an unconnected scatter of
+# "city" points, while the opposite African shore (book.map "4.07") was
+# correctly traced - reported by the user as "as if one coastline is
+# missing, full of little islands". Ptolemy's own catalogue narrates this
+# coast tribe-by-tribe ("In the country of the Kinaidokolpitans...", "The
+# Kassanite country...", "Country of the Elisarans...") rather than
+# re-stating "Arabian Gulf"/"Red Sea" at every section, and only sections
+# 02, 08 (and a few later ones already caught by _GULF_RE on their own
+# points) happen to carry an explicit sea-name header - topostext's English
+# translation confirms the whole span 02-19 is one continuous coastal
+# enumeration ("border of the Arabian Gulf in the inmost part of the
+# Elanite gulf, Onne" opens it; "Country of the Adramitans", "Sachalites",
+# "In the narrows of the Persian Gulf" carry it on down the Arabian Sea
+# coast and round into the Persian Gulf; section 20, the named-mountains
+# appendix, is where it ends - already handled by _MOUNTAIN_APPENDIX_SECTIONS
+# above). Forcing section_is_coastal here is safe even for the sections that
+# also contain real river mouths/sources (05's "Baitios-Quellen", 10's
+# "Prion-Mündung"/springs) since _RIVERFEAT_RE/_MOUTH_RE are checked before
+# the section-level coastal fallback ever gets a turn - only the plain
+# harbor-town citations that had nothing else to match on are affected
+# (Kopar, Zabram, Thebai, Badeo, Mamala, Muza, Okelis and more - several of
+# them well-attested real Red Sea ports).
+_COASTAL_APPENDIX_SECTIONS = {
+    ("6.07", "02"),
+    ("6.07", "03"),
+    ("6.07", "05"),
+    ("6.07", "06"),
+    ("6.07", "07"),
+    ("6.07", "08"),
+    ("6.07", "09"),
+    ("6.07", "10"),
+    ("6.07", "11"),
+    ("6.07", "12"),
+    ("6.07", "13"),
+    ("6.07", "14"),
+    ("6.07", "15"),
+    ("6.07", "16"),
+    ("6.07", "17"),
+    ("6.07", "18"),
+    ("6.07", "19"),
+    # Same pattern, found the same way (user-reported gap in a rendered
+    # map), on the Black Sea: Paphlagonia/Pontus's own coast (book.map
+    # "5.04") is headed by "Pontos Euxeinos" (Greek for "Black Sea") only
+    # once, at the very start of the book.map (section "01") - every
+    # section actually enumerating the coast is headed by a place name
+    # instead ("Kytoros", section "02"'s own header), so almost every
+    # plain-named point fell through to `city`, including two of antiquity's
+    # best-known Black Sea ports, Sinope and Amisos (Sinop/Samsun today).
+    # The real cape "Kap Karambis" and the two river mouths already caught
+    # via `_MOUTH_RE` were the only survivors.
+    ("5.04", "02"),
+    ("5.04", "03"),
+    # Bithynia's own coast (book.map "5.01"): section "03" (Astakos, Olbia,
+    # Nikomedeia, on the Gulf of Astakos/Izmit) sits directly between two
+    # promontory citations (section "02"'s Akritas cape, section "04"'s
+    # Posideion cape) with no sea-header of its own - a bay indentation in
+    # the same shape as Arabia's Adulitic Bay detour, not the genuinely
+    # inland cities of section "13" (which topostext itself introduces as
+    # "The following are the inland cities" - correctly left as `city`,
+    # not added here).
+    ("5.01", "03"),
+    # Sarmatia-in-Asia's own coast (book.map "5.09", the Sea of Azov/Kerch
+    # strait/NE Black Sea shore down to the Colchis border) - previously
+    # documented below (see the Coverage section of the README) as
+    # "confirmed, not fixed" for lack of an override mechanism at the time;
+    # fixed now that one exists. Real Bosporan-kingdom port towns
+    # (Phanagoria, Hermonassa, Sindikos - topostext explicitly calls the
+    # latter a "harbor") were sitting in `city` between coast/river_mouth
+    # points precisely because most of this coastal walk's own points never
+    # individually matched a keyword and the section headers are Greek
+    # place/tribe names, not `_COASTAL_HDR_RE`'s German sea words.
+    ("5.09", "02"),
+    ("5.09", "03"),
+    ("5.09", "04"),
+    ("5.09", "05"),
+    ("5.09", "06"),
+    ("5.09", "08"),
+    ("5.09", "09"),
+    ("5.09", "10"),
+    # The root cause behind all three Black Sea fixes above, generalized:
+    # `_COASTAL_HDR_RE` only recognizes *German* sea words ("Meer"/"Golf"/
+    # "Ozean"/...), but this catalogue routinely heads a Pontic-region
+    # section with the *Greek* proper noun instead ("Pontos Euxeinos",
+    # "Propontis", "Kimmerischer Bosporos") - which never matches. Reported
+    # by the user as points "hopping and dancing" around the Black Sea,
+    # Bosphorus and Thrace/Bithynia - not a classification problem exactly
+    # (each point's own coordinate was always right), but a *connectivity*
+    # one: with real waypoints along the shore sitting in `city` instead of
+    # `coast`, the graph had nothing to connect but the few points that did
+    # happen to match some other keyword, forcing long, geographically
+    # senseless edges between them instead of the short, orderly hops a
+    # complete coastal walk would draw. Checked every section headed by a
+    # Greek Pontic sea-name across the whole catalogue (via a regex on the
+    # header text) and triaged each one individually - most were already
+    # fine (either already `coast`, or genuinely inland, like `5.06.09`-
+    # `11`'s "Pontos" *province* name, Amaseia and neighbours, nowhere near
+    # the shore) or too low-impact/uncertain to act on without further
+    # verification (single boundary-point sections). These sections had a
+    # real, topostext-confirmed gap:
+    ("3.06", "02"),  # Crimea/Chersonesus Taurica's coast (topostext: "...in the Pontus: Dandake...Chersonesos...") - Eupatoria (Yevpatoria), Dandake etc.
+    ("3.06", "04"),  # The Cimmerian Bosphorus/Kerch strait's own coast (topostext: "On the Cimmerian Bosphorus, Tyriktake...Pantikapaia...") - the Bosporan Kingdom's capital
+    ("3.11", "03"),  # Thrace's own Black Sea coast, its boundary hand-off from Lower Moesia
+    ("3.11", "05"),  # Byzantion itself - the missing hinge point between Thrace's Black Sea coast (section "04") and its Propontis coast (section "06")
+    ("3.11", "06"),  # Thrace's Propontis coast (topostext: "Next, in Propontis...") - Selymbria, Herakleia, Bisanthe, the Long Wall, Paktye
+    ("5.01", "02"),  # Bithynia's Bosphorus-mouth coast - Chalkedon (Kadıköy) and Trarion
+    ("5.01", "04"),  # Bithynia's coast continuing past the Gulf of Astakos - Prusias (Modern_location: Gemlik) and Apameia (Modern_location: Mudanya), both real Marmara Sea ports; Askania-See stays `lake` regardless (matched by _LAKE_RE before the section-level fallback ever gets a turn)
+    ("5.01", "05"),  # Bithynia's own coast continuing east - Artake (topostext: "Artake kome")
+    ("5.02", "02"),  # Mysia/Troad's Propontis coast (topostext: "In the Propontis...Kyzikos...Parion...") - two more well-attested ancient ports
+    ("5.06", "03"),  # Pontus Galaticus' coast (topostext: "...the plain by Phanagoria: Themiskyra...") - legendary home of the Amazons, a real coastal city
+    ("5.06", "04"),  # Pontus Polemoniacus' coast (topostext: "Of Polemonian Pontos...") - Polemonion and neighbours
+    ("5.06", "05"),  # Pontus Cappadocicus' coast (topostext: "...near Sidene: Ischopolis...") - Kerasous/Giresun, Pharnakia, on the way to Trapezous/Trebizond
+    # A fourth round, from a systematic edge-by-edge sweep of every coastline
+    # in the wider Black Sea/Sea of Azov region (every consecutive-point gap
+    # over ~1.8 degrees, checked one at a time against topostext and the raw
+    # section headers, per the user's request after the third round still
+    # left some "non-neighbour" connections) - the same header-language gap
+    # as the fixes above, just two sections these earlier passes hadn't
+    # reached yet:
+    ("3.06", "03"),  # Crimea's coast continues past Kap Korax/Istrianos-Mündung with no header of its own - Theodosia (Feodosia) and Nymphaion were sitting in `city`, missing from the traced coastline entirely (topostext: "...Istrianos river mouth, Theodosia, Nymphaion" - directly between the two already-coastal sections either side)
+    ("3.05", "11"),  # Sarmatia-in-Europe's coast opens with "Neue Festung" (topostext: "isthmus...toward the Karkinites river, Neon Teichos") - the walk's own starting point, sitting in `city`
+    ("3.05", "12"),  # ...continuing (topostext, by name match - this book.map's own section numbering runs well ahead of topostext's: "Leianon city...Akra city...Gerros river mouth...Kremnoi city") - Leianon and Akra were `city`
+    ("3.05", "13"),  # ...continuing to the Tanais/Don (topostext: "...Agaron promontory...Hygreis city...Karoia kome...western mouth of the Tanais") - Kneme, Hygreis, Karoia were `city`
+    # The Thracian Chersonese's own coast (book.map "3.12", a self-contained
+    # peninsula loop distinct from mainland Thrace's - see topostext,
+    # book 3 map 11 section 9, oddly filed under Thrace's own map rather
+    # than getting its own: "the part of Propontis on that side as far as
+    # Kallipolis...on the west...Kardia city...Mastousia promontory...on
+    # the south...the city Elaious...the protruding promontory...on the
+    # East by the Hellespont, on which are the cities: Koila, Sestos, next
+    # the above-mentioned Kallipolis" - a closed loop back to its own
+    # start). Section "04"'s own header is "Hellespont" (Greek proper
+    # noun, not `_COASTAL_HDR_RE`'s German sea words) - Koila and Sestos
+    # were sitting in `city`, the two points the user spotted "floating in
+    # the water" north of Kap gleich daneben, unconnected to the rest of
+    # the peninsula's own coastline.
+    ("3.12", "04"),
+    # Lower Moesia's own coast resuming past the Danube delta (book.map
+    # "3.10" section "14", no header of its own) - topostext confirms the
+    # real sequence is a clean coastal run: "7.1 northernmost mouth of the
+    # Istros until the mouth of the Borysthenes...7.2 Axiakos river
+    # mouth / 7.3 Physke city / 7.4 Tyras river mouth / 7.5 Hermonaktos
+    # village / 7.6 Arpis city" - matching our own item order exactly
+    # (`.02` Axiakes-Mündung, `.03` Physke, `.04` Tyras-Mündung, `.05`
+    # Dorf des Hermonax, `.06` Harpis). Found by the user pointing at
+    # Axiakes-Mündung looking disconnected in a rendered map - it was
+    # technically connected already (to Panysus-Mündung, a real but large
+    # jump across an inland digression - see _COASTLINE_HARD_BREAKS'
+    # sibling comments), but the walk continuing *past* it dead-ended at
+    # Tyras-Mündung because Physke/Hermonax/Harpis, the points that should
+    # carry it onward, were sitting in `city`.
+    ("3.10", "14"),
+    # Found by the systematic catalogue-wide header scan (2026-07-30): the
+    # Troad's own Hellespont shore (book.map "5.02" section "03") is the
+    # same "Hellespont" (Greek, not `_COASTAL_HDR_RE`'s German sea words)
+    # gap as the Thracian Chersonese case above, just on the opposite
+    # shore of the strait - topostext confirms a clean coastal run: "on the
+    # Hellespont: Abydos / mouth of the Simoeis river / Dardanon / mouth of
+    # the Skamander river / Sigeion promontory". Abydos and Dardanon were
+    # sitting in `city`; the two river mouths and Kap Sigeion were already
+    # correctly `river_mouth`/`coast` via their own name keywords.
+    ("5.02", "03"),
+    # Found by the systematic topostext-disagreement review (2026-07-30):
+    # Marmarica/Cyrenaica's own Mediterranean coast (book.map "4.05",
+    # sections "03" through "07") continues directly from section "02"'s
+    # own coastal declaration ("on the north by the Egyptian sea. This
+    # seacoast is thus described: In the nomes of Marmarike are: Aziris
+    # village...") without repeating a sea-word header of its own -
+    # topostext confirms one continuous run of harbor/promontory/village
+    # citations straight through ("Antipyrgos harbor...Big Petras
+    # harbor...Panormos harbor...Ainesisphyra harbor...Selinous
+    # harbor...Graias Gony, harbor...Gyzis or Zygis harbor...Phoinikos
+    # harbor...Leukaspis harbor..."), matching the catalogue's own item
+    # order. The "Kap"-named capes in this stretch were already correctly
+    # `coast`; the plain-named harbor towns between them (Antipyrgos,
+    # Skythranios, Petra Megale, Panormos, Ainesisphyra, Zygris, Chettaia,
+    # Zagylis, Selinus, Graias Gony, Zygis, Leuke Akte, Antiphrai,
+    # Leukaspis) fell through to `city` for lack of a keyword of their own.
+    ("4.05", "03"),
+    ("4.05", "04"),
+    ("4.05", "05"),
+    ("4.05", "06"),
+    ("4.05", "07"),
+    # The same gap recurs on Egypt's Red Sea coast: section "13" is headed
+    # "Arabischer Golf" ("Arabian Gulf", the Red Sea) and correctly
+    # coastal, but sections "14" and "15" continue the same walk south
+    # without repeating that header - topostext confirms an unbroken run
+    # ("above-mentioned inmost point of the gulf...Arsinoe, Klysma
+    # castle, Drepanon promontory, Myos hormos, Philoteras harbor, Mt.
+    # Aias" straight into "Leukos harbor, Mt. Akabe, Nechesia, Mt.
+    # Samaragdos, Lepte akra, Berenike, Mt. Pentadaktylon, Bazion
+    # promontory" - the same mountains-ending-at-the-shore shape already
+    # established for Mt. Athos/Akrokeraunia, correctly staying coastal
+    # here too rather than being reclassified). Arsinoe, Klysma, Myos
+    # Hormos and Philoteras (section 14) were sitting in `city`.
+    ("4.05", "14"),
+    ("4.05", "15"),
+    # Epirus's own Ionian coast (book.map "3.14"): section "01" is headed
+    # "Ionisches Meer" and correctly coastal, but sections "02" and "04"
+    # continue the same walk without repeating that header - topostext
+    # confirms an unbroken run ("Chaonia Orikon" straight into "Panormos
+    # harbor...Onchesmos harbor...Kassiope harbor", then "Bouthroton
+    # gulf...Pelodes harbor" between the two already-coastal capes Kap
+    # Poseidion/Kap Thyamis). Orikon, Panormos, Onchesmos, Kassiope
+    # (section 02) and Buthroton, Schlammhafen (section 04) were sitting
+    # in `city`.
+    ("3.14", "02"),
+    ("3.14", "04"),
+    # A wide batch found by the same systematic topostext-disagreement
+    # review, each independently confirmed the same way: a plain-named
+    # harbor town or headland sitting in `city`, whose section has no
+    # sea-word header of its own but whose topostext citation both names
+    # it a harbor/port *and* sits in an unbroken run of coastal citations
+    # (river mouths, capes, other harbors) either side of it in the same
+    # section - the same "province/tribe name instead of sea name" header
+    # gap already fixed many times this session, just not yet swept
+    # outside the regions checked so far:
+    ("4.03", "04"),  # Africa: "Holcachites gulf...Tacatye...Lesser Collops...Siur port"
+    ("3.03", "02"),  # Sardinia, explicitly "Description of the coast...west side": Nymphaeum/Korakodes harbors among capes and river mouths
+    ("3.03", "03"),  # Sardinia, "Description of the southern side": Sulci/Bithia harbors among capes
+    ("3.03", "04"),  # Sardinia, "Description of the eastern side": Sulpicius/Olbian harbors among capes and river mouths
+    ("3.04", "07"),  # Sicily: river mouths and promontories either side of Kaukana harbor
+    ("3.15", "07"),  # Attica: "Peiraieus...Ilissos river outlet...Mounychias harbor...Hyphormos harbor...Sounion promontory..."
+    ("3.16", "03"),  # Korinthia: "Sanctuary of Hera of Corinth...Lechaion port...Asopos river outlet..."
+    ("3.16", "05"),  # Achaia proper: "Aigeira...Erineos harbor...Rhion promontory..."
+    ("3.16", "06"),  # Elis: "Kyllene port...Peneios river outlet...Chelonitis headland..."
+    ("3.16", "11"),  # Argolis: "Astron...Inachos river outlet...Nauplia port...Skyllaion promontory..."
+    ("3.16", "13"),  # Argolis/Korinthia continuation: "...Speiraion promontory...Kenchreai port...Schoinous harbor"
+    ("3.17", "02"),  # Crete, "Description of the western side": Korykos headland/city into Rhamnous harbor
+    ("3.17", "05"),  # Crete, "Description of the east side": Sammonion promontory into Minoa harbor
+    ("4.01", "02"),  # Mauretania Tingitana: a run of river mouths ending at Rusibis harbor
+    ("4.01", "03"),  # Mauretania Tingitana continuation: river mouths and capes around Mysokaras harbor
+    ("4.02", "02"),  # Mauretania Caesariensis: "Malva river mouth, Great promontory...Gypsaria harbor..."
+    ("4.03", "12"),  # Africa: a city-at-the-limit/promontory run including Pisidon and Garapha harbors
+    ("4.04", "03"),  # Cyrenaica (Syrtis): "Automalax fort...Drepanon promontory...Diarroia harbor...Tower of Herakles..."
+    ("4.04", "05"),  # Cyrenaica: "Phykous promontory...Apollonia [naval station]...Naustathmon harbor...Zephyrion promontory..."
+    ("5.06", "06"),  # Pontus (Kissian coast): "Opious...Rizous harbor...Athenon promontory..."
+    ("6.08", "09"),  # India: "Gulf of Paragon...Derane Billa...Kophanta harbor...river mouth..."
+    # Found by an independent second pass: building a standalone category
+    # guess purely from topostext's own wording (category_check.py, no
+    # access to the catalogue's category, name, or any exception list)
+    # and comparing it to the catalogue's category surfaced a few more
+    # instances of the same gap the batch above missed:
+    ("3.01", "21"),  # Picenum's own Adriatic coast: "Castrum...Cupra Maritima...mouth of the Truentini river...Potentia...Numana...Ancona"
+    ("3.13", "03"),  # Illyria: "west by the Ionian Sea from Dyrrachion...per the following description"..."Panyasos river outlet...Apollonia...Aoos river outlet...Aulon city and port"
+    ("4.07", "05"),  # Barbaria/Cape Guardafui coast: "Bazion promontory...Chersonesos...Deep harbor...Dioskoroi harbor...Lookout of Demeter promontory"
+    ("5.02", "10"),  # Doris/Caria: "Skopia promontory...Halikarnassos...Keramos...Knidos city and promontory"
+    ("3.04", "09"),  # Sicily's own east coast: "Syrakousai...Tauros promontory...Katane...Symaithos river mouth...Tauromenion...Argennon promontory...Messene in the strait"
+    ("4.03", "05"),  # Numidia/Africa coast at Cape Bon: "Hippo promontory...Stoborrum promontory...Aphrodisium...Hippo Regius...Rubricatus river mouth...Thabraca"
+    ("5.02", "06"),  # Aiolis' own coast: "Kaine promontory...Elaia...Myrina...Hydra promontory...Kyme...Phokaia...mouth of the Hermos river"
+    ("7.04", "05"),  # Taprobane's own coast: "Dagana...Cape of Dionysos...Ketaion Cape...Mouth of the river Barakes...the haven of Mardos"
+    # The Levant's own coast (book.map "5.15", Syria/Phoenicia/Palestine):
+    # found by the user noticing Sidon, Tyros and Byblos plotting inland
+    # in a rendered map ("real coastal cities... doesn't topostext give
+    # context that these sit along the water?"). Section "02" is headed
+    # "Syrisches Meer" and correctly coastal (Alexandreia bei Issos,
+    # Myriandros, Rhosos...), but sections "03" through "05" continue the
+    # same walk without repeating that header - topostext confirms one
+    # unbroken run: "mouth of the Orontes river...Poseidion...Herakleia...
+    # Laodikeia...Gabala...Paltos...Balaneai" straight into "Phoinike:
+    # mouth of Eleutheros river...Simyra...Orthosia...Tripolis...Theou
+    # prosopon promontory...Botrys...Byblos...mouth of the Adonis river"
+    # straight into "Berytos...mouth of the Leon river...Sidon...Tyros...
+    # Ekdippa...Ptolemais...Sykaminon...Karmelos mountain...Dora...mouth
+    # of the Chorseos river" - matching the catalogue's own item order
+    # exactly. Section "06" resumes with Judaea's own inland boundary
+    # description (Grenzpunkt entries, correctly `city`) - the gap is
+    # cleanly bounded to these three sections.
+    ("5.15", "03"),
+    ("5.15", "04"),
+    ("5.15", "05"),
+    #
+    # A seventeenth-round, catalogue-wide sweep (2026-07-30), prompted by
+    # the user pointing out a structural blind spot in every check run so
+    # far this session: crossref_topostext.py/category_check.py only ever
+    # flag a `city` point when *that point's own* topostext phrase
+    # contains a coastal keyword - Sidon, Tyros and Byblos (fixed just
+    # above) have none; their own citations are bare names. The signal
+    # that they're coastal was never in their own phrase, it was in their
+    # *section*: sitting between already-correctly-classified points
+    # (a "-Mündung" river mouth, a "Kap" cape) that do carry a keyword.
+    # That's checkable without topostext at all - a section mixing
+    # coastal-family points (`coast`/`harbor`/`river_mouth`, keyword-
+    # detected from the German name) with plain `city` points, with no
+    # sea-word header of its own, is structurally suspicious on its own:
+    # Ptolemy's sections are narratively homogeneous (a coastal run OR an
+    # inland list, established as this project's whole classification
+    # premise), so a section doing both at once is far more likely to be
+    # one coastal run some of whose points merely lack their own keyword
+    # than a genuine mix.
+    #
+    # Found 110 such sections catalogue-wide. Checked every one's full
+    # topostext text (not just the `city` points' own phrases) before
+    # adding it - looking for either confirming coastal language
+    # (promontory/harbor/river mouth/gulf/bay, a run of real coastal
+    # place-names) or a contradiction (an inland/interior framing, the
+    # same "in the interior of Galatian Pontos" shape that correctly
+    # ruled out a candidate earlier this session). 109 confirmed
+    # straightforwardly - a representative sample across the whole
+    # range: Lusitania's own coast continuing past the Durius fix above
+    # (Oliosipum/Lisbon, Obila - "LUSITANIA...the mouth of the river,
+    # which flows into the Outer Sea"); the Basque/Catalan coast
+    # (`2.06.07`/`.10`/`.14`/`.15`/`.18`/`.19`/`.20` - "Of the Autrigones:
+    # Nerva river mouth | Flaviobriga", "Of the Vascones: Oiasso city |
+    # Ocasso promontory of the Pyrenees"); Dalmatia (`2.16.02`/`.03`/`.05`
+    # - "Ortopla...mouth of the Titos river...Skardona"); Macedonia and
+    # Thessaly (`3.13.05/06/12/14/15/16` - "In Amphaxitis: Thessalonike |
+    # Echedoros river outlet", "In Pieria: ...Pydna | Haliakmon river
+    # outlet...Dion colonia...Peneios river outlet"); Boiotia and the
+    # Lokrians (`3.15.03/09/11` - "In Boiotia: Aulis | Ismenos river
+    # outlet | Salganeus | Anthedon"); Messenia (`3.16.07` - "Kyparissia
+    # city | Kyparission promontory...Pylos | Koryphasion headland |
+    # Mothone"); Crete's south coast (`3.17.03/04/07/08` - "Description
+    # of the south side: Lissos | Tarrha...Phoinix city | Phoinikous
+    # harbor"); Mauretania/Numidia/Africa/Cyrenaica
+    # (`4.01`-`4.04`,`4.06`-`4.08`, a dozen sections - Icosium, Rusazus,
+    # Carthage's own harbor towns, "In the Pentapolis, Berenike or
+    # Hesperides | mouth of the Lathon river"); Anatolia's Aeolis/Lykia/
+    # Pontus coasts (`5.01`-`5.14`, another dozen - "Patara | Antiphellos
+    # | Andriake...Olympos city | Phaselis"); the Levant's own
+    # continuation past the Phoenicia fix (`5.16.02` - Kaisareia,
+    # Apollonia, Ioppe/Jaffa, Azotos, Askalon, Anthedon, already-`harbor`
+    # Gaza/Iamnia ports between them); the Persian Gulf coast of
+    # Babylonia/Susiane/Persis (`5.20.05`,`6.02.02`-`6.04.02` - "this
+    # coast is described as follows: the western mouth of the Tigris
+    # river..."); and India's own Malabar/Coromandel/Ganges-delta coasts
+    # (`7.01`/`7.02`/`7.03`/`7.04`, the largest single cluster - "(Ariake)
+    # of the Pirates. Mandagara...", "Maisolia. Mouth of the River
+    # Maisolos...", "Mouths of the Ganges..."). One candidate,
+    # `3.05.14`, was excluded: its own `city` point ("Nördlicher
+    # Endpunkt") is "the southern limit of Sarmatia at the *sources* of
+    # the Tanais river" - a river-source boundary marker at the opposite
+    # end from this section's real coastal points (the Tanais' two
+    # mouths), the same shape as the Durius/Anas fixes above, not a
+    # coastal gap - left as `city`, worth a closer individual look later
+    # if it turns out to need one.
+    ("2.05", "04"),
+    ("2.06", "04"),
+    ("2.06", "07"),
+    ("2.06", "10"),
+    ("2.06", "14"),
+    ("2.06", "15"),
+    ("2.06", "18"),
+    ("2.06", "19"),
+    ("2.06", "20"),
+    ("2.09", "03"),
+    ("2.09", "04"),
+    ("2.10", "08"),
+    ("2.16", "02"),
+    ("2.16", "03"),
+    ("2.16", "05"),
+    ("3.01", "18"),
+    ("3.01", "19"),
+    ("3.01", "22"),
+    ("3.01", "23"),
+    ("3.02", "02"),
+    ("3.02", "03"),
+    ("3.02", "04"),
+    ("3.02", "05"),
+    ("3.03", "05"),
+    ("3.04", "03"),
+    ("3.04", "04"),
+    ("3.04", "06"),
+    ("3.05", "07"),
+    ("3.05", "08"),
+    ("3.10", "08"),
+    ("3.11", "04"),
+    ("3.13", "05"),
+    ("3.13", "06"),
+    ("3.13", "12"),
+    ("3.13", "14"),
+    ("3.13", "15"),
+    ("3.13", "16"),
+    ("3.14", "06"),
+    ("3.15", "03"),
+    ("3.15", "09"),
+    ("3.15", "11"),
+    ("3.16", "07"),
+    ("3.17", "03"),
+    ("3.17", "04"),
+    ("3.17", "07"),
+    ("3.17", "08"),
+    ("4.01", "04"),
+    ("4.01", "07"),
+    ("4.02", "03"),
+    ("4.02", "04"),
+    ("4.02", "05"),
+    ("4.02", "06"),
+    ("4.02", "07"),
+    ("4.02", "09"),
+    ("4.02", "10"),
+    ("4.03", "03"),
+    ("4.03", "06"),
+    ("4.03", "07"),
+    ("4.03", "08"),
+    ("4.03", "10"),
+    ("4.03", "11"),
+    ("4.03", "13"),
+    # Found by the user directly in a rendered map: a visible gap in the
+    # North African coast, orange `city` dots sitting where the dark-blue
+    # coastline should run, west of Cyrenaica. Section 4.03.14 is headed
+    # "Grosse Syrte" (the Gulf of Sidra/Great Syrtis) - topostext's own
+    # first citation confirms it explicitly: "Of Syrtis Major: Makomala or
+    # Kaloumakouma village" - but "Syrte"/"Syrtis" isn't one of
+    # _COASTAL_HDR_RE's recognized German sea-words, so the section defaulted
+    # to `city`. The point names confirm it independently: "Ras Bergavad"
+    # (ras = cape), "Hippu Akra" (akra = headland - a second, different
+    # point of this exact name already sits correctly `coast` elsewhere in
+    # book.map 4.03), and "Arae Philaenorum" (the historically-attested
+    # altar marking the Africa/Cyrenaica border, on the Gulf of Sidra shore
+    # itself). Not broadened into _COASTAL_HDR_RE itself: "Syrte" also
+    # appears in 4.03.41's own header ("Grosse Syrte | Kleine Syrte"), a
+    # section of genuinely inland Tripolitanian cities merely labelled with
+    # the region's name, not a coastal walk - broadening the regex would
+    # have wrongly swept that in too. 4.03.15 ("Grosse Syrte (Winkel)"),
+    # checked at the same time, is a single land-boundary tripoint
+    # ("inmost point of the Syrtis by the line running south...to the end
+    # point at") and correctly stays `city`.
+    ("4.03", "14"),
+    # Found the same way (user-reported "cities in the water" on a rendered
+    # map): the Kasiotis coast, between the Nile delta and Gaza (book.map
+    # "4.05", sections "11"/"12"). Headed "In Kassiotis" (a district name,
+    # not a sea-word) - topostext (4.5.11/4.5.12) confirms it's a coastal
+    # walk regardless: "Gerron *border*" (Kasiotis's own end marker), then
+    # Kassion (Mt. Kasios, the coastal dune/promontory on the Egypt-Judaea
+    # road), the outlet of Lake Sirbonis (already `lake` via _LAKE_RE,
+    # unaffected), Ostrakine, Rhinokoroura, ending at Anthedon - the same
+    # real place, same coordinates, as Judaea's own "Anthedon" (5.16.02.11,
+    # the end of that book's own coastal walk - see _ANTHEDON in
+    # static_map.py). Left as `city`, this whole stretch fell between
+    # Egypt's own coastline (which jumped straight from the Nile delta to
+    # the Sinai/Suez turning point) and Judaea's, leaving five real coastal
+    # towns stranded north of the rendered shore. Egypt's own "Anthedon"
+    # citation (4.05.12.06) is a bit-identical duplicate of Judaea's -
+    # skipped via _COASTLINE_SKIP_REF_IDS so this section's edges still run
+    # straight through to the Grenzpunkt/Zipfel des Arabischen Golfes
+    # continuation instead of stopping a point early.
+    ("4.05", "11"),
+    ("4.05", "12"),
+    # Found the same way again, this time by the user directly (asked for a
+    # side-by-side table of book.map "5.05.02"/"5.05.03"/"5.08.02" to see
+    # why they weren't coastal): Kilikia Tracheia's own western coast,
+    # between Side (the Eurasian arc's own long-unconfirmed loose end) and
+    # Anemurion. Section "5.05.03" is headed "Coast of Kilikia Tracheia"
+    # (topostext §5.5.3) - literally "coast", just naming a district instead
+    # of a sea. Section "5.08.02" is headed "In Selinitis of Kilikia
+    # Tracheia" (topostext §5.8.2), a sub-district within the same coast -
+    # confirmed by §5.8.1's own transition line: "with the following
+    # description: from Syedra, a city of Pamphylia, along the *coast*:".
+    # Longitude rises monotonically the whole way - Side 63.42 -> Korakesion
+    # 63.58 -> Syedra 63.83 -> Iotape 64.00 -> Selinus 64.33 -> Antiocheia
+    # 64.67 -> Nephelis 64.83 -> Anemurion 65.17 - a real coastal walk, not
+    # a coincidence. This closes the Side<->Anemurion gap with genuine data
+    # instead of the dashed schematic bridge used since the twenty-eighth
+    # round (see static_map.py's own now-removed _ANEMURION bridge logic).
+    ("5.05", "03"),
+    ("5.08", "02"),
+    ("4.04", "04"),
+    ("4.06", "05"),
+    ("4.06", "06"),
+    ("4.07", "07"),
+    ("4.07", "12"),
+    ("4.08", "02"),
+    ("5.01", "06"),
+    ("5.01", "07"),
+    ("5.02", "05"),
+    ("5.02", "08"),
+    ("5.03", "02"),
+    ("5.03", "03"),
+    ("5.05", "02"),
+    ("5.06", "02"),
+    ("5.06", "07"),
+    ("5.08", "03"),
+    ("5.08", "04"),
+    ("5.10", "02"),
+    ("5.12", "02"),
+    ("5.14", "04"),
+    ("5.16", "02"),
+    ("5.20", "05"),
+    ("6.02", "02"),
+    ("6.03", "02"),
+    ("6.04", "02"),
+    ("6.08", "05"),
+    ("6.09", "02"),
+    ("6.14", "02"),
+    ("6.21", "02"),
+    ("7.01", "04"),
+    ("7.01", "06"),
+    ("7.01", "07"),
+    ("7.01", "08"),
+    ("7.01", "09"),
+    ("7.01", "13"),
+    ("7.01", "14"),
+    ("7.01", "15"),
+    ("7.01", "17"),
+    ("7.01", "18"),
+    ("7.02", "03"),
+    ("7.02", "05"),
+    ("7.02", "06"),
+    ("7.03", "02"),
+    ("7.04", "03"),
+    ("7.04", "04"),
+    ("7.04", "06"),
+    ("7.04", "07"),
+}
+
 # The mountain-side counterpart of _ISLAND_POINT_OVERRIDES: a lone mountain
 # reference embedded in an otherwise-coastal section, where force-mountaining
 # the whole section (as above) would wrongly pull its genuine coastal points
@@ -425,6 +1013,106 @@ _MOUNTAIN_POINT_OVERRIDES = {
     "6.07.20.03",  # Klimax - a bare-name mountain in the same list, confirmed repeatedly elsewhere in the same chunk ("beyond Klimax mountain", "extending as far as Klimax mountain") rather than by a marker on this citation itself
 }
 
+# The river-side counterpart of _ISLAND_POINT_OVERRIDES/_MOUNTAIN_POINT_OVERRIDES:
+# a lone river-boundary reference embedded in an otherwise-coastal section
+# (book.map "2.04" section "03" is headed "Baliarisches Meer"), where
+# nothing in the bare name itself ("Anas", the river's own proper name -
+# no "Mündung"/"Quelle"/course-keyword) tells the classifier it's a river
+# point rather than a plain coastal one. Found by the user spotting it as
+# one of two odd-looking dots sitting inland in Spain on a rendered map.
+_RIVER_POINT_OVERRIDES = {
+    "2.04.03.04",  # Anas (Grenzpunkt Baetica, Lusitania, Tarraconensis) - a boundary marker up the river Anas/Guadiana itself (topostext: "Where the river touches the border of Lusitania", Modern_location "Guadiana"), not a coastal point - already excluded from the coastline's own edges (_COASTLINE_SKIP_REF_IDS) but still carried the wrong point category/color
+    # Found by the user auditing the GeoPackage export directly in QGIS
+    # (2026-07-30) - the same shape, a different river: "Durius (Grenzpunkt
+    # Lusitania, Tarraconensis)" (Modern_location "Douro", topostext: "The
+    # part of the river where Lusitania begins") is a boundary marker up
+    # the Durius/Douro, not a point on the coast - prompted a full sweep
+    # of every "Grenzpunkt"/"Endpunkt" name still categorized `coast`
+    # (see `_NONCOASTAL_POINT_OVERRIDES` below for the rest of that sweep).
+    "2.05.01.06",
+    # Same shape again, surfaced by the seventeenth-round batch coastal
+    # fix (2.05.04 newly force-coastal): "Tagus (Grenzpunkt Lusitania,
+    # Tarraconensis)" (Modern_location "Tejo") is a boundary marker up
+    # the Tagus/Tejo itself, sitting well inland (-8.67 vs. the real
+    # Tagus mouth at -12.17) - not a coastal point, just caught by its
+    # section becoming coastal like Anas/Durius were.
+    "2.05.04.05",
+}
+
+# The second of the two odd-looking Spain dots the user flagged is not
+# river- or lake-related at all: "Baetica (Ostende am Baliarischen Meer)"
+# ("Baetica's own eastern end at the Balearic sea", topostext: "there
+# along the border of Tarraconensis to where the Balearic sea ends") is a
+# province-to-sea boundary *endpoint*, the same "Grenzpunkt" shape as the
+# many already-non-coastal boundary markers elsewhere (5.03.01.06 etc.,
+# all `city`) - just sitting in a section whose header happens to be
+# coastal, with nothing in its own name to redirect it. Cited twice,
+# verbatim (2.04.03.07, then again as 2.06.12.05 orienting the next
+# province's own section) - both listed. The point-level counterpart of
+# `_NONCOASTAL_EXCEPTION_SECTIONS` (which operates on a whole section).
+_NONCOASTAL_POINT_OVERRIDES = {
+    "2.04.03.07",
+    "2.06.12.05",
+    # The rest of the "every remaining Grenzpunkt/Endpunkt still marked
+    # `coast`" sweep prompted by the Durius find above: of 27 such points,
+    # 23 are genuinely coastal (topostext explicitly names a sea/gulf as
+    # the boundary's own endpoint - "the other on the Adriatic at",
+    # "termination at the sea", "the inner recess of the...Maisanites
+    # Gulf" - or, for the Arabia Felix "Endpunkt am Meer" mountain cases,
+    # sit smoothly in-line with their coastal neighbours' own coordinates,
+    # the same Athos/Akrokeraunia shape already confirmed this session)
+    # and left untouched. These three are pure land-boundary descriptions
+    # with no sea/gulf mentioned anywhere in their citation, or explicitly
+    # contrasted with a *different*, genuinely coastal sibling point:
+    "2.16.01.04",  # Grenzpunkt (Illyricum, Pannonia Superior) - topostext: "Illyria is bounded on the north by the two Pannonias...whose midpoint toward the limit point of Upper Pannonia at" - the *inland* end of a line whose text explicitly names a second, different end "on the Adriatic" (2.16.01.05, correctly left coastal) - this one is the land end, not the sea end
+    "6.14.01.06",  # Grenzpunkt (beide Skythien, unbekanntes Land) - topostext: "Scythia within Imaos is bounded on the west by Sarmatia...on the north by an unknown land...on the east by Mount Imaos" - a pure Central-Asian land-boundary description, no sea mentioned at all
+    "5.19.01.04",  # Grenzpunkt (Arabia Deserta, Babylonien, Mesopotamien) - topostext's own fuller citation (5.18.1.2): "On the south by the remaining part of the Euphrates river, along Arabia Deserta to the limit point at" - a river-following boundary marker (the same Anas/Durius shape, just without a clean single-river attachment to force `river` instead), well inland of the same walk's own two genuinely coastal points a few steps later (5.19.01.11/.13, both explicitly "the Persian Gulf")
+    # Surfaced by the seventeenth-round batch coastal fix: `("3.13","06")`
+    # was included in that batch because it mixes `coast` (Malischer
+    # Golf, self-classifying via the word "Golf") with `city`
+    # (Grenzpunkt) - but that mix was never a real "sea named once, not
+    # repeated" gap the way the other 108 sections were; Malischer Golf
+    # already correctly self-classified on its own, and this Grenzpunkt
+    # is the *land* boundary it's paired with in the same short passage
+    # (topostext: "south to the line on this side along Epiros until the
+    # end, at position" - Achaia/Epiros/Makedonia's own tripoint via Mt.
+    # Pindos, not a coastal point). Left as `coast` by the batch fix, its
+    # edge to Neapolis (the real walk's own start, far south) cut across
+    # five of that walk's own later segments.
+    "3.13.06.02",
+    # Surfaced by this round's Gulf-of-Aqaba stitch (_BOUNDARY_STITCH_REF_ID_PAIRS,
+    # Elana/Elanitischer Golf -> Onne): extending the coastline past Elana
+    # exposed a self-intersection that existed one point earlier and had
+    # simply never had a further edge to cross before. "Pharan" sits between
+    # the gulf's own bend and its inner corner, but topostext calls it
+    # explicitly "Pharan kome" (kome = village) - Modern_location "Feiran"
+    # confirms it's the interior Sinai oasis, nowhere near the gulf shore -
+    # the same plain-settlement-amid-a-coastal-walk shape as every other
+    # entry above, just found by a crossing instead of a keyword sweep.
+    "5.17.01.11",
+    # Resolves the Apsorros/Sebastopolis case flagged in
+    # _BOUNDARY_STITCH_REF_ID_PAIRS above: "Sebastopolis 1" sits right after
+    # three genuine river-course points (Apsorros splitting into the Glaukos
+    # and Lykos, their sources - all correctly `river`, describing the
+    # Çoruh's own tributary system inland), and its own topostext citation
+    # is a fragment of boundary language ("...to the terminus which is
+    # located in...") rather than a coastal citation - not the walk
+    # continuing, an aside citing an administrative limit. Its
+    # Modern_location, "Sulusaray", is a Cappadocian inland town nowhere
+    # near this Black Sea coast, while the real coastal Sebastopolis
+    # (Dioskurias, Sukhumi) already sits correctly elsewhere in the
+    # catalogue (5.10.02.02) - two different places sharing one name, the
+    # same shape as the Deva/Alaunus/Sala rivers, just found on a coastline
+    # instead of a river this time.
+    "5.06.07.06",
+    # Four more found by the user auditing specific ref_ids directly, all
+    # the same "boundary/limit statement, not a coastal walk point" shape:
+    "5.16.01.05",  # Grenzpunkt (Ägypten, Judäa) - topostext (§4.5.13, matched from Egypt's side) confirms this is a land-boundary hand-off between Judaea and Arabia Petraea, stated *before* the coastal description resumes further on - see the long comment above _COASTLINE_EXPLICIT_ORDER_OVERRIDES' now-reverted entry for this ref_id.
+    "4.05.13.03",  # Grenzpunkt (Ägypten, Arabia Petraea, Judäa) - Egypt's own citation of the same boundary point as 5.16.01.05 above; same fix, same reasoning.
+    "2.09.14.06",  # Batavodurum (Nijmegen) - topostext (§2.9.8) is explicit: "the cities are on the west bank, of the Batavians *in the interior*: Batavodurum..." - an inland Rhine-valley city listed alongside genuinely coastal river-mouth points in the same section, not itself on the coast. Previously force-stitched to Rhenus-Mündung (östliche) on a name-proximity guess alone (round 21/22) - that pair removed from _BOUNDARY_STITCH_REF_ID_PAIRS.
+    "5.09.10.05",  # Grenzpunkt (Asiatisches Sarmatien, Iberien, Kolchis) - topostext (§5.9.10) is explicit: "...mouth of the Korax river...*The limit on the side of Kolchis is at* 75d00',47d30'" - a territorial limit statement, not a coastal walk point, despite the exact coordinate match. Previously force-stitched to Korax-Mündung on a "no topostext match, but the names align" guess alone (round 22) - that pair removed from _BOUNDARY_STITCH_REF_ID_PAIRS, now that a real (contradicting) match exists.
+}
+
 
 # "Kap" (cape) as a bare word anywhere in the name, not just as a leading
 # prefix - the catalogue names a cape many ways ("Nördliches Kap", "Heiliges
@@ -437,6 +1125,23 @@ _MOUNTAIN_POINT_OVERRIDES = {
 # here the way _MOUNTAIN_LOCATION_REF_RE guards the mountain tiers.
 _KAP_WORD_RE = re.compile(r"\bkap\b", re.IGNORECASE)
 
+# A point cited as a boundary marker between provinces/peoples ("Grenzpunkt
+# Baetica, Lusitania, Tarraconensis", "Baetica (Ostende am Baliarischen
+# Meer)", "Illyricum (südlicher Endpunkt an der Adria)") - this is an
+# *additional* tag alongside the point's own primary category (a boundary
+# point can just as easily be `river`, `city`, `coast` or `mountain`; see
+# _RIVER_POINT_OVERRIDES/_NONCOASTAL_POINT_OVERRIDES/_COASTLINE_SKIP_REF_IDS
+# throughout this file, every one of which turned out, on inspection, to be
+# exactly this kind of point), not a category of its own - the same
+# multi-category shape Defaux's Xi/OmegaStructure.json datasets tag directly
+# ("river mouth"+"boundary"). Checked catalogue-wide before adding (102
+# matches, spread sensibly across every category: 67 city, 26 coast, 4
+# river, 4 mountain, 1 lake) - not narrowed further, since every one of the
+# German phrasings found is a genuine "this is a limit/boundary citation"
+# marker, the same three shapes (Grenzpunkt/Grenze, Ostende, Endpunkt) this
+# project has been finding and hand-verifying individually all session.
+_BOUNDARY_NAME_RE = re.compile(r"grenzpunkt|grenze|ostende|endpunkt", re.IGNORECASE)
+
 
 def _classify_locality(
     name: str,
@@ -446,10 +1151,20 @@ def _classify_locality(
     force_noncoastal: bool = False,
     force_mountain: bool = False,
     force_mountain_point: bool = False,
+    force_coastal: bool = False,
+    force_river_point: bool = False,
 ) -> tuple[str, str]:
     """Return (category, naming_observation) - the observation is the audit
     trail for *why* this category was picked, for the "naming_observation"
     column of the annotated dataset (see annotate_dataset.py)."""
+    if force_coastal:
+        # A manually-verified coastal-appendix section (see
+        # _COASTAL_APPENDIX_SECTIONS) - the header-based section_is_coastal
+        # guess missed it because the header names a tribe, not a sea.
+        # Applied this early so it participates like any other
+        # section_is_coastal=True in every check below (river/mountain/lake
+        # keywords still win first - only the plain-city fallback changes).
+        section_is_coastal = True
     # A manually-verified island override - whole section or single point -
     # wins over everything else, including a name that otherwise reads as an
     # unambiguous cape ("Kap Leukimma" *is* a real cape - it's just a cape on
@@ -463,6 +1178,8 @@ def _classify_locality(
         return "mountain", "manually verified mountain-appendix section (_MOUNTAIN_APPENDIX_SECTIONS)"
     if force_mountain_point:
         return "mountain", "manually verified individual mountain point amid an otherwise coastal section (_MOUNTAIN_POINT_OVERRIDES)"
+    if force_river_point:
+        return "river", "manually verified individual river-boundary point amid an otherwise coastal section (_RIVER_POINT_OVERRIDES)"
     if _KAP_WORD_RE.search(name):
         # A name containing "Kap" is unambiguously a cape - even when it
         # also carries a mountain-range aside, e.g. "Kap Oiarso,
@@ -546,6 +1263,8 @@ class Reference:
     modern_location: str = ""
     recension: str = ""
     category: str = ""  # "coast" | "harbor" | "river_mouth" | "city" | "river" | "mountain" | "island" | "lake" | "" (unclassified)
+    extra_categories: str = ""  # additional tags beyond `category`, semicolon-separated (currently just "boundary" - see _BOUNDARY_NAME_RE); the multi-category counterpart of Defaux's Xi/OmegaStructure.json `category` arrays
+    section_type: str = ""  # "coast section" | "inland" | "island" | "mountain" - this point's whole (book.map, section)'s own narrative type, the same signal as Defaux's `type_sec`, computed from the same force_*/section_is_coastal signals _classify_locality already uses per-point
     ref_id: str = ""  # catalogue ID (book.map.section.item), used to reconstruct coastlines
     naming_observation: str = ""  # why _classify_locality picked this category (audit trail)
     feature_id: str = ""  # which drawn coastline this point belongs to, once resolved (see annotate_dataset.py)
@@ -618,6 +1337,8 @@ _ANNOTATED_CSV_FIELDS = [
     "ref_id",
     "name",
     "category",
+    "extra_categories",
+    "section_type",
     "book",
     "tabula",
     "modern_location",
@@ -654,6 +1375,8 @@ def write_annotated_csv(refs: list[Reference], path: Path) -> None:
                     "ref_id": ref.ref_id,
                     "name": ref.name,
                     "category": ref.category,
+                    "extra_categories": ref.extra_categories,
+                    "section_type": ref.section_type,
                     "book": ref.book,
                     "tabula": ref.tabula,
                     "modern_location": ref.modern_location,
@@ -695,6 +1418,8 @@ def load_annotated_csv(path: Path) -> list[Reference]:
                     modern_location=row.get("modern_location", ""),
                     recension=row.get("recension", ""),
                     category=row.get("category", ""),
+                    extra_categories=row.get("extra_categories", ""),
+                    section_type=row.get("section_type", ""),
                     ref_id=row.get("ref_id", ""),
                     naming_observation=row.get("naming_observation", ""),
                     feature_id=row.get("feature_id", ""),
@@ -731,7 +1456,7 @@ def _xlsx_has_coord(row: tuple) -> bool:
     )
 
 
-def load_xlsx(path: Path) -> list[Reference]:
+def load_xlsx(path: Path, overrides: OverrideBundle | None = None) -> list[Reference]:
     """Load the Stueckelberger/Grasshoff-schema catalogue workbook.
 
     Columns: ID, ID_map, Locality, Modern_location,
@@ -746,7 +1471,13 @@ def load_xlsx(path: Path) -> list[Reference]:
     name - Ptolemy lists coastal points as a running sequence along the
     shore), and keywords in the entry's own name (river mouth, cape,
     mountain range, island). See CATEGORIES and build_coastlines().
+
+    `overrides` defaults to `_DEFAULT_OVERRIDES` (ptolemy_map.py's own
+    eighteen Python collections) - pass one built from `db/ptolemy.db` via
+    `overrides.load_overrides_from_db()` to classify using the database's
+    override rows instead (see db/recompute.py).
     """
+    overrides = overrides if overrides is not None else _DEFAULT_OVERRIDES
     try:
         import openpyxl
     except ImportError as exc:  # pragma: no cover
@@ -771,9 +1502,28 @@ def load_xlsx(path: Path) -> list[Reference]:
         section_is_coastal = any(_COASTAL_HDR_RE.search(str(h[2])) for h in headers)
         id_parts = str(section_rows[0][0]).split(".")
         book_map_section = (".".join(id_parts[:2]), id_parts[2] if len(id_parts) > 2 else "")
-        force_island = book_map_section in _ISLAND_APPENDIX_SECTIONS
-        force_noncoastal = book_map_section in _NONCOASTAL_EXCEPTION_SECTIONS
-        force_mountain = book_map_section in _MOUNTAIN_APPENDIX_SECTIONS
+        force_island = book_map_section in overrides.island_appendix_sections
+        section_force_noncoastal = book_map_section in overrides.noncoastal_exception_sections
+        force_mountain = book_map_section in overrides.mountain_appendix_sections
+        force_coastal = book_map_section in overrides.coastal_appendix_sections
+
+        # The section-level counterpart of _classify_locality's own category
+        # decision, in the same priority order (force_island first, etc.) -
+        # this project's equivalent of Defaux's `type_sec`. Only the four
+        # buckets this catalogue's own signals can actually distinguish;
+        # unlike Defaux's source text, ours never keeps a section that's
+        # pure prose with no locality rows at all (see _xlsx_has_coord), so
+        # "title"/"area presentation"/"borders description" aren't
+        # representable here - those sections simply produce no Reference
+        # rows to tag in the first place.
+        if force_island:
+            section_type = "island"
+        elif force_mountain:
+            section_type = "mountain"
+        elif (section_is_coastal or force_coastal) and not section_force_noncoastal:
+            section_type = "coast section"
+        else:
+            section_type = "inland"
 
         for row in section_rows:
             _id, id_map, locality, modern_location, lon_o, lat_o, lon_x, lat_x = row
@@ -791,11 +1541,14 @@ def load_xlsx(path: Path) -> list[Reference]:
                 name,
                 section_is_coastal,
                 force_island=force_island,
-                force_island_point=str(_id) in _ISLAND_POINT_OVERRIDES,
-                force_noncoastal=force_noncoastal,
+                force_island_point=str(_id) in overrides.island_point_overrides,
+                force_noncoastal=section_force_noncoastal or str(_id) in overrides.noncoastal_point_overrides,
                 force_mountain=force_mountain,
-                force_mountain_point=str(_id) in _MOUNTAIN_POINT_OVERRIDES,
+                force_mountain_point=str(_id) in overrides.mountain_point_overrides,
+                force_coastal=force_coastal,
+                force_river_point=str(_id) in overrides.river_point_overrides,
             )
+            extra_categories = "boundary" if _BOUNDARY_NAME_RE.search(name) else ""
             refs.append(
                 Reference(
                     name=name,
@@ -807,6 +1560,8 @@ def load_xlsx(path: Path) -> list[Reference]:
                     modern_location=str(modern_location).strip() if modern_location else "",
                     recension=recension,
                     category=category,
+                    extra_categories=extra_categories,
+                    section_type=section_type,
                     naming_observation=observation,
                     ref_id=str(_id),
                 )
@@ -848,7 +1603,260 @@ _MAX_COASTAL_GAP_DEG = 5.0
 # coastline edges, the same way a non-coastal row already is.
 _COASTLINE_SKIP_REF_IDS = {
     "3.14.01.04",  # Acheloos-Mündung - introductory boundary citation, duplicated (correctly) at 3.14.06.07
+    "3.10.14.01",  # Borysthenes-Mündung - the same pattern the other way round: Lower Moesia's own coastal
+    # walk resumes at book.map "3.10" section "14" (Dniester-area river mouths, a genuinely new stretch)
+    # by re-stating the Dnieper's mouth as an orientation point first - the exact same coordinate already
+    # given, correctly, as Sarmatia-in-Europe's own citation (3.05.07.01). Left in as an edge, this
+    # duplicate coordinate became a node with edges to *both* its own real neighbour (3.10.14.02) and,
+    # via catalogue-order adjacency within its own book.map, the far end of a >4.5-degree jump back across
+    # section "08"'s last coastal point (an intervening digression into inland Danube-bank legionary
+    # camps, sections "09"-"13", correctly left `city`) - a zigzag with no geographic basis, reported by
+    # the user as "two strange lines...as if it's trying to connect the wrong features". Skipping this one
+    # re-citation lets 3.10's own walk connect directly to its real next point instead.
+    #
+    # The four entries below were found a different way: a real coastline
+    # never crosses itself (the same "a road doesn't cross itself" argument
+    # the user made, prompting this check) - so any drawn coastline whose
+    # own line self-intersects has a real ordering bug somewhere, findable
+    # without eyeballing a render or hand-picking a distance threshold.
+    # Checked every coastline/river/island/mountain line in the catalogue
+    # with shapely's line-segment intersection test; all four hits below
+    # turned out to be the *introductory boundary point* pattern above,
+    # just not yet found because a false self-crossing edge is a different
+    # symptom than a straight-line "jump" is.
+    "3.13.06.05",  # Malischer Golf - Macedonia's own southern border marker (topostext, by name match: cited alongside "Pindos mountain midpoint"/"Oite mountain midpoint" as boundary landmarks with Achaia/Epirus), stated *before* the region's coastal walk actually begins at Neapolis (3.13.09.03) - left in, its first edge (straight to Neapolis, far north) crossed twelve later segments of the walk it correctly closes back near its own start (Malischer Golf and Spercheios-Mündung are both near Thermopylae - see the existing 3.13.09.03/3.13.17.10 _NO_CLOSE_LOOP_TRAILS entry, which this restores)
+    "5.03.01.06",  # Grenzpunkt (Lykien, Pamphylien) - Lykia's own eastern border marker (topostext: "limit of Asia through the Masikytos mountain, as far as the sea at..." - its own separate introductory section, before "the following" starts the coastal walk at Kaunos/Xanthos)
+    "5.05.01.09",  # Grenzpunkt (Kilikien, Pamphylien) - Pamphylia's, the same shape (topostext: "limit point near Galatia to the Pamphylian sea, the limit point of this line at..." then "the shores of Pamphylia: Olbia, Attaleia...")
+    "5.08.01.09",  # Grenzpunkt (Kilikien, Syrien) - Cilicia's, the same shape again (topostext: "limit at Kappadokia extending to the Issian Gulf and Amanikian Gates, which limit..." then "In Selinitis of Kilikia Tracheia Iotape...")
+    "5.01.05.04",  # Kap Bithynia - an undermarked re-citation of the same headland as "Spitze Bithyniens mit Artemis-Heiligtum" (5.01.02.02): same latitude exactly, topostext re-describing it verbatim ("mouth of the Pontos and the sanctuary of Artemis Bithynian promontory") to reorient the reader before continuing west past Artake/Psyllis/Kalpas - the same shape as the Borysthenes-Mündung case, just without an explicit arrow marker this time. Left in, its edge from Rhyndakos-Mündung (the Gulf of Astakos digression's own inner end) cut straight back across the gulf, crossing three of the digression's own segments.
+    "3.12.04.05",  # Kallipolis - the Thracian Chersonese's own loop closing back to its start (topostext, book 3 map 11 section 9: "...Sestos, next the above-mentioned Kallipolis"), a bit-identical coordinate duplicate of 3.12.01.05. Left in as a fresh point, it would just re-close the loop a second time at the same node - the ordinary close-loop mechanism (feature_closes_loop) already does this correctly once 3.12's own points are traced.
+    #
+    # Found by the systematic whole-catalogue self-intersection review
+    # (2026-07-30), same "Grenzpunkt" boundary-marker pattern as the five
+    # entries above, this time in Iberia rather than the Aegean/Black Sea:
+    "2.04.03.04",  # Anas (Grenzpunkt Baetica, Lusitania, Tarraconensis) - a border marker *up the river Anas/Guadiana itself* (topostext: "Where the river touches the border of Lusitania", right after "Before the river turns towards the east") at -8.67,39.0 - over 4 degrees inland/east of either of the river's own two mouths. Left in as coastal, its edge from the eastern mouth cut straight back across the walk's own western end (Onoba/Baetis-Mündung, the same estuary as the western Anas mouth that closes this loop).
+    "2.04.03.07",  # Baetica (Ostende am Baliarischen Meer) - the very next citation, Baetica's own *eastern* border marker where the province line meets "the Balearic sea" (topostext: "there along the border of Tarraconensis to where the Balearic sea ends") - a second inland/administrative boundary point in the same short digression as the one above, not a coastal step either.
+    #
+    # Found indirectly, by fixing the Durius Grenzpunkt (_RIVER_POINT_OVERRIDES,
+    # 2026-07-30): removing that inland point from the coastline exposed a
+    # second, previously-hidden bug in the same book.map - the exact
+    # Acheloos-/Borysthenes-Mündung shape above, just not visible before
+    # because the wrong two-hop path (via the now-removed Grenzpunkt)
+    # happened not to cross anything, by coincidence, while the shorter
+    # direct edge does. Durius-Mündung (topostext: "The southern side of
+    # Lusitania is the common boundary with...Baetica. The northern side
+    # links to Tarraconensis along the western part of the Dourius
+    # river...The mouth of the river, which flows into the Outer Sea") is
+    # Lusitania's own *northern* boundary marker, stated first as an
+    # orientation point - the walk proper starts at Balsa (the *southern*,
+    # Baetica-border end) and runs the whole Algarve-then-west-coast loop
+    # back up to Vacua-Mündung, a few hundredths of a degree from Durius-
+    # Mündung's own coordinate, closing the loop on its own without this
+    # edge. Left in, the direct Durius-Mündung -> Balsa edge (skipping
+    # straight from Porto to the Algarve) cut across the walk's own real
+    # west-coast return leg three times.
+    "2.05.01.04",
+    "2.05.04.10",  # Durius-Mündung - a bit-identical re-citation of 2.05.01.04 (same coordinate, same topostext text), sitting right after Vacua-Mündung where the section-04 walk was force-made coastal by the seventeenth-round batch fix - closes the same loop a second time, at the same node, the same "would just re-close the loop again" reasoning as Kallipolis above
+    "6.21.01.07",  # Grenzpunkt (Arachosien, Gedrosien, Indien) - a bit-identical coordinate duplicate of "Grenzpunkt (Gedrosien, Indien)" (6.21.02.11, the walk's own correctly-positioned last point - Arbis-Mündung -> Rhagiraua -> Hafen der Frauen -> Koiamba -> Rhizana -> this Grenzpunkt is a clean, monotonic west-to-east progression). Re-cited earlier, before the walk itself, as an introductory boundary statement (same topostext text as 6.21.02.11: "boundary towards Arachosia to its termination at the sea in") - left in, its edge from Arbis-Mündung (the walk's *first* point) skipped straight to this duplicate at the *far* end, cutting across the whole real walk in between.
+    # NOTE: "5.16.01.05" (Grenzpunkt Ägypten/Judäa) used to be skipped here
+    # too, for the same "bit-identical duplicate, wrong-direction edge"
+    # reason - but the user spotted the resulting gap (Gaza to Egypt, the
+    # top of Sinai) and asked for the real coast, not a schematic bridge
+    # over it. Restored via _COASTLINE_EXPLICIT_ORDER_OVERRIDES instead,
+    # which fixes the wrong-direction edge without dropping the point - see
+    # that set's own comment.
+    "5.19.01.11",  # Grenzpunkt (Arabia Deserta, Babylonien)/Maisanitischer Golf - topostext (5.19.1) is explicit these are Arabia Deserta's own two *territorial* limit points ("bounded...on the east by Babylonia...to the inner recess of the Maisanites Gulf at 79.30d10' and by the nearer part of the Persian Gulf to a limit point at 79.29d00'"), not a coastal walk - and this one is a bit-identical coordinate duplicate of book 6.07's own "Maisanitischer Golf" (6.07.19.05, already the correct northern end of that long Arabian-coast walk). Left in, catalogue order zigzagged 30.17 -> 29.00 -> 30.17 -> 29.50 -> 29.25 (both Grenzpunkt entries, then the real walk) - the "coast facing the wrong way" the user spotted at the head of the Persian Gulf. Excluding both lets 6.07.19.05 stitch straight to Idikara (5.19.04.03, 0.67 degrees, a clean monotonic hand-off) instead.
+    "5.19.01.13",  # Grenzpunkt (Arabia Deserta, Arabia Felix) - Arabia Deserta's own *other* territorial limit point from the same topostext passage (5.19.1) - not a coastal walk point either, see 5.19.01.11 above.
+    "4.05.12.06",  # Anthedon (Egypt's own Kasiotis-list citation) - a bit-identical coordinate duplicate of Judaea's own "Anthedon" (5.16.02.11, the real end of that book's coastal walk - see _COASTAL_APPENDIX_SECTIONS' "4.05","12" entry above). Skipped so Egypt's own walk runs straight through from Rhinokorura to the Grenzpunkt/Zipfel des Arabischen Golfes continuation, rather than stopping one point early at a duplicate of a place already correctly drawn from the other side.
+    "6.03.02.01",  # Tigris-Mündung (westliche) - topostext (6.3.2) is explicit this is a re-citation, not new data: "this coast is described as follows: the western mouth of the Tigris river *is in the description of Babylonia*" - i.e. the same point as 5.20.05.03, restated only as Susiane's own orientation marker for where its coast picks up. Left in, catalogue order zigzagged both Tigris-mouth citations back and forth (Babylonia's 5.20.01.08/5.20.05.03 pair, then Teredon, then Susiane's own re-citation of the same two mouths again) - the "broken coastline" at the Persian Gulf's head the user spotted, a second instance of the same bug class as 5.19.01.11/.13 above.
+    "6.03.02.03",  # Tigris-Mündung (östliche) - Susiane's own re-citation of the *other* Tigris mouth (5.20.01.08), same topostext passage (6.3.2), see 6.03.02.01 above. Excluding both lets Susiane's own walk start cleanly at Charax des Pasines (6.03.02.04), 1.68 degrees from Babylonia's own last point (Teredon, 5.20.05.04) - a clean hand-off instead of a zigzag.
+    "6.03.01.10",  # Oroatis-Mündung - a third duplicate in the same book.map, found only after excluding the two above (it had been quietly absorbed into a non-crossing edge until then, then started self-intersecting once that edge changed). Topostext (6.3.1) confirms it too is an introductory boundary mention, not a walk point: Susiane "is bounded...on the east by Persis along the line linking the limit point of Assyrians and Media to the mouth of the Oroatis river" - a bit-identical coordinate duplicate of the walk's own real, correctly-sequenced last point (6.03.02.14, right before its own Oroatis-Quellen). Sorting first in raw catalogue order (section "01" before "02"), left in it pulled the walk's very first edge straight across to its own far end and back.
+    #
+    # A thirty-second round (2026-07-31): "Maisanitischer Golf" (6.07.19.05,
+    # topostext 6.7.19.3, "which the limit point of Desert Arabia and the
+    # Maisanites gulf at") is a *fourth* citation of the same Persian-Gulf-
+    # head boundary statement as 5.19.01.11/.13 above - Susiana/Persis's own
+    # side of it this time, not Arabia Deserta's. Left in, it auto-stitched
+    # (coordinate-identical, 0.0 degrees) to "Ammaia" (5.19.04.02, itself
+    # citing the *same* boundary passage as 5.19.01.11 - topostext 5.19.1.2,
+    # word for word) before Ammaia could ever be reached as a stitch target -
+    # the structural "can't reach an interior point" limitation static_map.py
+    # worked around all last round with a schematic bridge, rather than a
+    # real fix. Excluding it frees Ammaia back up as its own group's genuine
+    # trail endpoint, letting a normal stitch pair (see
+    # _BOUNDARY_STITCH_REF_ID_PAIRS below) join Tigris-Mündung (westliche)
+    # straight through to Idikara/Iokura instead - one real ~190-point
+    # trail (Iokura -> ... -> Kattigara*) rather than a documented-but-
+    # disconnected annotation. The Susiana/Persis coastal walk itself
+    # (Heiliger Golf, Koromanis, ...) loses its own accidental link to
+    # Idikara/Iokura as a result and becomes its own separate ~90-point
+    # trail (Zipfel des Arabischen Golfes -> Koromanis) - which matches the
+    # user's own stated Persian Gulf sequence (Charax des Pasines -> Tigris
+    # east -> Teredon -> Tigris west -> Maisanitischer Golf) ending there,
+    # not continuing on into Arabia's own Idikara/Iokura citations.
+    "6.07.19.05",
 }
+
+# A narrower tool than _COASTLINE_SKIP_REF_IDS: that one drops a point from
+# every edge it would touch, incoming or outgoing. Sometimes only *one*
+# specific edge is wrong and the point itself is a real, correctly-placed
+# step that should stay connected to what comes *before* it - just not to
+# what catalogue order happens to put right after it. Found by the user
+# pointing at two exact edges directly in a rendered map ("the line from
+# this point onward is wrong"):
+#
+# - `3.11.02.10` ("Grenzpunkt der Thrakischen Chersones an der Propontis")
+#   correctly ends Thrace's Aegean-coast-and-Chersonese-boundary walk, but
+#   catalogue order puts `3.11.03.05` ("Grenze bei Moesia Inferior") right
+#   after it - and topostext shows that's not a continuation at all: "3.1
+#   On the east by the Propontis and the mouth of Pontos...and by the
+#   onward shores of Pontos until the border with Lower Moesia" is a fresh
+#   *restatement* of Thrace's whole eastern boundary line, whose own
+#   enumeration ("3.2 which border the description is the following:
+#   after Mesembria of Moesia, Anchialos...") starts a new, independent
+#   coastal walk (already `_COASTAL_APPENDIX_SECTIONS`-fixed at
+#   `5.04`/`3.11.04` etc.) that never comes back near the Chersonese.
+#   Breaking just this edge lets that Black-Sea-and-Propontis walk stand
+#   as its own trail instead of bridging 3.2 degrees across Thrace's
+#   interior to a point it was never narratively connected to.
+# - `5.01.04.07` (Rhyndakos-Mündung) correctly ends the Gulf of
+#   Astakos/Marmara-south-shore digression (Astakos through Daskylion,
+#   `5.01.04`), but catalogue order puts Artake (`5.01.05.05`, where the
+#   main Propontis coast resumes past the Kap Bithynia re-citation) right
+#   after it - an edge that cut back across the whole digression regardless
+#   of which intermediate points were included (see check_self_intersections.py).
+#   Unlike the Thrace case there's no boundary-line sentence marking this
+#   one explicitly, but the same shape - a real digression's own end,
+#   bridged by catalogue adjacency to an unrelated resumption point - fits
+#   every other fact of the case.
+_COASTLINE_HARD_BREAKS: set[tuple[str, str]] = {
+    ("3.11.02.10", "3.11.03.05"),
+    ("5.01.04.07", "5.01.05.05"),
+    # Panysus-Mündung correctly ends the coast heading *south* from the
+    # Danube delta toward Thrace (topostext, book 3 map 10 section 3: "The
+    # eastern side of Moesia is bound by the coast following the mouths of
+    # Pontos as far as [Kap Pteron]...Tomoi...Kallatis...Tiristis
+    # promontory...Odessos...Panysos river mouth...Mesembria"). Axiakes-
+    # Mündung starts an entirely different stretch heading *north* from the
+    # delta toward the Dniester (topostext section 7: "northernmost mouth
+    # of the Istros until the mouth of the Borysthenes river and the
+    # hinterland...Axiakos river mouth..."). Catalogue order bridges them
+    # directly only because an inland digression (Danube-bank Roman cities,
+    # correctly `city`) sits between the two sections with nothing to mark
+    # the hard turn - a ~4 degree jump the user pointed at as "completely
+    # wrong" directly in a rendered map.
+    ("3.10.08.10", "3.10.14.02"),
+    # The delta's own six mouths reorder correctly south-to-north (see
+    # _COASTLINE_EXPLICIT_ORDER_OVERRIDES), ending at the *northernmost*
+    # one - but the coast heading south toward Thrace (Kap Pteron onward)
+    # naturally continues from there in ref_id order regardless, cutting
+    # straight back across the delta's own southward-opening branches
+    # (confirmed by check_self_intersections.py - three real crossings).
+    # Kap Pteron is topostext's own next-door neighbour to the *southern*
+    # mouth, Hieron/Heilige Mündung ("Sacred mouth of the Istros river,
+    # Pteron promontory" - one citation, not two), not the northern one.
+    # Breaking this edge and letting the ordinary proximity stitch
+    # reconnect Heilige Mündung to Kap Pteron instead (0.4 degrees apart,
+    # well under the stitch tolerance, and the closest pairing available)
+    # gives the delta a real branch shape: one open chain, walked
+    # south-to-north through the six mouths, with the rest of the coast
+    # rejoining at the south end where it geographically belongs.
+    ("3.10.04.03", "3.10.08.03"),
+    # The seventeenth-round batch coastal fix (section 3.10.08's own
+    # plain-named cities - Histria, Tomi, Callatis, Dionysopolis, Odessus
+    # - newly `coast`) extended this same run past Panysus-Mündung to its
+    # own real end, Mesembria (matching topostext's own list above
+    # exactly: "...Odessos...Panysos river mouth...Mesembria"). The
+    # Panysus/Axiakes break above no longer touches the run's new
+    # endpoint, so the ordinary proximity stitch reached past it and
+    # wired Mesembria straight to Axiakes-Mündung instead - the same
+    # wrong "coast heading south" to "coast heading north" bridge as
+    # before, just one point further along now that the run is longer.
+    ("3.10.08.11", "3.10.14.02"),
+}
+
+# build_coastlines assumes catalogue order (ref_id order) is walking order
+# - true for an ordinary coastal survey, but not for a river delta, which
+# Ptolemy describes as a *branching tree*, not a line: "the first division
+# of the mouths at Noviodunum...the southernmost part...flows out by the
+# Sacred mouth...the northernmost divides again...divides again...flows
+# out by Thiagola or Psilon...The more southerly of the second division
+# also splits...flows out by Boreios...also divides...flows out by
+# Narakion...also divides...flows out by Pseudostomon...the more
+# southerly flows out by Kalon" (topostext, book 3 map 10 - the Danube
+# delta). Reading that nested south/north branching in order (the
+# catalogue's own division points confirm every split: "Ister (1. Teilung
+# bei Noviodunum)", "...Teilung des nördlichsten Armes", two more bare
+# "Ister (Teilung)" citations - see _RIVER_COURSE_RE's "teilung" addition)
+# gives a real geographic south-to-north walk along the coast, confirmed
+# by every one of the six mouths' own latitude increasing monotonically
+# in this order - catalogue/ref_id order does not (it interleaves them
+# with the division points in a different sequence entirely). Found by
+# the user comparing the rendered result against old maps that draw this
+# delta as a single point fanning into several branches, and asking for
+# the branches to be worked through step by step rather than left to
+# ref_id order. `sort_key` below checks this override before falling back
+# to natural (book, tabula, section, item) order; unlisted ref_ids are
+# unaffected, and the six overrides are placed as extra tuple elements
+# immediately after the first mouth's own natural key so they sort
+# between it and the next unrelated point without disturbing anything
+# else in book.map "3.10".
+_COASTLINE_EXPLICIT_ORDER_OVERRIDES: dict[str, tuple] = {
+    "3.10.05.05": (3, 10, 2, 5, 1),  # Narakion-Mündung
+    "3.10.06.03": (3, 10, 2, 5, 2),  # Schöne Mündung (Kalon)
+    "3.10.06.02": (3, 10, 2, 5, 3),  # Pseudostomon (Mündung)
+    "3.10.05.03": (3, 10, 2, 5, 4),  # Nördliche Mündung (Boreios)
+    "3.10.04.03": (3, 10, 2, 5, 5),  # Psilon bzw. Thiagola (Mündung)
+    # NOTE: "5.16.01.05" (Grenzpunkt Ägypten/Judäa) briefly had an override
+    # here (sorted right after Anthedon, so it became the walk's own last
+    # point) - reverted. The user asked directly whether its Egypt-side
+    # duplicate (4.05.13.03) was really coastal; topostext (§4.5.13)
+    # settles it for both: "bounded on the east by part of Judaea which
+    # runs from Anthedon city to the *end point* at [64°15',30°40'] and
+    # *thence* by Arabia Petraia as far as the inmost point in the Arabian
+    # Gulf at Heroon polis" - a land-boundary hand-off between two inland
+    # provinces, stated *before* the coastal description resumes at Heroon
+    # polis (= Zipfel des Arabischen Golfes, 4.05.13.05 - its own topostext
+    # match is that exact phrase). Neither citation of this point belongs
+    # in the coastal walk - see _COASTLINE_SKIP_REF_IDS/_NONCOASTAL_POINT_
+    # OVERRIDES for both.
+    #
+    # Teredon (5.20.05.04) sorts (by ref_id alone) *after* both of the
+    # Tigris river's own mouths (5.20.01.08, 5.20.05.03) - but topostext
+    # (§5.20.5) places it explicitly "between the mouths of the Tigris
+    # river", and the user confirmed the real geography (Teredon = near
+    # Basra, between the two mouths, not past both of them). Sorted here to
+    # land between them, so Babylonia's own short trail runs Tigris-east ->
+    # Teredon -> Tigris-west, each mouth free to be its own trail endpoint
+    # for the two boundary stitches to Susiana/Arabia (see
+    # _BOUNDARY_STITCH_REF_ID_PAIRS' "thirty-first round" entries).
+    "5.20.05.04": (5, 20, 3, 0),  # Teredon*
+}
+
+# A different, self-marking version of the same "same point re-cited"
+# problem above, found from a user-reported zigzag in the Arabia
+# Felix/Persian Gulf area: book.map "6.07" sections "12" and "13" are each
+# a *summary recap* - "[Coastal mountains of Eudaimon Arabia:] Hippos
+# Mountain...Kaboubathra Mountain...Didyma Mountains..." (topostext) and
+# "Coastal rivers: Baitios river...Prionos river mouth..." - re-listing
+# points already cited earlier in the same book.map, each one explicitly
+# marked in the catalogue's own Locality text with a back-reference arrow
+# ("Didyma-Berge –> 6.7.11", "Lar-Mündung < 6,7,14"). Unlike the
+# Acheloos-Mündung case, these recap citations land at (essentially) the
+# *exact same coordinate* as their original, so node-collapsing doesn't
+# just merge two ends of one walk - it turns the original point into a
+# junction with extra edges to whatever precedes/follows it in the recap
+# list, which has no geographic relationship to the original's real
+# neighbours at all. The result was a coastline graph walk that left its
+# real path to detour through the recap list and back, a zigzag with no
+# geographic basis (checked across the whole catalogue via this same
+# regex - all 15 matches are these two sections, nowhere else). Matched by
+# pattern rather than a hand-picked ref_id list since the arrow itself
+# *is* the "this is a duplicate, not a new point" signal - skipped from
+# coastline edges, river-line and mountain-line grouping alike (a mountain
+# name recap would create the exact same kind of junction if one ever
+# shows up elsewhere).
+_RECAP_BACKREF_RE = re.compile(r"–>|->|<\s*\d")
 
 # The final global stitching pass below (see _SAME_POINT_TOL_DEG * 2)
 # reconnects two book.map trails only when their endpoints land within a
@@ -867,11 +1875,181 @@ _COASTLINE_SKIP_REF_IDS = {
 _BOUNDARY_STITCH_REF_ID_PAIRS = {
     ("3.14.06.07", "3.15.02.05"),  # Acheloos-Mündung (end of Epirus/Akarnania) -> Kap einer Halbinsel (start of Aetolia)
     ("3.11.02.01", "3.13.09.03"),  # Nessos-Mündung (end of Thrace) -> Neapolis/Kavala (start of Macedonia) - the Nestos, a real Thrace/Macedonia border river
-    ("3.13.05.03", "3.14.02.03"),  # Kelydnos-Mündung/Dukati (end of the Illyria fragment) -> Akrokeraunische Berge/Karaburun (start of Epirus) - the Ceraunian mountains, the real Illyria/Epirus border
     ("2.06.20.04", "2.10.02.07"),  # Clodianus-Mündung/Fluvià (end of Iberia's Mediterranean coast) -> Heiligtum der Venus/Cap Béar (start of Gaul's) - the real Spain/France Mediterranean border, a second Kap-Oiarso-style hand-off on the Mediterranean side
-    ("4.01.07.06", "4.02.02.05"),  # Malua-Mündung/Moulouya (end of Mauretania Tingitana) -> Siga-Mündung/Tafna (start of Mauretania Caesariensis) - the real Morocco/Algeria border river
-    ("4.02.11.06", "4.03.03.05"),  # Ampsaga-Mündung/Oued el-Kebir (end of Mauretania Caesariensis) -> Kap Treton/Bougaroun (start of Africa Proconsularis) - the real Algeria/Tunisia border river
+    #
+    # A twenty-first round (2026-07-31), prompted by trying to answer "what
+    # would it take to close the rest of Ptolemy's own coastline into fillable
+    # rings" (see static_map.py's --fill-ptolemy-land): computed the nearest-
+    # neighbour distance between every open coastline trail's own two
+    # endpoints and every other trail's endpoints. That check on the
+    # *existing* nine pairs above first, as a sanity check, found six of them
+    # no longer actually connect anything - later rounds this session added
+    # more coastal points to one side of the hand-off, so the ref_id these
+    # pairs name is no longer that trail's real endpoint (now an interior
+    # point, with the trail continuing past it). Five of the six had an
+    # obvious, still-correct replacement endpoint immediately findable this
+    # way and are corrected below (kept as edits to the same fact, not new
+    # entries) - the sixth, Apsorros-Mündung/Çoruh -> Phasis, needed a real
+    # fix instead of a relink: its trail's new "end" was a point named
+    # "Sebastopolis 1" whose own Modern_location ("Sulusaray") is a
+    # Cappadocian inland town, nowhere near this Black Sea coast, sitting
+    # right after three genuine inland river-course points (Apsorros
+    # splitting into the Glaukos/Lykos, their sources) with a fragmentary,
+    # boundary-flavoured topostext citation of its own ("...to the terminus
+    # which is located in...") - the real coastal Sebastopolis (Dioskurias,
+    # Sukhumi) already sits correctly elsewhere in the catalogue. Excluded
+    # via `_NONCOASTAL_POINT_OVERRIDES` (5.06.07.06), restoring
+    # Apsorros-Mündung as the trail's real end - the original pair below,
+    # unchanged.
+    ("3.13.05.03", "3.14.02.02"),  # was ("3.13.05.03","3.14.02.03") - Kelydnos-Mündung/Dukati -> Orikon (the Ceraunian coast's real next point is Orikon, not Akrokeraunische Berge - the mountain-range aside sits one point later in the same walk)
+    ("4.01.07.06", "4.02.02.02"),  # was ("4.01.07.06","4.02.02.05") - Malua-Mündung/Moulouya -> Grosses Kap (topostext matches both to the identical phrase "Malva river mouth, Great promontory" - literally one citation)
+    ("5.01.07.11", "5.04.02.02"),  # was ("5.01.07.07","5.04.02.02") - Kytoros -> Klimax (Bithynia/Paphlagonia border; Parthenios-Mündung is now an interior point of the same walk, not its end)
+    ("5.04.03.07", "5.06.02.02"),  # was ("5.04.03.07","5.06.02.03") - Amisos/Samsun -> Ankon der Leukosyrer (topostext: "the coastal part of this section...Of the Leukosyroi, Ankon of the Leukosyrians", directly continuing from Amisos)
+    ("4.02.11.06", "4.03.03.02"),  # was ("4.02.11.06","4.03.03.05") - Ampsaga-Mündung/Oued el-Kebir -> Winkel des Numidischen Golfes (topostext matches both to "Ampsagas river mouth: Numidicus harbor interior")
+    ("5.06.07.02", "5.10.02.10"),  # was ("5.06.07.02","5.10.02.09") - Apsorros-Mündung/Çoruh -> Phasis* (Pontus Cappadocicus -> Colchis, the real Turkey/Georgia border river - restored now that Sebastopolis-1 is excluded above)
+    #
+    # New pairs found by the same nearest-endpoint-distance check, each
+    # individually confirmed via topostext continuity and/or Modern_location
+    # (never applied on distance alone - see the excluded/flagged cases
+    # noted in the code review this round: Anas-Mündung/Balsa, three-way
+    # ambiguity around the Tigris' western mouth, Side/Phaselis/Anemurion,
+    # Anthedon, and a couple of thin-evidence boundary-marker pairs, all
+    # left for individual follow-up rather than guessed at):
+    ("5.15.05.10", "5.16.02.02"),  # Chorseas-Mündung -> Kaisareia des Straton (Levant coast; topostext matches both to "mouth of the Chorseos river" - one citation, Nahr ez-Zerka/Qaisariye genuinely adjacent)
+    ("5.02.11.09", "5.03.02.02"),  # Kaunos -> Kalinda (Lykia/Karia coast; topostext: "Kaunos Kalinda" as one phrase)
+    ("5.03.03.09", "5.05.02.04"),  # Phaselis -> Olbia (topostext: "Phaselis, city of Lykia, the shores of Pamphylia: Olbia")
+    ("3.13.17.10", "3.15.11.03"),  # Spercheios-Mündung -> Skarpheia (Thessaly/Lokris coast, real adjacent Greek shore)
+    ("2.16.05.09", "3.13.03.02"),  # Lissus -> Dyrrhachion (Illyricum's own coast handing off to Illyria's book-3 treatment - Lezhe -> Durres, the real Albanian coast)
+    ("5.08.04.15", "5.15.02.05"),  # Issos -> Alexandreia bei Issos (topostext matches both to "Issos and the Kilikian Gates Alexandreia on the Issos")
+    ("5.01.04.07", "5.02.02.04"),  # Rhyndakos-Mündung -> Kyzikos (Propontis/Marmara coast, real adjacent shore)
+    ("5.13.03.03", "6.02.01.04"),  # Grenzpunkt (Gross-Armenien, Medien) -> Sannina (Hyrkanian/Caspian coast boundary chain - both citations name the Kyros/Araxes rivers, which genuinely meet in the southern Caucasus)
+    ("4.04.05.08", "4.05.02.03"),  # Darnis -> Aziris (Cyrenaica coast; topostext: "on the north by the Egyptian sea...In the nomes of Marmarike are: Aziris village", Derna -> Wadi el-Chalig)
+    ("2.04.08.03", "2.06.14.02"),  # Baria -> Lucentum (Iberia's own SE Mediterranean coast, Vera -> Alicante)
+    ("2.16.02.05", "3.01.27.07"),  # Alvona -> Nesactum (Istria/Italy border; topostext explicitly: "Nesactum, last of Italy")
+    ("5.13.03.04", "5.12.02.09"),  # Araxes-Mündung -> Kyros-Mündung (Caspian coast; both rivers' real mouths sit at the Kura/Aras confluence area in the southern Caucasus)
+    ("3.05.07.01", "3.10.14.02"),  # Borysthenes-Mündung -> Axiakes-Mündung (Black Sea, Sarmatia's own coast handing off to the Danube delta's; 3.05.07.01 is the citation the round-17 Borysthenes-duplicate review already confirmed correct, not the introductory one skipped via _COASTLINE_SKIP_REF_IDS)
+    ("6.21.02.11", "7.01.02.03"),  # Grenzpunkt (Gedrosien, Indien) -> Naustathmos (Gedrosia/India border reaching the sea into India's own Gulf of Kanthi/Kutch)
+    ("5.17.01.12", "6.07.02.04"),  # Elana/Elanitischer Golf (Winkel) -> Onne (Gulf of Aqaba; topostext: "border of the Arabian Gulf in the inmost part of the Elanite gulf, Onne")
+    ("2.05.04.09", "2.06.01.05"),  # Vacua-Mündung -> Avus-Mündung (NW Iberia's own coast continuing north, real Vouga/Ave river mouths in Portugal)
+    ("6.03.02.14", "6.04.02.02"),  # Oroatis-Mündung -> Kap Taoke (Persis coast; topostext matches both to "mouth of the Oroatis river Taoke promontory")
+    ("3.05.14.02", "5.09.02.02"),  # Tanaïs (östlicher Mündungsarm) -> Paniardis (Sea of Azov/Sarmatia coast; topostext: "mouth of the Tanais river Paniardis")
+    ("6.04.02.10", "6.08.04.01"),  # Bagradas-Mündung -> Daras-Mündung (Persian Gulf coast, both citations use explicit boundary/limit-point language)
+    ("7.01.18.07", "7.02.02.04"),  # Ganges-Mündung (Antibole-Mündung) -> Pentapolis (India's own coast handing off toward Indochina; topostext: "In the Gangetic Gulf beyond the Mouth of the Ganges called Antibolei...Pentapolis")
+    # NOTE: ("2.11.01.04", "2.09.14.06") - Rhenus-Mündung (östliche) ->
+    # Batavodurum - removed. The user found topostext (§2.9.8) explicitly
+    # calls Batavodurum an inland city ("of the Batavians in the
+    # interior"); the pair was only ever a name-proximity guess (round
+    # 21/22) and didn't survive checking. See Batavodurum's own entry in
+    # _NONCOASTAL_POINT_OVERRIDES.
+    #
+    # A twenty-second round (still 2026-07-31), tracing which of the 28
+    # coastline features chain into one another - see README.md's "Closing
+    # the coastline into fillable rings" - resolved two more of the pairs
+    # noted as unconfirmed above:
+    ("4.01.04.07", "4.06.05.02"),  # Grösserer Atlas -> Subos-Mündung (Morocco's own Atlantic coast/Mauretania Tingitana border - "Grösserer Atlas" is `coast`, not `mountain`: the Atlas range reaching the shore, same shape as Athos/Akrokeraunia already confirmed elsewhere this session)
+    ("4.05.15.08", "4.07.05.03"),  # Kap Bazion -> Chersonesos (Red Sea/Egypt coast continuing toward Barbaria; confirmed, not a second world-edge case - the intervening mountain aside's own topostext citation says so directly: "Bazion promontory referred to above: Prionoton mountain")
+    ("2.04.03.01", "2.05.03.04"),  # Anas-Mündung (westliche) -> Balsa (Baetica's own coastal walk and Lusitania's own coastal walk both start from the shared Anas/Guadiana border mouth, walking opposite ways - Modern_location confirms real adjacency, Guadiana-Mündung to Tavira, right next to each other on the Algarve/Andalusia coast; distinct from the up-river "Anas (Biegung)"/"Anas (Grenzpunkt)" boundary citations already excluded elsewhere - this is the river's own real western mouth, correctly `river_mouth`)
+    ("4.03.14.09", "4.04.03.02"),  # was ("4.03.13.06","4.04.03.02") - Philainu -> Festung Automala (section 4.03.14, "Grosse Syrte"/the Gulf of Sidra, was found and fixed afterward - see _COASTAL_APPENDIX_SECTIONS - which extended this trail nine points further and made Kap Kephalai an interior point, not the end)
+    ("4.07.11.10", "4.07.11.11"),  # Essina -> Sarapion (Barbaria/Somalia coast; Modern_location confirms real-world adjacency - Wasin and Warsheik sit right next to each other on the Somali coast - despite the larger Ptolemaic-coordinate gap, the same growing-distortion-with-distance-from-the-Mediterranean pattern noted elsewhere this session)
+    # NOTE: ("5.09.10.05", "5.10.02.01") - Grenzpunkt (Asiatisches
+    # Sarmatien, Iberien, Kolchis) -> Korax-Mündung - removed. The user
+    # found a real topostext match for 5.09.10.05 after all (§5.9.10: "The
+    # limit on the side of Kolchis is at 75d00',47d30'"), and it contradicts
+    # the original "names align" guess (round 22): this is Asian Sarmatia's
+    # own territorial limit statement, not a coastal walk point. See
+    # _NONCOASTAL_POINT_OVERRIDES.
+    ("6.08.10.01", "6.21.02.03"),  # Grenzpunkt (Gedrosien, Karmanien) -> Arbis-Mündung (both citations name Karmania explicitly as the shared boundary - "the earlier mentioned limit of the Indian sea" / "extremity towards Karmania the mouth of the River Arabis")
+    #
+    # A thirty-first round (2026-07-31), all found by the user auditing
+    # specific ref_ids directly against their own topostext citations:
+    ("5.20.01.08", "6.03.02.04"),  # Tigris-Mündung (östliche) -> Charax des Pasines (head of the Persian Gulf; topostext §5.20.1 names this exact point - "on the east by Susiana...to its outflows into the Persian Gulf at 80d30',31d00'" - as Babylonia's own border *with Susiana*, i.e. Charax des Pasines' own province; Teredon sits *between* the Tigris' two mouths per topostext §5.20.5, not at either end - see _COASTLINE_EXPLICIT_ORDER_OVERRIDES)
+    ("5.05.03.04", "5.08.02.03"),  # Syedra -> Iotape (Kilikia Tracheia's own coast, book.map "5.05" -> "5.08" - the two newly-coastal sections' own local runs are only 0.17 degrees apart, well under _STITCH_MAX_GAP_DEG, but different book.map groups only auto-merge at the much tighter cross-group tolerance (_SAME_POINT_TOL_DEG*2), so this needs stating explicitly like every other cross-book.map hand-off)
+    ("6.14.02.08", "6.09.02.05"),  # Aspabota* -> Oxos-Mündung (topostext §6.14.2 states it directly: "...mouth of the river Polytimetos...Aspabota, a town...*after which comes the mouth of the Oxus*" - Scythia's own coastal walk continuing past Aspabota to the Oxus, not a schematic gap)
+    ("6.09.02.01", "6.02.02.12"),  # Saramanne -> Grenzpunkt (Hyrkanien, Medien) (topostext §6.9.1/§6.9.3: Hyrkania "is bordered on the north by the part of the Hyrkanian Sea from the limit toward Media" and Saramanne is named as the point "in which part of Media is Saramanne" - Hyrkania's own coastal walk starting where Media's border reaches the sea; completes the Caspian/Hyrcanian Sea's own closed loop with real data instead of the schematic Aspabota<->Grenzpunkt closure used since the twenty-seventh round, see the now-empty _FORCE_CLOSE_LOOP_TRAILS)
+    ("7.02.07.13", "7.03.02.03"),  # Grenzpunkt (Indien jenseits des Ganges, Land der Sinen) -> Aspitharas-Mündung (topostext §7.2.7 names this point "the end of the Great Gulf towards the Sinai"; §7.3.2 continues directly: "*After the boundary of the Gulf* on the side of India the mouth of the river Aspithra" - the Sinai's own coastal walk picking up exactly where India's leaves off)
+    ("7.03.02.13", "7.03.03.03"),  # Kap der Satyrn -> Kutiaris-Mündung (topostext §7.3.2 ends at "The Cape of Satyrs...Gulf of the Sinai"; §7.3.3 continues "Around the Gulf of the Sinai...mouth of the river Kottiaris...Kattigara" - completing the Sinai's own coast to Kattigara*, already this catalogue's own confirmed Asian world-edge point)
+    #
+    # A thirty-second round (2026-07-31): now works as a normal stitch pair
+    # after excluding "Maisanitischer Golf" (6.07.19.05, see
+    # _COASTLINE_SKIP_REF_IDS above) freed Ammaia back up as its own
+    # group's real trail endpoint.
+    ("5.20.05.03", "5.19.04.02"),  # Tigris-Mündung (westliche) -> Ammaia (topostext §5.19.4/§6.7.19: the same Persian-Gulf-head real place Susiana/Persis's own coastal citation "Ammaia" and Babylonia's own "Tigris-Mündung (westliche)" both describe - see the note above _COASTLINE_SKIP_REF_IDS' "6.07.19.05" entry)
+    #
+    # Not applied this round, left for individual follow-up rather than
+    # guessed at from distance alone: Anas-Mündung(westliche)/Balsa (2.04.03.01/
+    # 2.05.03.04, 0.42°) risks reopening the Durius/Anas introductory-citation
+    # shape already fixed earlier this session and needs re-checking against
+    # that fix specifically, not just topostext; Iokura (5.19.04.04) and
+    # Tigris-Mündung(östliche) (5.20.01.08) both also land within ~1.3° of
+    # Tigris-Mündung(westliche) - a genuine three-way ambiguity at the
+    # Persian Gulf's head, resolved above in Teredon's favour (closest, and
+    # explicit topostext continuity) but the other two aren't yet explained,
+    # just outcompeted; Side/Phaselis/Anemurion (5.05.02.10, three separate
+    # ~1.6-1.8° candidates) and Anthedon (5.16.02.11, two ~1.8-2.3° candidates
+    # including one toward the Gulf of Suez) both already have an
+    # established place in the Levant/Lykia coast from earlier rounds and
+    # these longer-distance matches are more likely coincidental proximity
+    # than real hand-offs; the remaining handful (Grenzpunkt entries
+    # at 0.75-2.4°: Hyrkanien/Medien-Saramanne, Gedrosien/Karmanien-Arbis,
+    # Indien jenseits des Ganges-Aspitharas) have only thin, one-sided
+    # topostext evidence and weren't confirmed either way.
 }
+
+# Real three-way (or more) coastal junctions - a single real-world point
+# where two or more *separately catalogued* provincial coastal
+# descriptions all meet - can't be represented by
+# _BOUNDARY_STITCH_REF_ID_PAIRS at all: _stitch_trails() only
+# concatenates trail *endpoints* into a longer trail, so a node can end
+# up with at most two neighbours in the result; a genuine third
+# connection at that same point has nowhere to go once the first two
+# have already claimed it (see the Ammaia/Maisanitischer-Golf note
+# above). These pairs are never fed to _stitch_trails() - get_coastlines()'s
+# trail geometry is unaffected by this dict - they exist purely as an
+# auditable, exported fact: static_map.py draws each one as its own short
+# solid bridge line (both entries here are well-evidenced, not schematic
+# guesses), and export_geopackage.py writes them into their own
+# "manual_bridges" layer, so the connection is visible in QGIS even
+# though get_coastlines() itself can't fold it into a single trail. Added
+# after the user pointed out that a `--fill-ptolemy-land` PNG showing
+# these connections isn't the same as them being checkable in the
+# GeoPackage they actually audit ref_ids against.
+_MANUAL_JUNCTION_REF_ID_PAIRS: dict[tuple[str, str], str] = {
+    ("4.05.12.05", "5.16.02.11"): (
+        "Rhinokorura (El-Arisch, Egypt's own Kasiotis-list citation) to Anthedon "
+        "(Gaza, Judaea's own coastal end) - 0.23 degrees apart along the real "
+        "Sinai coast (the Suez Canal did not exist to make this a water route, "
+        "but the two provinces' coastal descriptions do meet here on dry land). "
+        "Rhinokorura is an interior point of Africa's own huge coastal trail "
+        "(Egypt's coast continues past it toward the Gulf of Suez), so it can't "
+        "be reached with an ordinary stitch pair the way every other hand-off "
+        "on this coast can."
+    ),
+    # NOTE: Tigris-Mündung (westliche) <-> Ammaia used to be listed here
+    # too, but a thirty-second round found a real fix instead: excluding
+    # "Maisanitischer Golf" (6.07.19.05, itself a fourth citation of the
+    # same Arabia-Deserta boundary statement as 5.19.01.11/.13) freed
+    # Ammaia back up as its own group's genuine trail endpoint, so this
+    # connection is now a normal, working entry in
+    # _BOUNDARY_STITCH_REF_ID_PAIRS instead of a manual, unmerged
+    # annotation - see that dict's own "thirty-second round" note.
+}
+
+
+def get_manual_junctions(
+    refs: list[Reference], overrides: OverrideBundle | None = None
+) -> list[tuple[Reference, Reference, str]]:
+    """Resolve the manual_junction connection overrides against a loaded
+    reference list, for callers that want to draw/export them
+    (static_map.py, export_geopackage.py) without duplicating the ref_id
+    lookup. Skips any pair where either point isn't present in `refs`."""
+    overrides = overrides if overrides is not None else _DEFAULT_OVERRIDES
+    by_id = {r.ref_id: r for r in refs}
+    result = []
+    for (a, b), note in overrides.manual_junction_ref_id_pairs.items():
+        ref_a, ref_b = by_id.get(a), by_id.get(b)
+        if ref_a is not None and ref_b is not None:
+            result.append((ref_a, ref_b, note))
+    return result
 
 # Two catalogue points are treated as "the same physical spot" (a shared
 # corner where two separate coastal walks both start/end) if within this
@@ -909,7 +2087,51 @@ _CLOSE_LOOP_MAX_GAP_RATIO = 0.3
 # _ISLAND_APPENDIX_SECTIONS and _NONCOASTAL_EXCEPTION_SECTIONS.
 _NO_CLOSE_LOOP_TRAILS = {
     ("3.13.09.03", "3.13.17.10"),  # Neapolis (Kavala) -> Spercheios-Mündung: mainland Macedonia/Thessaly coast, not an island
+    # Both found via the self-intersection sweep (see _COASTLINE_SKIP_REF_IDS
+    # above): a small enough closing gap relative to path length to pass
+    # _CLOSE_LOOP_MAX_GAP_RATIO, but the resulting closing edge cut straight
+    # across the middle of the trail's own real path - the geometric
+    # signature of a mainland coast's two ends happening to land near each
+    # other, not an island's coastline genuinely returning to its start.
+    # ("3.10.02.05", "3.10.14.06") - Heilige Mündung -> Harpis - was here,
+    # covering Lower Moesia's Danube-delta-to-Dniester coast. No longer
+    # needed: reordering the delta's own six mouths and rejoining the rest
+    # of the coast at the correct (southern) end instead
+    # (_COASTLINE_EXPLICIT_ORDER_OVERRIDES, _COASTLINE_HARD_BREAKS) changed
+    # this trail's own endpoints to Panysus-Mündung/Axiakes-Mündung, over
+    # 2.5 degrees apart - well outside a false closure's reach, so nothing
+    # replaces this entry.
+    ("3.11.02.01", "3.11.06.09"),  # Nessos-Mündung -> Paktye: Thrace's Aegean-to-Propontis coast, not an island
+    # Once Thrace (3.11) and Macedonia/Thessaly (3.13) stopped each falsely
+    # closing on their own, the real Nessos-Mündung/Neapolis boundary stitch
+    # (_BOUNDARY_STITCH_REF_ID_PAIRS, below) correctly merged them into one
+    # much longer trail - whose own two new loose ends, Paktye and
+    # Spercheios-Mündung, then happened to satisfy the same ratio check
+    # themselves, closing a ~58-point trail across the whole Aegean and
+    # self-crossing the same way. Same fix, one level up.
+    ("3.11.06.09", "3.13.17.10"),  # Paktye -> Spercheios-Mündung: the merged Thrace+Macedonia+Thessaly coast, not an island
 }
+
+# The inverse problem: a trail whose two ends really are the same body of
+# water's shore closing back on itself, but far enough apart (in raw
+# distance and/or path-length ratio) that the ordinary auto-close check
+# below wouldn't catch it, and neither end has its own topostext/Modern_
+# location evidence pinning exactly how the missing stretch runs (see the
+# "not applied" fragments list in README.md's "Filling Ptolemy's own
+# coastline" section). Closed anyway on the user's own explicit request,
+# same pragmatic-closure standard as the Side*/world-bbox corner (see
+# static_map.py's _SIDE_STAR) - a straight line standing in for an
+# undescribed stretch of real shore, not a claim Ptolemy drew this exact
+# path.
+_FORCE_CLOSE_LOOP_TRAILS: set[tuple[str, str]] = set()
+# NOTE: this used to force-close the Caspian/Hyrcanian Sea's loop directly,
+# Aspabota* (6.14.02.08) straight to Grenzpunkt (Hyrkanien, Medien)
+# (6.02.02.12) - a schematic guess at the missing east shore. The user
+# found the catalogue actually describes that whole stretch, just under
+# two more book.map sections (Scythia's own "6.14" and Hyrkania's own
+# "6.9") this project hadn't traced yet - see the two new pairs in
+# _BOUNDARY_STITCH_REF_ID_PAIRS (Aspabota<->Oxos-Mündung, Saramanne<->
+# Grenzpunkt) that now close the same loop with real data instead.
 
 # Separate trails within the same book.map region are stitched together if
 # their nearest endpoints are closer than this - a run breaks whenever a
@@ -974,7 +2196,7 @@ def _stitch_trails(
     return trails
 
 
-def build_coastlines(refs: list[Reference]) -> list[list[Reference]]:
+def build_coastlines(refs: list[Reference], overrides: OverrideBundle | None = None) -> list[list[Reference]]:
     """Reconstruct coastlines from category="coast" points.
 
     Returns a list of trails, each an ordered list of the Reference points
@@ -1011,8 +2233,11 @@ def build_coastlines(refs: list[Reference]) -> list[list[Reference]]:
     differently-classified point interrupts the sequence, or the gap
     between two points is implausibly large.
     """
+    overrides = overrides if overrides is not None else _DEFAULT_OVERRIDES
 
     def sort_key(ref: Reference) -> tuple:
+        if ref.ref_id in overrides.coastline_explicit_order_overrides:
+            return overrides.coastline_explicit_order_overrides[ref.ref_id]
         return tuple(int(p) if p.isdigit() else p for p in ref.ref_id.split("."))
 
     def book_map(ref: Reference) -> str:
@@ -1041,9 +2266,18 @@ def build_coastlines(refs: list[Reference]) -> list[list[Reference]]:
         edges: list[tuple[Reference, Reference]] = []
         prev: Reference | None = None
         for ref in items:
-            if ref.category not in _COASTLINE_CATEGORIES or ref.ref_id in _COASTLINE_SKIP_REF_IDS:
+            if (
+                ref.category not in _COASTLINE_CATEGORIES
+                or ref.ref_id in overrides.coastline_skip_ref_ids
+                or _RECAP_BACKREF_RE.search(ref.name)
+            ):
                 continue
-            if prev is not None and _dist((prev.lat_modern, prev.lon_modern), (ref.lat_modern, ref.lon_modern)) <= _MAX_COASTAL_GAP_DEG:
+            if (
+                prev is not None
+                and _dist((prev.lat_modern, prev.lon_modern), (ref.lat_modern, ref.lon_modern)) <= _MAX_COASTAL_GAP_DEG
+                and (prev.ref_id, ref.ref_id) not in overrides.coastline_hard_breaks
+                and (ref.ref_id, prev.ref_id) not in overrides.coastline_hard_breaks
+            ):
                 edges.append((prev, ref))
             prev = ref
 
@@ -1123,13 +2357,16 @@ def build_coastlines(refs: list[Reference]) -> list[list[Reference]]:
     # cross-region guessing - plus any pair manually verified to be a real
     # hand-off despite falling just outside that tolerance (see
     # _BOUNDARY_STITCH_REF_ID_PAIRS).
-    polylines = _stitch_trails(polylines, max_gap_deg=_SAME_POINT_TOL_DEG * 2, force_pairs=_BOUNDARY_STITCH_REF_ID_PAIRS)
+    polylines = _stitch_trails(polylines, max_gap_deg=_SAME_POINT_TOL_DEG * 2, force_pairs=overrides.boundary_stitch_ref_id_pairs)
 
     final: list[list[Reference]] = []
     for trail_refs in polylines:
         first, last = trail_refs[0], trail_refs[-1]
-        no_close = (first.ref_id, last.ref_id) in _NO_CLOSE_LOOP_TRAILS or (last.ref_id, first.ref_id) in _NO_CLOSE_LOOP_TRAILS
-        if len(trail_refs) >= 4 and first is not last and not no_close:
+        no_close = (first.ref_id, last.ref_id) in overrides.no_close_loop_trails or (last.ref_id, first.ref_id) in overrides.no_close_loop_trails
+        force_close = (first.ref_id, last.ref_id) in overrides.force_close_loop_trails or (last.ref_id, first.ref_id) in overrides.force_close_loop_trails
+        if len(trail_refs) >= 4 and first is not last and force_close:
+            trail_refs = trail_refs + [first]
+        elif len(trail_refs) >= 4 and first is not last and not no_close:
             closing_gap = _ref_dist(first, last)
             path_length = sum(_ref_dist(trail_refs[i], trail_refs[i + 1]) for i in range(len(trail_refs) - 1))
             if closing_gap <= _CLOSE_LOOP_MAX_GAP_DEG and closing_gap <= _CLOSE_LOOP_MAX_GAP_RATIO * path_length:
@@ -1139,7 +2376,7 @@ def build_coastlines(refs: list[Reference]) -> list[list[Reference]]:
     return final
 
 
-def assign_coastline_features(refs: list[Reference]) -> None:
+def assign_coastline_features(refs: list[Reference], overrides: OverrideBundle | None = None) -> None:
     """Resolve every ambiguity build_coastlines has to reason about at
     runtime (which points connect, in what order, where a trail closes)
     into two plain data columns: `feature_id` and `sequence_in_feature`.
@@ -1151,7 +2388,7 @@ def assign_coastline_features(refs: list[Reference]) -> None:
     still does the actual reasoning; this just records its answer as data
     instead of re-deriving it on every run.
     """
-    trails = build_coastlines(refs)
+    trails = build_coastlines(refs, overrides)
     for trail_idx, trail in enumerate(trails):
         # A closed-loop trail repeats its first Reference as its last
         # (same object, so it can't hold two different sequence numbers).
@@ -1253,7 +2490,77 @@ def _river_base_name(name: str) -> str:
     return _RIVER_SUFFIX_RE.sub("", name).strip()
 
 
-def build_river_lines(refs: list[Reference]) -> list[list[Reference]]:
+# The river-line counterpart of _COASTLINE_SKIP_REF_IDS: a point excluded
+# from a river's node set entirely, rather than left to the ordinary
+# distance-based dedup below to sort out. Needed when the dedup's "keep
+# whichever duplicate sorts first by ref_id" rule picks the *wrong* one of
+# two identical-coordinate re-citations - an earlier-numbered boundary-line
+# citation of a bend/confluence (stated as an orientation point for an
+# unrelated province's border) instead of the same bend's later, correctly-
+# sequenced appearance within the river's own continuous course narrative.
+# Found by the systematic self-intersection review (2026-07-30), re-
+# examining the three Danuvius crossings this session had previously
+# accepted as "genuine Ptolemaic distortion" without checking this
+# possibility first - the same premature call already corrected once this
+# session for the Danube delta.
+_RIVER_LINE_SKIP_REF_IDS = {
+    "2.15.01.06",  # Danuvius (Einmündung des Savus) - topostext (2.15.1.1): "...on the south by Illyria which extends from the indicated terminus as far as the bend in the Danube near which the Savos river empties into it" - Pannonia Inferior's own boundary description, citing the Savus confluence purely as its terminus. The dedup (exact coordinate match, distance 0.0) kept this one because "2.15.01" sorts before "2.15.02", pulling it in front of Cirpi's *later* bend (2.15.02.04/2.11.05.16) and out of the real downstream order (Cirpi -> Dravus confluence -> Cornacum -> Acumincum -> Rittium -> Savus confluence) that Moesia Superior's own section 2.15.02 narrates as one continuous run - the same physical point is re-cited there too, correctly placed at the end, as "Danuvius (Biegung bei der Einmündung des Savus)" (2.15.02.18, also distance 0.0 from this one). Skipping this citation here lets that correctly-sequenced duplicate survive the dedup instead.
+}
+
+# Ptolemy reuses common river names for entirely unrelated rivers within
+# the *same* book, not just across books - Britain alone has two rivers
+# each called "Deva" and two each called "Alaunus" (topostext confirms:
+# `2.03.02.06` "mouth of the Devas river" sits on the west coast between
+# Iena and Novius estuaries, while `2.03.05.12` "mouth of the Deva river"
+# sits on the opposite, northeast coast between Taezalon promontory and
+# Tina estuary, nowhere near the first one's narrative context;
+# `2.03.04.06` "mouth of the Alaunus river" is on the south coast between
+# Isca and Magnus Portus, while `2.03.06.01` "mouth of the Alaunus river"
+# is far north on the east coast between Boderia estuary/the Firth of
+# Forth and Vedra/the Wear - modern Dee-side Chester vs. Dee-side
+# Aberdeen, and the Hampshire Aln vs. the Northumberland Aln, two
+# same-named-river coincidences, not one river each). Found by the user
+# asking for a north-south river crossing Britain's own coastline as a
+# review target: both pairs sit close enough (~6-8 degrees) to fall under
+# `_RIVER_LINE_MAX_GAP_DEG` and get merged into one two-point "river"
+# cutting straight across the island - short enough (2 points, 1 segment)
+# to never trip `check_self_intersections.py`'s `len(trail) >= 4` floor,
+# and a *coastline* crossing rather than a self-crossing, which that
+# checker never tests for at all. Lowering the general gap threshold
+# would risk splitting genuinely long, distorted rivers elsewhere
+# (Nile/Ganges/Indus already have confirmed-genuine internal jumps closer
+# to 20 degrees) - so this is a narrow, evidence-specific pairing
+# exclusion instead, the same shape as `_COASTLINE_HARD_BREAKS`.
+_RIVER_LINE_NO_MERGE_REF_ID_PAIRS: set[tuple[str, str]] = {
+    ("2.03.02.06", "2.03.05.12"),  # Deva (Chester) vs. Deva (Aberdeen)
+    ("2.03.04.06", "2.03.06.01"),  # Alaunus (Hampshire) vs. Alaunus (Northumberland)
+    #
+    # Found by generalizing the Deva/Alaunus check catalogue-wide (a new
+    # river-vs-coastline crossing check, since a same-name-merged river is
+    # usually only 2 points - too short for check_self_intersections.py's
+    # own len>=4 floor to ever catch as a self-crossing): the same reused-
+    # name coincidence, confirmed each time by two different `Modern_location`
+    # values and/or non-adjacent book.maps, not one continuous course:
+    ("4.01.02.06", "4.01.04.06"),  # Sala (Bou Regreg, Rabat) vs. Sala (Oued Tamrakt, ~7 degrees south) - both in book.map 4.01 (Mauretania Tingitana) but different modern rivers
+    ("3.02.05.01", "3.03.02.10"),  # Heiliger Fluss/"Sacred river" (Corsica's Fium'Orbo, book.map 3.02) vs. Heiliger Fluss (Sardinia, book.map 3.03) - a descriptive name ("Hieros Potamos"), not a proper name, reused independently on each island
+    ("3.13.18.11", "3.16.06.03"),  # Peneios-Quelle, Thessaly (book.map 3.13, near Mt. Pindos) vs. Peneios-Mündung, the Peloponnese (book.map 3.16) - two real, still-named rivers (Pineios of Thessaly and Pineios of Elis), not one course; the Thessalian mouth+source pair (3.13.15.07/3.13.18.11) stays merged as one line
+    ("3.15.13.09", "3.16.03.04"),  # Asopos (confluence with Kephisos/Ismenos - Boiotian rivers, book.map 3.15) vs. Asopos-Mündung, the Peloponnese (book.map 3.16) - the Boiotian Asopos (of the Battle of Plataia) and the Peloponnesian Asopos near Sikyon are two different rivers sharing a name
+    ("5.06.07.05", "5.14.02.06"),  # Lykos-Quellen (Kelkit Çayı, Pontus, book.map 5.06) vs. Lykos-Mündung (Kuris, book.map 5.14, far south) - different modern rivers entirely
+}
+
+# The eighteen collections above, as ptolemy_map.py's own code-sourced
+# OverrideBundle - the classifier/line-builders below all default to this
+# unless a caller passes its own `overrides=` (see db/recompute.py, which
+# passes one built from db/ptolemy.db's point_override/section_override/
+# connection_override tables instead - see README.md's "Reading overrides
+# from the database" section). Deliberately placed here, after the last of
+# the eighteen constants, not at module top: load_overrides_from_code()
+# reads them all by name off this module, so it can't run any earlier than
+# this in the file's own top-to-bottom execution.
+_DEFAULT_OVERRIDES: OverrideBundle = load_overrides_from_code()
+
+
+def build_river_lines(refs: list[Reference], overrides: OverrideBundle | None = None) -> list[list[Reference]]:
     """Connect river/river-mouth points that share a base name into a line
     tracing that river's course, in catalogue order - the same
     "categorization + sequence" approach as build_coastlines, just grouped
@@ -1264,13 +2571,20 @@ def build_river_lines(refs: list[Reference]) -> list[list[Reference]]:
     name isn't a safe key on its own (see _RIVER_LINE_MAX_GAP_DEG); split
     further wherever a gap is too large to be the same river.
     """
+    overrides = overrides if overrides is not None else _DEFAULT_OVERRIDES
 
     def sort_key(ref: Reference) -> tuple:
         return tuple(int(p) if p.isdigit() else p for p in ref.ref_id.split("."))
 
     groups: dict[tuple[str, str, str], list[Reference]] = {}
     for ref in refs:
-        if ref.category not in _RIVER_LINE_CATEGORIES or not ref.ref_id or not ref.is_plausible():
+        if (
+            ref.category not in _RIVER_LINE_CATEGORIES
+            or not ref.ref_id
+            or ref.ref_id in overrides.river_line_skip_ref_ids
+            or not ref.is_plausible()
+            or _RECAP_BACKREF_RE.search(ref.name)
+        ):
             continue
         base = _river_base_name(ref.name)
         if not base or _GENERIC_RIVER_NAME_RE.search(base):
@@ -1304,7 +2618,11 @@ def build_river_lines(refs: list[Reference]) -> list[list[Reference]]:
             continue
         run = [items[0]]
         for prev, cur in zip(items, items[1:]):
-            if _ref_dist(prev, cur) > _RIVER_LINE_MAX_GAP_DEG:
+            no_merge = (prev.ref_id, cur.ref_id) in overrides.river_line_no_merge_ref_id_pairs or (
+                cur.ref_id,
+                prev.ref_id,
+            ) in overrides.river_line_no_merge_ref_id_pairs
+            if no_merge or _ref_dist(prev, cur) > _RIVER_LINE_MAX_GAP_DEG:
                 if len(run) >= 2:
                     lines.append(run)
                 run = [cur]
@@ -1315,13 +2633,13 @@ def build_river_lines(refs: list[Reference]) -> list[list[Reference]]:
     return lines
 
 
-def assign_river_features(refs: list[Reference]) -> None:
+def assign_river_features(refs: list[Reference], overrides: OverrideBundle | None = None) -> None:
     """Materialize build_river_lines()'s output as data, the same way
     assign_coastline_features() does for coastlines - into river_feature_id/
     river_sequence_in_feature rather than feature_id/sequence_in_feature, so
     a river-mouth point (part of both a coastline and a river line) can
     carry both memberships at once."""
-    lines = build_river_lines(refs)
+    lines = build_river_lines(refs, overrides)
     for line_idx, points in enumerate(lines):
         feature_id = f"river_{line_idx:03d}_{_river_base_name(points[0].name)}"
         for position, ref in enumerate(points):
@@ -1416,7 +2734,12 @@ def build_mountain_lines(refs: list[Reference]) -> list[list[Reference]]:
 
     groups: dict[tuple[str, str, str], list[Reference]] = {}
     for ref in refs:
-        if ref.category not in _MOUNTAIN_LINE_CATEGORIES or not ref.ref_id or not ref.is_plausible():
+        if (
+            ref.category not in _MOUNTAIN_LINE_CATEGORIES
+            or not ref.ref_id
+            or not ref.is_plausible()
+            or _RECAP_BACKREF_RE.search(ref.name)
+        ):
             continue
         base = _mountain_base_name(ref.name)
         # Same guard as build_river_lines: "Namenlose(r) Berg(e)" ("unnamed
@@ -1488,33 +2811,47 @@ def get_mountain_lines(refs: list[Reference]) -> list[list[Reference]]:
     return build_mountain_lines(refs)
 
 
-def _island_line_group(ref: Reference) -> str | None:
-    """Which _ISLAND_LINE_GROUPS island (if any) a point belongs to, by its
+def _island_line_group(ref: Reference, overrides: OverrideBundle | None = None) -> str | None:
+    """Which island_line_group island (if any) a point belongs to, by its
     (book.map, section) - or None if its section isn't one of the
     manually-verified single-island coastal walks."""
+    overrides = overrides if overrides is not None else _DEFAULT_OVERRIDES
     parts = ref.ref_id.split(".")
     if len(parts) < 3:
         return None
-    return _ISLAND_LINE_GROUPS.get((".".join(parts[:2]), parts[2]))
+    return overrides.island_line_groups.get((".".join(parts[:2]), parts[2]))
 
 
-def build_island_lines(refs: list[Reference]) -> list[list[Reference]]:
+def build_island_lines(refs: list[Reference], overrides: OverrideBundle | None = None) -> list[list[Reference]]:
     """Connect an island's own points into a line tracing its shore, in
     catalogue order - grouped by _ISLAND_LINE_GROUPS rather than a graph,
     since (unlike coastlines) there's no reliable distance-based way to
     tell one island's own coastal walk apart from a list of several
-    different islands (see _ISLAND_LINE_GROUPS). Closes into a loop if the
-    trail's two ends land close enough relative to its own length - the
-    same check build_coastlines uses (_CLOSE_LOOP_MAX_GAP_DEG/_RATIO)."""
+    different islands (see _ISLAND_LINE_GROUPS). Always closes into a
+    loop - unlike build_coastlines()'s mainland trails, which might
+    legitimately be an open arc of a much bigger not-yet-stitched
+    landmass, every _ISLAND_LINE_GROUPS entry is a *manually confirmed*
+    single island's own complete coastal walk, and a real island's
+    coastline is inherently a closed shape. build_coastlines()'s
+    _CLOSE_LOOP_MAX_GAP_DEG/_RATIO gap-vs-length heuristic doesn't apply
+    here for the same reason: it exists to tell a genuine loop closure
+    apart from two nearby-but-unconnected points on an open trail, which
+    isn't a live question once the island itself is already confirmed.
+    Left unconditional, that heuristic wrongly left Karpathos (5.02.33,
+    just 3 points/2 edges - Kap Thoanteion, Kap Ephialtion, Potidaion)
+    open: its closing gap (0.53 degrees) is small in absolute terms but
+    more than 30% of its own very short 2-edge path length, exactly the
+    kind of short-path false negative the ratio check can't avoid."""
+    overrides = overrides if overrides is not None else _DEFAULT_OVERRIDES
 
     def sort_key(ref: Reference) -> tuple:
         return tuple(int(p) if p.isdigit() else p for p in ref.ref_id.split("."))
 
     groups: dict[tuple[str, str], list[Reference]] = {}
     for ref in refs:
-        if ref.category != "island" or not ref.ref_id or not ref.is_plausible():
+        if ref.category != "island" or not ref.ref_id or not ref.is_plausible() or _RECAP_BACKREF_RE.search(ref.name):
             continue
-        island = _island_line_group(ref)
+        island = _island_line_group(ref, overrides)
         if island is None:
             continue
         groups.setdefault((ref.source, island), []).append(ref)
@@ -1524,23 +2861,19 @@ def build_island_lines(refs: list[Reference]) -> list[list[Reference]]:
         if len(items) < 2:
             continue
         items.sort(key=sort_key)
-        first, last = items[0], items[-1]
-        closing_gap = _ref_dist(first, last)
-        path_length = sum(_ref_dist(items[i], items[i + 1]) for i in range(len(items) - 1))
-        if closing_gap <= _CLOSE_LOOP_MAX_GAP_DEG and closing_gap <= _CLOSE_LOOP_MAX_GAP_RATIO * path_length:
-            items = items + [first]
-        lines.append(items)
+        lines.append(items + [items[0]])
     return lines
 
 
-def assign_island_features(refs: list[Reference]) -> None:
+def assign_island_features(refs: list[Reference], overrides: OverrideBundle | None = None) -> None:
     """Materialize build_island_lines()'s output as data, the same way
     assign_coastline_features()/assign_river_features() do."""
-    lines = build_island_lines(refs)
+    overrides = overrides if overrides is not None else _DEFAULT_OVERRIDES
+    lines = build_island_lines(refs, overrides)
     for line_idx, trail in enumerate(lines):
         closes_loop = len(trail) > 1 and trail[0] is trail[-1]
         points = trail[:-1] if closes_loop else trail
-        feature_id = f"island_{line_idx:03d}_{_island_line_group(points[0])}"
+        feature_id = f"island_{line_idx:03d}_{_island_line_group(points[0], overrides)}"
         for position, ref in enumerate(points):
             ref.island_feature_id = feature_id
             ref.island_sequence_in_feature = position
@@ -1790,9 +3123,14 @@ def build_map(
         )
         color = CATEGORIES[ref.category]["color"]
         is_coast_family = ref.category in _COASTLINE_CATEGORIES or ref.ref_id in island_position
+        # Lakes share the rivers' light-blue color now (both are "inland
+        # water" to a reader at a glance) - sized up instead, so a lake is
+        # still visually distinct from an ordinary river bend/confluence
+        # rather than just blending into the same-colored dots around it.
+        radius = 11 if ref.category == "lake" else (8 if is_coast_family else 5)
         marker = folium.CircleMarker(
             location=[ref.lat_modern, ref.lon_modern],
-            radius=8 if is_coast_family else 5,
+            radius=radius,
             color=color,
             weight=2,
             fill=True,
